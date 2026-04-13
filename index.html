@@ -1,155 +1,173 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
+  <title>DealerFlow</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DealerFlow - Turn your stock into sales</title>
 
   <style>
     body {
-      font-family: Arial, sans-serif;
       margin: 0;
-      background:#f5f7fb;
-      color:#0f172a;
+      font-family: Arial, sans-serif;
+      background: #f3f4f6;
     }
 
-    header {
-      background:#1d4ed8;
-      color:white;
-      padding:20px;
+    .header {
+      background: #2f55c7;
+      color: white;
+      padding: 20px;
     }
 
-    h1 { margin:0; }
-
-    .container {
-      padding:20px;
-      max-width:1100px;
-      margin:auto;
+    .header h1 {
+      margin: 0 0 8px 0;
     }
 
     .card {
-      background:white;
-      padding:20px;
-      border-radius:12px;
-      margin-bottom:20px;
-      box-shadow:0 2px 8px rgba(0,0,0,0.05);
+      background: white;
+      margin: 20px;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     }
 
     .btn {
-      display:inline-block;
-      padding:14px 24px;
-      border-radius:8px;
-      text-decoration:none;
-      font-weight:bold;
-      margin-top:10px;
+      background: #2f55c7;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      display: inline-block;
+      font-weight: bold;
     }
 
-    .btn-primary {
-      background:#1d4ed8;
-      color:white;
+    .cars-wrap {
+      padding: 0 20px 20px 20px;
     }
 
-    .btn-primary:hover {
-      background:#163bb5;
+    .car {
+      background: white;
+      margin-bottom: 20px;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
 
-    .vehicle-card {
-      display:flex;
-      gap:20px;
-      flex-wrap:wrap;
+    .car img {
+      width: 100%;
+      max-height: 320px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 12px;
+      background: #e5e7eb;
     }
 
-    .vehicle-card img {
-      width:300px;
-      border-radius:10px;
+    .car h3 {
+      margin: 0 0 10px 0;
+      font-size: 24px;
     }
 
     .price {
-      color:red;
-      font-size:22px;
-      font-weight:bold;
+      color: #d11a2a;
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 10px;
     }
 
-    footer {
-      text-align:center;
-      padding:20px;
-      font-size:14px;
-      color:#64748b;
-    }
-
-    @media(max-width:768px){
-      .vehicle-card {
-        flex-direction:column;
-      }
-
-      .vehicle-card img {
-        width:100%;
-      }
+    .status {
+      background: white;
+      margin: 20px;
+      padding: 16px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     }
   </style>
 </head>
 
 <body>
 
-<header>
-  <h1>DealerFlow</h1>
-  <p>Turn your stock into sales</p>
-</header>
+  <div class="header">
+    <h1>DealerFlow</h1>
+    <p>Turn your stock into sales</p>
+  </div>
 
-<div class="container">
-
-  <!-- DEALER SECTION -->
   <div class="card">
     <h2>For Dealers</h2>
     <p>Load your vehicle stock and receive real buyer leads directly via call, WhatsApp, or enquiry.</p>
-
-    <a href="upload.html" class="btn btn-primary">Upload Your Stock</a>
+    <a href="upload6.html" class="btn">Upload Your Stock</a>
   </div>
 
-  <h2 style="padding: 20px;">Latest Vehicles</h2>
+  <h2 style="padding: 0 20px;">Latest Vehicles</h2>
 
-<div id="cars" style="padding: 20px;"></div>
+  <div id="status" class="status">Loading vehicles...</div>
+  <div id="cars" class="cars-wrap"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<script>
-const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
-const supabaseKey = "sb_publishable_D7saHOTE_JhSlMnSgBnIhQ_mOAOUD9s"; // ← replace this
-const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+  <script>
+    const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
+    const supabaseKey = "sb_publishable_D7saHOTE_JhSlMnSgBnIhQ_mOAOUD9s";
 
-async function loadCars() {
-  const { data, error } = await supabase
-    .from('vehicles')
-    .select('*')
-    .order('id', { ascending: false });
+    const client = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-  if (error) {
-    console.log(error);
-    return;
-  }
+    async function loadCars() {
+      const carsContainer = document.getElementById("cars");
+      const statusBox = document.getElementById("status");
 
-  const container = document.getElementById("cars");
+      try {
+        const { data, error } = await client
+          .from("vehicles")
+          .select("*")
+          .order("id", { ascending: false });
 
-  data.forEach(car => {
-    const div = document.createElement("div");
-    div.style.marginBottom = "20px";
-    div.style.background = "#fff";
-    div.style.padding = "10px";
-    div.style.borderRadius = "10px";
+        console.log("Vehicles data:", data);
+        console.log("Vehicles error:", error);
 
-    div.innerHTML = `
-      <img src="${car.image}" style="width:100%; border-radius:10px;" />
-      <h3>${car.title}</h3>
-      <p><b>Price:</b> R${car.price}</p>
-      <p><b>Mileage:</b> ${car.milage} km</p>
-      <p><b>Location:</b> ${car.location}</p>
-      <p><b>Dealer:</b> ${car.dealer}</p>
-      <p><b>Phone:</b> ${car.phone}</p>
-    `;
+        if (error) {
+          statusBox.innerHTML = "Error loading vehicles.";
+          return;
+        }
 
-    container.appendChild(div);
-  });
-}
+        if (!data || data.length === 0) {
+          statusBox.innerHTML = "No vehicles found.";
+          return;
+        }
 
-loadCars();
-</script>
+        statusBox.style.display = "none";
+        carsContainer.innerHTML = "";
+
+        data.forEach(car => {
+          const imageUrl = car.image ? car.image : "";
+          const phone = car.phone ? car.phone : "";
+          const whatsappNumber = phone.startsWith("0") ? "27" + phone.substring(1) : phone;
+
+          const div = document.createElement("div");
+          div.className = "car";
+
+          div.innerHTML = `
+            <img src="${imageUrl}" alt="${car.title || ''}">
+            <h3>${car.title || ""}</h3>
+            <div class="price">R${car.price || ""}</div>
+            <p><strong>Mileage:</strong> ${car.milage || ""} km</p>
+            <p><strong>Location:</strong> ${car.location || ""}</p>
+            <p><strong>Dealer:</strong> ${car.dealer || ""}</p>
+            <p><strong>Phone:</strong> ${phone}</p>
+            <p>
+              <a class="btn" href="tel:${phone}">Call Dealer</a>
+            </p>
+            <p>
+              <a class="btn" href="https://wa.me/${whatsappNumber}" target="_blank">WhatsApp Dealer</a>
+            </p>
+          `;
+
+          carsContainer.appendChild(div);
+        });
+      } catch (e) {
+        console.log("Unexpected error:", e);
+        statusBox.innerHTML = "Something went wrong loading vehicles.";
+      }
+    }
+
+    loadCars();
+  </script>
+
+</body>
+</html>
