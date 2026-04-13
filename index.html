@@ -79,6 +79,33 @@
       border-radius: 12px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     }
+
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+      flex-wrap: wrap;
+    }
+
+    .call-btn,
+    .whatsapp-btn {
+      flex: 1;
+      text-align: center;
+      padding: 12px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      color: white;
+      min-width: 120px;
+    }
+
+    .call-btn {
+      background: #2f55c7;
+    }
+
+    .whatsapp-btn {
+      background: #25D366;
+    }
   </style>
 </head>
 
@@ -137,7 +164,9 @@
         data.forEach(car => {
           const imageUrl = car.image ? car.image : "";
           const phone = car.phone ? car.phone : "";
-          const whatsappNumber = phone.startsWith("0") ? "27" + phone.substring(1) : phone;
+          const whatsappNumber = phone.startsWith("0")
+            ? "27" + phone.substring(1)
+            : phone;
 
           const div = document.createElement("div");
           div.className = "car";
@@ -150,12 +179,11 @@
             <p><strong>Location:</strong> ${car.location || ""}</p>
             <p><strong>Dealer:</strong> ${car.dealer || ""}</p>
             <p><strong>Phone:</strong> ${phone}</p>
-            <p>
-              <a class="btn" href="tel:${phone}">Call Dealer</a>
-            </p>
-            <p>
-              <a class="btn" href="https://wa.me/${whatsappNumber}" target="_blank">WhatsApp Dealer</a>
-            </p>
+
+            <div class="action-buttons">
+              <a href="tel:${phone}" class="call-btn">📞 Call</a>
+              <a href="https://wa.me/${whatsappNumber}" target="_blank" class="whatsapp-btn">💬 WhatsApp</a>
+            </div>
           `;
 
           carsContainer.appendChild(div);
