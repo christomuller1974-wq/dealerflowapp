@@ -106,45 +106,50 @@
     <a href="upload.html" class="btn btn-primary">Upload Your Stock</a>
   </div>
 
-  <!-- FEATURED VEHICLE -->
-  <div class="card">
-    <h2>Featured Vehicle</h2>
+  <h2 style="padding: 20px;">Latest Vehicles</h2>
 
-    <div class="vehicle-card">
+<div id="cars" style="padding: 20px;"></div>
 
-      <img src="https://images.unsplash.com/photo-1494976388531-d1058494cdd8" alt="Car">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
-      <div>
-        <h3>2022 Toyota Urban Cruiser 1.5 XS</h3>
-        <p class="price">R259,900</p>
-        <p>Mileage: 22,000 km</p>
-        <p>Location: Kimberley</p>
-        <p>Dealer: Auto Excellence Kimberley</p>
+<script>
+const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
+const supabaseKey = "YOUR_ANON_KEY"; // ← replace this
+const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-        <p>Clean white Urban Cruiser with black mags and low mileage.</p>
+async function loadCars() {
+  const { data, error } = await supabase
+    .from('vehicles')
+    .select('*')
+    .order('id', { ascending: false });
 
-        <a href="tel:0825744526" class="btn btn-primary">Call</a>
-        <a href="https://wa.me/27825744526" class="btn" style="background:green; color:white;">WhatsApp</a>
-      </div>
+  if (error) {
+    console.log(error);
+    return;
+  }
 
-    </div>
-  </div>
+  const container = document.getElementById("cars");
 
-  <!-- HOW IT WORKS -->
-  <div class="card">
-    <h2>How it Works</h2>
-    <ol>
-      <li>Dealers upload vehicles</li>
-      <li>Buyers browse and enquire</li>
-      <li>Dealers receive leads and close sales</li>
-    </ol>
-  </div>
+  data.forEach(car => {
+    const div = document.createElement("div");
+    div.style.marginBottom = "20px";
+    div.style.background = "#fff";
+    div.style.padding = "10px";
+    div.style.borderRadius = "10px";
 
-</div>
+    div.innerHTML = `
+      <img src="${car.image}" style="width:100%; border-radius:10px;" />
+      <h3>${car.title}</h3>
+      <p><b>Price:</b> R${car.price}</p>
+      <p><b>Mileage:</b> ${car.milage} km</p>
+      <p><b>Location:</b> ${car.location}</p>
+      <p><b>Dealer:</b> ${car.dealer}</p>
+      <p><b>Phone:</b> ${car.phone}</p>
+    `;
 
-<footer>
-  © 2026 DealerFlow. All rights reserved.
-</footer>
+    container.appendChild(div);
+  });
+}
 
-</body>
-</html>
+loadCars();
+</script>
