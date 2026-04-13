@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DealerFlow - Turn your stock into sales</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background:#f5f7fb;
+      color:#0f172a;
+    }
+
+    header {
+      background:#1d4ed8;
+      color:white;
+      padding:20px;
+    }
+
+    h1 { margin:0; }
+
+    .container {
+      padding:20px;
+      max-width:1100px;
+      margin:auto;
+    }
+
+    .card {
+      background:white;
+      padding:20px;
+      border-radius:12px;
+      margin-bottom:20px;
+      box-shadow:0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .btn {
+      display:inline-block;
+      padding:14px 24px;
+      border-radius:8px;
+      text-decoration:none;
+      font-weight:bold;
+      margin-top:10px;
+    }
+
+    .btn-primary {
+      background:#1d4ed8;
+      color:white;
+    }
+
+    .btn-primary:hover {
+      background:#163bb5;
+    }
+
+    .vehicle-card {
+      display:flex;
+      gap:20px;
+      flex-wrap:wrap;
+    }
+
+    .vehicle-card img {
+      width:300px;
+      border-radius:10px;
+    }
+
+    .price {
+      color:red;
+      font-size:22px;
+      font-weight:bold;
+    }
+
+    footer {
+      text-align:center;
+      padding:20px;
+      font-size:14px;
+      color:#64748b;
+    }
+
+    @media(max-width:768px){
+      .vehicle-card {
+        flex-direction:column;
+      }
+
+      .vehicle-card img {
+        width:100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>DealerFlow</h1>
+  <p>Turn your stock into sales</p>
+</header>
+
+<div class="container">
+
+  <!-- DEALER SECTION -->
+  <div class="card">
+    <h2>For Dealers</h2>
+    <p>Load your vehicle stock and receive real buyer leads directly via call, WhatsApp, or enquiry.</p>
+
+    <a href="upload.html" class="btn btn-primary">Upload Your Stock</a>
+  </div>
+
+  <!-- FEATURED VEHICLE -->
+  <div class="card">
+    <h2>Featured Vehicle</h2>
+
+    <div class="vehicle-card">
+
+      <img src="https://images.unsplash.com/photo-1494976388531-d1058494cdd8" alt="Car">
+
+      <div>
+        <h3>2022 Toyota Urban Cruiser 1.5 XS</h3>
+        <p class="price">R259,900</p>
+        <p>Mileage: 22,000 km</p>
+        <p>Location: Kimberley</p>
+        <p>Dealer: Auto Excellence Kimberley</p>
+
+        <p>Clean white Urban Cruiser with black mags and low mileage.</p>
+
+        <a href="tel:0825744526" class="btn btn-primary">Call</a>
+        <a href="https://wa.me/27825744526" class="btn" style="background:green; color:white;">WhatsApp</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div class="card">
+    <h2>How it Works</h2>
+    <ol>
+      <li>Dealers upload vehicles</li>
+      <li>Buyers browse and enquire</li>
+      <li>Dealers receive leads and close sales</li>
+    </ol>
+  </div>
+
+</div>
+
+<footer>
+  © 2026 DealerFlow. All rights reserved.
+</footer>
+
+</body>
+</html>
