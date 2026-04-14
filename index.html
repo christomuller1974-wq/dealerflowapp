@@ -76,13 +76,29 @@
       box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
 
-    .car img {
+    .car img.main-image {
       width: 100%;
       max-height: 320px;
       object-fit: cover;
       border-radius: 10px;
       margin-bottom: 12px;
       background: #e5e7eb;
+    }
+
+    .thumb-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+      overflow-x: auto;
+    }
+
+    .thumb-row img {
+      width: 78px;
+      height: 58px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+      flex: 0 0 auto;
     }
 
     .car h3 {
@@ -156,31 +172,12 @@
 
   <div class="filters-wrap">
     <div class="filters-grid">
-      <input
-        id="searchInput"
-        class="filter-input"
-        type="text"
-        placeholder="Search vehicles, dealer or location"
-      >
-
-      <input
-        id="maxPriceInput"
-        class="filter-input"
-        type="number"
-        placeholder="Max price"
-      >
-
-      <input
-        id="maxMileageInput"
-        class="filter-input"
-        type="number"
-        placeholder="Max mileage"
-      >
-
+      <input id="searchInput" class="filter-input" type="text" placeholder="Search vehicles, dealer or location">
+      <input id="maxPriceInput" class="filter-input" type="number" placeholder="Max price">
+      <input id="maxMileageInput" class="filter-input" type="number" placeholder="Max mileage">
       <select id="locationFilter" class="filter-select">
         <option value="">All locations</option>
       </select>
-
       <select id="sortFilter" class="filter-select">
         <option value="newest">Sort: Newest</option>
         <option value="price-low">Price: Low to High</option>
@@ -201,7 +198,6 @@
   <script>
     const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
     const supabaseKey = "sb_publishable_D7saHOTE_JhSlMnSgBnIhQ_mOAOUD9s";
-
     const client = window.supabase.createClient(supabaseUrl, supabaseKey);
 
     let allCars = [];
@@ -211,9 +207,7 @@
       const currentValue = locationFilter.value;
 
       const locations = [...new Set(
-        cars
-          .map(car => (car.location || "").trim())
-          .filter(location => location !== "")
+        cars.map(car => (car.location || "").trim()).filter(Boolean)
       )].sort();
 
       locationFilter.innerHTML = '<option value="">All locations</option>';
@@ -226,6 +220,22 @@
       });
 
       locationFilter.value = currentValue;
+    }
+
+    function getImagesArray(car) {
+      if (!car.images) {
+        return car.image ? [car.image] : [];
+      }
+      return car.images.split(",").map(url => url.trim()).filter(Boolean);
+    }
+
+    function renderThumbs(images) {
+      if (!images.length) return "";
+      return `
+        <div class="thumb-row">
+          ${images.slice(0, 5).map(url => `<img src="${url}" alt="Vehicle image">`).join("")}
+        </div>
+      `;
     }
 
     function renderCars(cars) {
@@ -251,14 +261,9 @@
           dealer.includes(searchValue) ||
           location.includes(searchValue);
 
-        const matchesPrice =
-          !maxPriceValue || price <= Number(maxPriceValue);
-
-        const matchesMileage =
-          !maxMileageValue || mileage <= Number(maxMileageValue);
-
-        const matchesLocation =
-          !locationValue || (car.location || "") === locationValue;
+        const matchesPrice = !maxPriceValue || price <= Number(maxPriceValue);
+        const matchesMileage = !maxMileageValue || mileage <= Number(maxMileageValue);
+        const matchesLocation = !locationValue || (car.location || "") === locationValue;
 
         return matchesSearch && matchesPrice && matchesMileage && matchesLocation;
       });
@@ -275,7 +280,6 @@
         if (sortValue === "price-high") return priceB - priceA;
         if (sortValue === "mileage-low") return mileageA - mileageB;
         if (sortValue === "mileage-high") return mileageB - mileageA;
-
         return idB - idA;
       });
 
@@ -290,18 +294,18 @@
       statusBox.style.display = "none";
 
       filteredCars.forEach(car => {
-        const imageUrl = car.image || "";
+        const images = getImagesArray(car);
+        const imageUrl = images[0] || "";
         const phone = car.phone || "";
         const mileageValue = car.mileage || "";
-        const whatsappNumber = phone.startsWith("0")
-          ? "27" + phone.substring(1)
-          : phone;
+        const whatsappNumber = phone.startsWith("0") ? "27" + phone.substring(1) : phone;
 
         const div = document.createElement("div");
         div.className = "car";
 
         div.innerHTML = `
-          <img src="${imageUrl}" alt="${car.title || ''}">
+          <img src="${imageUrl}" alt="${car.title || ''}" class="main-image">
+          ${renderThumbs(images)}
           <h3>${car.title || ""}</h3>
           <div class="price">R${car.price || ""}</div>
           <p><strong>Mileage:</strong> ${mileageValue} km</p>
@@ -324,9 +328,7 @@
       const statusBox = document.getElementById("status");
 
       try {
-        const { data, error } = await client
-          .from("vehicles")
-          .select("*");
+        const { data, error } = await client.from("vehicles").select("*");
 
         if (error) {
           console.log(error);
@@ -342,7 +344,6 @@
         allCars = data;
         fillLocationDropdown(allCars);
         renderCars(allCars);
-
       } catch (e) {
         console.log("Unexpected error:", e);
         statusBox.innerHTML = "Something went wrong loading vehicles.";
@@ -351,25 +352,11 @@
 
     loadCars();
 
-    document.getElementById("searchInput").addEventListener("input", function () {
-      renderCars(allCars);
-    });
-
-    document.getElementById("maxPriceInput").addEventListener("input", function () {
-      renderCars(allCars);
-    });
-
-    document.getElementById("maxMileageInput").addEventListener("input", function () {
-      renderCars(allCars);
-    });
-
-    document.getElementById("locationFilter").addEventListener("change", function () {
-      renderCars(allCars);
-    });
-
-    document.getElementById("sortFilter").addEventListener("change", function () {
-      renderCars(allCars);
-    });
+    document.getElementById("searchInput").addEventListener("input", () => renderCars(allCars));
+    document.getElementById("maxPriceInput").addEventListener("input", () => renderCars(allCars));
+    document.getElementById("maxMileageInput").addEventListener("input", () => renderCars(allCars));
+    document.getElementById("locationFilter").addEventListener("change", () => renderCars(allCars));
+    document.getElementById("sortFilter").addEventListener("change", () => renderCars(allCars));
   </script>
 
 </body>
