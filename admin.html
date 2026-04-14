@@ -30,7 +30,8 @@
       padding: 20px;
     }
 
-    .top-actions a {
+    .top-actions a,
+    .top-actions button {
       background: #111827;
       color: white;
       padding: 12px 18px;
@@ -40,6 +41,9 @@
       display: inline-block;
       margin-right: 10px;
       margin-bottom: 10px;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
     }
 
     .status {
@@ -118,44 +122,175 @@
       background: #dc2626;
     }
 
-    .refresh-btn {
-      background: #16a34a;
-    }
-
     .small {
       color: #6b7280;
       font-size: 14px;
       margin-bottom: 10px;
     }
+
+    .hidden {
+      display: none;
+    }
+
+    .login-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 420px;
+      background: white;
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    }
+
+    .login-card h2 {
+      margin-top: 0;
+      margin-bottom: 10px;
+    }
+
+    .login-card p {
+      color: #475569;
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+
+    .login-card button {
+      width: 100%;
+      background: #2f55c7;
+      margin-top: 8px;
+    }
+
+    .login-error {
+      margin-top: 12px;
+      background: #fee2e2;
+      color: #b91c1c;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-weight: bold;
+      display: none;
+    }
+
+    .note {
+      margin-top: 12px;
+      color: #64748b;
+      font-size: 13px;
+    }
   </style>
 </head>
 <body>
 
-  <div class="header">
-    <h1>DealerFlow Admin</h1>
-    <p>Edit and delete your vehicle listings</p>
+  <!-- LOGIN SCREEN -->
+  <div id="loginScreen" class="login-screen">
+    <div class="login-card">
+      <h2>DealerFlow Admin Login</h2>
+      <p>Enter your admin password to manage vehicle listings.</p>
+
+      <input type="password" id="adminPasswordInput" placeholder="Enter password">
+      <button type="button" onclick="checkPassword()">Unlock Admin</button>
+
+      <div id="loginError" class="login-error">Wrong password.</div>
+
+      <div class="note">
+        Change the password inside this file by editing:
+        <br><strong>const ADMIN_PASSWORD = "YourPasswordHere";</strong>
+      </div>
+    </div>
   </div>
 
-  <div class="top-actions">
-    <a href="index.html">← Back to Website</a>
-    <a href="upload6.html">+ Add Vehicle</a>
-  </div>
+  <!-- ADMIN APP -->
+  <div id="adminApp" class="hidden">
+    <div class="header">
+      <h1>DealerFlow Admin</h1>
+      <p>Edit and delete your vehicle listings</p>
+    </div>
 
-  <div id="status" class="status">Loading vehicles...</div>
+    <div class="top-actions">
+      <a href="index.html">← Back to Website</a>
+      <a href="upload6.html">+ Add Vehicle</a>
+      <button type="button" onclick="logoutAdmin()">Logout</button>
+    </div>
 
-  <div class="wrap">
-    <div id="vehicleList"></div>
+    <div id="status" class="status">Loading vehicles...</div>
+
+    <div class="wrap">
+      <div id="vehicleList"></div>
+    </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <script>
+    // =========================
+    // CHANGE THIS PASSWORD
+    // =========================
+    const ADMIN_PASSWORD = "Auto1234!";
+
     const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
     const supabaseKey = "sb_publishable_D7saHOTE_JhSlMnSgBnIhQ_mOAOUD9s";
     const client = window.supabase.createClient(supabaseUrl, supabaseKey);
 
     function setStatus(message) {
-      document.getElementById("status").textContent = message;
+      const statusEl = document.getElementById("status");
+      if (statusEl) {
+        statusEl.textContent = message;
+      }
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    }
+
+    function checkPassword() {
+      const entered = document.getElementById("adminPasswordInput").value;
+      const errorBox = document.getElementById("loginError");
+
+      if (entered === ADMIN_PASSWORD) {
+        sessionStorage.setItem("dealerflow_admin_ok", "yes");
+        showAdminApp();
+      } else {
+        errorBox.style.display = "block";
+      }
+    }
+
+    function logoutAdmin() {
+      sessionStorage.removeItem("dealerflow_admin_ok");
+      location.reload();
+    }
+
+    function showAdminApp() {
+      document.getElementById("loginScreen").classList.add("hidden");
+      document.getElementById("adminApp").classList.remove("hidden");
+      loadVehicles();
+    }
+
+    function initPage() {
+      const isUnlocked = sessionStorage.getItem("dealerflow_admin_ok") === "yes";
+
+      if (isUnlocked) {
+        showAdminApp();
+      } else {
+        document.getElementById("loginScreen").classList.remove("hidden");
+        document.getElementById("adminApp").classList.add("hidden");
+      }
+
+      const passwordInput = document.getElementById("adminPasswordInput");
+      passwordInput.addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+          checkPassword();
+        }
+      });
     }
 
     async function loadVehicles() {
@@ -191,8 +326,8 @@
           const featuredChecked = car.featured ? "checked" : "";
 
           card.innerHTML = `
-            <img src="${imageUrl}" alt="${car.title || ""}">
-            <h3>${car.title || "Untitled Vehicle"}</h3>
+            <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(car.title || "")}">
+            <h3>${escapeHtml(car.title || "Untitled Vehicle")}</h3>
             <div class="small">Vehicle ID: ${car.id}</div>
 
             <div class="grid">
@@ -257,14 +392,6 @@
         console.log(e);
         setStatus("Something went wrong loading vehicles.");
       }
-    }
-
-    function escapeHtml(value) {
-      return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/"/g, "&quot;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;");
     }
 
     async function saveVehicle(id) {
@@ -336,7 +463,7 @@
       }
     }
 
-    loadVehicles();
+    initPage();
   </script>
 
 </body>
