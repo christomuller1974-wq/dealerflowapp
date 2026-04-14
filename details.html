@@ -35,11 +35,28 @@
       overflow: hidden;
     }
 
-    .card img {
+    .main-image {
       width: 100%;
       max-height: 520px;
       object-fit: cover;
       background: #e5e7eb;
+    }
+
+    .gallery {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding: 15px 15px 0 15px;
+    }
+
+    .gallery img {
+      width: 120px;
+      height: 85px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 2px solid #d1d5db;
+      cursor: pointer;
+      flex: 0 0 auto;
     }
 
     .content {
@@ -119,12 +136,23 @@
   <script>
     const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
     const supabaseKey = "sb_publishable_D7saHOTE_JhSlMnSgBnIhQ_mOAOUD9s";
-
     const client = window.supabase.createClient(supabaseUrl, supabaseKey);
 
     function getVehicleId() {
       const params = new URLSearchParams(window.location.search);
       return params.get("id");
+    }
+
+    function getImagesArray(data) {
+      if (!data.images) {
+        return data.image ? [data.image] : [];
+      }
+      return data.images.split(",").map(url => url.trim()).filter(Boolean);
+    }
+
+    function changeMainImage(url) {
+      const main = document.getElementById("mainVehicleImage");
+      if (main) main.src = url;
     }
 
     async function loadVehicle() {
@@ -151,16 +179,22 @@
 
         statusBox.style.display = "none";
 
-        const imageUrl = data.image || "";
+        const images = getImagesArray(data);
+        const firstImage = images[0] || "";
         const phone = data.phone || "";
         const mileageValue = data.mileage || "";
         const whatsappNumber = phone.startsWith("0")
           ? "27" + phone.substring(1)
           : phone;
 
+        const galleryHtml = images.map(url => `
+          <img src="${url}" alt="Vehicle image" onclick="changeMainImage('${url}')">
+        `).join("");
+
         vehicleDetails.innerHTML = `
           <div class="card">
-            <img src="${imageUrl}" alt="${data.title || ''}">
+            <img src="${firstImage}" alt="${data.title || ''}" class="main-image" id="mainVehicleImage">
+            <div class="gallery">${galleryHtml}</div>
             <div class="content">
               <div class="title">${data.title || ""}</div>
               <div class="price">R${data.price || ""}</div>
