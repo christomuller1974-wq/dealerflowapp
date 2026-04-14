@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dealer Signup - DealerFlow</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f3f4f6;
+      color: #111827;
+    }
+
+    .wrap {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 420px;
+      background: white;
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    }
+
+    h1 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 28px;
+    }
+
+    p {
+      color: #475569;
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+
+    input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 15px;
+      background: white;
+      margin-bottom: 12px;
+    }
+
+    button {
+      width: 100%;
+      background: #2f55c7;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 15px;
+    }
+
+    .status {
+      margin-top: 14px;
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: bold;
+      background: #e2e8f0;
+      color: #111827;
+      min-height: 20px;
+    }
+
+    .links {
+      margin-top: 16px;
+      text-align: center;
+    }
+
+    .links a {
+      color: #2f55c7;
+      text-decoration: none;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="wrap">
+    <div class="card">
+      <h1>Dealer Signup</h1>
+      <p>Create your DealerFlow account to upload and manage your stock.</p>
+
+      <input type="email" id="email" placeholder="Email address">
+      <input type="password" id="password" placeholder="Create password">
+
+      <button type="button" onclick="signUp()">Create Account</button>
+
+      <div id="status" class="status">Ready</div>
+
+      <div class="links">
+        Already have an account?
+        <a href="login.html">Login here</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
+    const supabaseKey = "sb_publishable_D7saHOTE_JhSlMnSgBnIhQ_mOAOUD9s";
+    const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+    async function signUp() {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const status = document.getElementById("status");
+
+      if (!email || !password) {
+        status.textContent = "Please enter email and password.";
+        return;
+      }
+
+      status.textContent = "Creating account...";
+
+      const { data, error } = await supabase.auth.signUp({
+        email: email,
+        password: password
+      });
+
+      if (error) {
+        console.log(error);
+        status.textContent = "Signup failed: " + error.message;
+        return;
+      }
+
+      status.textContent = "Account created. Check your email if confirmation is enabled.";
+    }
+  </script>
+
+</body>
+</html>
