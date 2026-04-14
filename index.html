@@ -39,6 +39,20 @@
       font-weight: bold;
     }
 
+    .search-wrap {
+      padding: 0 20px;
+    }
+
+    .search-box {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 14px;
+      border-radius: 10px;
+      border: 1px solid #d1d5db;
+      font-size: 16px;
+      background: white;
+    }
+
     .cars-wrap {
       padding: 0 20px 20px 20px;
     }
@@ -49,7 +63,6 @@
       padding: 15px;
       border-radius: 12px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      cursor: pointer;
     }
 
     .car img {
@@ -64,6 +77,7 @@
     .car h3 {
       margin: 0 0 10px 0;
       font-size: 24px;
+      line-height: 1.2;
     }
 
     .price {
@@ -129,6 +143,15 @@
     <a href="upload6.html" class="btn">Upload Your Stock</a>
   </div>
 
+  <div class="search-wrap">
+    <input
+      id="searchInput"
+      class="search-box"
+      type="text"
+      placeholder="Search vehicles (e.g. BMW, Toyota, Urban Cruiser)"
+    >
+  </div>
+
   <h2 style="padding: 0 20px;">Latest Vehicles</h2>
 
   <div id="status" class="status">Loading vehicles...</div>
@@ -145,6 +168,7 @@
     async function loadCars() {
       const carsContainer = document.getElementById("cars");
       const statusBox = document.getElementById("status");
+      const searchValue = document.getElementById("searchInput").value.toLowerCase().trim();
 
       try {
         const { data, error } = await client
@@ -153,6 +177,7 @@
           .order("id", { ascending: false });
 
         if (error) {
+          console.log(error);
           statusBox.innerHTML = "Error loading vehicles.";
           return;
         }
@@ -162,10 +187,29 @@
           return;
         }
 
-        statusBox.style.display = "none";
         carsContainer.innerHTML = "";
 
-        data.forEach(car => {
+        const filteredCars = data.filter(car => {
+          const title = (car.title || "").toLowerCase();
+          const dealer = (car.dealer || "").toLowerCase();
+          const location = (car.location || "").toLowerCase();
+
+          return (
+            title.includes(searchValue) ||
+            dealer.includes(searchValue) ||
+            location.includes(searchValue)
+          );
+        });
+
+        if (filteredCars.length === 0) {
+          statusBox.style.display = "block";
+          statusBox.innerHTML = "No matching vehicles found.";
+          return;
+        }
+
+        statusBox.style.display = "none";
+
+        filteredCars.forEach(car => {
           const imageUrl = car.image || "";
           const phone = car.phone || "";
           const mileageValue = car.mileage || "";
@@ -196,11 +240,16 @@
         });
 
       } catch (e) {
+        console.log("Unexpected error:", e);
         statusBox.innerHTML = "Something went wrong loading vehicles.";
       }
     }
 
     loadCars();
+
+    document.getElementById("searchInput").addEventListener("input", function () {
+      loadCars();
+    });
   </script>
 
 </body>
