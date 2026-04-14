@@ -164,9 +164,7 @@
         data.forEach(car => {
           const imageUrl = car.image || "";
           const phone = car.phone || "";
-
-          // ✅ FIX: handles BOTH mileage & milage
-          const mileageValue = car.mileage || car.milage || "";
+          const mileageValue = car.mileage || "";
 
           const whatsappNumber = phone.startsWith("0")
             ? "27" + phone.substring(1)
@@ -179,7 +177,6 @@
             <img src="${imageUrl}" alt="${car.title || ''}">
             <h3>${car.title || ""}</h3>
             <div class="price">R${car.price || ""}</div>
-
             <p><strong>Mileage:</strong> ${mileageValue} km</p>
             <p><strong>Location:</strong> ${car.location || ""}</p>
             <p><strong>Dealer:</strong> ${car.dealer || ""}</p>
