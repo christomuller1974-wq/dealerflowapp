@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dealer Login - DealerFlow</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f3f4f6;
+      color: #111827;
+    }
+
+    .wrap {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 420px;
+      background: white;
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    }
+
+    h1 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 28px;
+    }
+
+    p {
+      color: #475569;
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+
+    input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 15px;
+      background: white;
+      margin-bottom: 12px;
+    }
+
+    button {
+      width: 100%;
+      background: #2f55c7;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 15px;
+    }
+
+    .status {
+      margin-top: 14px;
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: bold;
+      background: #e2e8f0;
+      color: #111827;
+      min-height: 20px;
+      line-height: 1.4;
+    }
+
+    .links {
+      margin-top: 16px;
+      text-align: center;
+    }
+
+    .links a {
+      color: #2f55c7;
+      text-decoration: none;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="wrap">
+    <div class="card">
+      <h1>Dealer Login</h1>
+      <p>Log in to upload and manage your own stock.</p>
+
+      <form id="loginForm">
+        <input type="email" id="email" placeholder="Email address" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <button type="submit" id="loginButton">Login</button>
+      </form>
+
+      <div id="status" class="status">Ready</div>
+
+      <div class="links">
+        Need an account?
+        <a href="signup.html">Sign up here</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
+    const supabaseKey = "sb_publishable_D7saHOTE_JhSlMnSgBnIhQ_mOAOUD9s";
+    const client = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+    const form = document.getElementById("loginForm");
+    const statusBox = document.getElementById("status");
+    const loginButton = document.getElementById("loginButton");
+
+    form.addEventListener("submit", async function(event) {
+      event.preventDefault();
+
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      if (!email || !password) {
+        statusBox.textContent = "Please enter email and password.";
+        return;
+      }
+
+      loginButton.disabled = true;
+      loginButton.textContent = "Logging in...";
+      statusBox.textContent = "Logging in...";
+
+      try {
+        const { data, error } = await client.auth.signInWithPassword({
+          email: email,
+          password: password
+        });
+
+        if (error) {
+          console.log("Login error:", error);
+          statusBox.textContent = "Login failed: " + error.message;
+          loginButton.disabled = false;
+          loginButton.textContent = "Login";
+          return;
+        }
+
+        console.log("Login success:", data);
+        statusBox.textContent = "Login successful. Redirecting...";
+
+        setTimeout(() => {
+          window.location.href = "dealer-admin.html";
+        }, 1000);
+
+      } catch (err) {
+        console.log("Unexpected login error:", err);
+        statusBox.textContent = "Something went wrong: " + err.message;
+      }
+
+      loginButton.disabled = false;
+      loginButton.textContent = "Login";
+    });
+  </script>
+
+</body>
+</html>
