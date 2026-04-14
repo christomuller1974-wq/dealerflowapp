@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Vehicle Details - DealerFlow</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f3f4f6;
+    }
+
+    .header {
+      background: #2f55c7;
+      color: white;
+      padding: 20px;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 30px;
+    }
+
+    .container {
+      max-width: 950px;
+      margin: 20px auto;
+      padding: 0 15px 30px 15px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+
+    .card img {
+      width: 100%;
+      max-height: 520px;
+      object-fit: cover;
+      background: #e5e7eb;
+    }
+
+    .content {
+      padding: 20px;
+    }
+
+    .title {
+      font-size: 34px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .price {
+      color: #d11a2a;
+      font-size: 38px;
+      font-weight: bold;
+      margin-bottom: 16px;
+    }
+
+    .info p {
+      font-size: 18px;
+      margin: 10px 0;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    .btn {
+      text-align: center;
+      padding: 14px 18px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: bold;
+      color: white;
+      min-width: 160px;
+      display: inline-block;
+    }
+
+    .call-btn {
+      background: #2f55c7;
+    }
+
+    .whatsapp-btn {
+      background: #25D366;
+    }
+
+    .back-btn {
+      background: #111827;
+    }
+
+    .status {
+      background: white;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="header">
+    <h1>DealerFlow</h1>
+  </div>
+
+  <div class="container">
+    <div id="status" class="status">Loading vehicle...</div>
+    <div id="vehicleDetails"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
+    const supabaseKey = "sb_publishable_D7saHOTE_JhSlMnSgBnIhQ_mOAOUD9s";
+
+    const client = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+    function getVehicleId() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get("id");
+    }
+
+    async function loadVehicle() {
+      const statusBox = document.getElementById("status");
+      const vehicleDetails = document.getElementById("vehicleDetails");
+      const vehicleId = getVehicleId();
+
+      if (!vehicleId) {
+        statusBox.innerHTML = "No vehicle selected.";
+        return;
+      }
+
+      try {
+        const { data, error } = await client
+          .from("vehicles")
+          .select("*")
+          .eq("id", vehicleId)
+          .single();
+
+        if (error || !data) {
+          statusBox.innerHTML = "Vehicle not found.";
+          return;
+        }
+
+        statusBox.style.display = "none";
+
+        const imageUrl = data.image || "";
+        const phone = data.phone || "";
+        const mileageValue = data.mileage || "";
+        const whatsappNumber = phone.startsWith("0")
+          ? "27" + phone.substring(1)
+          : phone;
+
+        vehicleDetails.innerHTML = `
+          <div class="card">
+            <img src="${imageUrl}" alt="${data.title || ''}">
+            <div class="content">
+              <div class="title">${data.title || ""}</div>
+              <div class="price">R${data.price || ""}</div>
+
+              <div class="info">
+                <p><strong>Mileage:</strong> ${mileageValue} km</p>
+                <p><strong>Location:</strong> ${data.location || ""}</p>
+                <p><strong>Dealer:</strong> ${data.dealer || ""}</p>
+                <p><strong>Phone:</strong> ${phone}</p>
+              </div>
+
+              <div class="buttons">
+                <a href="tel:${phone}" class="btn call-btn">📞 Call Dealer</a>
+                <a href="https://wa.me/${whatsappNumber}" target="_blank" class="btn whatsapp-btn">💬 WhatsApp Dealer</a>
+                <a href="index.html" class="btn back-btn">← Back to Listings</a>
+              </div>
+            </div>
+          </div>
+        `;
+      } catch (e) {
+        statusBox.innerHTML = "Something went wrong loading this vehicle.";
+      }
+    }
+
+    loadVehicle();
+  </script>
+
+</body>
+</html>
