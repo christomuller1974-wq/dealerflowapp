@@ -49,6 +49,7 @@
       padding: 15px;
       border-radius: 12px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      cursor: pointer;
     }
 
     .car img {
@@ -88,7 +89,8 @@
     }
 
     .call-btn,
-    .whatsapp-btn {
+    .whatsapp-btn,
+    .view-btn {
       flex: 1;
       text-align: center;
       padding: 12px;
@@ -97,6 +99,7 @@
       font-weight: bold;
       color: white;
       min-width: 120px;
+      border: none;
     }
 
     .call-btn {
@@ -105,6 +108,10 @@
 
     .whatsapp-btn {
       background: #25D366;
+    }
+
+    .view-btn {
+      background: #111827;
     }
   </style>
 </head>
@@ -145,9 +152,6 @@
           .select("*")
           .order("id", { ascending: false });
 
-        console.log("Vehicles data:", data);
-        console.log("Vehicles error:", error);
-
         if (error) {
           statusBox.innerHTML = "Error loading vehicles.";
           return;
@@ -165,7 +169,6 @@
           const imageUrl = car.image || "";
           const phone = car.phone || "";
           const mileageValue = car.mileage || "";
-
           const whatsappNumber = phone.startsWith("0")
             ? "27" + phone.substring(1)
             : phone;
@@ -183,6 +186,7 @@
             <p><strong>Phone:</strong> ${phone}</p>
 
             <div class="action-buttons">
+              <a href="details.html?id=${car.id}" class="view-btn">View Details</a>
               <a href="tel:${phone}" class="call-btn">📞 Call</a>
               <a href="https://wa.me/${whatsappNumber}" target="_blank" class="whatsapp-btn">💬 WhatsApp</a>
             </div>
@@ -192,7 +196,6 @@
         });
 
       } catch (e) {
-        console.log("Unexpected error:", e);
         statusBox.innerHTML = "Something went wrong loading vehicles.";
       }
     }
