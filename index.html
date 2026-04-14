@@ -39,11 +39,22 @@
       font-weight: bold;
     }
 
-    .search-wrap {
-      padding: 0 20px;
+    .filters-wrap {
+      background: white;
+      margin: 20px;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     }
 
-    .search-box {
+    .filters-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+    }
+
+    .filter-input,
+    .filter-select {
       width: 100%;
       box-sizing: border-box;
       padding: 14px;
@@ -143,13 +154,41 @@
     <a href="upload6.html" class="btn">Upload Your Stock</a>
   </div>
 
-  <div class="search-wrap">
-    <input
-      id="searchInput"
-      class="search-box"
-      type="text"
-      placeholder="Search vehicles (e.g. BMW, Toyota, Urban Cruiser)"
-    >
+  <div class="filters-wrap">
+    <div class="filters-grid">
+      <input
+        id="searchInput"
+        class="filter-input"
+        type="text"
+        placeholder="Search vehicles, dealer or location"
+      >
+
+      <input
+        id="maxPriceInput"
+        class="filter-input"
+        type="number"
+        placeholder="Max price"
+      >
+
+      <input
+        id="maxMileageInput"
+        class="filter-input"
+        type="number"
+        placeholder="Max mileage"
+      >
+
+      <select id="locationFilter" class="filter-select">
+        <option value="">All locations</option>
+      </select>
+
+      <select id="sortFilter" class="filter-select">
+        <option value="newest">Sort: Newest</option>
+        <option value="price-low">Price: Low to High</option>
+        <option value="price-high">Price: High to Low</option>
+        <option value="mileage-low">Mileage: Low to High</option>
+        <option value="mileage-high">Mileage: High to Low</option>
+      </select>
+    </div>
   </div>
 
   <h2 style="padding: 0 20px;">Latest Vehicles</h2>
@@ -165,16 +204,129 @@
 
     const client = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-    async function loadCars() {
+    let allCars = [];
+
+    function fillLocationDropdown(cars) {
+      const locationFilter = document.getElementById("locationFilter");
+      const currentValue = locationFilter.value;
+
+      const locations = [...new Set(
+        cars
+          .map(car => (car.location || "").trim())
+          .filter(location => location !== "")
+      )].sort();
+
+      locationFilter.innerHTML = '<option value="">All locations</option>';
+
+      locations.forEach(location => {
+        const option = document.createElement("option");
+        option.value = location;
+        option.textContent = location;
+        locationFilter.appendChild(option);
+      });
+
+      locationFilter.value = currentValue;
+    }
+
+    function renderCars(cars) {
       const carsContainer = document.getElementById("cars");
       const statusBox = document.getElementById("status");
+
       const searchValue = document.getElementById("searchInput").value.toLowerCase().trim();
+      const maxPriceValue = document.getElementById("maxPriceInput").value.trim();
+      const maxMileageValue = document.getElementById("maxMileageInput").value.trim();
+      const locationValue = document.getElementById("locationFilter").value;
+      const sortValue = document.getElementById("sortFilter").value;
+
+      let filteredCars = cars.filter(car => {
+        const title = (car.title || "").toLowerCase();
+        const dealer = (car.dealer || "").toLowerCase();
+        const location = (car.location || "").toLowerCase();
+        const price = Number(car.price || 0);
+        const mileage = Number(car.mileage || 0);
+
+        const matchesSearch =
+          !searchValue ||
+          title.includes(searchValue) ||
+          dealer.includes(searchValue) ||
+          location.includes(searchValue);
+
+        const matchesPrice =
+          !maxPriceValue || price <= Number(maxPriceValue);
+
+        const matchesMileage =
+          !maxMileageValue || mileage <= Number(maxMileageValue);
+
+        const matchesLocation =
+          !locationValue || (car.location || "") === locationValue;
+
+        return matchesSearch && matchesPrice && matchesMileage && matchesLocation;
+      });
+
+      filteredCars.sort((a, b) => {
+        const priceA = Number(a.price || 0);
+        const priceB = Number(b.price || 0);
+        const mileageA = Number(a.mileage || 0);
+        const mileageB = Number(b.mileage || 0);
+        const idA = Number(a.id || 0);
+        const idB = Number(b.id || 0);
+
+        if (sortValue === "price-low") return priceA - priceB;
+        if (sortValue === "price-high") return priceB - priceA;
+        if (sortValue === "mileage-low") return mileageA - mileageB;
+        if (sortValue === "mileage-high") return mileageB - mileageA;
+
+        return idB - idA;
+      });
+
+      carsContainer.innerHTML = "";
+
+      if (filteredCars.length === 0) {
+        statusBox.style.display = "block";
+        statusBox.innerHTML = "No matching vehicles found.";
+        return;
+      }
+
+      statusBox.style.display = "none";
+
+      filteredCars.forEach(car => {
+        const imageUrl = car.image || "";
+        const phone = car.phone || "";
+        const mileageValue = car.mileage || "";
+        const whatsappNumber = phone.startsWith("0")
+          ? "27" + phone.substring(1)
+          : phone;
+
+        const div = document.createElement("div");
+        div.className = "car";
+
+        div.innerHTML = `
+          <img src="${imageUrl}" alt="${car.title || ''}">
+          <h3>${car.title || ""}</h3>
+          <div class="price">R${car.price || ""}</div>
+          <p><strong>Mileage:</strong> ${mileageValue} km</p>
+          <p><strong>Location:</strong> ${car.location || ""}</p>
+          <p><strong>Dealer:</strong> ${car.dealer || ""}</p>
+          <p><strong>Phone:</strong> ${phone}</p>
+
+          <div class="action-buttons">
+            <a href="details.html?id=${car.id}" class="view-btn">View Details</a>
+            <a href="tel:${phone}" class="call-btn">📞 Call</a>
+            <a href="https://wa.me/${whatsappNumber}" target="_blank" class="whatsapp-btn">💬 WhatsApp</a>
+          </div>
+        `;
+
+        carsContainer.appendChild(div);
+      });
+    }
+
+    async function loadCars() {
+      const statusBox = document.getElementById("status");
 
       try {
         const { data, error } = await client
           .from("vehicles")
-          .select("*")
-          .order("id", { ascending: false });
+          .select("*");
 
         if (error) {
           console.log(error);
@@ -187,57 +339,9 @@
           return;
         }
 
-        carsContainer.innerHTML = "";
-
-        const filteredCars = data.filter(car => {
-          const title = (car.title || "").toLowerCase();
-          const dealer = (car.dealer || "").toLowerCase();
-          const location = (car.location || "").toLowerCase();
-
-          return (
-            title.includes(searchValue) ||
-            dealer.includes(searchValue) ||
-            location.includes(searchValue)
-          );
-        });
-
-        if (filteredCars.length === 0) {
-          statusBox.style.display = "block";
-          statusBox.innerHTML = "No matching vehicles found.";
-          return;
-        }
-
-        statusBox.style.display = "none";
-
-        filteredCars.forEach(car => {
-          const imageUrl = car.image || "";
-          const phone = car.phone || "";
-          const mileageValue = car.mileage || "";
-          const whatsappNumber = phone.startsWith("0")
-            ? "27" + phone.substring(1)
-            : phone;
-
-          const div = document.createElement("div");
-          div.className = "car";
-
-          div.innerHTML = `
-            <img src="${imageUrl}" alt="${car.title || ''}">
-            <h3>${car.title || ""}</h3>
-            <div class="price">R${car.price || ""}</div>
-            <p><strong>Mileage:</strong> ${mileageValue} km</p>
-            <p><strong>Location:</strong> ${car.location || ""}</p>
-            <p><strong>Dealer:</strong> ${car.dealer || ""}</p>
-            <p><strong>Phone:</strong> ${phone}</p>
-
-            <div class="action-buttons">
-              <a href="details.html?id=${car.id}" class="view-btn">View Details</a>
-              <a href="tel:${phone}" class="call-btn">📞 Call</a>
-              <a href="https://wa.me/${whatsappNumber}" target="_blank" class="whatsapp-btn">💬 WhatsApp</a>
-            </div>
-          `;
-
-          carsContainer.appendChild(div);
-        });
+        allCars = data;
+        fillLocationDropdown(allCars);
+        renderCars(allCars);
 
       } catch (e) {
         console.log("Unexpected error:", e);
@@ -248,7 +352,23 @@
     loadCars();
 
     document.getElementById("searchInput").addEventListener("input", function () {
-      loadCars();
+      renderCars(allCars);
+    });
+
+    document.getElementById("maxPriceInput").addEventListener("input", function () {
+      renderCars(allCars);
+    });
+
+    document.getElementById("maxMileageInput").addEventListener("input", function () {
+      renderCars(allCars);
+    });
+
+    document.getElementById("locationFilter").addEventListener("change", function () {
+      renderCars(allCars);
+    });
+
+    document.getElementById("sortFilter").addEventListener("change", function () {
+      renderCars(allCars);
     });
   </script>
 
