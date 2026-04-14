@@ -73,6 +73,7 @@
       background: #e2e8f0;
       color: #111827;
       min-height: 20px;
+      line-height: 1.4;
     }
 
     .links {
@@ -94,10 +95,11 @@
       <h1>Dealer Signup</h1>
       <p>Create your DealerFlow account to upload and manage your stock.</p>
 
-      <input type="email" id="email" placeholder="Email address">
-      <input type="password" id="password" placeholder="Create password">
-
-      <button type="button" onclick="signUp()">Create Account</button>
+      <form id="signupForm">
+        <input type="email" id="email" placeholder="Email address" required>
+        <input type="password" id="password" placeholder="Create password (min 6 characters)" required>
+        <button type="submit" id="signupButton">Create Account</button>
+      </form>
 
       <div id="status" class="status">Ready</div>
 
@@ -112,33 +114,63 @@
   <script>
     const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
     const supabaseKey = "sb_publishable_D7saHOTE_JhSlMnSgBnIhQ_mOAOUD9s";
-    const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+    const client = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-    async function signUp() {
+    const form = document.getElementById("signupForm");
+    const statusBox = document.getElementById("status");
+    const signupButton = document.getElementById("signupButton");
+
+    form.addEventListener("submit", async function(event) {
+      event.preventDefault();
+
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value.trim();
-      const status = document.getElementById("status");
 
       if (!email || !password) {
-        status.textContent = "Please enter email and password.";
+        statusBox.textContent = "Please enter email and password.";
         return;
       }
 
-      status.textContent = "Creating account...";
-
-      const { data, error } = await supabase.auth.signUp({
-        email: email,
-        password: password
-      });
-
-      if (error) {
-        console.log(error);
-        status.textContent = "Signup failed: " + error.message;
+      if (password.length < 6) {
+        statusBox.textContent = "Password must be at least 6 characters.";
         return;
       }
 
-      status.textContent = "Account created. Check your email if confirmation is enabled.";
-    }
+      signupButton.disabled = true;
+      signupButton.textContent = "Creating account...";
+      statusBox.textContent = "Creating account...";
+
+      try {
+        const { data, error } = await client.auth.signUp({
+          email: email,
+          password: password
+        });
+
+        if (error) {
+          console.log("Signup error:", error);
+          statusBox.textContent = "Signup failed: " + error.message;
+          signupButton.disabled = false;
+          signupButton.textContent = "Create Account";
+          return;
+        }
+
+        console.log("Signup success:", data);
+
+        if (data.user) {
+          statusBox.textContent = "Account created successfully. You can now go to login.";
+          form.reset();
+        } else {
+          statusBox.textContent = "Signup submitted. Check your email if confirmation is enabled.";
+        }
+
+      } catch (err) {
+        console.log("Unexpected signup error:", err);
+        statusBox.textContent = "Something went wrong: " + err.message;
+      }
+
+      signupButton.disabled = false;
+      signupButton.textContent = "Create Account";
+    });
   </script>
 
 </body>
