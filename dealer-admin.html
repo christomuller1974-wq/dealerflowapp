@@ -1,36 +1,4 @@
-[08:59, 4/15/2026] Christo Muller: <!DOCTYPE html>
-<html>
-<head>
-  <title>Dealer Dashboard</title>
-</head>
-
-<body style="font-family: Arial; padding: 20px;">
-
-<h1>Dealer Dashboard</h1>
-<p id="user">Checking login...</p>
-
-<a href="index.html">← Back to Website</a>
-<button onclick="logout()">Logout</button>
-
-<hr>
-
-<h2>Your Vehicles</h2>
-<div id="vehicles"></div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-
-<script>
-const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
-const supabaseKey = "sb_publishable_D7saHOTE_JhSlMnSgBnIhQ_mOAOUD9s";
-const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-
-// ✅ LOAD USER SESSION
-async function loadUser() {
-  const { data: { session } } = await supabase.auth.getSession();
-
-  if (!session) {
-    document.getElementById("user").innerTe…
-[09:09, 4/15/2026] Christo Muller: <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
   <title>Dealer Dashboard</title>
@@ -222,18 +190,10 @@ async function loadUser() {
 
     async function checkUser() {
       try {
-        const { data, error } = await client.auth.getUser();
+        const sessionResult = await client.auth.getSession();
+        const session = sessionResult.data.session;
 
-        if (error) {
-          console.log("getUser error:", error);
-          setStatus("Login session not found. Please log in again.");
-          setTimeout(() => {
-            window.location.href = "login.html";
-          }, 1500);
-          return;
-        }
-
-        if (!data.user) {
+        if (!session) {
           setStatus("Not logged in. Redirecting to login...");
           setTimeout(() => {
             window.location.href = "login.html";
@@ -241,7 +201,7 @@ async function loadUser() {
           return;
         }
 
-        currentUser = data.user;
+        currentUser = session.user;
         setStatus("Logged in as " + currentUser.email + ". Loading your vehicles...");
         await loadMyVehicles();
       } catch (err) {
@@ -351,15 +311,15 @@ async function loadUser() {
     }
 
     async function saveVehicle(id) {
-      const title = document.getElementById(title-${id}).value.trim();
-      const price = document.getElementById(price-${id}).value.trim();
-      const mileage = document.getElementById(mileage-${id}).value.trim();
-      const location = document.getElementById(location-${id}).value.trim();
-      const dealer = document.getElementById(dealer-${id}).value.trim();
-      const phone = document.getElementById(phone-${id}).value.trim();
-      const image = document.getElementById(image-${id}).value.trim();
-      const images = document.getElementById(images-${id}).value.trim();
-      const featured = document.getElementById(featured-${id}).checked;
+      const title = document.getElementById(`title-${id}`).value.trim();
+      const price = document.getElementById(`price-${id}`).value.trim();
+      const mileage = document.getElementById(`mileage-${id}`).value.trim();
+      const location = document.getElementById(`location-${id}`).value.trim();
+      const dealer = document.getElementById(`dealer-${id}`).value.trim();
+      const phone = document.getElementById(`phone-${id}`).value.trim();
+      const image = document.getElementById(`image-${id}`).value.trim();
+      const images = document.getElementById(`images-${id}`).value.trim();
+      const featured = document.getElementById(`featured-${id}`).checked;
 
       setStatus("Saving vehicle " + id + "...");
 
