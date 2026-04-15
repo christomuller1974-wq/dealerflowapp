@@ -1,0 +1,327 @@
+[15:15, 4/15/2026] Christo Muller: <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Vehicle</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f5f7fb;
+      color: #0f172a;
+    }
+
+    .header {
+      background: #1d4ed8;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 760px;
+      margin: 20px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .top-actions {
+      margin-bottom: 15px;
+    }
+
+    .top-actions a,
+    .top-actions button {
+      background: #111827;
+      color: white;
+      padding:…
+[15:24, 4/15/2026] Christo Muller: <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dealer Profile</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    .hero {
+      background: #2f55c7;
+      color: white;
+      padding: 28px 20px;
+    }
+
+    .hero h1 {
+      margin: 0 0 10px 0;
+      font-size: 42px;
+    }
+
+    .hero p {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .container {
+      padding: 20px;
+    }
+
+    .profile-card {
+      background: #f8fafc;
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .profile-title {
+      font-size: 32px;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+
+    .profile-meta {
+      font-size: 18px;
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
+
+    .profile-meta strong {
+      color: #000;
+    }
+
+    .btn {
+      display: inline-block;
+      background: #111827;
+      color: white;
+      text-decoration: none;
+      padding: 14px 22px;
+      border-radius: 12px;
+      font-weight: bold;
+      margin-top: 12px;
+      margin-right: 10px;
+    }
+
+    .status {
+      background: #f8fafc;
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      font-weight: bold;
+    }
+
+    .car-card {
+      background: #f8fafc;
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .car-card img {
+      width: 100%;
+      height: 320px;
+      object-fit: cover;
+      border-radius: 16px;
+      margin-bottom: 14px;
+      background: #cbd5e1;
+    }
+
+    .car-title {
+      font-size: 30px;
+      font-weight: bold;
+      line-height: 1.15;
+      margin-bottom: 12px;
+    }
+
+    .year-badge {
+      display: inline-block;
+      background: #dbeafe;
+      color: #1d4ed8;
+      font-weight: bold;
+      padding: 8px 12px;
+      border-radius: 999px;
+      margin-bottom: 14px;
+      font-size: 14px;
+    }
+
+    .car-price {
+      color: #c53030;
+      font-size: 34px;
+      font-weight: bold;
+      margin-bottom: 18px;
+    }
+
+    .car-meta {
+      font-size: 18px;
+      margin-bottom: 14px;
+      line-height: 1.5;
+    }
+
+    .car-meta strong {
+      color: #000;
+    }
+
+    .car-buttons a {
+      display: block;
+      text-align: center;
+      text-decoration: none;
+      color: white;
+      font-weight: bold;
+      padding: 16px;
+      border-radius: 16px;
+      margin-top: 12px;
+      font-size: 18px;
+    }
+
+    .details-btn {
+      background: #0f172a;
+    }
+
+    .call-btn {
+      background: #3f5cc9;
+    }
+
+    .wa-btn {
+      background: #66cc6a;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="hero">
+    <h1 id="dealerNameHero">Dealer Profile</h1>
+    <p>View this dealer's stock</p>
+  </div>
+
+  <div class="container">
+    <div id="status" class="status">Loading dealer profile...</div>
+
+    <div id="profileCard" class="profile-card" style="display:none;">
+      <div id="dealerName" class="profile-title"></div>
+      <div class="profile-meta"><strong>Phone:</strong> <span id="dealerPhone"></span></div>
+
+      <a href="index.html" class="btn">← Back to Listings</a>
+      <a id="dealerWhatsApp" href="#" target="_blank" class="btn" style="background:#66cc6a;">WhatsApp Dealer</a>
+    </div>
+
+    <h2>Dealer Vehicles</h2>
+    <div id="cars"></div>
+  </div>
+
+  <script>
+    const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
+    const supabaseKey = "sb_publishable_D7saHOTE_JhSlMnSgBnIhQ_mOAOUD9s";
+
+    function getDealerNameFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get("dealer");
+    }
+
+    function setStatus(message) {
+      document.getElementById("status").textContent = message;
+    }
+
+    function normalisePhone(phone) {
+      return String(phone || "").replace(/\s+/g, "");
+    }
+
+    function safeText(value) {
+      return String(value || "");
+    }
+
+    async function loadDealerPage() {
+      const dealerName = getDealerNameFromUrl();
+
+      if (!dealerName) {
+        setStatus("Dealer not found.");
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          supabaseUrl + "/rest/v1/vehicles?select=*&dealer=eq." + encodeURIComponent(dealerName) + "&order=id.desc",
+          {
+            headers: {
+              apikey: supabaseKey,
+              Authorization: "Bearer " + supabaseKey
+            }
+          }
+        );
+
+        if (!response.ok) {
+          const text = await response.text();
+          setStatus("Could not load dealer vehicles: " + text);
+          return;
+        }
+
+        const cars = await response.json();
+
+        if (!cars.length) {
+          setStatus("No vehicles found for this dealer.");
+          return;
+        }
+
+        const dealerPhone = cars[0].phone || "";
+        const phoneClean = normalisePhone(dealerPhone);
+        const whatsappLink = phoneClean
+          ? "https://wa.me/27" + phoneClean.replace(/^0/, "") + "?text=" + encodeURIComponent("Hi, I'm interested in your vehicles")
+          : "#";
+
+        document.getElementById("dealerNameHero").textContent = dealerName;
+        document.getElementById("dealerName").textContent = dealerName;
+        document.getElementById("dealerPhone").textContent = dealerPhone;
+        document.getElementById("dealerWhatsApp").href = whatsappLink;
+        document.getElementById("profileCard").style.display = "block";
+
+        setStatus(cars.length + " vehicle(s) found for " + dealerName + ".");
+
+        const container = document.getElementById("cars");
+        container.innerHTML = "";
+
+        cars.forEach(car => {
+          const phoneCleanCar = normalisePhone(car.phone);
+          const whatsappCar = phoneCleanCar
+            ? "https://wa.me/27" + phoneCleanCar.replace(/^0/, "") + "?text=" + encodeURIComponent("Hi, I'm interested in the " + safeText(car.title))
+            : "#";
+
+          const div = document.createElement("div");
+          div.className = "car-card";
+          div.innerHTML = `
+            <img src="${safeText(car.image)}" alt="${safeText(car.title)}">
+            <div class="car-title">${safeText(car.title)}</div>
+            <div class="year-badge">Year: ${safeText(car.year) || "Not set"}</div>
+            <div class="car-price">R${safeText(car.price)}</div>
+            <div class="car-meta"><strong>Mileage:</strong> ${safeText(car.mileage)} km</div>
+            <div class="car-meta"><strong>Location:</strong> ${safeText(car.location)}</div>
+            <div class="car-meta"><strong>Dealer:</strong> ${safeText(car.dealer)}</div>
+            <div class="car-meta"><strong>Phone:</strong> ${safeText(car.phone)}</div>
+
+            <div class="car-buttons">
+              <a href="details.html?id=${car.id}" class="details-btn">View Details</a>
+              <a href="tel:${phoneCleanCar}" class="call-btn">📞 Call Dealer</a>
+              <a href="${whatsappCar}" target="_blank" class="wa-btn">💬 WhatsApp Dealer</a>
+            </div>
+          `;
+          container.appendChild(div);
+        });
+
+      } catch (err) {
+        console.log("Dealer page error:", err);
+        setStatus("Something went wrong loading the dealer page.");
+      }
+    }
+
+    loadDealerPage();
+  </script>
+
+</body>
+</html>
