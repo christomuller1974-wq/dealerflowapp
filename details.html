@@ -1,222 +1,218 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Vehicle Details - DealerFlow</title>
+  <meta charset="UTF-8">
+  <title>Vehicle Details</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
     body {
-      margin: 0;
       font-family: Arial, sans-serif;
-      background: #f3f4f6;
-    }
-
-    .header {
-      background: #2f55c7;
-      color: white;
-      padding: 20px;
-    }
-
-    .header h1 {
       margin: 0;
-      font-size: 30px;
+      background: #e5e7eb;
+      color: #111827;
     }
 
     .container {
-      max-width: 950px;
+      max-width: 860px;
       margin: 20px auto;
-      padding: 0 15px 30px 15px;
+      padding: 20px;
     }
 
     .card {
-      background: white;
-      border-radius: 14px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      overflow: hidden;
+      background: #f8fafc;
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     }
 
     .main-image {
       width: 100%;
-      max-height: 520px;
+      height: 420px;
       object-fit: cover;
-      background: #e5e7eb;
+      border-radius: 16px;
+      background: #cbd5e1;
+      margin-bottom: 14px;
     }
 
-    .gallery {
-      display: flex;
+    .thumbs {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
       gap: 10px;
-      overflow-x: auto;
-      padding: 15px 15px 0 15px;
+      margin-bottom: 18px;
     }
 
-    .gallery img {
-      width: 120px;
-      height: 85px;
+    .thumbs img {
+      width: 100%;
+      height: 90px;
       object-fit: cover;
-      border-radius: 8px;
-      border: 2px solid #d1d5db;
+      border-radius: 10px;
       cursor: pointer;
-      flex: 0 0 auto;
-    }
-
-    .content {
-      padding: 20px;
+      border: 2px solid transparent;
     }
 
     .title {
-      font-size: 34px;
+      font-size: 32px;
       font-weight: bold;
-      margin-bottom: 10px;
+      line-height: 1.15;
+      margin-bottom: 12px;
+    }
+
+    .year-badge {
+      display: inline-block;
+      background: #dbeafe;
+      color: #1d4ed8;
+      font-weight: bold;
+      padding: 8px 12px;
+      border-radius: 999px;
+      margin-bottom: 14px;
+      font-size: 14px;
     }
 
     .price {
-      color: #d11a2a;
-      font-size: 38px;
+      font-size: 34px;
       font-weight: bold;
-      margin-bottom: 16px;
+      color: #c53030;
+      margin-bottom: 18px;
     }
 
-    .info p {
+    .meta {
       font-size: 18px;
-      margin: 10px 0;
+      line-height: 1.6;
+      margin-bottom: 10px;
     }
 
-    .buttons {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-top: 20px;
+    .meta strong {
+      color: #000;
     }
 
-    .btn {
+    .action-btn {
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
       text-align: center;
-      padding: 14px 18px;
-      border-radius: 10px;
       text-decoration: none;
-      font-weight: bold;
       color: white;
-      min-width: 160px;
-      display: inline-block;
+      font-weight: bold;
+      padding: 16px;
+      border-radius: 16px;
+      margin-top: 14px;
+      font-size: 18px;
     }
 
     .call-btn {
-      background: #2f55c7;
+      background: #3f5cc9;
     }
 
-    .whatsapp-btn {
-      background: #25D366;
+    .wa-btn {
+      background: #66cc6a;
     }
 
     .back-btn {
-      background: #111827;
-    }
-
-    .status {
-      background: white;
-      border-radius: 12px;
-      padding: 16px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      background: #0f172a;
     }
   </style>
 </head>
-
 <body>
 
-  <div class="header">
-    <h1>DealerFlow</h1>
-  </div>
-
   <div class="container">
-    <div id="status" class="status">Loading vehicle...</div>
-    <div id="vehicleDetails"></div>
+    <div class="card">
+      <img id="mainImage" class="main-image" src="" alt="Vehicle image">
+      <div id="thumbs" class="thumbs"></div>
+
+      <div id="title" class="title"></div>
+      <div id="year" class="year-badge"></div>
+      <div id="price" class="price"></div>
+
+      <div class="meta"><strong>Mileage:</strong> <span id="mileage"></span></div>
+      <div class="meta"><strong>Location:</strong> <span id="location"></span></div>
+      <div class="meta"><strong>Dealer:</strong> <span id="dealer"></span></div>
+      <div class="meta"><strong>Phone:</strong> <span id="phone"></span></div>
+
+      <a id="callBtn" class="action-btn call-btn" href="#">📞 Call Dealer</a>
+      <a id="waBtn" class="action-btn wa-btn" href="#" target="_blank">💬 WhatsApp Dealer</a>
+      <a href="index.html" class="action-btn back-btn">← Back to Listings</a>
+    </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
   <script>
     const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
     const supabaseKey = "sb_publishable_D7saHOTE_JhSlMnSgBnIhQ_mOAOUD9s";
-    const client = window.supabase.createClient(supabaseUrl, supabaseKey);
+    const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
     function getVehicleId() {
       const params = new URLSearchParams(window.location.search);
       return params.get("id");
     }
 
-    function getImagesArray(data) {
-      if (!data.images) {
-        return data.image ? [data.image] : [];
-      }
-      return data.images.split(",").map(url => url.trim()).filter(Boolean);
+    function normalisePhone(phone) {
+      return String(phone || "").replace(/\s+/g, "");
     }
 
-    function changeMainImage(url) {
-      const main = document.getElementById("mainVehicleImage");
-      if (main) main.src = url;
+    function setMainImage(url) {
+      document.getElementById("mainImage").src = url || "";
+    }
+
+    function renderThumbs(imagesString, mainImage) {
+      const thumbs = document.getElementById("thumbs");
+      thumbs.innerHTML = "";
+
+      let images = [];
+      if (imagesString && imagesString.trim() !== "") {
+        images = imagesString.split(",").map(x => x.trim()).filter(Boolean);
+      }
+
+      if (!images.length && mainImage) {
+        images = [mainImage];
+      }
+
+      images.forEach(url => {
+        const img = document.createElement("img");
+        img.src = url;
+        img.onclick = function() {
+          setMainImage(url);
+        };
+        thumbs.appendChild(img);
+      });
     }
 
     async function loadVehicle() {
-      const statusBox = document.getElementById("status");
-      const vehicleDetails = document.getElementById("vehicleDetails");
-      const vehicleId = getVehicleId();
+      const id = getVehicleId();
 
-      if (!vehicleId) {
-        statusBox.innerHTML = "No vehicle selected.";
+      if (!id) {
+        document.body.innerHTML = "<p style='padding:20px;'>No vehicle selected.</p>";
         return;
       }
 
-      try {
-        const { data, error } = await client
-          .from("vehicles")
-          .select("*")
-          .eq("id", vehicleId)
-          .single();
+      const { data, error } = await supabase
+        .from("vehicles")
+        .select("*")
+        .eq("id", id)
+        .single();
 
-        if (error || !data) {
-          statusBox.innerHTML = "Vehicle not found.";
-          return;
-        }
-
-        statusBox.style.display = "none";
-
-        const images = getImagesArray(data);
-        const firstImage = images[0] || "";
-        const phone = data.phone || "";
-        const mileageValue = data.mileage || "";
-        const whatsappNumber = phone.startsWith("0")
-          ? "27" + phone.substring(1)
-          : phone;
-
-        const galleryHtml = images.map(url => `
-          <img src="${url}" alt="Vehicle image" onclick="changeMainImage('${url}')">
-        `).join("");
-
-        vehicleDetails.innerHTML = `
-          <div class="card">
-            <img src="${firstImage}" alt="${data.title || ''}" class="main-image" id="mainVehicleImage">
-            <div class="gallery">${galleryHtml}</div>
-            <div class="content">
-              <div class="title">${data.title || ""}</div>
-              <div class="price">R${data.price || ""}</div>
-
-              <div class="info">
-                <p><strong>Mileage:</strong> ${mileageValue} km</p>
-                <p><strong>Location:</strong> ${data.location || ""}</p>
-                <p><strong>Dealer:</strong> ${data.dealer || ""}</p>
-                <p><strong>Phone:</strong> ${phone}</p>
-              </div>
-
-              <div class="buttons">
-                <a href="tel:${phone}" class="btn call-btn">📞 Call Dealer</a>
-                <a href="https://wa.me/${whatsappNumber}" target="_blank" class="btn whatsapp-btn">💬 WhatsApp Dealer</a>
-                <a href="index.html" class="btn back-btn">← Back to Listings</a>
-              </div>
-            </div>
-          </div>
-        `;
-      } catch (e) {
-        statusBox.innerHTML = "Something went wrong loading this vehicle.";
+      if (error || !data) {
+        console.log(error);
+        document.body.innerHTML = "<p style='padding:20px;'>Vehicle not found.</p>";
+        return;
       }
+
+      const phoneClean = normalisePhone(data.phone);
+      const whatsappLink = "https://wa.me/27" + phoneClean.replace(/^0/, "") + "?text=" + encodeURIComponent("Hi, I'm interested in the " + (data.title || "vehicle"));
+
+      document.getElementById("title").textContent = data.title || "";
+      document.getElementById("year").textContent = "Year: " + (data.year || "Not set");
+      document.getElementById("price").textContent = "R" + (data.price || "");
+      document.getElementById("mileage").textContent = (data.mileage || "") + " km";
+      document.getElementById("location").textContent = data.location || "";
+      document.getElementById("dealer").textContent = data.dealer || "";
+      document.getElementById("phone").textContent = data.phone || "";
+
+      document.getElementById("callBtn").href = "tel:" + phoneClean;
+      document.getElementById("waBtn").href = whatsappLink;
+
+      setMainImage(data.image || "");
+      renderThumbs(data.images || "", data.image || "");
     }
 
     loadVehicle();
