@@ -208,11 +208,9 @@
     <div id="cars"></div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
     const supabaseKey = "sb_publishable_D7saHOTE_JhSlMnSgBnIhQ_mOAOUD9s";
-    const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
     let allCars = [];
 
@@ -280,10 +278,7 @@
       }
 
       if (priceFilter) {
-        const parts = priceFilter.split("-");
-        const min = Number(parts[0]);
-        const max = Number(parts[1]);
-
+        const [min, max] = priceFilter.split("-").map(Number);
         filtered = filtered.filter(car => {
           const price = Number(car.price || 0);
           return price >= min && price <= max;
@@ -337,23 +332,30 @@
       setStatus("Loading vehicles...");
 
       try {
-        const { data, error } = await supabase
-          .from("vehicles")
-          .select("*")
-          .order("id", { ascending: false });
+        const response = await fetch(
+          supabaseUrl + "/rest/v1/vehicles?select=*&order=id.desc",
+          {
+            headers: {
+              apikey: supabaseKey,
+              Authorization: "Bearer " + supabaseKey
+            }
+          }
+        );
 
-        if (error) {
-          console.log("Supabase load error:", error);
-          setStatus("Could not load vehicles: " + error.message);
+        if (!response.ok) {
+          const text = await response.text();
+          setStatus("Could not load vehicles: " + text);
           return;
         }
 
+        const data = await response.json();
         allCars = data || [];
+
         populateYearFilter(allCars);
         populateLocationFilter(allCars);
         renderCars();
       } catch (err) {
-        console.log("loadCars catch:", err);
+        console.log("loadCars error:", err);
         setStatus("Something went wrong loading vehicles.");
       }
     }
