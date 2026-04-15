@@ -153,6 +153,10 @@
       background: #0f172a;
     }
 
+    .dealer-btn {
+      background: #16a34a;
+    }
+
     .call-btn {
       background: #3f5cc9;
     }
@@ -305,6 +309,7 @@
           : "#";
 
         const detailsLink = "details.html?id=" + car.id;
+        const dealerLink = "dealer.html?dealer=" + encodeURIComponent(safeText(car.dealer));
 
         const div = document.createElement("div");
         div.className = "car-card";
@@ -320,6 +325,7 @@
 
           <div class="car-buttons">
             <a href="${detailsLink}" class="details-btn">View Details</a>
+            <a href="${dealerLink}" class="dealer-btn">View Dealer Stock</a>
             <a href="tel:${phoneClean}" class="call-btn">📞 Call Dealer</a>
             <a href="${whatsappLink}" target="_blank" class="wa-btn">💬 WhatsApp Dealer</a>
           </div>
@@ -365,3 +371,5 @@
 
 </body>
 </html>
+
+
