@@ -2,59 +2,101 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Vehicle Details</title>
+  <title>Dealer Profile</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
     body {
-      font-family: Arial, sans-serif;
       margin: 0;
+      font-family: Arial, sans-serif;
       background: #e5e7eb;
       color: #111827;
     }
 
+    .hero {
+      background: #2f55c7;
+      color: white;
+      padding: 28px 20px;
+    }
+
+    .hero h1 {
+      margin: 0 0 10px 0;
+      font-size: 42px;
+    }
+
+    .hero p {
+      margin: 0;
+      font-size: 18px;
+    }
+
     .container {
-      max-width: 860px;
-      margin: 20px auto;
       padding: 20px;
     }
 
-    .card {
+    .profile-card {
       background: #f8fafc;
       border-radius: 18px;
-      padding: 18px;
+      padding: 20px;
+      margin-bottom: 24px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     }
 
-    .main-image {
+    .profile-title {
+      font-size: 32px;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+
+    .profile-meta {
+      font-size: 18px;
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
+
+    .profile-meta strong {
+      color: #000;
+    }
+
+    .btn {
+      display: inline-block;
+      background: #111827;
+      color: white;
+      text-decoration: none;
+      padding: 14px 22px;
+      border-radius: 12px;
+      font-weight: bold;
+      margin-top: 12px;
+      margin-right: 10px;
+    }
+
+    .status {
+      background: #f8fafc;
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      font-weight: bold;
+    }
+
+    .car-card {
+      background: #f8fafc;
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .car-card img {
       width: 100%;
-      height: 420px;
+      height: 320px;
       object-fit: cover;
       border-radius: 16px;
-      background: #cbd5e1;
       margin-bottom: 14px;
-      display: block;
-    }
-
-    .thumbs {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-      gap: 10px;
-      margin-bottom: 18px;
-    }
-
-    .thumbs img {
-      width: 100%;
-      height: 90px;
-      object-fit: cover;
-      border-radius: 10px;
-      cursor: pointer;
-      border: 2px solid transparent;
       background: #cbd5e1;
     }
 
-    .title {
-      font-size: 32px;
+    .car-title {
+      font-size: 30px;
       font-weight: bold;
       line-height: 1.15;
       margin-bottom: 12px;
@@ -71,35 +113,37 @@
       font-size: 14px;
     }
 
-    .price {
+    .car-price {
+      color: #c53030;
       font-size: 34px;
       font-weight: bold;
-      color: #c53030;
       margin-bottom: 18px;
     }
 
-    .meta {
+    .car-meta {
       font-size: 18px;
-      line-height: 1.6;
-      margin-bottom: 10px;
+      margin-bottom: 14px;
+      line-height: 1.5;
     }
 
-    .meta strong {
+    .car-meta strong {
       color: #000;
     }
 
-    .action-btn {
+    .car-buttons a {
       display: block;
-      width: 100%;
-      box-sizing: border-box;
       text-align: center;
       text-decoration: none;
       color: white;
       font-weight: bold;
       padding: 16px;
       border-radius: 16px;
-      margin-top: 14px;
+      margin-top: 12px;
       font-size: 18px;
+    }
+
+    .details-btn {
+      background: #0f172a;
     }
 
     .call-btn {
@@ -109,122 +153,134 @@
     .wa-btn {
       background: #66cc6a;
     }
-
-    .back-btn {
-      background: #0f172a;
-    }
   </style>
 </head>
 <body>
 
-  <div class="container">
-    <div class="card">
-      <img id="image" class="main-image" src="" alt="Vehicle image">
-      <div id="thumbs" class="thumbs"></div>
-
-      <div id="title" class="title"></div>
-      <div id="year" class="year-badge"></div>
-      <div id="price" class="price"></div>
-
-      <div class="meta"><strong>Mileage:</strong> <span id="mileage"></span></div>
-      <div class="meta"><strong>Location:</strong> <span id="location"></span></div>
-      <div class="meta"><strong>Dealer:</strong> <span id="dealer"></span></div>
-      <div class="meta"><strong>Phone:</strong> <span id="phone"></span></div>
-
-      <a id="callBtn" class="action-btn call-btn" href="#">📞 Call Dealer</a>
-      <a id="whatsappBtn" class="action-btn wa-btn" href="#" target="_blank">💬 WhatsApp Dealer</a>
-      <a href="index.html" class="action-btn back-btn">← Back to Listings</a>
-    </div>
+  <div class="hero">
+    <h1 id="dealerNameHero">Dealer Profile</h1>
+    <p>View this dealer's stock</p>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <div class="container">
+    <div id="status" class="status">Loading dealer profile...</div>
+
+    <div id="profileCard" class="profile-card" style="display:none;">
+      <div id="dealerName" class="profile-title"></div>
+      <div class="profile-meta"><strong>Phone:</strong> <span id="dealerPhone"></span></div>
+
+      <a href="index.html" class="btn">← Back to Listings</a>
+      <a id="dealerWhatsApp" href="#" target="_blank" class="btn" style="background:#66cc6a;">WhatsApp Dealer</a>
+    </div>
+
+    <h2>Dealer Vehicles</h2>
+    <div id="cars"></div>
+  </div>
+
   <script>
     const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
     const supabaseKey = "sb_publishable_D7saHOTE_JhSlMnSgBnIhQ_mOAOUD9s";
-    const client = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-    function getVehicleId() {
+    function getDealerNameFromUrl() {
       const params = new URLSearchParams(window.location.search);
-      return params.get("id");
+      return params.get("dealer");
     }
 
-    function cleanPhone(phone) {
+    function setStatus(message) {
+      document.getElementById("status").textContent = message;
+    }
+
+    function normalisePhone(phone) {
       return String(phone || "").replace(/\s+/g, "");
     }
 
-    function setMainImage(url) {
-      document.getElementById("image").src = url || "";
+    function safeText(value) {
+      return String(value || "");
     }
 
-    function renderThumbs(imagesString, mainImage) {
-      const thumbs = document.getElementById("thumbs");
-      thumbs.innerHTML = "";
+    async function loadDealerPage() {
+      const dealerName = getDealerNameFromUrl();
 
-      let images = [];
-
-      if (imagesString && imagesString.trim() !== "") {
-        images = imagesString
-          .split(",")
-          .map(x => x.trim())
-          .filter(Boolean);
-      }
-
-      if (images.length === 0 && mainImage) {
-        images = [mainImage];
-      }
-
-      images.forEach(url => {
-        const img = document.createElement("img");
-        img.src = url;
-        img.alt = "Vehicle photo";
-        img.onclick = function () {
-          setMainImage(url);
-        };
-        thumbs.appendChild(img);
-      });
-    }
-
-    async function loadVehicle() {
-      const id = getVehicleId();
-
-      if (!id) {
-        document.body.innerHTML = "<h2 style='padding:20px;'>Vehicle not found</h2>";
+      if (!dealerName) {
+        setStatus("Dealer not found.");
         return;
       }
 
-      const { data, error } = await client
-        .from("vehicles")
-        .select("*")
-        .eq("id", id)
-        .single();
+      try {
+        const response = await fetch(
+          supabaseUrl + "/rest/v1/vehicles?select=*&dealer=eq." + encodeURIComponent(dealerName) + "&order=id.desc",
+          {
+            headers: {
+              apikey: supabaseKey,
+              Authorization: "Bearer " + supabaseKey
+            }
+          }
+        );
 
-      if (error || !data) {
-        console.log("Vehicle load error:", error);
-        document.body.innerHTML = "<h2 style='padding:20px;'>Vehicle not found</h2>";
-        return;
+        if (!response.ok) {
+          const text = await response.text();
+          setStatus("Could not load dealer vehicles: " + text);
+          return;
+        }
+
+        const cars = await response.json();
+
+        if (!cars.length) {
+          setStatus("No vehicles found for this dealer.");
+          return;
+        }
+
+        const dealerPhone = cars[0].phone || "";
+        const phoneClean = normalisePhone(dealerPhone);
+        const whatsappLink = phoneClean
+          ? "https://wa.me/27" + phoneClean.replace(/^0/, "") + "?text=" + encodeURIComponent("Hi, I'm interested in your vehicles")
+          : "#";
+
+        document.getElementById("dealerNameHero").textContent = dealerName;
+        document.getElementById("dealerName").textContent = dealerName;
+        document.getElementById("dealerPhone").textContent = dealerPhone;
+        document.getElementById("dealerWhatsApp").href = whatsappLink;
+        document.getElementById("profileCard").style.display = "block";
+
+        setStatus(cars.length + " vehicle(s) found for " + dealerName + ".");
+
+        const container = document.getElementById("cars");
+        container.innerHTML = "";
+
+        cars.forEach(car => {
+          const phoneCleanCar = normalisePhone(car.phone);
+          const whatsappCar = phoneCleanCar
+            ? "https://wa.me/27" + phoneCleanCar.replace(/^0/, "") + "?text=" + encodeURIComponent("Hi, I'm interested in the " + safeText(car.title))
+            : "#";
+
+          const div = document.createElement("div");
+          div.className = "car-card";
+          div.innerHTML = `
+            <img src="${safeText(car.image)}" alt="${safeText(car.title)}">
+            <div class="car-title">${safeText(car.title)}</div>
+            <div class="year-badge">Year: ${safeText(car.year) || "Not set"}</div>
+            <div class="car-price">R${safeText(car.price)}</div>
+            <div class="car-meta"><strong>Mileage:</strong> ${safeText(car.mileage)} km</div>
+            <div class="car-meta"><strong>Location:</strong> ${safeText(car.location)}</div>
+            <div class="car-meta"><strong>Dealer:</strong> ${safeText(car.dealer)}</div>
+            <div class="car-meta"><strong>Phone:</strong> ${safeText(car.phone)}</div>
+
+            <div class="car-buttons">
+              <a href="details.html?id=${car.id}" class="details-btn">View Details</a>
+              <a href="tel:${phoneCleanCar}" class="call-btn">📞 Call Dealer</a>
+              <a href="${whatsappCar}" target="_blank" class="wa-btn">💬 WhatsApp Dealer</a>
+            </div>
+          `;
+          container.appendChild(div);
+        });
+
+      } catch (err) {
+        console.log("Dealer page error:", err);
+        setStatus("Something went wrong loading the dealer page.");
       }
-
-      console.log("Vehicle:", data);
-
-      document.getElementById("title").textContent = data.title || "";
-      document.getElementById("year").textContent = "Year: " + (data.year || "Not set");
-      document.getElementById("price").textContent = "R" + (data.price || "");
-      document.getElementById("mileage").textContent = (data.mileage || "") + " km";
-      document.getElementById("location").textContent = data.location || "";
-      document.getElementById("dealer").textContent = data.dealer || "";
-      document.getElementById("phone").textContent = data.phone || "";
-
-      const phoneClean = cleanPhone(data.phone);
-      document.getElementById("callBtn").href = "tel:" + phoneClean;
-      document.getElementById("whatsappBtn").href =
-        "https://wa.me/27" + phoneClean.replace(/^0/, "") +
-        "?text=" + encodeURIComponent("Hi, I'm interested in the " + (data.title || "vehicle"));
-
-      setMainImage(data.image || "");
-      renderThumbs(data.images || "", data.image || "");
     }
 
-    loadVehicle();
+    loadDealerPage();
   </script>
 
 </body>
