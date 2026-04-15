@@ -48,7 +48,8 @@
       font-size: 14px;
     }
 
-    input {
+    input,
+    select {
       width: 100%;
       padding: 12px;
       margin-bottom: 12px;
@@ -56,6 +57,7 @@
       border: 1px solid #ccc;
       box-sizing: border-box;
       font-size: 14px;
+      background: white;
     }
 
     button.publish-btn {
@@ -123,6 +125,11 @@
     <div id="previewGrid" class="preview-grid"></div>
 
     <input id="title" placeholder="Vehicle Title" />
+
+    <select id="year">
+      <option value="">Select Year</option>
+    </select>
+
     <input id="price" placeholder="Price" />
     <input id="mileage" placeholder="Mileage" />
     <input id="location" placeholder="Location" />
@@ -162,6 +169,18 @@
 
     function setStatus(message) {
       statusBox.textContent = message;
+    }
+
+    function populateYears() {
+      const yearSelect = document.getElementById("year");
+      const currentYear = new Date().getFullYear();
+
+      for (let y = currentYear; y >= 1980; y--) {
+        const option = document.createElement("option");
+        option.value = y;
+        option.textContent = y;
+        yearSelect.appendChild(option);
+      }
     }
 
     async function logout() {
@@ -270,6 +289,7 @@
       }
 
       const title = document.getElementById("title").value.trim();
+      const year = document.getElementById("year").value;
       const price = document.getElementById("price").value.trim();
       const mileage = document.getElementById("mileage").value.trim();
       const location = document.getElementById("location").value.trim();
@@ -277,7 +297,7 @@
       const phone = document.getElementById("phone").value.trim();
       const files = Array.from(photosInput.files || []);
 
-      if (!title || !price || !mileage || !location || !dealer || !phone) {
+      if (!title || !year || !price || !mileage || !location || !dealer || !phone) {
         setStatus("Please fill in all required fields.");
         return;
       }
@@ -305,6 +325,7 @@
           .from("vehicles")
           .insert([{
             title: title,
+            year: year,
             price: price,
             mileage: mileage,
             location: location,
@@ -325,6 +346,7 @@
         setStatus("Vehicle uploaded successfully to your account.");
 
         document.getElementById("title").value = "";
+        document.getElementById("year").value = "";
         document.getElementById("price").value = "";
         document.getElementById("mileage").value = "";
         document.getElementById("location").value = "";
@@ -341,9 +363,9 @@
       }
     }
 
+    populateYears();
     checkUser();
   </script>
 </body>
 </html>
-
    
