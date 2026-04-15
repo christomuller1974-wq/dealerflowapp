@@ -2,49 +2,6 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>DealerFlow</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #e5e7eb;
-      color: #111827;
-    }
-
-    .hero {
-      background: #2f55c7;
-      color: white;
-      padding: 28px 20px;
-    }
-
-    .hero h1 {
-      margin: 0 0 10px 0;
-      font-size: 52px;
-    }
-
-    .hero p {
-      margin: 0;
-      font-size: 18px;
-    }
-
-    .section {
-      background: #f8fafc;
-      margin: 20px;
-      padding: 20px;
-      border-radius: 18px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    }
-
-    .btn {
-      display: inline-block;
-      background: #2f55c7;
-      color: wh…
-[16:56, 4/15/2026] Christo Muller: <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
   <title>Vehicle Details</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -67,6 +24,7 @@
       border-radius: 18px;
       padding: 18px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      margin-bottom: 20px;
     }
 
     .main-image {
@@ -143,6 +101,8 @@
       border-radius: 16px;
       margin-top: 14px;
       font-size: 18px;
+      border: none;
+      cursor: pointer;
     }
 
     .call-btn {
@@ -159,6 +119,47 @@
 
     .back-btn {
       background: #0f172a;
+    }
+
+    .lead-title {
+      font-size: 26px;
+      font-weight: bold;
+      margin-bottom: 14px;
+    }
+
+    .lead-text {
+      color: #475569;
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px solid #cbd5e1;
+      font-size: 16px;
+      margin-bottom: 12px;
+      background: white;
+      font-family: Arial, sans-serif;
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .status {
+      background: #e2e8f0;
+      color: #0f172a;
+      padding: 12px;
+      border-radius: 10px;
+      font-weight: bold;
+      margin-top: 12px;
+      min-height: 20px;
+      line-height: 1.4;
     }
   </style>
 </head>
@@ -183,6 +184,19 @@
       <a id="dealerStockBtn" class="action-btn dealer-btn" href="#">View Dealer Stock</a>
       <a href="index.html" class="action-btn back-btn">← Back to Listings</a>
     </div>
+
+    <div class="card">
+      <div class="lead-title">Send an Enquiry</div>
+      <div class="lead-text">Interested in this vehicle? Send your details and message directly to the dealer.</div>
+
+      <input type="text" id="buyerName" placeholder="Your Name">
+      <input type="text" id="buyerPhone" placeholder="Your Phone Number">
+      <textarea id="buyerMessage" placeholder="Your message"></textarea>
+
+      <button id="sendLeadBtn" class="action-btn call-btn" type="button" onclick="sendLead()">Send Enquiry</button>
+
+      <div id="leadStatus" class="status">Ready to send.</div>
+    </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -190,6 +204,8 @@
     const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
     const supabaseKey = "sb_publishable_D7saHOTE_JhSlMnSgBnIhQ_mOAOUD9s";
     const client = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+    let currentVehicle = null;
 
     function getVehicleId() {
       const params = new URLSearchParams(window.location.search);
@@ -202,6 +218,18 @@
 
     function setMainImage(url) {
       document.getElementById("image").src = url || "";
+    }
+
+    function setLeadStatus(message) {
+      document.getElementById("leadStatus").textContent = message;
+    }
+
+    function setLeadSending(isSending) {
+      const btn = document.getElementById("sendLeadBtn");
+      btn.disabled = isSending;
+      btn.textContent = isSending ? "Sending..." : "Send Enquiry";
+      btn.style.opacity = isSending ? "0.7" : "1";
+      btn.style.cursor = isSending ? "not-allowed" : "pointer";
     }
 
     function renderThumbs(imagesString, mainImage) {
@@ -252,6 +280,8 @@
         return;
       }
 
+      currentVehicle = data;
+
       document.getElementById("title").textContent = data.title || "";
       document.getElementById("year").textContent = "Year: " + (data.year || "Not set");
       document.getElementById("price").textContent = "R" + (data.price || "");
@@ -269,8 +299,63 @@
       document.getElementById("dealerStockBtn").href =
         "dealer.html?dealer=" + encodeURIComponent(data.dealer || "");
 
+      document.getElementById("buyerMessage").value =
+        "Hi, I'm interested in the " + (data.title || "vehicle") + ". Please contact me.";
+
       setMainImage(data.image || "");
       renderThumbs(data.images || "", data.image || "");
+    }
+
+    async function sendLead() {
+      if (!currentVehicle) {
+        setLeadStatus("Vehicle details not loaded yet.");
+        return;
+      }
+
+      const buyerName = document.getElementById("buyerName").value.trim();
+      const buyerPhone = document.getElementById("buyerPhone").value.trim();
+      const message = document.getElementById("buyerMessage").value.trim();
+
+      if (!buyerName || !buyerPhone || !message) {
+        setLeadStatus("Please fill in your name, phone number, and message.");
+        return;
+      }
+
+      try {
+        setLeadSending(true);
+        setLeadStatus("Sending enquiry...");
+
+        const { error } = await client
+          .from("leads")
+          .insert([{
+            vehicle_id: currentVehicle.id,
+            vehicle_title: currentVehicle.title || "",
+            dealer_name: currentVehicle.dealer || "",
+            dealer_phone: currentVehicle.phone || "",
+            buyer_name: buyerName,
+            buyer_phone: buyerPhone,
+            message: message
+          }]);
+
+        if (error) {
+          console.log("Lead insert error:", error);
+          setLeadStatus("Could not send enquiry: " + error.message);
+          setLeadSending(false);
+          return;
+        }
+
+        document.getElementById("buyerName").value = "";
+        document.getElementById("buyerPhone").value = "";
+        document.getElementById("buyerMessage").value = "";
+
+        setLeadStatus("Enquiry sent successfully.");
+        setLeadSending(false);
+
+      } catch (err) {
+        console.log("Lead send error:", err);
+        setLeadStatus("Something went wrong: " + err.message);
+        setLeadSending(false);
+      }
     }
 
     loadVehicle();
