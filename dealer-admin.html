@@ -1,460 +1,89 @@
-[16:25, 4/14/2026] Christo Muller: <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
-  <title>Dealer Login - DealerFlow</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f3f4f6;
-      color: #111827;
-    }
-
-    .wrap {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      box-sizing: border-box;
-    }
-
-    .card {
-      width: 100%;
-      max-width: 420px;
-      background: white;
-      border-radius: 14px;
-      padding: 24px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-    }
-
-    h1 {
-      margin-top: 0;
-      margin-bottom: 10px;
-      font-size: 28px;
-    }
-
-    p {
-      color: #475569;
-      line-heigh…
-[16:41, 4/14/2026] Christo Muller: <!DOCTYPE html>
-<html>
-<head>
-  <title>Dealer Admin - DealerFlow</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f3f4f6;
-      color: #111827;
-    }
-
-    .header {
-      background: #2f55c7;
-      color: white;
-      padding: 20px;
-    }
-
-    .header h1 {
-      margin: 0 0 8px 0;
-    }
-
-    .header p {
-      margin: 0;
-    }
-
-    .top-actions {
-      padding: 20px;
-    }
-
-    .top-actions a,
-    .top-actions button {
-      background: #111827;
-      color: white;
-      padding: 12px 18px;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: bold;
-      display: inline-block;
-      margin-right: 10px;
-      marg…
-[16:44, 4/14/2026] Christo Muller: <!DOCTYPE html>
-<html>
-<head>
-  <title>Dealer Admin - DealerFlow</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f3f4f6;
-      color: #111827;
-    }
-
-    .header {
-      background: #2f55c7;
-      color: white;
-      padding: 20px;
-    }
-
-    .header h1 {
-      margin: 0 0 8px 0;
-    }
-
-    .header p {
-      margin: 0;
-    }
-
-    .top-actions {
-      padding: 20px;
-    }
-
-    .top-actions a,
-    .top-actions button {
-      background: #111827;
-      color: white;
-      padding: 12px 18px;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: bold;
-      display: inline-block;
-      margin-right: 10px;
-      margin-bottom: 10px;
-      border: none;
-      cursor: pointer;
-      font-size: 14px;
-    }
-
-    .status {
-      background: white;
-      margin: 0 20px 20px 20px;
-      padding: 16px;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-      font-weight: bold;
-      line-height: 1.4;
-    }
-
-    .wrap {
-      padding: 0 20px 20px 20px;
-    }
-
-    .vehicle-card {
-      background: white;
-      border-radius: 12px;
-      padding: 15px;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
-
-    .vehicle-card img {
-      width: 100%;
-      max-height: 280px;
-      object-fit: cover;
-      border-radius: 10px;
-      margin-bottom: 12px;
-      background: #e5e7eb;
-    }
-
-    .vehicle-card h3 {
-      margin: 0 0 15px 0;
-      font-size: 24px;
-    }
-
-    .small {
-      color: #6b7280;
-      font-size: 14px;
-      margin-bottom: 10px;
-      line-height: 1.4;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 12px;
-    }
-
-    .grid input {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 12px;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
-      font-size: 15px;
-      background: white;
-      margin-top: 6px;
-    }
-
-    .checkbox-row {
-      padding-top: 12px;
-    }
-
-    .buttons {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 15px;
-    }
-
-    .save-btn,
-    .delete-btn {
-      border: none;
-      border-radius: 8px;
-      padding: 12px 16px;
-      font-weight: bold;
-      cursor: pointer;
-      color: white;
-      min-width: 140px;
-    }
-
-    .save-btn {
-      background: #2f55c7;
-    }
-
-    .delete-btn {
-      background: #dc2626;
-    }
-  </style>
+  <title>Dealer Dashboard</title>
 </head>
-<body>
 
-  <div class="header">
-    <h1>Dealer Dashboard</h1>
-    <p>Manage only your own stock</p>
-  </div>
+<body style="font-family: Arial; padding: 20px;">
 
-  <div class="top-actions">
-    <a href="index.html">← Back to Website</a>
-    <a href="upload6.html">+ Add Vehicle</a>
-    <button type="button" onclick="logout()">Logout</button>
-  </div>
+<h1>Dealer Dashboard</h1>
+<p id="user">Checking login...</p>
 
-  <div id="status" class="status">Checking login...</div>
+<a href="index.html">← Back to Website</a>
+<button onclick="logout()">Logout</button>
 
-  <div class="wrap">
-    <div id="vehicleList"></div>
-  </div>
+<hr>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<h2>Your Vehicles</h2>
+<div id="vehicles"></div>
 
-  <script>
-    const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
-    const supabaseKey = "sb_publishable_D7saHOTE_JhSlMnSgBnIhQ_mOAOUD9s";
-    const client = window.supabase.createClient(supabaseUrl, supabaseKey);
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
-    let currentUser = null;
+<script>
+const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
+const supabaseKey = "YOUR_KEY_HERE";
+const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-    function setStatus(message) {
-      document.getElementById("status").textContent = message;
-    }
+// ✅ LOAD USER SESSION
+async function loadUser() {
+  const { data: { session } } = await supabase.auth.getSession();
 
-    function escapeHtml(value) {
-      return String(value ?? "")
-        .replace(/&/g, "&amp;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#39;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;");
-    }
+  if (!session) {
+    document.getElementById("user").innerText = "Not logged in";
+    return;
+  }
 
-    async function logout() {
-      await client.auth.signOut();
-      window.location.href = "login.html";
-    }
+  const user = session.user;
+  document.getElementById("user").innerText = "Logged in as: " + user.email;
 
-    async function checkUser() {
-      const { data, error } = await client.auth.getUser();
+  loadVehicles(user.id);
+}
 
-      if (error || !data.user) {
-        window.location.href = "login.html";
-        return;
-      }
+// ✅ LOAD ONLY USER VEHICLES
+async function loadVehicles(userId) {
+  const { data, error } = await supabase
+    .from("vehicles")
+    .select("*")
+    .eq("user_id", userId);
 
-      currentUser = data.user;
-      setStatus("Logged in as " + currentUser.email + ". Loading your vehicles...");
-      loadMyVehicles();
-    }
+  const container = document.getElementById("vehicles");
+  container.innerHTML = "";
 
-    async function loadMyVehicles() {
-      const vehicleList = document.getElementById("vehicleList");
-      vehicleList.innerHTML = "";
+  if (!data || data.length === 0) {
+    container.innerHTML = "<p>No vehicles found.</p>";
+    return;
+  }
 
-      try {
-        const { data, error } = await client
-          .from("vehicles")
-          .select("*")
-          .eq("user_id", currentUser.id)
-          .order("id", { ascending: false });
+  data.forEach(car => {
+    container.innerHTML += `
+      <div style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
+        <h3>${car.title}</h3>
+        <p>Price: R${car.price}</p>
+        <p>Mileage: ${car.mileage} km</p>
 
-        if (error) {
-          console.log(error);
-          setStatus("Error loading your vehicles.");
-          return;
-        }
+        <button onclick="deleteVehicle(${car.id})">Delete</button>
+      </div>
+    `;
+  });
+}
 
-        if (!data || data.length === 0) {
-          setStatus("You have no vehicles yet. Use Add Vehicle to create your first listing.");
-          return;
-        }
+// ✅ DELETE VEHICLE
+async function deleteVehicle(id) {
+  if (!confirm("Delete this vehicle?")) return;
 
-        setStatus("Your vehicles loaded.");
+  await supabase.from("vehicles").delete().eq("id", id);
+  location.reload();
+}
 
-        data.forEach(car => {
-          const imageUrl = car.image || "";
-          const mileageValue = car.mileage || "";
-          const featuredChecked = car.featured ? "checked" : "";
+// ✅ LOGOUT
+async function logout() {
+  await supabase.auth.signOut();
+  window.location.href = "login.html";
+}
 
-          const card = document.createElement("div");
-          card.className = "vehicle-card";
-
-          card.innerHTML = `
-            <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(car.title || "")}">
-            <h3>${escapeHtml(car.title || "Untitled Vehicle")}</h3>
-            <div class="small">Vehicle ID: ${car.id}</div>
-            <div class="small">Owner User ID: ${escapeHtml(car.user_id || "")}</div>
-
-            <div class="grid">
-              <div>
-                <label>Title</label>
-                <input type="text" id="title-${car.id}" value="${escapeHtml(car.title || "")}">
-              </div>
-
-              <div>
-                <label>Price</label>
-                <input type="number" id="price-${car.id}" value="${escapeHtml(car.price || "")}">
-              </div>
-
-              <div>
-                <label>Mileage</label>
-                <input type="number" id="mileage-${car.id}" value="${escapeHtml(mileageValue || "")}">
-              </div>
-
-              <div>
-                <label>Location</label>
-                <input type="text" id="location-${car.id}" value="${escapeHtml(car.location || "")}">
-              </div>
-
-              <div>
-                <label>Dealer</label>
-                <input type="text" id="dealer-${car.id}" value="${escapeHtml(car.dealer || "")}">
-              </div>
-
-              <div>
-                <label>Phone</label>
-                <input type="text" id="phone-${car.id}" value="${escapeHtml(car.phone || "")}">
-              </div>
-
-              <div>
-                <label>Main Image URL</label>
-                <input type="text" id="image-${car.id}" value="${escapeHtml(car.image || "")}">
-              </div>
-
-              <div>
-                <label>All Images (comma separated)</label>
-                <input type="text" id="images-${car.id}" value="${escapeHtml(car.images || "")}">
-              </div>
-
-              <div class="checkbox-row">
-                <label>
-                  <input type="checkbox" id="featured-${car.id}" ${featuredChecked} style="width:auto; transform:scale(1.2); margin-right:8px;">
-                  Featured
-                </label>
-              </div>
-            </div>
-
-            <div class="buttons">
-              <button class="save-btn" onclick="saveVehicle(${car.id})">Save Changes</button>
-              <button class="delete-btn" onclick="deleteVehicle(${car.id})">Delete Vehicle</button>
-            </div>
-          `;
-
-          vehicleList.appendChild(card);
-        });
-
-      } catch (e) {
-        console.log(e);
-        setStatus("Something went wrong loading your vehicles.");
-      }
-    }
-
-    async function saveVehicle(id) {
-      const title = document.getElementById(title-${id}).value.trim();
-      const price = document.getElementById(price-${id}).value.trim();
-      const mileage = document.getElementById(mileage-${id}).value.trim();
-      const location = document.getElementById(location-${id}).value.trim();
-      const dealer = document.getElementById(dealer-${id}).value.trim();
-      const phone = document.getElementById(phone-${id}).value.trim();
-      const image = document.getElementById(image-${id}).value.trim();
-      const images = document.getElementById(images-${id}).value.trim();
-      const featured = document.getElementById(featured-${id}).checked;
-
-      setStatus("Saving vehicle " + id + "...");
-
-      try {
-        const { error } = await client
-          .from("vehicles")
-          .update({
-            title: title,
-            price: price,
-            mileage: mileage,
-            location: location,
-            dealer: dealer,
-            phone: phone,
-            image: image,
-            images: images,
-            featured: featured
-          })
-          .eq("id", id)
-          .eq("user_id", currentUser.id);
-
-        if (error) {
-          console.log(error);
-          setStatus("Save failed for vehicle " + id + ".");
-          return;
-        }
-
-        setStatus("Vehicle " + id + " saved successfully.");
-        loadMyVehicles();
-      } catch (e) {
-        console.log(e);
-        setStatus("Something went wrong saving vehicle " + id + ".");
-      }
-    }
-
-    async function deleteVehicle(id) {
-      const confirmed = confirm("Are you sure you want to delete this vehicle?");
-      if (!confirmed) return;
-
-      setStatus("Deleting vehicle " + id + "...");
-
-      try {
-        const { error } = await client
-          .from("vehicles")
-          .delete()
-          .eq("id", id)
-          .eq("user_id", currentUser.id);
-
-        if (error) {
-          console.log(error);
-          setStatus("Delete failed for vehicle " + id + ".");
-          return;
-        }
-
-        setStatus("Vehicle " + id + " deleted successfully.");
-        loadMyVehicles();
-      } catch (e) {
-        console.log(e);
-        setStatus("Something went wrong deleting vehicle " + id + ".");
-      }
-    }
-
-    checkUser();
-  </script>
+// 🚀 RUN
+loadUser();
+</script>
 
 </body>
 </html>
