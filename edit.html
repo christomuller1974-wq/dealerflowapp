@@ -21,7 +21,7 @@
     }
 
     .container {
-      max-width: 750px;
+      max-width: 760px;
       margin: 20px auto;
       background: white;
       padding: 20px;
@@ -63,17 +63,47 @@
 
     .preview-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-      gap: 10px;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
       margin-bottom: 14px;
     }
 
-    .preview-grid img {
+    .preview-item {
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      padding: 8px;
+      background: #f8fafc;
+      position: relative;
+    }
+
+    .preview-item img {
       width: 100%;
-      height: 110px;
+      height: 120px;
       object-fit: cover;
       border-radius: 10px;
-      border: 1px solid #ddd;
+      display: block;
+      margin-bottom: 8px;
+      background: #cbd5e1;
+    }
+
+    .preview-item .label {
+      font-size: 12px;
+      font-weight: bold;
+      color: #334155;
+      text-align: center;
+    }
+
+    .remove-btn {
+      margin-top: 8px;
+      width: 100%;
+      border: none;
+      border-radius: 8px;
+      padding: 8px;
+      background: #dc2626;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 12px;
     }
 
     .save-btn {
@@ -105,6 +135,12 @@
       margin-top: -6px;
       margin-bottom: 12px;
     }
+
+    .help {
+      font-size: 13px;
+      color: #475569;
+      margin-bottom: 12px;
+    }
   </style>
 </head>
 <body>
@@ -122,7 +158,11 @@
 
     <div id="dealerInfo" class="status">Checking login...</div>
 
+    <div class="help">Current gallery images. The first image is the main image shown on listings.</div>
     <div id="previewGrid" class="preview-grid"></div>
+
+    <input type="file" id="newPhotos" accept="image/*" multiple />
+    <div class="help">Select new images to add to this vehicle. New images will be added to the gallery.</div>
 
     <input id="title" placeholder="Vehicle Title">
 
@@ -140,14 +180,12 @@
     <input id="phone" placeholder="Phone Number" readonly>
     <div class="muted">Auto-filled from dealer profile</div>
 
-    <input id="image" placeholder="Main Image URL">
-    <input id="images" placeholder="All Images (comma separated URLs)">
     <label style="display:block; margin-bottom:12px;">
       <input type="checkbox" id="featured" style="width:auto; margin-right:8px;">
       Featured
     </label>
 
-    <button type="button" class="save-btn" onclick="saveVehicle()">Save Changes</button>
+    <button type="button" class="save-btn" id="saveBtn" onclick="saveVehicle()">Save Changes</button>
 
     <div id="status" class="status">Ready.</div>
   </div>
@@ -156,6 +194,7 @@
   <script>
     const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
     const supabaseKey = "sb_publishable_D7saHOTE_JhSlMnSgBnIhQ_mOAOUD9s";
+    const bucketName = "vehicle-images";
 
     const client = window.supabase.createClient(supabaseUrl, supabaseKey, {
       auth: {
@@ -168,10 +207,14 @@
     const dealerInfoBox = document.getElementById("dealerInfo");
     const statusBox = document.getElementById("status");
     const previewGrid = document.getElementById("previewGrid");
+    const newPhotosInput = document.getElementById("newPhotos");
+    const saveBtn = document.getElementById("saveBtn");
 
     let currentUser = null;
     let currentProfile = null;
     let vehicleId = null;
+    let currentImages = [];
+    let currentMainImage = "";
 
     function getVehicleId() {
       const params = new URLSearchParams(window.location.search);
@@ -180,6 +223,13 @@
 
     function setStatus(message) {
       statusBox.textContent = message;
+    }
+
+    function setSavingState(isSaving, text = "Save Changes") {
+      saveBtn.disabled = isSaving;
+      saveBtn.textContent = isSaving ? text : "Save Changes";
+      saveBtn.style.opacity = isSaving ? "0.7" : "1";
+      saveBtn.style.cursor = isSaving ? "not-allowed" : "pointer";
     }
 
     function populateYears() {
@@ -199,23 +249,43 @@
       window.location.href = "login.html";
     }
 
-    function renderPreview(imagesString, mainImage) {
+    function renderPreview() {
       previewGrid.innerHTML = "";
 
-      let images = [];
-      if (imagesString && imagesString.trim() !== "") {
-        images = imagesString.split(",").map(x => x.trim()).filter(Boolean);
-      }
+      currentImages.forEach((url, index) => {
+        const item = document.createElement("div");
+        item.className = "preview-item";
 
-      if (images.length === 0 && mainImage) {
-        images = [mainImage];
-      }
-
-      images.forEach(url => {
         const img = document.createElement("img");
         img.src = url;
-        previewGrid.appendChild(img);
+        img.alt = "Vehicle image";
+
+        const label = document.createElement("div");
+        label.className = "label";
+        label.textContent = index === 0 ? "Main Image" : "Gallery Image " + index;
+
+        const removeBtn = document.createElement("button");
+        removeBtn.className = "remove-btn";
+        removeBtn.type = "button";
+        removeBtn.textContent = "Remove";
+        removeBtn.onclick = function () {
+          removeImage(index);
+        };
+
+        item.appendChild(img);
+        item.appendChild(label);
+        item.appendChild(removeBtn);
+        previewGrid.appendChild(item);
       });
+    }
+
+    function removeImage(index) {
+      if (!confirm("Remove this image?")) return;
+
+      currentImages.splice(index, 1);
+      currentMainImage = currentImages.length ? currentImages[0] : "";
+      renderPreview();
+      setStatus("Image removed from gallery. Save changes to keep this update.");
     }
 
     async function loadProfile(userId) {
@@ -236,6 +306,34 @@
       document.getElementById("phone").value = data.phone || "";
       dealerInfoBox.textContent = "Logged in as: " + currentUser.email + " | " + (data.dealer_name || "Dealer");
       return true;
+    }
+
+    async function uploadOneFile(file, userId) {
+      const fileExt = (file.name.split(".").pop() || "jpg").toLowerCase();
+      const safeExt = fileExt.replace(/[^a-z0-9]/g, "") || "jpg";
+      const fileName = userId + "-" + Date.now() + "-" + Math.floor(Math.random() * 100000) + "." + safeExt;
+      const filePath = "vehicles/" + fileName;
+
+      const uploadRes = await fetch(
+        supabaseUrl + "/storage/v1/object/" + bucketName + "/" + filePath,
+        {
+          method: "POST",
+          headers: {
+            "Authorization": "Bearer " + supabaseKey,
+            "apikey": supabaseKey,
+            "x-upsert": "false",
+            "Content-Type": file.type || "image/jpeg"
+          },
+          body: file
+        }
+      );
+
+      if (!uploadRes.ok) {
+        const uploadText = await uploadRes.text();
+        throw new Error(uploadText);
+      }
+
+      return supabaseUrl + "/storage/v1/object/public/" + bucketName + "/" + filePath;
     }
 
     async function checkUserAndLoadVehicle() {
@@ -284,11 +382,19 @@
         document.getElementById("price").value = data.price || "";
         document.getElementById("mileage").value = data.mileage || "";
         document.getElementById("location").value = data.location || "";
-        document.getElementById("image").value = data.image || "";
-        document.getElementById("images").value = data.images || "";
         document.getElementById("featured").checked = !!data.featured;
 
-        renderPreview(data.images || "", data.image || "");
+        if (data.images && data.images.trim() !== "") {
+          currentImages = data.images.split(",").map(x => x.trim()).filter(Boolean);
+        } else if (data.image) {
+          currentImages = [data.image];
+        } else {
+          currentImages = [];
+        }
+
+        currentMainImage = currentImages.length ? currentImages[0] : (data.image || "");
+        renderPreview();
+
         setStatus("Vehicle loaded.");
       } catch (err) {
         console.log("checkUserAndLoadVehicle error:", err);
@@ -309,18 +415,35 @@
       const location = document.getElementById("location").value.trim();
       const dealer = document.getElementById("dealer").value.trim();
       const phone = document.getElementById("phone").value.trim();
-      const image = document.getElementById("image").value.trim();
-      const images = document.getElementById("images").value.trim();
       const featured = document.getElementById("featured").checked;
+      const newFiles = Array.from(newPhotosInput.files || []);
 
       if (!title || !year || !price || !mileage || !location || !dealer || !phone) {
         setStatus("Please fill in all fields.");
         return;
       }
 
-      setStatus("Saving changes...");
-
       try {
+        setSavingState(true, "Saving...");
+        let uploadedUrls = [];
+
+        if (newFiles.length) {
+          for (let i = 0; i < newFiles.length; i++) {
+            setStatus("Uploading new photo " + (i + 1) + " of " + newFiles.length + "...");
+            const imageUrl = await uploadOneFile(newFiles[i], currentUser.id);
+            uploadedUrls.push(imageUrl);
+          }
+        }
+
+        if (uploadedUrls.length) {
+          currentImages = currentImages.concat(uploadedUrls);
+        }
+
+        currentMainImage = currentImages.length ? currentImages[0] : "";
+        const imagesString = currentImages.join(",");
+
+        setStatus("Saving changes to vehicle...");
+
         const { error } = await client
           .from("vehicles")
           .update({
@@ -331,8 +454,8 @@
             location: location,
             dealer: dealer,
             phone: phone,
-            image: image,
-            images: images,
+            image: currentMainImage,
+            images: imagesString,
             featured: featured
           })
           .eq("id", vehicleId)
@@ -341,24 +464,20 @@
         if (error) {
           console.log("save error:", error);
           setStatus("Save failed: " + error.message);
+          setSavingState(false);
           return;
         }
 
-        renderPreview(images, image);
+        newPhotosInput.value = "";
+        renderPreview();
         setStatus("Vehicle updated successfully.");
+        setSavingState(false);
       } catch (err) {
         console.log("save catch:", err);
         setStatus("Something went wrong: " + err.message);
+        setSavingState(false);
       }
     }
-
-    document.getElementById("image").addEventListener("input", function() {
-      renderPreview(document.getElementById("images").value, this.value);
-    });
-
-    document.getElementById("images").addEventListener("input", function() {
-      renderPreview(this.value, document.getElementById("image").value);
-    });
 
     populateYears();
     checkUserAndLoadVehicle();
