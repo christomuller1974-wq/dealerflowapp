@@ -57,6 +57,7 @@
       border: 2px solid #111827;
       box-sizing: border-box;
       font-size: 16px;
+      background: white;
     }
 
     .filters-row {
@@ -66,8 +67,22 @@
       margin: 0 20px 20px 20px;
     }
 
+    .filters-row .filter-box {
+      width: 100%;
+      margin: 0;
+    }
+
     .cars-wrap {
       padding: 0 20px 30px 20px;
+    }
+
+    .status {
+      background: #f8fafc;
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      font-weight: bold;
     }
 
     .car-card {
@@ -160,7 +175,13 @@
     <a class="btn" href="upload6.html">Upload Your Stock</a>
   </div>
 
-  <input type="text" id="searchInput" class="search-box" placeholder="Search vehicles (e.g. BMW, Toyota, Urban Cruiser)" oninput="renderCars()">
+  <input
+    type="text"
+    id="searchInput"
+    class="search-box"
+    placeholder="Search vehicles (e.g. BMW, Toyota, Urban Cruiser)"
+    oninput="renderCars()"
+  >
 
   <div class="filters-row">
     <select id="yearFilter" class="filter-box" onchange="renderCars()">
@@ -181,7 +202,9 @@
   </div>
 
   <h2 style="padding: 0 20px;">Latest Vehicles</h2>
+
   <div class="cars-wrap">
+    <div id="status" class="status">Loading vehicles...</div>
     <div id="cars"></div>
   </div>
 
@@ -193,15 +216,24 @@
 
     let allCars = [];
 
+    function setStatus(message) {
+      document.getElementById("status").textContent = message;
+    }
+
     function normalisePhone(phone) {
       return String(phone || "").replace(/\s+/g, "");
+    }
+
+    function safeText(value) {
+      return String(value || "");
     }
 
     function populateYearFilter(cars) {
       const yearFilter = document.getElementById("yearFilter");
       yearFilter.innerHTML = '<option value="">All Years</option>';
 
-      const years = [...new Set(cars.map(car => car.year).filter(Boolean))].sort((a, b) => Number(b) - Number(a));
+      const years = [...new Set(cars.map(car => String(car.year || "")).filter(Boolean))]
+        .sort((a, b) => Number(b) - Number(a));
 
       years.forEach(year => {
         const option = document.createElement("option");
@@ -215,7 +247,7 @@
       const locationFilter = document.getElementById("locationFilter");
       locationFilter.innerHTML = '<option value="">All Locations</option>';
 
-      const locations = [...new Set(cars.map(car => car.location).filter(Boolean))].sort();
+      const locations = [...new Set(cars.map(car => safeText(car.location)).filter(Boolean))].sort();
 
       locations.forEach(location => {
         const option = document.createElement("option");
@@ -236,10 +268,10 @@
 
       if (searchText) {
         filtered = filtered.filter(car =>
-          (car.title || "").toLowerCase().includes(searchText) ||
-          (car.dealer || "").toLowerCase().includes(searchText) ||
-          (car.location || "").toLowerCase().includes(searchText) ||
-          (car.year || "").toLowerCase().includes(searchText)
+          safeText(car.title).toLowerCase().includes(searchText) ||
+          safeText(car.dealer).toLowerCase().includes(searchText) ||
+          safeText(car.location).toLowerCase().includes(searchText) ||
+          safeText(car.year).toLowerCase().includes(searchText)
         );
       }
 
@@ -259,32 +291,37 @@
       }
 
       if (locationFilter) {
-        filtered = filtered.filter(car => (car.location || "") === locationFilter);
+        filtered = filtered.filter(car => safeText(car.location) === locationFilter);
       }
 
       container.innerHTML = "";
 
       if (!filtered.length) {
-        container.innerHTML = "<p>No vehicles found.</p>";
+        setStatus("No vehicles found.");
         return;
       }
 
+      setStatus(filtered.length + " vehicle(s) found.");
+
       filtered.forEach(car => {
         const phoneClean = normalisePhone(car.phone);
-        const whatsappLink = "https://wa.me/27" + phoneClean.replace(/^0/, "") + "?text=" + encodeURIComponent("Hi, I'm interested in the " + (car.title || "vehicle"));
+        const whatsappLink = phoneClean
+          ? "https://wa.me/27" + phoneClean.replace(/^0/, "") + "?text=" + encodeURIComponent("Hi, I'm interested in the " + safeText(car.title || "vehicle"))
+          : "#";
+
         const detailsLink = "details.html?id=" + car.id;
 
         const div = document.createElement("div");
         div.className = "car-card";
         div.innerHTML = `
-          <img src="${car.image || ""}" alt="${car.title || ""}">
-          <div class="car-title">${car.title || ""}</div>
-          <div class="year-badge">Year: ${car.year || "Not set"}</div>
-          <div class="car-price">R${car.price || ""}</div>
-          <div class="car-meta"><strong>Mileage:</strong> ${car.mileage || ""} km</div>
-          <div class="car-meta"><strong>Location:</strong> ${car.location || ""}</div>
-          <div class="car-meta"><strong>Dealer:</strong> ${car.dealer || ""}</div>
-          <div class="car-meta"><strong>Phone:</strong> ${car.phone || ""}</div>
+          <img src="${safeText(car.image)}" alt="${safeText(car.title)}">
+          <div class="car-title">${safeText(car.title)}</div>
+          <div class="year-badge">Year: ${safeText(car.year) || "Not set"}</div>
+          <div class="car-price">R${safeText(car.price)}</div>
+          <div class="car-meta"><strong>Mileage:</strong> ${safeText(car.mileage)} km</div>
+          <div class="car-meta"><strong>Location:</strong> ${safeText(car.location)}</div>
+          <div class="car-meta"><strong>Dealer:</strong> ${safeText(car.dealer)}</div>
+          <div class="car-meta"><strong>Phone:</strong> ${safeText(car.phone)}</div>
 
           <div class="car-buttons">
             <a href="${detailsLink}" class="details-btn">View Details</a>
@@ -297,21 +334,28 @@
     }
 
     async function loadCars() {
-      const { data, error } = await supabase
-        .from("vehicles")
-        .select("*")
-        .order("id", { ascending: false });
+      setStatus("Loading vehicles...");
 
-      if (error) {
-        console.log(error);
-        document.getElementById("cars").innerHTML = "<p>Could not load vehicles.</p>";
-        return;
+      try {
+        const { data, error } = await supabase
+          .from("vehicles")
+          .select("*")
+          .order("id", { ascending: false });
+
+        if (error) {
+          console.log("Supabase load error:", error);
+          setStatus("Could not load vehicles: " + error.message);
+          return;
+        }
+
+        allCars = data || [];
+        populateYearFilter(allCars);
+        populateLocationFilter(allCars);
+        renderCars();
+      } catch (err) {
+        console.log("loadCars catch:", err);
+        setStatus("Something went wrong loading vehicles.");
       }
-
-      allCars = data || [];
-      populateYearFilter(allCars);
-      populateLocationFilter(allCars);
-      renderCars();
     }
 
     loadCars();
