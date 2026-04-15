@@ -2,6 +2,49 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <title>DealerFlow</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    .hero {
+      background: #2f55c7;
+      color: white;
+      padding: 28px 20px;
+    }
+
+    .hero h1 {
+      margin: 0 0 10px 0;
+      font-size: 52px;
+    }
+
+    .hero p {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .section {
+      background: #f8fafc;
+      margin: 20px;
+      padding: 20px;
+      border-radius: 18px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .btn {
+      display: inline-block;
+      background: #2f55c7;
+      color: wh…
+[16:56, 4/15/2026] Christo Muller: <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
   <title>Vehicle Details</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -110,6 +153,10 @@
       background: #66cc6a;
     }
 
+    .dealer-btn {
+      background: #16a34a;
+    }
+
     .back-btn {
       background: #0f172a;
     }
@@ -133,6 +180,7 @@
 
       <a id="callBtn" class="action-btn call-btn" href="#">📞 Call Dealer</a>
       <a id="whatsappBtn" class="action-btn wa-btn" href="#" target="_blank">💬 WhatsApp Dealer</a>
+      <a id="dealerStockBtn" class="action-btn dealer-btn" href="#">View Dealer Stock</a>
       <a href="index.html" class="action-btn back-btn">← Back to Listings</a>
     </div>
   </div>
@@ -204,8 +252,6 @@
         return;
       }
 
-      console.log("Vehicle:", data);
-
       document.getElementById("title").textContent = data.title || "";
       document.getElementById("year").textContent = "Year: " + (data.year || "Not set");
       document.getElementById("price").textContent = "R" + (data.price || "");
@@ -219,6 +265,9 @@
       document.getElementById("whatsappBtn").href =
         "https://wa.me/27" + phoneClean.replace(/^0/, "") +
         "?text=" + encodeURIComponent("Hi, I'm interested in the " + (data.title || "vehicle"));
+
+      document.getElementById("dealerStockBtn").href =
+        "dealer.html?dealer=" + encodeURIComponent(data.dealer || "");
 
       setMainImage(data.image || "");
       renderThumbs(data.images || "", data.image || "");
