@@ -1,157 +1,321 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>DealerFlow</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
-    body { margin:0; font-family:Arial; background:#f3f4f6; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #e5e7eb;
+      color: #111827;
+    }
 
-    .header { background:#2f55c7; color:white; padding:20px; }
+    .hero {
+      background: #2f55c7;
+      color: white;
+      padding: 28px 20px;
+    }
 
-    .card {
-      background:white;
-      margin:20px;
-      padding:20px;
-      border-radius:12px;
+    .hero h1 {
+      margin: 0 0 10px 0;
+      font-size: 52px;
+    }
+
+    .hero p {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .section {
+      background: #f8fafc;
+      margin: 20px;
+      padding: 20px;
+      border-radius: 18px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     }
 
     .btn {
-      background:#2f55c7;
-      color:white;
-      padding:12px 20px;
-      border-radius:8px;
-      text-decoration:none;
-      display:inline-block;
-      font-weight:bold;
+      display: inline-block;
+      background: #2f55c7;
+      color: white;
+      text-decoration: none;
+      padding: 14px 22px;
+      border-radius: 12px;
+      font-weight: bold;
+      margin-top: 12px;
     }
 
-    .cars-wrap { padding:20px; }
-
-    .car {
-      background:white;
-      margin-bottom:20px;
-      padding:15px;
-      border-radius:12px;
+    .search-box,
+    .filter-box {
+      width: calc(100% - 40px);
+      margin: 0 20px 15px 20px;
+      padding: 14px;
+      border-radius: 12px;
+      border: 2px solid #111827;
+      box-sizing: border-box;
+      font-size: 16px;
     }
 
-    .car img {
-      width:100%;
-      border-radius:10px;
-      margin-bottom:10px;
+    .filters-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin: 0 20px 20px 20px;
     }
 
-    .price {
-      color:#d11a2a;
-      font-size:26px;
-      font-weight:bold;
+    .cars-wrap {
+      padding: 0 20px 30px 20px;
     }
 
-    .featured {
-      border:3px solid gold;
+    .car-card {
+      background: #f8fafc;
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     }
 
-    .badge {
-      background:gold;
-      color:black;
-      padding:5px 10px;
-      border-radius:6px;
-      font-weight:bold;
-      display:inline-block;
-      margin-bottom:10px;
+    .car-card img {
+      width: 100%;
+      height: 320px;
+      object-fit: cover;
+      border-radius: 16px;
+      margin-bottom: 14px;
+      background: #cbd5e1;
     }
 
-    .buttons a {
-      display:block;
-      margin-top:10px;
-      padding:12px;
-      border-radius:8px;
-      text-align:center;
-      text-decoration:none;
-      color:white;
-      font-weight:bold;
+    .car-title {
+      font-size: 34px;
+      font-weight: bold;
+      line-height: 1.15;
+      margin-bottom: 12px;
     }
 
-    .view { background:#111827; }
-    .call { background:#2f55c7; }
-    .whatsapp { background:#25D366; }
+    .year-badge {
+      display: inline-block;
+      background: #dbeafe;
+      color: #1d4ed8;
+      font-weight: bold;
+      padding: 8px 12px;
+      border-radius: 999px;
+      margin-bottom: 14px;
+      font-size: 14px;
+    }
+
+    .car-price {
+      color: #c53030;
+      font-size: 36px;
+      font-weight: bold;
+      margin-bottom: 18px;
+    }
+
+    .car-meta {
+      font-size: 18px;
+      margin-bottom: 14px;
+      line-height: 1.5;
+    }
+
+    .car-meta strong {
+      color: #000;
+    }
+
+    .car-buttons a {
+      display: block;
+      text-align: center;
+      text-decoration: none;
+      color: white;
+      font-weight: bold;
+      padding: 16px;
+      border-radius: 16px;
+      margin-top: 12px;
+      font-size: 18px;
+    }
+
+    .details-btn {
+      background: #0f172a;
+    }
+
+    .call-btn {
+      background: #3f5cc9;
+    }
+
+    .wa-btn {
+      background: #66cc6a;
+    }
   </style>
 </head>
-
 <body>
 
-<div class="header">
-  <h1>DealerFlow</h1>
-  <p>Turn your stock into sales</p>
-</div>
+  <div class="hero">
+    <h1>DealerFlow</h1>
+    <p>Turn your stock into sales</p>
+  </div>
 
-<div class="card">
-  <h2>For Dealers</h2>
-  <a href="upload6.html" class="btn">Upload Your Stock</a>
-</div>
+  <div class="section">
+    <h2>For Dealers</h2>
+    <p>Load your vehicle stock and receive real buyer leads directly via call, WhatsApp, or enquiry.</p>
+    <a class="btn" href="upload6.html">Upload Your Stock</a>
+  </div>
 
-<h2 style="padding:20px;">⭐ Featured Vehicles</h2>
-<div id="featuredCars" class="cars-wrap"></div>
+  <input type="text" id="searchInput" class="search-box" placeholder="Search vehicles (e.g. BMW, Toyota, Urban Cruiser)" oninput="renderCars()">
 
-<h2 style="padding:20px;">Latest Vehicles</h2>
-<div id="cars" class="cars-wrap"></div>
+  <div class="filters-row">
+    <select id="yearFilter" class="filter-box" onchange="renderCars()">
+      <option value="">All Years</option>
+    </select>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <select id="priceFilter" class="filter-box" onchange="renderCars()">
+      <option value="">All Prices</option>
+      <option value="0-100000">Under R100 000</option>
+      <option value="100000-200000">R100 000 - R200 000</option>
+      <option value="200000-300000">R200 000 - R300 000</option>
+      <option value="300000-99999999">Above R300 000</option>
+    </select>
 
-<script>
-const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
-const supabaseKey = "sb_publishable_D7saHOTE_JhSlMnSgBnIhQ_mOAOUD9s";
-const client = window.supabase.createClient(supabaseUrl, supabaseKey);
+    <select id="locationFilter" class="filter-box" onchange="renderCars()">
+      <option value="">All Locations</option>
+    </select>
+  </div>
 
-function getImages(car) {
-  if (!car.images) return [car.image];
-  return car.images.split(",");
-}
+  <h2 style="padding: 0 20px;">Latest Vehicles</h2>
+  <div class="cars-wrap">
+    <div id="cars"></div>
+  </div>
 
-function createCarHTML(car, isFeatured=false) {
-  const images = getImages(car);
-  const phone = car.phone;
-  const whatsapp = phone.startsWith("0") ? "27"+phone.substring(1) : phone;
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
+    const supabaseKey = "sb_publishable_D7saHOTE_JhSlMnSgBnIhQ_mOAOUD9s";
+    const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-  return `
-    <div class="car ${isFeatured ? 'featured' : ''}">
-      ${isFeatured ? '<div class="badge">⭐ Featured</div>' : ''}
-      <img src="${images[0]}">
-      <h3>${car.title}</h3>
-      <div class="price">R${car.price}</div>
-      <p><b>Mileage:</b> ${car.mileage} km</p>
-      <p><b>Location:</b> ${car.location}</p>
-      <p><b>Dealer:</b> ${car.dealer}</p>
+    let allCars = [];
 
-      <div class="buttons">
-        <a href="details.html?id=${car.id}" class="view">View Details</a>
-        <a href="tel:${phone}" class="call">📞 Call</a>
-        <a href="https://wa.me/${whatsapp}" class="whatsapp">💬 WhatsApp</a>
-      </div>
-    </div>
-  `;
-}
-
-async function loadCars() {
-  const { data } = await client.from("vehicles").select("*");
-
-  const featuredDiv = document.getElementById("featuredCars");
-  const normalDiv = document.getElementById("cars");
-
-  featuredDiv.innerHTML = "";
-  normalDiv.innerHTML = "";
-
-  data.forEach(car => {
-    if (car.featured) {
-      featuredDiv.innerHTML += createCarHTML(car, true);
-    } else {
-      normalDiv.innerHTML += createCarHTML(car);
+    function normalisePhone(phone) {
+      return String(phone || "").replace(/\s+/g, "");
     }
-  });
-}
 
-loadCars();
-</script>
+    function populateYearFilter(cars) {
+      const yearFilter = document.getElementById("yearFilter");
+      yearFilter.innerHTML = '<option value="">All Years</option>';
+
+      const years = [...new Set(cars.map(car => car.year).filter(Boolean))].sort((a, b) => Number(b) - Number(a));
+
+      years.forEach(year => {
+        const option = document.createElement("option");
+        option.value = year;
+        option.textContent = year;
+        yearFilter.appendChild(option);
+      });
+    }
+
+    function populateLocationFilter(cars) {
+      const locationFilter = document.getElementById("locationFilter");
+      locationFilter.innerHTML = '<option value="">All Locations</option>';
+
+      const locations = [...new Set(cars.map(car => car.location).filter(Boolean))].sort();
+
+      locations.forEach(location => {
+        const option = document.createElement("option");
+        option.value = location;
+        option.textContent = location;
+        locationFilter.appendChild(option);
+      });
+    }
+
+    function renderCars() {
+      const container = document.getElementById("cars");
+      const searchText = document.getElementById("searchInput").value.toLowerCase().trim();
+      const yearFilter = document.getElementById("yearFilter").value;
+      const priceFilter = document.getElementById("priceFilter").value;
+      const locationFilter = document.getElementById("locationFilter").value;
+
+      let filtered = [...allCars];
+
+      if (searchText) {
+        filtered = filtered.filter(car =>
+          (car.title || "").toLowerCase().includes(searchText) ||
+          (car.dealer || "").toLowerCase().includes(searchText) ||
+          (car.location || "").toLowerCase().includes(searchText) ||
+          (car.year || "").toLowerCase().includes(searchText)
+        );
+      }
+
+      if (yearFilter) {
+        filtered = filtered.filter(car => String(car.year || "") === String(yearFilter));
+      }
+
+      if (priceFilter) {
+        const parts = priceFilter.split("-");
+        const min = Number(parts[0]);
+        const max = Number(parts[1]);
+
+        filtered = filtered.filter(car => {
+          const price = Number(car.price || 0);
+          return price >= min && price <= max;
+        });
+      }
+
+      if (locationFilter) {
+        filtered = filtered.filter(car => (car.location || "") === locationFilter);
+      }
+
+      container.innerHTML = "";
+
+      if (!filtered.length) {
+        container.innerHTML = "<p>No vehicles found.</p>";
+        return;
+      }
+
+      filtered.forEach(car => {
+        const phoneClean = normalisePhone(car.phone);
+        const whatsappLink = "https://wa.me/27" + phoneClean.replace(/^0/, "") + "?text=" + encodeURIComponent("Hi, I'm interested in the " + (car.title || "vehicle"));
+        const detailsLink = "details.html?id=" + car.id;
+
+        const div = document.createElement("div");
+        div.className = "car-card";
+        div.innerHTML = `
+          <img src="${car.image || ""}" alt="${car.title || ""}">
+          <div class="car-title">${car.title || ""}</div>
+          <div class="year-badge">Year: ${car.year || "Not set"}</div>
+          <div class="car-price">R${car.price || ""}</div>
+          <div class="car-meta"><strong>Mileage:</strong> ${car.mileage || ""} km</div>
+          <div class="car-meta"><strong>Location:</strong> ${car.location || ""}</div>
+          <div class="car-meta"><strong>Dealer:</strong> ${car.dealer || ""}</div>
+          <div class="car-meta"><strong>Phone:</strong> ${car.phone || ""}</div>
+
+          <div class="car-buttons">
+            <a href="${detailsLink}" class="details-btn">View Details</a>
+            <a href="tel:${phoneClean}" class="call-btn">📞 Call Dealer</a>
+            <a href="${whatsappLink}" target="_blank" class="wa-btn">💬 WhatsApp Dealer</a>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    async function loadCars() {
+      const { data, error } = await supabase
+        .from("vehicles")
+        .select("*")
+        .order("id", { ascending: false });
+
+      if (error) {
+        console.log(error);
+        document.getElementById("cars").innerHTML = "<p>Could not load vehicles.</p>";
+        return;
+      }
+
+      allCars = data || [];
+      populateYearFilter(allCars);
+      populateLocationFilter(allCars);
+      renderCars();
+    }
+
+    loadCars();
+  </script>
 
 </body>
 </html>
