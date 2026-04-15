@@ -20,7 +20,7 @@
     }
 
     .container {
-      max-width: 700px;
+      max-width: 760px;
       margin: 20px auto;
       background: white;
       padding: 20px;
@@ -60,7 +60,7 @@
       background: white;
     }
 
-    button.publish-btn {
+    .publish-btn {
       width: 100%;
       padding: 14px;
       border: none;
@@ -74,17 +74,32 @@
 
     .preview-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-      gap: 10px;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
       margin-bottom: 14px;
     }
 
-    .preview-grid img {
+    .preview-item {
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      padding: 8px;
+      background: #f8fafc;
+    }
+
+    .preview-item img {
       width: 100%;
-      height: 110px;
+      height: 120px;
       object-fit: cover;
       border-radius: 10px;
-      border: 1px solid #ddd;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .preview-item .label {
+      font-size: 12px;
+      font-weight: bold;
+      color: #334155;
+      text-align: center;
     }
 
     .status {
@@ -102,6 +117,12 @@
       font-size: 13px;
       color: #64748b;
       margin-top: -6px;
+      margin-bottom: 12px;
+    }
+
+    .help {
+      font-size: 13px;
+      color: #475569;
       margin-bottom: 12px;
     }
   </style>
@@ -122,6 +143,7 @@
     <div id="dealerInfo" class="status">Checking login...</div>
 
     <input type="file" id="photos" accept="image/*" multiple />
+    <div class="help">Upload one or more photos. The first uploaded photo becomes the main image.</div>
     <div id="previewGrid" class="preview-grid"></div>
 
     <input id="title" placeholder="Vehicle Title" />
@@ -140,7 +162,7 @@
     <input id="phone" placeholder="Phone Number" readonly />
     <div class="muted">Auto-filled from dealer profile</div>
 
-    <button type="button" class="publish-btn" onclick="publishVehicle()">Publish Vehicle</button>
+    <button type="button" class="publish-btn" id="publishBtn" onclick="publishVehicle()">Publish Vehicle</button>
 
     <div id="status" class="status">Ready.</div>
   </div>
@@ -163,12 +185,20 @@
     const previewGrid = document.getElementById("previewGrid");
     const statusBox = document.getElementById("status");
     const dealerInfoBox = document.getElementById("dealerInfo");
+    const publishBtn = document.getElementById("publishBtn");
 
     let currentUser = null;
     let currentProfile = null;
 
     function setStatus(message) {
       statusBox.textContent = message;
+    }
+
+    function setPublishingState(isPublishing, text = "Publish Vehicle") {
+      publishBtn.disabled = isPublishing;
+      publishBtn.textContent = isPublishing ? text : "Publish Vehicle";
+      publishBtn.style.opacity = isPublishing ? "0.7" : "1";
+      publishBtn.style.cursor = isPublishing ? "not-allowed" : "pointer";
     }
 
     function populateYears() {
@@ -197,7 +227,7 @@
 
       if (error || !data) {
         console.log("profile error:", error);
-        dealerInfoBox.textContent = "Profile not found. Please sign up again or create your profile.";
+        dealerInfoBox.textContent = "Profile not found. Please create your dealer profile first.";
         return;
       }
 
@@ -237,22 +267,33 @@
         return;
       }
 
-      files.forEach(file => {
+      files.forEach((file, index) => {
         const reader = new FileReader();
         reader.onload = function (e) {
+          const item = document.createElement("div");
+          item.className = "preview-item";
+
           const img = document.createElement("img");
           img.src = e.target.result;
-          previewGrid.appendChild(img);
+
+          const label = document.createElement("div");
+          label.className = "label";
+          label.textContent = index === 0 ? "Main Image" : "Gallery Image " + index;
+
+          item.appendChild(img);
+          item.appendChild(label);
+          previewGrid.appendChild(item);
         };
         reader.readAsDataURL(file);
       });
 
-      setStatus(files.length + " photo(s) selected.");
+      setStatus(files.length + " photo(s) selected. First photo will be used as the main image.");
     });
 
-    async function uploadOneFile(file) {
-      const fileExt = file.name.split(".").pop();
-      const fileName = Date.now() + "-" + Math.floor(Math.random() * 100000) + "." + fileExt;
+    async function uploadOneFile(file, userId) {
+      const fileExt = (file.name.split(".").pop() || "jpg").toLowerCase();
+      const safeExt = fileExt.replace(/[^a-z0-9]/g, "") || "jpg";
+      const fileName = userId + "-" + Date.now() + "-" + Math.floor(Math.random() * 100000) + "." + safeExt;
       const filePath = "vehicles/" + fileName;
 
       const uploadRes = await fetch(
@@ -308,15 +349,17 @@
       }
 
       try {
+        setPublishingState(true, "Uploading...");
         const uploadedUrls = [];
 
         for (let i = 0; i < files.length; i++) {
           setStatus("Uploading photo " + (i + 1) + " of " + files.length + "...");
-          const imageUrl = await uploadOneFile(files[i]);
+          const imageUrl = await uploadOneFile(files[i], currentUser.id);
           uploadedUrls.push(imageUrl);
         }
 
         setStatus("Saving vehicle...");
+        setPublishingState(true, "Saving...");
 
         const mainImage = uploadedUrls[0];
         const imagesString = uploadedUrls.join(",");
@@ -340,6 +383,7 @@
         if (error) {
           console.log("insert error:", error);
           setStatus("Vehicle save failed: " + error.message);
+          setPublishingState(false);
           return;
         }
 
@@ -353,6 +397,8 @@
         photosInput.value = "";
         previewGrid.innerHTML = "";
 
+        setPublishingState(false);
+
         setTimeout(() => {
           window.location.href = "dealer-admin.html";
         }, 1000);
@@ -360,6 +406,7 @@
       } catch (err) {
         console.log("publish error:", err);
         setStatus("Something went wrong: " + err.message);
+        setPublishingState(false);
       }
     }
 
@@ -368,4 +415,3 @@
   </script>
 </body>
 </html>
-   
