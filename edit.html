@@ -96,6 +96,13 @@
       min-height: 20px;
       line-height: 1.4;
     }
+
+    .muted {
+      font-size: 13px;
+      color: #64748b;
+      margin-top: -6px;
+      margin-bottom: 12px;
+    }
   </style>
 </head>
 <body>
@@ -119,8 +126,13 @@
     <input id="price" placeholder="Price">
     <input id="mileage" placeholder="Mileage">
     <input id="location" placeholder="Location">
-    <input id="dealer" placeholder="Dealer Name">
-    <input id="phone" placeholder="Phone Number">
+
+    <input id="dealer" placeholder="Dealer Name" readonly>
+    <div class="muted">Auto-filled from dealer profile</div>
+
+    <input id="phone" placeholder="Phone Number" readonly>
+    <div class="muted">Auto-filled from dealer profile</div>
+
     <input id="image" placeholder="Main Image URL">
     <input id="images" placeholder="All Images (comma separated URLs)">
     <label style="display:block; margin-bottom:12px;">
@@ -151,6 +163,7 @@
     const previewGrid = document.getElementById("previewGrid");
 
     let currentUser = null;
+    let currentProfile = null;
     let vehicleId = null;
 
     function getVehicleId() {
@@ -186,6 +199,26 @@
       });
     }
 
+    async function loadProfile(userId) {
+      const { data, error } = await client
+        .from("profiles")
+        .select("*")
+        .eq("id", userId)
+        .single();
+
+      if (error || !data) {
+        console.log("profile error:", error);
+        dealerInfoBox.textContent = "Profile not found.";
+        return false;
+      }
+
+      currentProfile = data;
+      document.getElementById("dealer").value = data.dealer_name || "";
+      document.getElementById("phone").value = data.phone || "";
+      dealerInfoBox.textContent = "Logged in as: " + currentUser.email + " | " + (data.dealer_name || "Dealer");
+      return true;
+    }
+
     async function checkUserAndLoadVehicle() {
       try {
         const sessionResult = await client.auth.getSession();
@@ -200,7 +233,12 @@
         }
 
         currentUser = session.user;
-        dealerInfoBox.textContent = "Logged in as: " + currentUser.email;
+
+        const profileOk = await loadProfile(currentUser.id);
+        if (!profileOk) {
+          setStatus("Dealer profile missing.");
+          return;
+        }
 
         vehicleId = getVehicleId();
 
@@ -226,8 +264,6 @@
         document.getElementById("price").value = data.price || "";
         document.getElementById("mileage").value = data.mileage || "";
         document.getElementById("location").value = data.location || "";
-        document.getElementById("dealer").value = data.dealer || "";
-        document.getElementById("phone").value = data.phone || "";
         document.getElementById("image").value = data.image || "";
         document.getElementById("images").value = data.images || "";
         document.getElementById("featured").checked = !!data.featured;
@@ -241,8 +277,8 @@
     }
 
     async function saveVehicle() {
-      if (!currentUser || !vehicleId) {
-        setStatus("Missing user or vehicle.");
+      if (!currentUser || !vehicleId || !currentProfile) {
+        setStatus("Missing user, profile or vehicle.");
         return;
       }
 
