@@ -33,6 +33,7 @@
       border-radius: 16px;
       background: #cbd5e1;
       margin-bottom: 14px;
+      display: block;
     }
 
     .thumbs {
@@ -49,6 +50,7 @@
       border-radius: 10px;
       cursor: pointer;
       border: 2px solid transparent;
+      background: #cbd5e1;
     }
 
     .title {
@@ -117,7 +119,7 @@
 
   <div class="container">
     <div class="card">
-      <img id="mainImage" class="main-image" src="" alt="Vehicle image">
+      <img id="image" class="main-image" src="" alt="Vehicle image">
       <div id="thumbs" class="thumbs"></div>
 
       <div id="title" class="title"></div>
@@ -130,7 +132,7 @@
       <div class="meta"><strong>Phone:</strong> <span id="phone"></span></div>
 
       <a id="callBtn" class="action-btn call-btn" href="#">📞 Call Dealer</a>
-      <a id="waBtn" class="action-btn wa-btn" href="#" target="_blank">💬 WhatsApp Dealer</a>
+      <a id="whatsappBtn" class="action-btn wa-btn" href="#" target="_blank">💬 WhatsApp Dealer</a>
       <a href="index.html" class="action-btn back-btn">← Back to Listings</a>
     </div>
   </div>
@@ -139,19 +141,19 @@
   <script>
     const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
     const supabaseKey = "sb_publishable_D7saHOTE_JhSlMnSgBnIhQ_mOAOUD9s";
-    const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+    const client = window.supabase.createClient(supabaseUrl, supabaseKey);
 
     function getVehicleId() {
       const params = new URLSearchParams(window.location.search);
       return params.get("id");
     }
 
-    function normalisePhone(phone) {
+    function cleanPhone(phone) {
       return String(phone || "").replace(/\s+/g, "");
     }
 
     function setMainImage(url) {
-      document.getElementById("mainImage").src = url || "";
+      document.getElementById("image").src = url || "";
     }
 
     function renderThumbs(imagesString, mainImage) {
@@ -159,18 +161,23 @@
       thumbs.innerHTML = "";
 
       let images = [];
+
       if (imagesString && imagesString.trim() !== "") {
-        images = imagesString.split(",").map(x => x.trim()).filter(Boolean);
+        images = imagesString
+          .split(",")
+          .map(x => x.trim())
+          .filter(Boolean);
       }
 
-      if (!images.length && mainImage) {
+      if (images.length === 0 && mainImage) {
         images = [mainImage];
       }
 
       images.forEach(url => {
         const img = document.createElement("img");
         img.src = url;
-        img.onclick = function() {
+        img.alt = "Vehicle photo";
+        img.onclick = function () {
           setMainImage(url);
         };
         thumbs.appendChild(img);
@@ -181,24 +188,23 @@
       const id = getVehicleId();
 
       if (!id) {
-        document.body.innerHTML = "<p style='padding:20px;'>No vehicle selected.</p>";
+        document.body.innerHTML = "<h2 style='padding:20px;'>Vehicle not found</h2>";
         return;
       }
 
-      const { data, error } = await supabase
+      const { data, error } = await client
         .from("vehicles")
         .select("*")
         .eq("id", id)
         .single();
 
       if (error || !data) {
-        console.log(error);
-        document.body.innerHTML = "<p style='padding:20px;'>Vehicle not found.</p>";
+        console.log("Vehicle load error:", error);
+        document.body.innerHTML = "<h2 style='padding:20px;'>Vehicle not found</h2>";
         return;
       }
 
-      const phoneClean = normalisePhone(data.phone);
-      const whatsappLink = "https://wa.me/27" + phoneClean.replace(/^0/, "") + "?text=" + encodeURIComponent("Hi, I'm interested in the " + (data.title || "vehicle"));
+      console.log("Vehicle:", data);
 
       document.getElementById("title").textContent = data.title || "";
       document.getElementById("year").textContent = "Year: " + (data.year || "Not set");
@@ -208,8 +214,11 @@
       document.getElementById("dealer").textContent = data.dealer || "";
       document.getElementById("phone").textContent = data.phone || "";
 
+      const phoneClean = cleanPhone(data.phone);
       document.getElementById("callBtn").href = "tel:" + phoneClean;
-      document.getElementById("waBtn").href = whatsappLink;
+      document.getElementById("whatsappBtn").href =
+        "https://wa.me/27" + phoneClean.replace(/^0/, "") +
+        "?text=" + encodeURIComponent("Hi, I'm interested in the " + (data.title || "vehicle"));
 
       setMainImage(data.image || "");
       renderThumbs(data.images || "", data.image || "");
