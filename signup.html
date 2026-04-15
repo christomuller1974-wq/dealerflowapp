@@ -23,7 +23,7 @@
 
     .card {
       width: 100%;
-      max-width: 420px;
+      max-width: 460px;
       background: white;
       border-radius: 14px;
       padding: 24px;
@@ -93,9 +93,11 @@
   <div class="wrap">
     <div class="card">
       <h1>Dealer Signup</h1>
-      <p>Create your DealerFlow account to upload and manage your stock.</p>
+      <p>Create your DealerFlow account and dealer profile.</p>
 
       <form id="signupForm">
+        <input type="text" id="dealer_name" placeholder="Dealer / Business Name" required>
+        <input type="text" id="phone" placeholder="Phone Number" required>
         <input type="email" id="email" placeholder="Email address" required>
         <input type="password" id="password" placeholder="Create password (min 6 characters)" required>
         <button type="submit" id="signupButton">Create Account</button>
@@ -123,11 +125,13 @@
     form.addEventListener("submit", async function(event) {
       event.preventDefault();
 
+      const dealerName = document.getElementById("dealer_name").value.trim();
+      const phone = document.getElementById("phone").value.trim();
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value.trim();
 
-      if (!email || !password) {
-        statusBox.textContent = "Please enter email and password.";
+      if (!dealerName || !phone || !email || !password) {
+        statusBox.textContent = "Please complete all fields.";
         return;
       }
 
@@ -154,14 +158,33 @@
           return;
         }
 
-        console.log("Signup success:", data);
-
-        if (data.user) {
-          statusBox.textContent = "Account created successfully. You can now go to login.";
-          form.reset();
-        } else {
-          statusBox.textContent = "Signup submitted. Check your email if confirmation is enabled.";
+        if (!data.user) {
+          statusBox.textContent = "Account created, but user data not returned.";
+          signupButton.disabled = false;
+          signupButton.textContent = "Create Account";
+          return;
         }
+
+        const userId = data.user.id;
+
+        const { error: profileError } = await client
+          .from("profiles")
+          .upsert([{
+            id: userId,
+            dealer_name: dealerName,
+            phone: phone
+          }]);
+
+        if (profileError) {
+          console.log("Profile error:", profileError);
+          statusBox.textContent = "Account created, but profile save failed: " + profileError.message;
+          signupButton.disabled = false;
+          signupButton.textContent = "Create Account";
+          return;
+        }
+
+        statusBox.textContent = "Account and profile created successfully. You can now log in.";
+        form.reset();
 
       } catch (err) {
         console.log("Unexpected signup error:", err);
