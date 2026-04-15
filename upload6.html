@@ -48,7 +48,7 @@
       font-size: 14px;
     }
 
-    input, textarea {
+    input {
       width: 100%;
       padding: 12px;
       margin-bottom: 12px;
@@ -95,6 +95,13 @@
       min-height: 20px;
       line-height: 1.4;
     }
+
+    .muted {
+      font-size: 13px;
+      color: #64748b;
+      margin-top: -6px;
+      margin-bottom: 12px;
+    }
   </style>
 </head>
 <body>
@@ -119,8 +126,12 @@
     <input id="price" placeholder="Price" />
     <input id="mileage" placeholder="Mileage" />
     <input id="location" placeholder="Location" />
-    <input id="dealer" placeholder="Dealer Name" />
-    <input id="phone" placeholder="Phone Number" />
+
+    <input id="dealer" placeholder="Dealer Name" readonly />
+    <div class="muted">Auto-filled from dealer profile</div>
+
+    <input id="phone" placeholder="Phone Number" readonly />
+    <div class="muted">Auto-filled from dealer profile</div>
 
     <button type="button" class="publish-btn" onclick="publishVehicle()">Publish Vehicle</button>
 
@@ -147,6 +158,7 @@
     const dealerInfoBox = document.getElementById("dealerInfo");
 
     let currentUser = null;
+    let currentProfile = null;
 
     function setStatus(message) {
       statusBox.textContent = message;
@@ -155,6 +167,25 @@
     async function logout() {
       await client.auth.signOut();
       window.location.href = "login.html";
+    }
+
+    async function loadProfile(userId) {
+      const { data, error } = await client
+        .from("profiles")
+        .select("*")
+        .eq("id", userId)
+        .single();
+
+      if (error || !data) {
+        console.log("profile error:", error);
+        dealerInfoBox.textContent = "Profile not found. Please sign up again or create your profile.";
+        return;
+      }
+
+      currentProfile = data;
+      document.getElementById("dealer").value = data.dealer_name || "";
+      document.getElementById("phone").value = data.phone || "";
+      dealerInfoBox.textContent = "Logged in as: " + currentUser.email + " | " + (data.dealer_name || "Dealer");
     }
 
     async function checkUser() {
@@ -171,7 +202,7 @@
         }
 
         currentUser = session.user;
-        dealerInfoBox.textContent = "Logged in as: " + currentUser.email;
+        await loadProfile(currentUser.id);
       } catch (err) {
         console.log("checkUser error:", err);
         dealerInfoBox.textContent = "Could not verify login.";
@@ -233,6 +264,11 @@
         return;
       }
 
+      if (!currentProfile) {
+        setStatus("Dealer profile not loaded.");
+        return;
+      }
+
       const title = document.getElementById("title").value.trim();
       const price = document.getElementById("price").value.trim();
       const mileage = document.getElementById("mileage").value.trim();
@@ -242,7 +278,7 @@
       const files = Array.from(photosInput.files || []);
 
       if (!title || !price || !mileage || !location || !dealer || !phone) {
-        setStatus("Please fill in all fields.");
+        setStatus("Please fill in all required fields.");
         return;
       }
 
@@ -292,8 +328,6 @@
         document.getElementById("price").value = "";
         document.getElementById("mileage").value = "";
         document.getElementById("location").value = "";
-        document.getElementById("dealer").value = "";
-        document.getElementById("phone").value = "";
         photosInput.value = "";
         previewGrid.innerHTML = "";
 
@@ -311,3 +345,5 @@
   </script>
 </body>
 </html>
+
+   
