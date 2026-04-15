@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Vehicle</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f5f7fb;
+      color: #0f172a;
+    }
+
+    .header {
+      background: #1d4ed8;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 750px;
+      margin: 20px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .top-actions {
+      margin-bottom: 15px;
+    }
+
+    .top-actions a,
+    .top-actions button {
+      background: #111827;
+      color: white;
+      padding: 10px 14px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      display: inline-block;
+      margin-right: 10px;
+      margin-bottom: 10px;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 12px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+      font-size: 14px;
+    }
+
+    .preview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .preview-grid img {
+      width: 100%;
+      height: 110px;
+      object-fit: cover;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+    }
+
+    .save-btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 15px;
+      background: #1d4ed8;
+      color: white;
+    }
+
+    .status {
+      margin-top: 14px;
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: bold;
+      background: #e2e8f0;
+      color: #0f172a;
+      min-height: 20px;
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h2>Edit Vehicle</h2>
+    <p>Update your listing</p>
+  </div>
+
+  <div class="container">
+    <div class="top-actions">
+      <a href="dealer-admin.html">← Back to Dashboard</a>
+      <a href="index.html">Website</a>
+      <button type="button" onclick="logout()">Logout</button>
+    </div>
+
+    <div id="dealerInfo" class="status">Checking login...</div>
+
+    <div id="previewGrid" class="preview-grid"></div>
+
+    <input id="title" placeholder="Vehicle Title">
+    <input id="price" placeholder="Price">
+    <input id="mileage" placeholder="Mileage">
+    <input id="location" placeholder="Location">
+    <input id="dealer" placeholder="Dealer Name">
+    <input id="phone" placeholder="Phone Number">
+    <input id="image" placeholder="Main Image URL">
+    <input id="images" placeholder="All Images (comma separated URLs)">
+    <label style="display:block; margin-bottom:12px;">
+      <input type="checkbox" id="featured" style="width:auto; margin-right:8px;">
+      Featured
+    </label>
+
+    <button type="button" class="save-btn" onclick="saveVehicle()">Save Changes</button>
+
+    <div id="status" class="status">Ready.</div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
+    const supabaseKey = "sb_publishable_D7saHOTE_JhSlMnSgBnIhQ_mOAOUD9s";
+
+    const client = window.supabase.createClient(supabaseUrl, supabaseKey, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true
+      }
+    });
+
+    const dealerInfoBox = document.getElementById("dealerInfo");
+    const statusBox = document.getElementById("status");
+    const previewGrid = document.getElementById("previewGrid");
+
+    let currentUser = null;
+    let vehicleId = null;
+
+    function getVehicleId() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get("id");
+    }
+
+    function setStatus(message) {
+      statusBox.textContent = message;
+    }
+
+    async function logout() {
+      await client.auth.signOut();
+      window.location.href = "login.html";
+    }
+
+    function renderPreview(imagesString, mainImage) {
+      previewGrid.innerHTML = "";
+
+      let images = [];
+      if (imagesString && imagesString.trim() !== "") {
+        images = imagesString.split(",").map(x => x.trim()).filter(Boolean);
+      }
+
+      if (images.length === 0 && mainImage) {
+        images = [mainImage];
+      }
+
+      images.forEach(url => {
+        const img = document.createElement("img");
+        img.src = url;
+        previewGrid.appendChild(img);
+      });
+    }
+
+    async function checkUserAndLoadVehicle() {
+      try {
+        const sessionResult = await client.auth.getSession();
+        const session = sessionResult.data.session;
+
+        if (!session) {
+          dealerInfoBox.textContent = "Not logged in. Redirecting to login...";
+          setTimeout(() => {
+            window.location.href = "login.html";
+          }, 1500);
+          return;
+        }
+
+        currentUser = session.user;
+        dealerInfoBox.textContent = "Logged in as: " + currentUser.email;
+
+        vehicleId = getVehicleId();
+
+        if (!vehicleId) {
+          setStatus("No vehicle selected.");
+          return;
+        }
+
+        const { data, error } = await client
+          .from("vehicles")
+          .select("*")
+          .eq("id", vehicleId)
+          .eq("user_id", currentUser.id)
+          .single();
+
+        if (error || !data) {
+          console.log("load vehicle error:", error);
+          setStatus("Vehicle not found or you do not own it.");
+          return;
+        }
+
+        document.getElementById("title").value = data.title || "";
+        document.getElementById("price").value = data.price || "";
+        document.getElementById("mileage").value = data.mileage || "";
+        document.getElementById("location").value = data.location || "";
+        document.getElementById("dealer").value = data.dealer || "";
+        document.getElementById("phone").value = data.phone || "";
+        document.getElementById("image").value = data.image || "";
+        document.getElementById("images").value = data.images || "";
+        document.getElementById("featured").checked = !!data.featured;
+
+        renderPreview(data.images || "", data.image || "");
+        setStatus("Vehicle loaded.");
+      } catch (err) {
+        console.log("checkUserAndLoadVehicle error:", err);
+        setStatus("Something went wrong.");
+      }
+    }
+
+    async function saveVehicle() {
+      if (!currentUser || !vehicleId) {
+        setStatus("Missing user or vehicle.");
+        return;
+      }
+
+      const title = document.getElementById("title").value.trim();
+      const price = document.getElementById("price").value.trim();
+      const mileage = document.getElementById("mileage").value.trim();
+      const location = document.getElementById("location").value.trim();
+      const dealer = document.getElementById("dealer").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const image = document.getElementById("image").value.trim();
+      const images = document.getElementById("images").value.trim();
+      const featured = document.getElementById("featured").checked;
+
+      if (!title || !price || !mileage || !location || !dealer || !phone) {
+        setStatus("Please fill in all fields.");
+        return;
+      }
+
+      setStatus("Saving changes...");
+
+      try {
+        const { error } = await client
+          .from("vehicles")
+          .update({
+            title: title,
+            price: price,
+            mileage: mileage,
+            location: location,
+            dealer: dealer,
+            phone: phone,
+            image: image,
+            images: images,
+            featured: featured
+          })
+          .eq("id", vehicleId)
+          .eq("user_id", currentUser.id);
+
+        if (error) {
+          console.log("save error:", error);
+          setStatus("Save failed: " + error.message);
+          return;
+        }
+
+        renderPreview(images, image);
+        setStatus("Vehicle updated successfully.");
+      } catch (err) {
+        console.log("save catch:", err);
+        setStatus("Something went wrong: " + err.message);
+      }
+    }
+
+    document.getElementById("image").addEventListener("input", function() {
+      renderPreview(document.getElementById("images").value, this.value);
+    });
+
+    document.getElementById("images").addEventListener("input", function() {
+      renderPreview(this.value, document.getElementById("image").value);
+    });
+
+    checkUserAndLoadVehicle();
+  </script>
+</body>
+</html>
