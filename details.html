@@ -2,21 +2,125 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <title>Dealer Profile</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    .hero {
+      background: #2f55c7;
+      color: white;
+      padding: 28px 20px;
+    }
+
+    .hero h1 {
+      margin: 0 0 10px 0;
+      font-size: 42px;
+    }
+
+    .hero p {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .container {
+      padding: 20px;
+    }
+
+    .profile-card {
+      background: #f8fafc;
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .profile-title {
+…
+[14:26, 4/16/2026] Christo Muller: <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dealer Profile</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    .hero {
+      background: #2f55c7;
+      color: white;
+      padding: 28px 20px;
+    }
+
+    .hero h1 {
+      margin: 0 0 10px 0;
+      font-size: 42px;
+    }
+
+    .hero p {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .container {
+      padding: 20px;
+    }
+
+    .status {
+      background: #f8fafc;
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      font-weight: bold;
+    …
+[14:40, 4/16/2026] Christo Muller: <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
   <title>Vehicle Details</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
     body {
-      font-family: Arial, sans-serif;
       margin: 0;
+      font-family: Arial, sans-serif;
       background: #e5e7eb;
       color: #111827;
     }
 
+    .hero {
+      background: #2f55c7;
+      color: white;
+      padding: 28px 20px;
+    }
+
+    .hero h1 {
+      margin: 0 0 10px 0;
+      font-size: 42px;
+    }
+
+    .hero p {
+      margin: 0;
+      font-size: 18px;
+    }
+
     .container {
-      max-width: 860px;
+      max-width: 1100px;
       margin: 20px auto;
-      padding: 20px;
+      padding: 0 20px 30px 20px;
     }
 
     .card {
@@ -29,7 +133,7 @@
 
     .main-image {
       width: 100%;
-      height: 420px;
+      height: 260px;
       object-fit: cover;
       border-radius: 16px;
       background: #cbd5e1;
@@ -39,25 +143,25 @@
 
     .thumbs {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
       gap: 10px;
       margin-bottom: 18px;
     }
 
     .thumbs img {
       width: 100%;
-      height: 90px;
+      height: 80px;
       object-fit: cover;
       border-radius: 10px;
       cursor: pointer;
-      border: 2px solid transparent;
       background: #cbd5e1;
+      border: 2px solid transparent;
     }
 
     .title {
-      font-size: 32px;
+      font-size: 30px;
       font-weight: bold;
-      line-height: 1.15;
+      line-height: 1.2;
       margin-bottom: 12px;
     }
 
@@ -73,20 +177,33 @@
     }
 
     .price {
-      font-size: 34px;
+      font-size: 32px;
       font-weight: bold;
       color: #c53030;
       margin-bottom: 18px;
     }
 
     .meta {
-      font-size: 18px;
+      font-size: 17px;
       line-height: 1.6;
       margin-bottom: 10px;
     }
 
     .meta strong {
       color: #000;
+    }
+
+    .meta a {
+      color: #1d4ed8;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .action-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 18px;
     }
 
     .action-btn {
@@ -97,10 +214,9 @@
       text-decoration: none;
       color: white;
       font-weight: bold;
-      padding: 16px;
-      border-radius: 16px;
-      margin-top: 14px;
-      font-size: 18px;
+      padding: 15px;
+      border-radius: 14px;
+      font-size: 17px;
       border: none;
       cursor: pointer;
     }
@@ -122,7 +238,7 @@
     }
 
     .lead-title {
-      font-size: 26px;
+      font-size: 28px;
       font-weight: bold;
       margin-bottom: 14px;
     }
@@ -131,6 +247,7 @@
       color: #475569;
       margin-bottom: 16px;
       line-height: 1.5;
+      font-size: 16px;
     }
 
     input,
@@ -161,9 +278,50 @@
       min-height: 20px;
       line-height: 1.4;
     }
+
+    @media (min-width: 768px) {
+      .main-image {
+        height: 380px;
+      }
+
+      .thumbs {
+        grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      }
+
+      .thumbs img {
+        height: 90px;
+      }
+
+      .title {
+        font-size: 34px;
+      }
+
+      .price {
+        font-size: 36px;
+      }
+
+      .meta {
+        font-size: 18px;
+      }
+
+      .action-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 1100px) {
+      .main-image {
+        height: 460px;
+      }
+    }
   </style>
 </head>
 <body>
+
+  <div class="hero">
+    <h1>Vehicle Details</h1>
+    <p>View this vehicle and contact the dealer</p>
+  </div>
 
   <div class="container">
     <div class="card">
@@ -176,13 +334,18 @@
 
       <div class="meta"><strong>Mileage:</strong> <span id="mileage"></span></div>
       <div class="meta"><strong>Location:</strong> <span id="location"></span></div>
-      <div class="meta"><strong>Dealer:</strong> <span id="dealer"></span></div>
+      <div class="meta">
+        <strong>Dealer:</strong>
+        <a id="dealerLink" href="#"><span id="dealer"></span></a>
+      </div>
       <div class="meta"><strong>Phone:</strong> <span id="phone"></span></div>
 
-      <a id="callBtn" class="action-btn call-btn" href="#">📞 Call Dealer</a>
-      <a id="whatsappBtn" class="action-btn wa-btn" href="#" target="_blank">💬 WhatsApp Dealer</a>
-      <a id="dealerStockBtn" class="action-btn dealer-btn" href="#">View Dealer Stock</a>
-      <a href="index.html" class="action-btn back-btn">← Back to Listings</a>
+      <div class="action-grid">
+        <a id="callBtn" class="action-btn call-btn" href="#">📞 Call Dealer</a>
+        <a id="whatsappBtn" class="action-btn wa-btn" href="#" target="_blank">💬 WhatsApp Dealer</a>
+        <a id="dealerStockBtn" class="action-btn dealer-btn" href="#">View Dealer Stock</a>
+        <a href="index.html" class="action-btn back-btn">← Back to Listings</a>
+      </div>
     </div>
 
     <div class="card">
@@ -291,13 +454,15 @@
       document.getElementById("phone").textContent = data.phone || "";
 
       const phoneClean = cleanPhone(data.phone);
+      const dealerHref = "dealer.html?dealer=" + encodeURIComponent(data.dealer || "");
+
       document.getElementById("callBtn").href = "tel:" + phoneClean;
       document.getElementById("whatsappBtn").href =
         "https://wa.me/27" + phoneClean.replace(/^0/, "") +
         "?text=" + encodeURIComponent("Hi, I'm interested in the " + (data.title || "vehicle"));
 
-      document.getElementById("dealerStockBtn").href =
-        "dealer.html?dealer=" + encodeURIComponent(data.dealer || "");
+      document.getElementById("dealerStockBtn").href = dealerHref;
+      document.getElementById("dealerLink").href = dealerHref;
 
       document.getElementById("buyerMessage").value =
         "Hi, I'm interested in the " + (data.title || "vehicle") + ". Please contact me.";
