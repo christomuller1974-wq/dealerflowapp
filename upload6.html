@@ -227,14 +227,21 @@
 
       if (error || !data) {
         console.log("profile error:", error);
-        dealerInfoBox.textContent = "Profile not found. Please create your dealer profile first.";
-        return;
+        dealerInfoBox.textContent = "Profile not found.";
+        return false;
       }
 
       currentProfile = data;
       document.getElementById("dealer").value = data.dealer_name || "";
       document.getElementById("phone").value = data.phone || "";
+
+      if (!data.is_active) {
+        dealerInfoBox.textContent = "Your account is not active yet. Please contact admin after payment.";
+        return false;
+      }
+
       dealerInfoBox.textContent = "Logged in as: " + currentUser.email + " | " + (data.dealer_name || "Dealer");
+      return true;
     }
 
     async function checkUser() {
@@ -251,7 +258,12 @@
         }
 
         currentUser = session.user;
-        await loadProfile(currentUser.id);
+        const ok = await loadProfile(currentUser.id);
+
+        if (!ok) {
+          publishBtn.disabled = true;
+          return;
+        }
       } catch (err) {
         console.log("checkUser error:", err);
         dealerInfoBox.textContent = "Could not verify login.";
@@ -319,13 +331,8 @@
     }
 
     async function publishVehicle() {
-      if (!currentUser) {
-        setStatus("You must be logged in first.");
-        return;
-      }
-
-      if (!currentProfile) {
-        setStatus("Dealer profile not loaded.");
+      if (!currentUser || !currentProfile || !currentProfile.is_active) {
+        setStatus("Your account is not active yet.");
         return;
       }
 
