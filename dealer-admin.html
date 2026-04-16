@@ -95,6 +95,7 @@
       padding: 12px;
       margin-top: 10px;
       line-height: 1.5;
+      white-space: pre-wrap;
     }
 
     .vehicle-card img {
@@ -256,18 +257,35 @@
 
     async function checkUser() {
       try {
-        const sessionResult = await client.auth.getSession();
-        const session = sessionResult.data.session;
+        const { data: sessionData, error: sessionError } = await client.auth.getSession();
 
-        if (!session) {
-          setStatus("Not logged in. Redirecting to login...");
-          setTimeout(() => {
-            window.location.href = "login.html";
-          }, 1500);
-          return;
+        if (sessionError) {
+          console.log("Session error:", sessionError);
         }
 
-        currentUser = session.user;
+        let session = sessionData?.session || null;
+
+        if (!session || !session.user) {
+          const { data: userData, error: userError } = await client.auth.getUser();
+
+          if (userError) {
+            console.log("User error:", userError);
+          }
+
+          if (!userData || !userData.user) {
+            setStatus("Not logged in. Redirecting...");
+            setTimeout(() => {
+              window.location.href = "login.html";
+            }, 1500);
+            return;
+          }
+
+          currentUser = userData.user;
+        } else {
+          currentUser = session.user;
+        }
+
+        console.log("User loaded:", currentUser);
 
         const profileOk = await loadProfile(currentUser.id);
         if (!profileOk) {
@@ -275,12 +293,14 @@
           return;
         }
 
-        setStatus("Logged in as " + currentUser.email + ". Loading dashboard...");
+        setStatus("Welcome " + (currentProfile.dealer_name || currentUser.email));
+
         await loadMyLeads();
         await loadMyVehicles();
+
       } catch (err) {
         console.log("checkUser error:", err);
-        setStatus("Could not read login session.");
+        setStatus("Error loading dashboard.");
       }
     }
 
@@ -344,12 +364,9 @@
         }
 
         if (!data || data.length === 0) {
-          setStatus("You have no vehicles yet. Use Add Vehicle to create your first listing.");
           vehicleList.innerHTML = "<div class='vehicle-card'>No vehicles yet.</div>";
           return;
         }
-
-        setStatus("Dashboard loaded.");
 
         data.forEach(car => {
           const imageUrl = car.image || "";
@@ -436,16 +453,16 @@
     }
 
     async function saveVehicle(id) {
-      const title = document.getElementById(title-${id}).value.trim();
-      const year = document.getElementById(year-${id}).value.trim();
-      const price = document.getElementById(price-${id}).value.trim();
-      const mileage = document.getElementById(mileage-${id}).value.trim();
-      const location = document.getElementById(location-${id}).value.trim();
-      const dealer = document.getElementById(dealer-${id}).value.trim();
-      const phone = document.getElementById(phone-${id}).value.trim();
-      const image = document.getElementById(image-${id}).value.trim();
-      const images = document.getElementById(images-${id}).value.trim();
-      const featured = document.getElementById(featured-${id}).checked;
+      const title = document.getElementById(`title-${id}`).value.trim();
+      const year = document.getElementById(`year-${id}`).value.trim();
+      const price = document.getElementById(`price-${id}`).value.trim();
+      const mileage = document.getElementById(`mileage-${id}`).value.trim();
+      const location = document.getElementById(`location-${id}`).value.trim();
+      const dealer = document.getElementById(`dealer-${id}`).value.trim();
+      const phone = document.getElementById(`phone-${id}`).value.trim();
+      const image = document.getElementById(`image-${id}`).value.trim();
+      const images = document.getElementById(`images-${id}`).value.trim();
+      const featured = document.getElementById(`featured-${id}`).checked;
 
       setStatus("Saving vehicle " + id + "...");
 
