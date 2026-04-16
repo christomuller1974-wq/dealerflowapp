@@ -33,6 +33,15 @@
       padding: 20px;
     }
 
+    .status {
+      background: #f8fafc;
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      font-weight: bold;
+    }
+
     .profile-card {
       background: #f8fafc;
       border-radius: 18px;
@@ -77,15 +86,6 @@
 
     .wa-btn-top {
       background: #66cc6a;
-    }
-
-    .status {
-      background: #f8fafc;
-      border-radius: 14px;
-      padding: 14px 16px;
-      margin-bottom: 16px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-      font-weight: bold;
     }
 
     .page-title {
@@ -278,15 +278,17 @@
       }
 
       try {
-        const response = await fetch(
-          supabaseUrl + "/rest/v1/vehicles?select=*&dealer=eq." + encodeURIComponent(dealerName) + "&order=id.desc",
-          {
-            headers: {
-              apikey: supabaseKey,
-              Authorization: "Bearer " + supabaseKey
-            }
+        const url = new URL(supabaseUrl + "/rest/v1/vehicles");
+        url.searchParams.set("select", "*");
+        url.searchParams.set("dealer", "eq." + dealerName);
+        url.searchParams.set("order", "id.desc");
+
+        const response = await fetch(url.toString(), {
+          headers: {
+            apikey: supabaseKey,
+            Authorization: "Bearer " + supabaseKey
           }
-        );
+        });
 
         if (!response.ok) {
           const text = await response.text();
