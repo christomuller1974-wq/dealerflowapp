@@ -16,30 +16,52 @@
     .hero {
       background: #2f55c7;
       color: white;
-      padding: 20px;
+      padding: 28px 20px;
     }
 
     .hero h1 {
+      margin: 0 0 10px 0;
+      font-size: 42px;
+    }
+
+    .hero p {
       margin: 0;
-      font-size: 26px;
+      font-size: 18px;
     }
 
     .container {
-      padding: 14px;
+      padding: 20px;
     }
 
     .profile-card {
-      background: #fff;
-      border-radius: 12px;
-      padding: 14px;
-      margin-bottom: 16px;
-      font-size: 14px;
+      background: #f8fafc;
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     }
 
     .profile-title {
-      font-size: 20px;
+      font-size: 30px;
       font-weight: bold;
-      margin-bottom: 6px;
+      margin-bottom: 12px;
+    }
+
+    .profile-meta {
+      font-size: 18px;
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
+
+    .profile-meta strong {
+      color: #000;
+    }
+
+    .profile-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 14px;
     }
 
     .btn {
@@ -47,59 +69,85 @@
       background: #111827;
       color: white;
       text-decoration: none;
-      padding: 10px 14px;
-      border-radius: 8px;
-      font-size: 14px;
-      margin-top: 8px;
-      margin-right: 6px;
+      padding: 14px 22px;
+      border-radius: 12px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .wa-btn-top {
+      background: #66cc6a;
     }
 
     .status {
-      font-size: 14px;
-      margin-bottom: 10px;
+      background: #f8fafc;
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      font-weight: bold;
+    }
+
+    .page-title {
+      font-size: 32px;
+      margin: 0 0 18px 0;
+    }
+
+    .cars-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
     }
 
     .car-card {
-      background: #fff;
-      border-radius: 12px;
-      padding: 12px;
-      margin-bottom: 16px;
+      background: #f8fafc;
+      border-radius: 18px;
+      padding: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     }
 
     .car-card img {
       width: 100%;
-      height: 180px;
+      height: 220px;
       object-fit: cover;
-      border-radius: 10px;
-      margin-bottom: 10px;
+      border-radius: 12px;
+      margin-bottom: 14px;
+      background: #cbd5e1;
     }
 
     .car-title {
-      font-size: 18px;
+      font-size: 28px;
       font-weight: bold;
-      margin-bottom: 6px;
+      line-height: 1.2;
+      margin-bottom: 12px;
     }
 
     .year-badge {
       display: inline-block;
       background: #dbeafe;
       color: #1d4ed8;
-      font-size: 12px;
-      padding: 4px 8px;
-      border-radius: 20px;
-      margin-bottom: 6px;
+      font-weight: bold;
+      padding: 8px 12px;
+      border-radius: 999px;
+      margin-bottom: 14px;
+      font-size: 14px;
     }
 
     .car-price {
       color: #c53030;
-      font-size: 20px;
+      font-size: 34px;
       font-weight: bold;
-      margin-bottom: 6px;
+      margin-bottom: 18px;
     }
 
     .car-meta {
-      font-size: 13px;
-      margin-bottom: 4px;
+      font-size: 17px;
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+
+    .car-meta strong {
+      color: #000;
     }
 
     .car-buttons a {
@@ -107,21 +155,80 @@
       text-align: center;
       text-decoration: none;
       color: white;
-      font-size: 14px;
-      padding: 10px;
-      border-radius: 8px;
-      margin-top: 6px;
+      font-weight: bold;
+      padding: 15px;
+      border-radius: 14px;
+      margin-top: 10px;
+      font-size: 17px;
     }
 
-    .details-btn { background: #0f172a; }
-    .call-btn { background: #3f5cc9; }
-    .wa-btn { background: #66cc6a; }
+    .details-btn {
+      background: #0f172a;
+    }
+
+    .call-btn {
+      background: #3f5cc9;
+    }
+
+    .wa-btn {
+      background: #66cc6a;
+    }
+
+    @media (min-width: 768px) {
+      .cars-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .car-card img {
+        height: 180px;
+      }
+
+      .car-title {
+        font-size: 24px;
+      }
+
+      .car-price {
+        font-size: 28px;
+      }
+
+      .car-meta {
+        font-size: 15px;
+      }
+
+      .car-buttons a {
+        font-size: 15px;
+        padding: 13px;
+      }
+    }
+
+    @media (min-width: 1100px) {
+      .cars-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .car-card img {
+        height: 160px;
+      }
+
+      .car-title {
+        font-size: 22px;
+      }
+
+      .car-price {
+        font-size: 26px;
+      }
+
+      .car-meta {
+        font-size: 14px;
+      }
+    }
   </style>
 </head>
 <body>
 
   <div class="hero">
     <h1 id="dealerNameHero">Dealer Profile</h1>
+    <p>View this dealer's stock</p>
   </div>
 
   <div class="container">
@@ -129,14 +236,16 @@
 
     <div id="profileCard" class="profile-card" style="display:none;">
       <div id="dealerName" class="profile-title"></div>
-      <div class="car-meta"><strong>Phone:</strong> <span id="dealerPhone"></span></div>
+      <div class="profile-meta"><strong>Phone:</strong> <span id="dealerPhone"></span></div>
 
-      <a href="index.html" class="btn">← Back</a>
-      <a id="dealerWhatsApp" href="#" target="_blank" class="btn" style="background:#66cc6a;">WhatsApp</a>
+      <div class="profile-buttons">
+        <a href="index.html" class="btn">← Back to Listings</a>
+        <a id="dealerWhatsApp" href="#" target="_blank" class="btn wa-btn-top">WhatsApp Dealer</a>
+      </div>
     </div>
 
-    <h3>Dealer Vehicles</h3>
-    <div id="cars"></div>
+    <h2 class="page-title">Dealer Vehicles</h2>
+    <div id="cars" class="cars-grid"></div>
   </div>
 
   <script>
@@ -156,11 +265,15 @@
       return String(value || "");
     }
 
+    function setStatus(message) {
+      document.getElementById("status").textContent = message;
+    }
+
     async function loadDealerPage() {
       const dealerName = getDealerNameFromUrl();
 
       if (!dealerName) {
-        document.getElementById("status").textContent = "Dealer not found.";
+        setStatus("Dealer not found.");
         return;
       }
 
@@ -175,54 +288,66 @@
           }
         );
 
+        if (!response.ok) {
+          const text = await response.text();
+          setStatus("Could not load dealer vehicles: " + text);
+          return;
+        }
+
         const cars = await response.json();
 
         if (!cars.length) {
-          document.getElementById("status").textContent = "No vehicles found.";
+          setStatus("No vehicles found for this dealer.");
           return;
         }
 
         const dealerPhone = cars[0].phone || "";
         const phoneClean = normalisePhone(dealerPhone);
+        const whatsappLink = phoneClean
+          ? "https://wa.me/27" + phoneClean.replace(/^0/, "") + "?text=" + encodeURIComponent("Hi, I'm interested in your vehicles")
+          : "#";
 
         document.getElementById("dealerNameHero").textContent = dealerName;
         document.getElementById("dealerName").textContent = dealerName;
         document.getElementById("dealerPhone").textContent = dealerPhone;
-
-        document.getElementById("dealerWhatsApp").href =
-          "https://wa.me/27" + phoneClean.replace(/^0/, "") + "?text=Hi I'm interested in your vehicles";
-
+        document.getElementById("dealerWhatsApp").href = whatsappLink;
         document.getElementById("profileCard").style.display = "block";
-        document.getElementById("status").textContent = cars.length + " vehicles found";
+
+        setStatus(cars.length + " vehicle(s) found for " + dealerName + ".");
 
         const container = document.getElementById("cars");
         container.innerHTML = "";
 
         cars.forEach(car => {
           const phoneCleanCar = normalisePhone(car.phone);
+          const whatsappCar = phoneCleanCar
+            ? "https://wa.me/27" + phoneCleanCar.replace(/^0/, "") + "?text=" + encodeURIComponent("Hi, I'm interested in the " + safeText(car.title))
+            : "#";
 
           const div = document.createElement("div");
           div.className = "car-card";
           div.innerHTML = `
-            <img src="${safeText(car.image)}">
+            <img src="${safeText(car.image)}" alt="${safeText(car.title)}">
             <div class="car-title">${safeText(car.title)}</div>
-            <div class="year-badge">Year: ${safeText(car.year)}</div>
+            <div class="year-badge">Year: ${safeText(car.year) || "Not set"}</div>
             <div class="car-price">R${safeText(car.price)}</div>
-            <div class="car-meta">Mileage: ${safeText(car.mileage)} km</div>
-            <div class="car-meta">Location: ${safeText(car.location)}</div>
+            <div class="car-meta"><strong>Mileage:</strong> ${safeText(car.mileage)} km</div>
+            <div class="car-meta"><strong>Location:</strong> ${safeText(car.location)}</div>
+            <div class="car-meta"><strong>Dealer:</strong> ${safeText(car.dealer)}</div>
+            <div class="car-meta"><strong>Phone:</strong> ${safeText(car.phone)}</div>
 
             <div class="car-buttons">
               <a href="details.html?id=${car.id}" class="details-btn">View Details</a>
-              <a href="tel:${phoneCleanCar}" class="call-btn">Call</a>
-              <a href="https://wa.me/27${phoneCleanCar.replace(/^0/, "")}" target="_blank" class="wa-btn">WhatsApp</a>
+              <a href="tel:${phoneCleanCar}" class="call-btn">📞 Call Dealer</a>
+              <a href="${whatsappCar}" target="_blank" class="wa-btn">💬 WhatsApp Dealer</a>
             </div>
           `;
           container.appendChild(div);
         });
 
       } catch (err) {
-        console.log(err);
-        document.getElementById("status").textContent = "Error loading dealer.";
+        console.log("Dealer page error:", err);
+        setStatus("Something went wrong loading the dealer page.");
       }
     }
 
