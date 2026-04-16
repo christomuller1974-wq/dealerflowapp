@@ -40,135 +40,6 @@
       text-decoration: none;
       font-weight: bold;
       display: inline-block;
-      marg…
-[09:17, 4/16/2026] Christo Muller: <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Super Admin - DealerFlow</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f3f4f6;
-      color: #111827;
-    }
-
-    .header {
-      background: #111827;
-      color: white;
-      padding: 20px;
-    }
-
-    .header h1 {
-      margin: 0 0 8px 0;
-    }
-
-    .header p {
-      margin: 0;
-    }
-
-    .top-actions {
-      padding: 20px;
-    }
-
-    .top-actions a,
-    .top-actions button {
-      background: #2f55c7;
-      color: white;
-      padding: 12px 18px;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: bold;
-      display: inline-block;
-  …
-[09:20, 4/16/2026] Christo Muller: <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Dealer Dashboard</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f3f4f6;
-      color: #111827;
-    }
-
-    .header {
-      background: #2f55c7;
-      color: white;
-      padding: 20px;
-    }
-
-    .header h1 {
-      margin: 0 0 8px 0;
-    }
-
-    .header p {
-      margin: 0;
-    }
-
-    .top-actions {
-      padding: 20px;
-    }
-
-    .top-actions a,
-    .top-actions button {
-      background: #111827;
-      color: white;
-      padding: 12px 18px;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: bold;
-      display: inline-block;
-      marg…
-[09:42, 4/16/2026] Christo Muller: <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Dealer Dashboard</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f3f4f6;
-      color: #111827;
-    }
-
-    .header {
-      background: #2f55c7;
-      color: white;
-      padding: 20px;
-    }
-
-    .header h1 {
-      margin: 0 0 8px 0;
-    }
-
-    .header p {
-      margin: 0;
-    }
-
-    .top-actions {
-      padding: 20px;
-    }
-
-    .top-actions a,
-    .top-actions button {
-      background: #111827;
-      color: white;
-      padding: 12px 18px;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: bold;
-      display: inline-block;
       margin-right: 10px;
       margin-bottom: 10px;
       border: none;
@@ -359,8 +230,7 @@
 
     function formatDate(dateString) {
       if (!dateString) return "";
-      const date = new Date(dateString);
-      return date.toLocaleString();
+      return new Date(dateString).toLocaleString();
     }
 
     async function logout() {
@@ -384,41 +254,49 @@
       return true;
     }
 
+    async function getLoggedInUser() {
+      const { data: sessionData, error: sessionError } = await client.auth.getSession();
+      if (sessionError) {
+        console.log("getSession error:", sessionError);
+      }
+
+      if (sessionData && sessionData.session && sessionData.session.user) {
+        return sessionData.session.user;
+      }
+
+      const { data: userData, error: userError } = await client.auth.getUser();
+      if (userError) {
+        console.log("getUser error:", userError);
+      }
+
+      if (userData && userData.user) {
+        return userData.user;
+      }
+
+      return null;
+    }
+
     async function checkUser() {
       try {
-        const { data: sessionData, error: sessionError } = await client.auth.getSession();
+        currentUser = await getLoggedInUser();
 
-        if (sessionError) {
-          console.log("Session error:", sessionError);
+        if (!currentUser) {
+          setStatus("Not logged in. Redirecting...");
+          setTimeout(() => {
+            window.location.href = "login.html";
+          }, 1500);
+          return;
         }
 
-        let session = sessionData?.session || null;
-
-        if (!session || !session.user) {
-          const { data: userData, error: userError } = await client.auth.getUser();
-
-          if (userError) {
-            console.log("User error:", userError);
-          }
-
-          if (!userData || !userData.user) {
-            setStatus("Not logged in. Redirecting...");
-            setTimeout(() => {
-              window.location.href = "login.html";
-            }, 1500);
-            return;
-          }
-
-          currentUser = userData.user;
-        } else {
-          currentUser = session.user;
-        }
+        console.log("Logged in user:", currentUser);
 
         const profileOk = await loadProfile(currentUser.id);
         if (!profileOk) {
           setStatus("Dealer profile not found.");
           return;
         }
+
+        console.log("Loaded profile:", currentProfile);
 
         if (!currentProfile.is_active) {
           document.getElementById("leadList").innerHTML = "";
