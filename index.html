@@ -48,6 +48,50 @@
       margin-top: 12px;
     }
 
+    .quick-links {
+      background: #ffffff;
+      padding: 20px;
+      margin: 20px;
+      border-radius: 18px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .quick-links h3 {
+      margin-top: 0;
+      margin-bottom: 15px;
+      font-size: 24px;
+    }
+
+    .quick-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    .quick-btn {
+      display: inline-block;
+      padding: 12px 20px;
+      background: #1d4ed8;
+      color: white;
+      text-decoration: none;
+      border-radius: 10px;
+      font-weight: bold;
+    }
+
+    .quick-btn:hover {
+      background: #153ea8;
+    }
+
+    .admin-btn {
+      background: #111827;
+    }
+
+    .admin-btn:hover {
+      background: #000000;
+    }
+
     .search-box,
     .filter-box {
       width: calc(100% - 40px);
@@ -171,6 +215,16 @@
   <div class="hero">
     <h1>DealerFlow</h1>
     <p>Turn your stock into sales</p>
+  </div>
+
+  <div class="quick-links">
+    <h3>Quick Access</h3>
+
+    <div class="quick-buttons">
+      <a href="login.html" class="quick-btn">🔐 Dealer Login</a>
+      <a href="dealer-admin.html" class="quick-btn">📊 Dealer Dashboard</a>
+      <a href="super-admin.html" class="quick-btn admin-btn">⚙️ Super Admin</a>
+    </div>
   </div>
 
   <div class="section">
@@ -371,5 +425,4 @@
 
 </body>
 </html>
-
 
