@@ -304,6 +304,12 @@
       currentProfile = data;
       document.getElementById("dealer").value = data.dealer_name || "";
       document.getElementById("phone").value = data.phone || "";
+
+      if (!data.is_active) {
+        dealerInfoBox.textContent = "Your account is not active yet. Please contact admin after payment.";
+        return false;
+      }
+
       dealerInfoBox.textContent = "Logged in as: " + currentUser.email + " | " + (data.dealer_name || "Dealer");
       return true;
     }
@@ -353,7 +359,7 @@
 
         const profileOk = await loadProfile(currentUser.id);
         if (!profileOk) {
-          setStatus("Dealer profile missing.");
+          saveBtn.disabled = true;
           return;
         }
 
@@ -403,8 +409,13 @@
     }
 
     async function saveVehicle() {
-      if (!currentUser || !vehicleId || !currentProfile) {
-        setStatus("Missing user, profile or vehicle.");
+      if (!currentUser || !currentProfile || !currentProfile.is_active) {
+        setStatus("Your account is not active yet.");
+        return;
+      }
+
+      if (!vehicleId) {
+        setStatus("No vehicle selected.");
         return;
       }
 
