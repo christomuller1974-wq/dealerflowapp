@@ -16,17 +16,17 @@
     .hero {
       background: #2f55c7;
       color: white;
-      padding: 22px 20px;
+      padding: 24px 20px;
     }
 
     .hero h1 {
       margin: 0 0 8px 0;
-      font-size: 34px;
+      font-size: 36px;
     }
 
     .hero p {
       margin: 0;
-      font-size: 15px;
+      font-size: 16px;
     }
 
     .container {
@@ -42,313 +42,503 @@
     }
 
     .left-column,
-    .right-colu…
-[16:43, 4/16/2026] Christo Muller: <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Vehicle Details</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    .right-column {
+      min-width: 0;
+    }
 
-<style>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #e5e7eb;
-  color: #111827;
-}
+    .card {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      margin-bottom: 18px;
+    }
 
-.hero {
-  background: #2f55c7;
-  color: white;
-  padding: 20px;
-}
+    .main-image-wrap {
+      width: 100%;
+      height: 340px;
+      background: #eef2f7;
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
 
-.container {
-  max-width: 1200px;
-  margin: 20px auto;
-  padding: 15px;
-}
+    .main-image {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #eef2f7;
+      display: block;
+    }
 
-/* LAYOUT */
-.layout {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 20px;
-}
+    .thumbs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
 
-@media (min-width: 900px) {
-  .layout {
-    grid-template-columns: 1.2fr 0.8fr;
-  }
-}
+    .thumb-wrap {
+      height: 78px;
+      background: #eef2f7;
+      border-radius: 10px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-/* CARD */
-.card {
-  background: white;
-  border-radius: 12px;
-  padding: 14px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-}
+    .thumb-image {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      cursor: pointer;
+      background: #eef2f7;
+      border: 2px solid transparent;
+      border-radius: 10px;
+      display: block;
+    }
 
-/* IMAGE FIX (NO CUTTING) */
-.main-image-wrap {
-  height: 320px;
-  background: #ddd;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+    .thumb-image:hover {
+      border-color: #2f55c7;
+    }
 
-.main-image {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
+    .title {
+      font-size: 28px;
+      font-weight: bold;
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
 
-/* THUMBS */
-.thumbs {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 6px;
-  margin-top: 8px;
-}
+    .year-badge {
+      display: inline-block;
+      background: #dbeafe;
+      color: #1d4ed8;
+      font-weight: bold;
+      padding: 6px 10px;
+      border-radius: 999px;
+      margin-bottom: 12px;
+      font-size: 12px;
+    }
 
-.thumb-wrap {
-  height: 70px;
-  background: #eee;
-  border-radius: 6px;
-  overflow: hidden;
-}
+    .price {
+      color: #c53030;
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 14px;
+    }
 
-.thumb-wrap img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  cursor: pointer;
-}
+    .meta {
+      font-size: 14px;
+      line-height: 1.5;
+      margin-bottom: 8px;
+    }
 
-/* TEXT */
-.title {
-  font-size: 22px;
-  font-weight: bold;
-}
+    .meta strong {
+      color: #000;
+    }
 
-.price {
-  font-size: 24px;
-  color: #c53030;
-  font-weight: bold;
-  margin: 8px 0;
-}
+    .meta a {
+      color: #1d4ed8;
+      text-decoration: none;
+      font-weight: bold;
+    }
 
-.meta {
-  font-size: 14px;
-  margin: 4px 0;
-}
+    .spec-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-top: 12px;
+      margin-bottom: 12px;
+    }
 
-/* SMALL CLEAN BUTTONS */
-.action-stack {
-  display: grid;
-  gap: 6px;
-  margin-top: 10px;
-}
+    .spec-box {
+      background: #f8fafc;
+      border-radius: 10px;
+      padding: 10px;
+      font-size: 13px;
+      box-shadow: inset 0 0 0 1px #e5e7eb;
+    }
 
-.action-btn {
-  display: block;
-  text-align: center;
-  padding: 9px;
-  border-radius: 6px;
-  font-size: 13px;
-  font-weight: 600;
-  text-decoration: none;
-  color: white;
-}
+    .spec-box strong {
+      display: block;
+      color: #334155;
+      margin-bottom: 4px;
+      font-size: 12px;
+    }
 
-.call { background: #3f5cc9; }
-.wa { background: #25d366; }
-.dealer { background: #16a34a; }
-.back { background: #1f2937; }
+    .action-stack {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 6px;
+      margin-top: 12px;
+    }
 
-/* FORM */
-input, textarea {
-  width: 100%;
-  padding: 9px;
-  margin-top: 6px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 13px;
-}
+    .btn {
+      display: inline-block;
+      text-decoration: none;
+      text-align: center;
+      font-weight: 600;
+      font-size: 13px;
+      padding: 9px 12px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      color: white;
+      width: 100%;
+      box-sizing: border-box;
+    }
 
-textarea {
-  height: 90px;
-}
+    .btn-blue {
+      background: #3f5cc9;
+    }
 
-.send-btn {
-  margin-top: 8px;
-  background: #3f5cc9;
-  color: white;
-  border: none;
-  padding: 9px;
-  border-radius: 6px;
-  cursor: pointer;
-}
+    .btn-green {
+      background: #16a34a;
+    }
 
-.status {
-  margin-top: 8px;
-  background: #eee;
-  padding: 8px;
-  border-radius: 6px;
-  font-size: 13px;
-}
+    .btn-whatsapp {
+      background: #25d366;
+    }
 
-</style>
+    .btn-dark {
+      background: #1f2937;
+    }
+
+    .lead-title {
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .lead-text {
+      color: #475569;
+      margin-bottom: 12px;
+      line-height: 1.5;
+      font-size: 14px;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #cbd5e1;
+      font-size: 14px;
+      margin-bottom: 10px;
+      background: white;
+      font-family: Arial, sans-serif;
+    }
+
+    textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    .status {
+      background: #eef2f7;
+      color: #0f172a;
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-weight: bold;
+      margin-top: 10px;
+      min-height: 20px;
+      line-height: 1.4;
+      font-size: 13px;
+    }
+
+    @media (min-width: 900px) {
+      .details-layout {
+        grid-template-columns: 1.2fr 0.8fr;
+        align-items: start;
+      }
+
+      .main-image-wrap {
+        height: 400px;
+      }
+
+      .thumbs {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      .thumb-wrap {
+        height: 84px;
+      }
+
+      .title {
+        font-size: 30px;
+      }
+
+      .price {
+        font-size: 30px;
+      }
+    }
+
+    @media (min-width: 1200px) {
+      .main-image-wrap {
+        height: 430px;
+      }
+
+      .thumb-wrap {
+        height: 88px;
+      }
+    }
+  </style>
 </head>
-
 <body>
 
-<div class="hero">
-  <h2>Vehicle Details</h2>
-</div>
-
-<div class="container">
-<div class="layout">
-
-<!-- LEFT -->
-<div class="card">
-  <div class="main-image-wrap">
-    <img id="mainImage" class="main-image">
+  <div class="hero">
+    <h1>Vehicle Details</h1>
+    <p>View this vehicle and contact the dealer</p>
   </div>
 
-  <div id="thumbs" class="thumbs"></div>
-</div>
-
-<!-- RIGHT -->
-<div>
-
-<div class="card">
-  <div id="title" class="title"></div>
-  <div id="price" class="price"></div>
-
-  <div class="meta" id="year"></div>
-  <div class="meta" id="mileage"></div>
-  <div class="meta" id="location"></div>
-  <div class="meta" id="dealer"></div>
-  <div class="meta" id="phone"></div>
-
-  <div class="action-stack">
-    <a id="callBtn" class="action-btn call">Call Dealer</a>
-    <a id="waBtn" class="action-btn wa">WhatsApp Dealer</a>
-    <a id="dealerBtn" class="action-btn dealer">View Dealer Stock</a>
-    <a href="index.html" class="action-btn back">Back to Listings</a>
-  </div>
-</div>
-
-<div class="card">
-  <h3>Send Enquiry</h3>
-
-  <input id="name" placeholder="Your Name">
-  <input id="phoneInput" placeholder="Phone Number">
-  <textarea id="message"></textarea>
-
-  <button onclick="sendEnquiry()" class="send-btn">Send</button>
-
-  <div id="status" class="status"></div>
-</div>
-
-</div>
-
-</div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script>
-const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
-const supabaseKey = "sb_publishable_D7saHOTE_JhSlMnSgBnIhQ_mOAOUD9s";
-const client = window.supabase.createClient(supabaseUrl, supabaseKey);
-
-const params = new URLSearchParams(window.location.search);
-const id = params.get("id");
-
-let vehicle = null;
-
-async function loadVehicle() {
-
-  const { data, error } = await client
-    .from("vehicles")
-    .select("*")
-    .eq("id", id)
-    .single();
-
-  if (error || !data) {
-    document.body.innerHTML = `
-      <div style="padding:40px;text-align:center">
-        <h2>Vehicle not found</h2>
-        <a href="index.html">Back</a>
+  <div class="container">
+    <div class="details-layout">
+      <div class="left-column">
+        <div class="card">
+          <div class="main-image-wrap">
+            <img id="mainImage" class="main-image" src="" alt="Vehicle image">
+          </div>
+          <div id="thumbs" class="thumbs"></div>
+        </div>
       </div>
-    `;
-    return;
-  }
 
-  vehicle = data;
+      <div class="right-column">
+        <div class="card">
+          <div id="title" class="title"></div>
+          <div id="year" class="year-badge"></div>
+          <div id="price" class="price"></div>
 
-  document.getElementById("title").innerText = data.title;
-  document.getElementById("price").innerText = "R" + data.price;
-  document.getElementById("year").innerText = "Year: " + data.year;
-  document.getElementById("mileage").innerText = "Mileage: " + data.mileage;
-  document.getElementById("location").innerText = "Location: " + data.location;
-  document.getElementById("dealer").innerText = "Dealer: " + data.dealer;
-  document.getElementById("phone").innerText = "Phone: " + data.phone;
+          <div class="meta">
+            <strong>Dealer:</strong>
+            <a id="dealerLink" href="#"><span id="dealer"></span></a>
+          </div>
+          <div class="meta"><strong>Phone:</strong> <span id="phone"></span></div>
 
-  document.getElementById("callBtn").href = "tel:" + data.phone;
+          <div class="spec-grid">
+            <div class="spec-box">
+              <strong>Mileage</strong>
+              <span id="mileage"></span>
+            </div>
+            <div class="spec-box">
+              <strong>Location</strong>
+              <span id="location"></span>
+            </div>
+          </div>
 
-  document.getElementById("waBtn").href =
-    "https://wa.me/27" + data.phone.replace(/^0/, "");
+          <div class="action-stack">
+            <a id="callBtn" class="btn btn-blue" href="#">Call Dealer</a>
+            <a id="whatsappBtn" class="btn btn-whatsapp" href="#" target="_blank">WhatsApp Dealer</a>
+            <a id="dealerStockBtn" class="btn btn-green" href="#">View Dealer Stock</a>
+            <a href="index.html" class="btn btn-dark">Back to Listings</a>
+          </div>
+        </div>
 
-  document.getElementById("dealerBtn").href =
-    "dealer.html?dealer=" + encodeURIComponent(data.dealer);
+        <div class="card">
+          <div class="lead-title">Send an Enquiry</div>
+          <div class="lead-text">Interested in this vehicle? Send your details and message directly to the dealer.</div>
 
-  const mainImage = document.getElementById("mainImage");
-  mainImage.src = data.image;
+          <input type="text" id="buyerName" placeholder="Your Name">
+          <input type="text" id="buyerPhone" placeholder="Your Phone Number">
+          <textarea id="buyerMessage" placeholder="Your message"></textarea>
 
-  const thumbs = document.getElementById("thumbs");
+          <button id="sendLeadBtn" class="btn btn-blue" type="button" onclick="sendLead()">Send Enquiry</button>
 
-  if (data.images) {
-    data.images.split(",").forEach(img => {
-      const wrap = document.createElement("div");
-      wrap.className = "thumb-wrap";
+          <div id="leadStatus" class="status">Ready to send.</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-      const image = document.createElement("img");
-      image.src = img;
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
+    const supabaseKey = "sb_publishable_D7saHOTE_JhSlMnSgBnIhQ_mOAOUD9s";
+    const client = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-      image.onclick = () => mainImage.src = img;
+    let currentVehicle = null;
 
-      wrap.appendChild(image);
-      thumbs.appendChild(wrap);
-    });
-  }
-}
+    function getVehicleId() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get("id");
+    }
 
-async function sendEnquiry() {
-  const name = document.getElementById("name").value;
-  const phone = document.getElementById("phoneInput").value;
-  const message = document.getElementById("message").value;
+    function cleanPhone(phone) {
+      return String(phone || "").replace(/\s+/g, "");
+    }
 
-  const { error } = await client.from("leads").insert([{
-    vehicle_id: vehicle.id,
-    buyer_name: name,
-    buyer_phone: phone,
-    message: message
-  }]);
+    function setMainImage(url) {
+      document.getElementById("mainImage").src = url || "";
+    }
 
-  document.getElementById("status").innerText =
-    error ? "Error sending enquiry" : "Enquiry sent!";
-}
+    function setLeadStatus(message) {
+      document.getElementById("leadStatus").textContent = message;
+    }
 
-loadVehicle();
-</script>
+    function setLeadSending(isSending) {
+      const btn = document.getElementById("sendLeadBtn");
+      btn.disabled = isSending;
+      btn.textContent = isSending ? "Sending..." : "Send Enquiry";
+      btn.style.opacity = isSending ? "0.7" : "1";
+      btn.style.cursor = isSending ? "not-allowed" : "pointer";
+    }
+
+    function renderThumbs(imagesString, mainImage) {
+      const thumbs = document.getElementById("thumbs");
+      thumbs.innerHTML = "";
+
+      let images = [];
+
+      if (imagesString && imagesString.trim() !== "") {
+        images = imagesString
+          .split(",")
+          .map(x => x.trim())
+          .filter(Boolean);
+      }
+
+      if (images.length === 0 && mainImage) {
+        images = [mainImage];
+      }
+
+      images.forEach(url => {
+        const wrap = document.createElement("div");
+        wrap.className = "thumb-wrap";
+
+        const img = document.createElement("img");
+        img.src = url;
+        img.alt = "Vehicle photo";
+        img.className = "thumb-image";
+        img.onclick = function () {
+          setMainImage(url);
+        };
+
+        wrap.appendChild(img);
+        thumbs.appendChild(wrap);
+      });
+    }
+
+    async function loadVehicle() {
+      const id = getVehicleId();
+
+      if (!id) {
+        document.body.innerHTML = `
+          <div style="padding:40px;text-align:center;font-family:Arial">
+            <h2>Vehicle not found</h2>
+            <p>No vehicle ID was supplied.</p>
+            <a href="index.html" style="display:inline-block;margin-top:20px;padding:10px 14px;background:#2f55c7;color:white;border-radius:8px;text-decoration:none;">Back to Listings</a>
+          </div>
+        `;
+        return;
+      }
+
+      const { data, error } = await client
+        .from("vehicles")
+        .select("*")
+        .eq("id", id)
+        .single();
+
+      if (error || !data) {
+        console.log("Vehicle load error:", error);
+        document.body.innerHTML = `
+          <div style="padding:40px;text-align:center;font-family:Arial">
+            <h2>Vehicle not found</h2>
+            <p>This vehicle may have been removed or the ID is incorrect.</p>
+            <a href="index.html" style="display:inline-block;margin-top:20px;padding:10px 14px;background:#2f55c7;color:white;border-radius:8px;text-decoration:none;">Back to Listings</a>
+          </div>
+        `;
+        return;
+      }
+
+      currentVehicle = data;
+
+      document.getElementById("title").textContent = data.title || "";
+      document.getElementById("year").textContent = "Year: " + (data.year || "Not set");
+      document.getElementById("price").textContent = "R" + (data.price || "");
+      document.getElementById("mileage").textContent = (data.mileage || "") + " km";
+      document.getElementById("location").textContent = data.location || "";
+      document.getElementById("dealer").textContent = data.dealer || "";
+      document.getElementById("phone").textContent = data.phone || "";
+
+      const phoneClean = cleanPhone(data.phone);
+      const dealerHref = "dealer.html?dealer=" + encodeURIComponent(data.dealer || "");
+
+      document.getElementById("callBtn").href = phoneClean ? "tel:" + phoneClean : "#";
+
+      if (phoneClean) {
+        document.getElementById("whatsappBtn").href =
+          "https://wa.me/27" + phoneClean.replace(/^0/, "") +
+          "?text=" + encodeURIComponent("Hi, I'm interested in the " + (data.title || "vehicle"));
+      } else {
+        document.getElementById("whatsappBtn").href = "#";
+      }
+
+      document.getElementById("dealerStockBtn").href = dealerHref;
+      document.getElementById("dealerLink").href = dealerHref;
+
+      document.getElementById("buyerMessage").value =
+        "Hi, I'm interested in the " + (data.title || "vehicle") + ". Please contact me.";
+
+      setMainImage(data.image || "");
+      renderThumbs(data.images || "", data.image || "");
+    }
+
+    async function sendLead() {
+      if (!currentVehicle) {
+        setLeadStatus("Vehicle details not loaded yet.");
+        return;
+      }
+
+      const buyerName = document.getElementById("buyerName").value.trim();
+      const buyerPhone = document.getElementById("buyerPhone").value.trim();
+      const message = document.getElementById("buyerMessage").value.trim();
+
+      if (!buyerName || !buyerPhone || !message) {
+        setLeadStatus("Please fill in your name, phone number, and message.");
+        return;
+      }
+
+      try {
+        setLeadSending(true);
+        setLeadStatus("Sending enquiry...");
+
+        const { error } = await client
+          .from("leads")
+          .insert([{
+            vehicle_id: currentVehicle.id,
+            vehicle_title: currentVehicle.title || "",
+            dealer_name: currentVehicle.dealer || "",
+            dealer_phone: currentVehicle.phone || "",
+            buyer_name: buyerName,
+            buyer_phone: buyerPhone,
+            message: message
+          }]);
+
+        if (error) {
+          console.log("Lead insert error:", error);
+          setLeadStatus("Could not send enquiry: " + error.message);
+          setLeadSending(false);
+          return;
+        }
+
+        document.getElementById("buyerName").value = "";
+        document.getElementById("buyerPhone").value = "";
+        document.getElementById("buyerMessage").value = "";
+
+        setLeadStatus("Enquiry sent successfully.");
+        setLeadSending(false);
+
+      } catch (err) {
+        console.log("Lead send error:", err);
+        setLeadStatus("Something went wrong: " + err.message);
+        setLeadSending(false);
+      }
+    }
+
+    loadVehicle();
+  </script>
 
 </body>
 </html>
-
