@@ -30,7 +30,7 @@
     }
 
     .container {
-      max-width: 1300px;
+      max-width: 1200px;
       margin: 0 auto;
       padding: 18px;
     }
@@ -48,18 +48,16 @@
       text-align: center;
       font-weight: 600;
       font-size: 12px;
-      padding: 6px 10px;
-      border-radius: 6px;
+      padding: 8px 12px;
+      border-radius: 8px;
       border: none;
       cursor: pointer;
       color: white;
     }
 
     .btn-blue { background: #3f5cc9; }
-    .btn-green { background: #16a34a; }
     .btn-dark { background: #1f2937; }
-    .btn-red { background: #dc2626; }
-    .btn-orange { background: #f59e0b; }
+    .btn-green { background: #16a34a; }
 
     .status {
       background: #ffffff;
@@ -90,13 +88,6 @@
       border-radius: 14px;
       padding: 14px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .vehicle-card:hover,
-    .lead-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 6px 16px rgba(0,0,0,0.15);
     }
 
     .lead-card h3,
@@ -133,29 +124,14 @@
       align-items: center;
       justify-content: center;
       margin-bottom: 12px;
-      position: relative;
     }
 
     .card-image {
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: contain;
       background: #eef2f7;
       display: block;
-      border-radius: 12px;
-    }
-
-    .featured-ribbon {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: #f59e0b;
-      color: white;
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-size: 11px;
-      font-weight: bold;
-      z-index: 2;
     }
 
     .year-badge {
@@ -183,44 +159,15 @@
       margin-top: 12px;
     }
 
-    .checkbox-row {
-      margin-top: 10px;
-      margin-bottom: 10px;
-      font-size: 14px;
-      color: #334155;
-      font-weight: bold;
-    }
-
-    .checkbox-row input {
-      margin-right: 8px;
-      transform: scale(1.1);
-    }
-
     @media (min-width: 768px) {
       .vehicle-list {
         grid-template-columns: repeat(2, 1fr);
-      }
-
-      .card-image-wrap {
-        height: 180px;
-      }
-
-      .vehicle-card h3 {
-        font-size: 20px;
       }
     }
 
     @media (min-width: 1100px) {
       .vehicle-list {
         grid-template-columns: repeat(3, 1fr);
-      }
-
-      .card-image-wrap {
-        height: 170px;
-      }
-
-      .vehicle-card h3 {
-        font-size: 18px;
       }
     }
   </style>
@@ -257,13 +204,7 @@
     const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
     const supabaseKey = "sb_publishable_D7saHOTE_JhSlMnSgBnIhQ_mOAOUD9s";
 
-    const client = window.supabase.createClient(supabaseUrl, supabaseKey, {
-      auth: {
-        persistSession: true,
-        autoRefreshToken: true,
-        detectSessionInUrl: true
-      }
-    });
+    const client = window.supabase.createClient(supabaseUrl, supabaseKey);
 
     let currentUser = null;
     let currentProfile = null;
@@ -274,12 +215,12 @@
     }
 
     function escapeHtml(value) {
-      return String(value ?? "")
+      return String(value || "")
         .replace(/&/g, "&amp;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#39;")
         .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;");
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
     }
 
     function formatDate(dateString) {
@@ -295,153 +236,126 @@
     async function loadProfile(userId) {
       setStatus("Loading dealer profile...");
 
-      const { data, error } = await client
+      const result = await client
         .from("profiles")
         .select("*")
         .eq("id", userId)
         .single();
 
-      console.log("PROFILE:", data, error);
+      console.log("PROFILE RESULT:", result);
 
-      if (error || !data) {
+      if (result.error || !result.data) {
         return false;
       }
 
-      currentProfile = data;
+      currentProfile = result.data;
       return true;
     }
 
     async function loadLeads() {
+      setStatus("Loading leads...");
+
       const leadList = document.getElementById("leadList");
       leadList.innerHTML = "";
 
-      setStatus("Loading leads...");
-
-      const { data, error } = await client
+      const result = await client
         .from("leads")
         .select("*")
         .eq("dealer_name", currentProfile.dealer_name)
         .order("id", { ascending: false });
 
-      console.log("LEADS:", data, error);
+      console.log("LEADS RESULT:", result);
 
-      if (error) {
+      if (result.error) {
         leadList.innerHTML = "<div class='lead-card'>Could not load leads.</div>";
         return;
       }
 
-      if (!data || data.length === 0) {
+      const leads = result.data || [];
+
+      if (leads.length === 0) {
         leadList.innerHTML = "<div class='lead-card'>No leads yet.</div>";
         return;
       }
 
-      data.forEach(lead => {
+      leads.forEach(function(lead) {
         const card = document.createElement("div");
         card.className = "lead-card";
-        card.innerHTML = `
-          <h3>${escapeHtml(lead.vehicle_title || "Vehicle Enquiry")}</h3>
-          <div class="meta"><strong>Buyer:</strong> ${escapeHtml(lead.buyer_name || "")}</div>
-          <div class="meta"><strong>Phone:</strong> ${escapeHtml(lead.buyer_phone || "")}</div>
-          <div class="meta"><strong>Sent:</strong> ${escapeHtml(formatDate(lead.created_at))}</div>
-          <div class="message-box">${escapeHtml(lead.message || "")}</div>
-        `;
+        card.innerHTML =
+          "<h3>" + escapeHtml(lead.vehicle_title || "Vehicle Enquiry") + "</h3>" +
+          "<div class='meta'><strong>Buyer:</strong> " + escapeHtml(lead.buyer_name || "") + "</div>" +
+          "<div class='meta'><strong>Phone:</strong> " + escapeHtml(lead.buyer_phone || "") + "</div>" +
+          "<div class='meta'><strong>Sent:</strong> " + escapeHtml(formatDate(lead.created_at)) + "</div>" +
+          "<div class='message-box'>" + escapeHtml(lead.message || "") + "</div>";
         leadList.appendChild(card);
       });
     }
 
     async function loadVehicles() {
+      setStatus("Loading vehicles...");
+
       const vehicleList = document.getElementById("vehicleList");
       vehicleList.innerHTML = "";
 
-      setStatus("Loading vehicles...");
-
-      const { data, error } = await client
+      const result = await client
         .from("vehicles")
         .select("*")
         .eq("user_id", currentUser.id)
         .order("id", { ascending: false });
 
-      console.log("VEHICLES:", data, error);
+      console.log("VEHICLES RESULT:", result);
 
-      if (error) {
+      if (result.error) {
         vehicleList.innerHTML = "<div class='vehicle-card'>Could not load vehicles.</div>";
         return;
       }
 
-      if (!data || data.length === 0) {
+      const vehicles = result.data || [];
+
+      if (vehicles.length === 0) {
         vehicleList.innerHTML = "<div class='vehicle-card'>No vehicles yet.</div>";
         return;
       }
 
-      data.forEach(car => {
+      vehicles.forEach(function(car) {
         const card = document.createElement("div");
         card.className = "vehicle-card";
 
-        card.innerHTML = `
-          <div class="card-image-wrap">
-            ${car.featured ? '<div class="featured-ribbon">FEATURED</div>' : ''}
-            <img src="${escapeHtml(car.image || "")}" alt="${escapeHtml(car.title || "")}" class="card-image">
-          </div>
-
-          <h3>${escapeHtml(car.title || "Untitled Vehicle")}</h3>
-          <div class="year-badge">Year: ${escapeHtml(car.year || "Not set")}</div>
-          <div class="price">R${escapeHtml(car.price || "")}</div>
-          <div class="meta"><strong>Mileage:</strong> ${escapeHtml(car.mileage || "")} km</div>
-          <div class="meta"><strong>Location:</strong> ${escapeHtml(car.location || "")}</div>
-          <div class="meta"><strong>Phone:</strong> ${escapeHtml(car.phone || "")}</div>
-
-          <div class="checkbox-row">
-            <label>
-              <input type="checkbox" id="featured-${car.id}" ${car.featured ? "checked" : ""}>
-              Mark as Featured
-            </label>
-          </div>
-
-          <div class="vehicle-buttons">
-            <button class="btn btn-green" onclick="saveFeatured(${car.id})">Save Featured</button>
-            <a class="btn btn-orange" href="edit.html?id=${car.id}">Edit</a>
-            <a class="btn btn-blue" href="details.html?id=${car.id}">View Details</a>
-          </div>
-        `;
+        card.innerHTML =
+          "<div class='card-image-wrap'>" +
+            "<img src='" + escapeHtml(car.image || "") + "' alt='" + escapeHtml(car.title || "") + "' class='card-image'>" +
+          "</div>" +
+          "<h3>" + escapeHtml(car.title || "Untitled Vehicle") + "</h3>" +
+          "<div class='year-badge'>Year: " + escapeHtml(car.year || "Not set") + "</div>" +
+          "<div class='price'>R" + escapeHtml(car.price || "") + "</div>" +
+          "<div class='meta'><strong>Mileage:</strong> " + escapeHtml(car.mileage || "") + " km</div>" +
+          "<div class='meta'><strong>Location:</strong> " + escapeHtml(car.location || "") + "</div>" +
+          "<div class='meta'><strong>Phone:</strong> " + escapeHtml(car.phone || "") + "</div>" +
+          "<div class='vehicle-buttons'>" +
+            "<a class='btn btn-green' href='edit.html?id=" + car.id + "'>Edit</a>" +
+            "<a class='btn btn-blue' href='details.html?id=" + car.id + "'>View Details</a>" +
+          "</div>";
 
         vehicleList.appendChild(card);
       });
-    }
-
-    async function saveFeatured(id) {
-      const featured = document.getElementById(featured-${id}).checked;
-
-      setStatus("Saving featured setting...");
-
-      const { error } = await client
-        .from("vehicles")
-        .update({ featured: featured })
-        .eq("id", id)
-        .eq("user_id", currentUser.id);
-
-      if (error) {
-        console.log(error);
-        setStatus("Could not save featured setting.");
-        return;
-      }
-
-      setStatus("Featured setting saved.");
-      await loadVehicles();
     }
 
     async function startDashboard() {
       try {
         setStatus("Checking login...");
 
-        const { data, error } = await client.auth.getUser();
-        console.log("USER:", data, error);
+        const authResult = await client.auth.getUser();
+        console.log("USER RESULT:", authResult);
 
-        if (error || !data || !data.user) {
-          window.location.href = "login.html";
+        if (authResult.error || !authResult.data || !authResult.data.user) {
+          setStatus("Not logged in. Redirecting...");
+          setTimeout(function() {
+            window.location.href = "login.html";
+          }, 1000);
           return;
         }
 
-        currentUser = data.user;
+        currentUser = authResult.data.user;
 
         const profileOk = await loadProfile(currentUser.id);
 
@@ -466,8 +380,6 @@
       } catch (err) {
         console.log("DASHBOARD ERROR:", err);
         setStatus("Error loading dashboard.");
-        document.getElementById("leadList").innerHTML = "<div class='lead-card'>Error loading leads.</div>";
-        document.getElementById("vehicleList").innerHTML = "<div class='vehicle-card'>Error loading vehicles.</div>";
       }
     }
 
