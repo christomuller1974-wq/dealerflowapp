@@ -55,25 +55,11 @@
       color: white;
     }
 
-    .btn-blue {
-      background: #3f5cc9;
-    }
-
-    .btn-green {
-      background: #16a34a;
-    }
-
-    .btn-dark {
-      background: #1f2937;
-    }
-
-    .btn-red {
-      background: #dc2626;
-    }
-
-    .btn-orange {
-      background: #f59e0b;
-    }
+    .btn-blue { background: #3f5cc9; }
+    .btn-green { background: #16a34a; }
+    .btn-dark { background: #1f2937; }
+    .btn-red { background: #dc2626; }
+    .btn-orange { background: #f59e0b; }
 
     .status {
       background: #ffffff;
@@ -240,10 +226,14 @@
     <div id="status" class="status">Starting dashboard...</div>
 
     <h2 class="section-title">Your Leads</h2>
-    <div id="leadList" class="lead-list"></div>
+    <div id="leadList" class="lead-list">
+      <div class="lead-card">Loading leads...</div>
+    </div>
 
     <h2 class="section-title">Your Vehicles</h2>
-    <div id="vehicleList" class="vehicle-list"></div>
+    <div id="vehicleList" class="vehicle-list">
+      <div class="vehicle-card">Loading vehicles...</div>
+    </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -294,8 +284,9 @@
         .eq("id", userId)
         .single();
 
+      console.log("PROFILE RESULT:", data, error);
+
       if (error || !data) {
-        console.log("profile error:", error);
         return false;
       }
 
@@ -313,8 +304,9 @@
         .eq("dealer_name", currentProfile.dealer_name)
         .order("id", { ascending: false });
 
+      console.log("LEADS RESULT:", data, error);
+
       if (error) {
-        console.log("load leads error:", error);
         leadList.innerHTML = "<div class='lead-card'>Could not load leads.</div>";
         return;
       }
@@ -350,8 +342,9 @@
         .eq("user_id", currentUser.id)
         .order("id", { ascending: false });
 
+      console.log("VEHICLES RESULT:", data, error);
+
       if (error) {
-        console.log("load vehicles error:", error);
         vehicleList.innerHTML = "<div class='vehicle-card'>Could not load vehicles.</div>";
         return;
       }
@@ -363,8 +356,6 @@
 
       data.forEach(car => {
         const imageUrl = car.image || "";
-        const yearValue = car.year || "";
-        const mileageValue = car.mileage || "";
         const featuredChecked = car.featured ? "checked" : "";
 
         const card = document.createElement("div");
@@ -376,7 +367,7 @@
           </div>
 
           <h3>${escapeHtml(car.title || "Untitled Vehicle")}</h3>
-          <div class="year-badge">Year: ${escapeHtml(yearValue || "Not set")}</div>
+          <div class="year-badge">Year: ${escapeHtml(car.year || "Not set")}</div>
           <div class="small">Vehicle ID: ${car.id}</div>
 
           <div class="form-grid">
@@ -387,7 +378,7 @@
 
             <div>
               <label>Year</label>
-              <input type="text" id="year-${car.id}" value="${escapeHtml(yearValue || "")}">
+              <input type="text" id="year-${car.id}" value="${escapeHtml(car.year || "")}">
             </div>
 
             <div>
@@ -397,7 +388,7 @@
 
             <div>
               <label>Mileage</label>
-              <input type="number" id="mileage-${car.id}" value="${escapeHtml(mileageValue || "")}">
+              <input type="number" id="mileage-${car.id}" value="${escapeHtml(car.mileage || "")}">
             </div>
 
             <div>
@@ -475,8 +466,9 @@
         .eq("id", id)
         .eq("user_id", currentUser.id);
 
+      console.log("SAVE RESULT:", error);
+
       if (error) {
-        console.log("save error:", error);
         setStatus("Save failed for vehicle " + id + ".");
         return;
       }
@@ -497,8 +489,9 @@
         .eq("id", id)
         .eq("user_id", currentUser.id);
 
+      console.log("DELETE RESULT:", error);
+
       if (error) {
-        console.log("delete error:", error);
         setStatus("Delete failed for vehicle " + id + ".");
         return;
       }
@@ -509,46 +502,49 @@
 
     async function startDashboard() {
       try {
-        setStatus("Checking logged in user...");
+        setStatus("Checking login...");
 
-        const { data: userData, error: userError } = await client.auth.getUser();
+        const { data, error } = await client.auth.getUser();
+        console.log("USER RESULT:", data, error);
 
-        if (userError) {
-          console.log("getUser error:", userError);
-        }
-
-        if (!userData || !userData.user) {
-          setStatus("Not logged in. Redirecting...");
-          setTimeout(() => {
-            window.location.href = "login.html";
-          }, 1500);
+        if (error || !data || !data.user) {
+          setStatus("Not logged in. Please log in again.");
+          document.getElementById("leadList").innerHTML = "<div class='lead-card'>Please log in first.</div>";
+          document.getElementById("vehicleList").innerHTML = "<div class='vehicle-card'>Please log in first.</div>";
           return;
         }
 
-        currentUser = userData.user;
+        currentUser = data.user;
+        setStatus("User found: " + (currentUser.email || currentUser.id));
 
         const profileOk = await loadProfile(currentUser.id);
+
         if (!profileOk) {
-          setStatus("Dealer profile not found.");
+          setStatus("Profile not found for this user.");
+          document.getElementById("leadList").innerHTML = "<div class='lead-card'>Profile not found.</div>";
+          document.getElementById("vehicleList").innerHTML = "<div class='vehicle-card'>Profile not found.</div>";
           return;
         }
 
         if (!currentProfile.is_active) {
-          document.getElementById("leadList").innerHTML = "";
-          document.getElementById("vehicleList").innerHTML = "";
           setStatus("Your account is not active yet. Please contact admin after payment.");
+          document.getElementById("leadList").innerHTML = "<div class='lead-card'>Account not active.</div>";
+          document.getElementById("vehicleList").innerHTML = "<div class='vehicle-card'>Account not active.</div>";
           return;
         }
 
-        setStatus("Welcome " + (currentProfile.dealer_name || currentUser.email) + ". Loading your dashboard...");
-
+        setStatus("Loading leads...");
         await loadMyLeads();
+
+        setStatus("Loading vehicles...");
         await loadMyVehicles();
 
         setStatus("Dashboard loaded successfully.");
       } catch (err) {
-        console.log("startDashboard error:", err);
+        console.log("DASHBOARD ERROR:", err);
         setStatus("Error loading dashboard.");
+        document.getElementById("leadList").innerHTML = "<div class='lead-card'>Error loading leads.</div>";
+        document.getElementById("vehicleList").innerHTML = "<div class='vehicle-card'>Error loading vehicles.</div>";
       }
     }
 
@@ -557,3 +553,4 @@
 
 </body>
 </html>
+
