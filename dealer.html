@@ -16,110 +16,130 @@
     .hero {
       background: #2f55c7;
       color: white;
-      padding: 28px 20px;
+      padding: 24px 20px;
     }
 
     .hero h1 {
-      margin: 0 0 10px 0;
-      font-size: 42px;
+      margin: 0 0 8px 0;
+      font-size: 38px;
     }
 
     .hero p {
       margin: 0;
-      font-size: 18px;
+      font-size: 16px;
     }
 
     .container {
-      padding: 20px;
-    }
-
-    .status {
-      background: #f8fafc;
-      border-radius: 14px;
-      padding: 14px 16px;
-      margin-bottom: 16px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-      font-weight: bold;
+      padding: 18px;
+      max-width: 1300px;
+      margin: 0 auto;
     }
 
     .profile-card {
-      background: #f8fafc;
-      border-radius: 18px;
-      padding: 20px;
-      margin-bottom: 24px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 18px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
 
     .profile-title {
-      font-size: 30px;
+      font-size: 28px;
       font-weight: bold;
-      margin-bottom: 12px;
-    }
-
-    .profile-meta {
-      font-size: 18px;
-      line-height: 1.6;
       margin-bottom: 10px;
     }
 
-    .profile-meta strong {
-      color: #000;
+    .profile-meta {
+      font-size: 15px;
+      line-height: 1.5;
+      margin-bottom: 8px;
     }
 
     .profile-buttons {
       display: flex;
       flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 14px;
+      gap: 10px;
+      margin-top: 12px;
     }
 
     .btn {
       display: inline-block;
-      background: #111827;
-      color: white;
       text-decoration: none;
-      padding: 14px 22px;
-      border-radius: 12px;
-      font-weight: bold;
       text-align: center;
+      font-weight: 600;
+      font-size: 13px;
+      padding: 9px 12px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      color: white;
     }
 
-    .wa-btn-top {
-      background: #66cc6a;
+    .btn-blue {
+      background: #3f5cc9;
+    }
+
+    .btn-green {
+      background: #25d366;
+    }
+
+    .btn-dark {
+      background: #1f2937;
+    }
+
+    .status {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      font-weight: bold;
+      font-size: 14px;
     }
 
     .page-title {
-      font-size: 32px;
-      margin: 0 0 18px 0;
+      font-size: 28px;
+      margin: 0 0 16px 0;
     }
 
     .cars-grid {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 20px;
+      gap: 18px;
     }
 
     .car-card {
-      background: #f8fafc;
-      border-radius: 18px;
-      padding: 16px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
 
-    .car-card img {
+    .card-image-wrap {
       width: 100%;
       height: 220px;
-      object-fit: cover;
+      background: #eef2f7;
       border-radius: 12px;
-      margin-bottom: 14px;
-      background: #cbd5e1;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+
+    .card-image {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #eef2f7;
+      display: block;
     }
 
     .car-title {
-      font-size: 28px;
+      font-size: 24px;
       font-weight: bold;
       line-height: 1.2;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .year-badge {
@@ -127,22 +147,22 @@
       background: #dbeafe;
       color: #1d4ed8;
       font-weight: bold;
-      padding: 8px 12px;
+      padding: 6px 10px;
       border-radius: 999px;
-      margin-bottom: 14px;
-      font-size: 14px;
+      margin-bottom: 12px;
+      font-size: 12px;
     }
 
     .car-price {
       color: #c53030;
-      font-size: 34px;
+      font-size: 28px;
       font-weight: bold;
-      margin-bottom: 18px;
+      margin-bottom: 14px;
     }
 
     .car-meta {
-      font-size: 17px;
-      margin-bottom: 12px;
+      font-size: 14px;
+      margin-bottom: 8px;
       line-height: 1.5;
     }
 
@@ -150,20 +170,15 @@
       color: #000;
     }
 
-    .car-buttons a {
-      display: block;
-      text-align: center;
-      text-decoration: none;
-      color: white;
-      font-weight: bold;
-      padding: 15px;
-      border-radius: 14px;
-      margin-top: 10px;
-      font-size: 17px;
+    .car-buttons {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 6px;
+      margin-top: 12px;
     }
 
     .details-btn {
-      background: #0f172a;
+      background: #1f2937;
     }
 
     .call-btn {
@@ -171,7 +186,7 @@
     }
 
     .wa-btn {
-      background: #66cc6a;
+      background: #25d366;
     }
 
     @media (min-width: 768px) {
@@ -179,25 +194,16 @@
         grid-template-columns: repeat(2, 1fr);
       }
 
-      .car-card img {
-        height: 180px;
+      .card-image-wrap {
+        height: 190px;
       }
 
       .car-title {
-        font-size: 24px;
+        font-size: 21px;
       }
 
       .car-price {
-        font-size: 28px;
-      }
-
-      .car-meta {
-        font-size: 15px;
-      }
-
-      .car-buttons a {
-        font-size: 15px;
-        padding: 13px;
+        font-size: 24px;
       }
     }
 
@@ -206,20 +212,16 @@
         grid-template-columns: repeat(3, 1fr);
       }
 
-      .car-card img {
-        height: 160px;
+      .card-image-wrap {
+        height: 180px;
       }
 
       .car-title {
-        font-size: 22px;
+        font-size: 19px;
       }
 
       .car-price {
-        font-size: 26px;
-      }
-
-      .car-meta {
-        font-size: 14px;
+        font-size: 22px;
       }
     }
   </style>
@@ -239,8 +241,8 @@
       <div class="profile-meta"><strong>Phone:</strong> <span id="dealerPhone"></span></div>
 
       <div class="profile-buttons">
-        <a href="index.html" class="btn">← Back to Listings</a>
-        <a id="dealerWhatsApp" href="#" target="_blank" class="btn wa-btn-top">WhatsApp Dealer</a>
+        <a href="index.html" class="btn btn-dark">Back to Listings</a>
+        <a id="dealerWhatsApp" href="#" target="_blank" class="btn btn-green">WhatsApp Dealer</a>
       </div>
     </div>
 
@@ -329,7 +331,10 @@
           const div = document.createElement("div");
           div.className = "car-card";
           div.innerHTML = `
-            <img src="${safeText(car.image)}" alt="${safeText(car.title)}">
+            <div class="card-image-wrap">
+              <img src="${safeText(car.image)}" alt="${safeText(car.title)}" class="card-image">
+            </div>
+
             <div class="car-title">${safeText(car.title)}</div>
             <div class="year-badge">Year: ${safeText(car.year) || "Not set"}</div>
             <div class="car-price">R${safeText(car.price)}</div>
@@ -339,9 +344,9 @@
             <div class="car-meta"><strong>Phone:</strong> ${safeText(car.phone)}</div>
 
             <div class="car-buttons">
-              <a href="details.html?id=${car.id}" class="details-btn">View Details</a>
-              <a href="tel:${phoneCleanCar}" class="call-btn">📞 Call Dealer</a>
-              <a href="${whatsappCar}" target="_blank" class="wa-btn">💬 WhatsApp Dealer</a>
+              <a href="details.html?id=${car.id}" class="btn details-btn">View Details</a>
+              <a href="tel:${phoneCleanCar}" class="btn call-btn">Call Dealer</a>
+              <a href="${whatsappCar}" target="_blank" class="btn wa-btn">WhatsApp Dealer</a>
             </div>
           `;
           container.appendChild(div);
