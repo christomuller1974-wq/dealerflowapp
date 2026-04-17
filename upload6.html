@@ -114,6 +114,7 @@
       background: white;
       font-size: 14px;
       font-family: Arial, sans-serif;
+      color: #111827;
     }
 
     .field textarea {
@@ -191,7 +192,7 @@
     <div class="top-actions">
       <a href="dealer-admin.html" class="btn btn-dark">Back to Dashboard</a>
       <a href="index.html" class="btn btn-dark">Website</a>
-      <button type="button" class="btn btn-dark" id="logoutBtn">Logout</button>
+      <button type="button" class="btn btn-dark" onclick="logoutUser()">Logout</button>
     </div>
 
     <div id="status" class="status">Starting upload page...</div>
@@ -203,12 +204,14 @@
       <div class="form-grid">
         <div class="field full-width">
           <label for="photoInput">Vehicle Photos</label>
-          <input type="file" id="photoInput" accept="image/*" multiple>
+          <input type="file" id="photoInput" accept="image/*" multiple onchange="handleFiles(event)">
         </div>
 
         <div class="field full-width">
           <label>Photo Preview</label>
-          <div id="previewGrid" class="preview-grid"></div>
+          <div id="previewGrid" class="preview-grid">
+            <div class="preview-card">No photos selected yet.</div>
+          </div>
         </div>
 
         <div class="field full-width">
@@ -218,7 +221,56 @@
 
         <div class="field">
           <label for="year">Select Year</label>
-          <select id="year"></select>
+          <select id="year">
+            <option value="">Select Year</option>
+            <option>2026</option>
+            <option>2025</option>
+            <option>2024</option>
+            <option>2023</option>
+            <option>2022</option>
+            <option>2021</option>
+            <option>2020</option>
+            <option>2019</option>
+            <option>2018</option>
+            <option>2017</option>
+            <option>2016</option>
+            <option>2015</option>
+            <option>2014</option>
+            <option>2013</option>
+            <option>2012</option>
+            <option>2011</option>
+            <option>2010</option>
+            <option>2009</option>
+            <option>2008</option>
+            <option>2007</option>
+            <option>2006</option>
+            <option>2005</option>
+            <option>2004</option>
+            <option>2003</option>
+            <option>2002</option>
+            <option>2001</option>
+            <option>2000</option>
+            <option>1999</option>
+            <option>1998</option>
+            <option>1997</option>
+            <option>1996</option>
+            <option>1995</option>
+            <option>1994</option>
+            <option>1993</option>
+            <option>1992</option>
+            <option>1991</option>
+            <option>1990</option>
+            <option>1989</option>
+            <option>1988</option>
+            <option>1987</option>
+            <option>1986</option>
+            <option>1985</option>
+            <option>1984</option>
+            <option>1983</option>
+            <option>1982</option>
+            <option>1981</option>
+            <option>1980</option>
+          </select>
         </div>
 
         <div class="field">
@@ -253,7 +305,7 @@
       </div>
 
       <div class="submit-row">
-        <button type="button" id="uploadBtn" class="btn btn-blue">Save Vehicle</button>
+        <button type="button" id="uploadBtn" class="btn btn-blue" onclick="submitVehicle()">Save Vehicle</button>
       </div>
     </div>
   </div>
@@ -277,7 +329,7 @@
 
     function setStatus(message) {
       document.getElementById("status").textContent = message;
-      console.log("STATUS:", message);
+      console.log(message);
     }
 
     function setWarning(message) {
@@ -295,24 +347,10 @@
       const btn = document.getElementById("uploadBtn");
       btn.disabled = isBusy;
       btn.textContent = isBusy ? "Saving..." : "Save Vehicle";
-      btn.style.opacity = isBusy ? "0.7" : "1";
-      btn.style.cursor = isBusy ? "not-allowed" : "pointer";
     }
 
-    function fillYearDropdown() {
-      const yearSelect = document.getElementById("year");
-      yearSelect.innerHTML = '<option value="">Select Year</option>';
-
-      const currentYear = new Date().getFullYear();
-      for (let y = currentYear; y >= 1980; y--) {
-        const option = document.createElement("option");
-        option.value = String(y);
-        option.textContent = String(y);
-        yearSelect.appendChild(option);
-      }
-    }
-
-    function showPreview() {
+    function handleFiles(event) {
+      selectedFiles = Array.from(event.target.files || []);
       const grid = document.getElementById("previewGrid");
       grid.innerHTML = "";
 
@@ -322,19 +360,16 @@
       }
 
       selectedFiles.forEach((file, index) => {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          const card = document.createElement("div");
-          card.className = "preview-card";
-          card.innerHTML = `
-            <div class="preview-image-wrap">
-              <img src="${e.target.result}" class="preview-image" alt="Preview">
-            </div>
-            <div class="preview-label">${index === 0 ? "Main image" : "Extra image"}</div>
-          `;
-          grid.appendChild(card);
-        };
-        reader.readAsDataURL(file);
+        const url = URL.createObjectURL(file);
+        const card = document.createElement("div");
+        card.className = "preview-card";
+        card.innerHTML = `
+          <div class="preview-image-wrap">
+            <img src="${url}" class="preview-image" alt="Preview">
+          </div>
+          <div class="preview-label">${index === 0 ? "Main image" : "Extra image"}</div>
+        `;
+        grid.appendChild(card);
       });
     }
 
@@ -350,12 +385,7 @@
         .eq("id", userId)
         .single();
 
-      console.log("PROFILE RESULT:", data, error);
-
-      if (error || !data) {
-        return false;
-      }
-
+      if (error || !data) return false;
       currentProfile = data;
       return true;
     }
@@ -369,9 +399,7 @@
         .from("vehicle-images")
         .upload(filePath, file);
 
-      if (error) {
-        throw error;
-      }
+      if (error) throw error;
 
       const { data } = client.storage
         .from("vehicle-images")
@@ -443,14 +471,12 @@
           }]);
 
         if (error) {
-          console.log("SAVE VEHICLE ERROR:", error);
           setStatus("Could not save vehicle: " + error.message);
           setUploadBusy(false);
           return;
         }
 
         setStatus("Vehicle saved successfully.");
-
         document.getElementById("title").value = "";
         document.getElementById("year").value = "";
         document.getElementById("price").value = "";
@@ -461,11 +487,9 @@
         document.getElementById("description").value = "";
         document.getElementById("photoInput").value = "";
         selectedFiles = [];
-        showPreview();
-
+        document.getElementById("previewGrid").innerHTML = "<div class='preview-card'>No photos selected yet.</div>";
         setUploadBusy(false);
       } catch (err) {
-        console.log("UPLOAD ERROR:", err);
         setStatus("Upload failed: " + err.message);
         setUploadBusy(false);
       }
@@ -476,7 +500,6 @@
         setStatus("Checking login...");
 
         const { data, error } = await client.auth.getUser();
-        console.log("USER RESULT:", data, error);
 
         if (error || !data || !data.user) {
           setStatus("Not logged in. Redirecting...");
@@ -489,9 +512,9 @@
         currentUser = data.user;
 
         setStatus("Loading dealer profile...");
-        const profileOk = await loadProfile(currentUser.id);
+        const ok = await loadProfile(currentUser.id);
 
-        if (!profileOk) {
+        if (!ok) {
           setStatus("Profile not found.");
           return;
         }
@@ -508,25 +531,12 @@
 
         setStatus("Upload page ready.");
       } catch (err) {
-        console.log("START PAGE ERROR:", err);
         setStatus("Error starting upload page.");
+        console.log(err);
       }
     }
 
-    document.addEventListener("DOMContentLoaded", function () {
-      fillYearDropdown();
-      showPreview();
-
-      document.getElementById("photoInput").addEventListener("change", function(event) {
-        selectedFiles = Array.from(event.target.files || []);
-        showPreview();
-      });
-
-      document.getElementById("uploadBtn").addEventListener("click", submitVehicle);
-      document.getElementById("logoutBtn").addEventListener("click", logoutUser);
-
-      startUploadPage();
-    });
+    startUploadPage();
   </script>
 
 </body>
