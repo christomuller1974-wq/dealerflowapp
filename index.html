@@ -16,99 +16,96 @@
     .hero {
       background: #2f55c7;
       color: white;
-      padding: 28px 20px;
+      padding: 24px 20px;
     }
 
     .hero h1 {
-      margin: 0 0 10px 0;
-      font-size: 52px;
+      margin: 0 0 8px 0;
+      font-size: 44px;
     }
 
     .hero p {
       margin: 0;
-      font-size: 18px;
+      font-size: 17px;
     }
 
     .section {
-      background: #f8fafc;
-      margin: 20px;
-      padding: 20px;
-      border-radius: 18px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      background: #ffffff;
+      margin: 18px;
+      padding: 18px;
+      border-radius: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
 
-    .btn {
+    .section h2,
+    .section h3 {
+      margin-top: 0;
+    }
+
+    .btn,
+    .quick-btn {
       display: inline-block;
-      background: #2f55c7;
-      color: white;
       text-decoration: none;
-      padding: 14px 22px;
-      border-radius: 12px;
-      font-weight: bold;
-      margin-top: 12px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 13px;
+      padding: 9px 12px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      color: white;
+    }
+
+    .btn-blue {
+      background: #3f5cc9;
+    }
+
+    .btn-green {
+      background: #16a34a;
+    }
+
+    .btn-dark {
+      background: #1f2937;
     }
 
     .quick-links {
       background: #ffffff;
-      padding: 20px;
-      margin: 20px;
-      border-radius: 18px;
+      padding: 18px;
+      margin: 18px;
+      border-radius: 14px;
       text-align: center;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
 
     .quick-links h3 {
-      margin-top: 0;
-      margin-bottom: 15px;
-      font-size: 24px;
+      margin: 0 0 12px 0;
+      font-size: 22px;
     }
 
     .quick-buttons {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 15px;
-    }
-
-    .quick-btn {
-      display: inline-block;
-      padding: 12px 20px;
-      background: #1d4ed8;
-      color: white;
-      text-decoration: none;
-      border-radius: 10px;
-      font-weight: bold;
-    }
-
-    .quick-btn:hover {
-      background: #153ea8;
-    }
-
-    .admin-btn {
-      background: #111827;
-    }
-
-    .admin-btn:hover {
-      background: #000000;
+      gap: 10px;
     }
 
     .search-box,
     .filter-box {
-      width: calc(100% - 40px);
-      margin: 0 20px 15px 20px;
-      padding: 14px;
-      border-radius: 12px;
-      border: 2px solid #111827;
+      width: calc(100% - 36px);
+      margin: 0 18px 12px 18px;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #cbd5e1;
       box-sizing: border-box;
-      font-size: 16px;
+      font-size: 15px;
       background: white;
     }
 
     .filters-row {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 12px;
-      margin: 0 20px 20px 20px;
+      gap: 10px;
+      margin: 0 18px 18px 18px;
     }
 
     .filters-row .filter-box {
@@ -116,43 +113,55 @@
       margin: 0;
     }
 
-    .cars-wrap {
-      padding: 0 20px 30px 20px;
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 20px;
+    .status {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin: 0 18px 14px 18px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      font-weight: bold;
+      font-size: 14px;
     }
 
-    .status {
-      background: #f8fafc;
-      border-radius: 14px;
-      padding: 14px 16px;
-      margin: 0 20px 16px 20px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-      font-weight: bold;
+    .cars-wrap {
+      padding: 0 18px 24px 18px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
     }
 
     .car-card {
-      background: #f8fafc;
-      border-radius: 18px;
-      padding: 16px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
 
-    .car-card img {
+    .card-image-wrap {
       width: 100%;
       height: 220px;
-      object-fit: cover;
+      background: #eef2f7;
       border-radius: 12px;
-      margin-bottom: 14px;
-      background: #cbd5e1;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+
+    .card-image {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #eef2f7;
+      display: block;
     }
 
     .car-title {
-      font-size: 28px;
+      font-size: 24px;
       font-weight: bold;
       line-height: 1.2;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .year-badge {
@@ -160,22 +169,22 @@
       background: #dbeafe;
       color: #1d4ed8;
       font-weight: bold;
-      padding: 8px 12px;
+      padding: 6px 10px;
       border-radius: 999px;
-      margin-bottom: 14px;
-      font-size: 14px;
+      margin-bottom: 12px;
+      font-size: 12px;
     }
 
     .car-price {
       color: #c53030;
-      font-size: 34px;
+      font-size: 28px;
       font-weight: bold;
-      margin-bottom: 18px;
+      margin-bottom: 14px;
     }
 
     .car-meta {
-      font-size: 17px;
-      margin-bottom: 12px;
+      font-size: 14px;
+      margin-bottom: 8px;
       line-height: 1.5;
     }
 
@@ -183,20 +192,21 @@
       color: #000;
     }
 
-    .car-buttons a {
-      display: block;
-      text-align: center;
+    .car-meta a {
+      color: #1d4ed8;
       text-decoration: none;
-      color: white;
       font-weight: bold;
-      padding: 15px;
-      border-radius: 14px;
-      margin-top: 10px;
-      font-size: 17px;
+    }
+
+    .car-buttons {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 6px;
+      margin-top: 12px;
     }
 
     .details-btn {
-      background: #0f172a;
+      background: #1f2937;
     }
 
     .dealer-btn {
@@ -208,7 +218,7 @@
     }
 
     .wa-btn {
-      background: #66cc6a;
+      background: #25d366;
     }
 
     @media (min-width: 768px) {
@@ -216,25 +226,16 @@
         grid-template-columns: repeat(2, 1fr);
       }
 
-      .car-card img {
-        height: 180px;
+      .card-image-wrap {
+        height: 190px;
       }
 
       .car-title {
-        font-size: 24px;
+        font-size: 21px;
       }
 
       .car-price {
-        font-size: 28px;
-      }
-
-      .car-meta {
-        font-size: 15px;
-      }
-
-      .car-buttons a {
-        font-size: 15px;
-        padding: 13px;
+        font-size: 24px;
       }
     }
 
@@ -243,20 +244,16 @@
         grid-template-columns: repeat(3, 1fr);
       }
 
-      .car-card img {
-        height: 160px;
+      .card-image-wrap {
+        height: 180px;
       }
 
       .car-title {
-        font-size: 22px;
+        font-size: 19px;
       }
 
       .car-price {
-        font-size: 26px;
-      }
-
-      .car-meta {
-        font-size: 14px;
+        font-size: 22px;
       }
     }
   </style>
@@ -270,18 +267,17 @@
 
   <div class="quick-links">
     <h3>Quick Access</h3>
-
     <div class="quick-buttons">
-      <a href="login.html" class="quick-btn">🔐 Dealer Login</a>
-      <a href="dealer-admin.html" class="quick-btn">📊 Dealer Dashboard</a>
-      <a href="super-admin.html" class="quick-btn admin-btn">⚙️ Super Admin</a>
+      <a href="login.html" class="quick-btn btn-blue">Dealer Login</a>
+      <a href="dealer-admin.html" class="quick-btn btn-blue">Dealer Dashboard</a>
+      <a href="super-admin.html" class="quick-btn btn-dark">Super Admin</a>
     </div>
   </div>
 
   <div class="section">
     <h2>For Dealers</h2>
     <p>Load your vehicle stock and receive real buyer leads directly via call, WhatsApp, or enquiry.</p>
-    <a class="btn" href="upload6.html">Upload Your Stock</a>
+    <a class="btn btn-blue" href="upload6.html">Upload Your Stock</a>
   </div>
 
   <input
@@ -310,7 +306,7 @@
     </select>
   </div>
 
-  <h2 style="padding: 0 20px;">Latest Vehicles</h2>
+  <h2 style="padding: 0 18px;">Latest Vehicles</h2>
 
   <div id="status" class="status">Loading vehicles...</div>
   <div id="cars" class="cars-wrap"></div>
@@ -417,20 +413,23 @@
         const div = document.createElement("div");
         div.className = "car-card";
         div.innerHTML = `
-          <img src="${safeText(car.image)}" alt="${safeText(car.title)}">
+          <div class="card-image-wrap">
+            <img src="${safeText(car.image)}" alt="${safeText(car.title)}" class="card-image">
+          </div>
+
           <div class="car-title">${safeText(car.title)}</div>
           <div class="year-badge">Year: ${safeText(car.year) || "Not set"}</div>
           <div class="car-price">R${safeText(car.price)}</div>
           <div class="car-meta"><strong>Mileage:</strong> ${safeText(car.mileage)} km</div>
           <div class="car-meta"><strong>Location:</strong> ${safeText(car.location)}</div>
-          <div class="car-meta"><strong>Dealer:</strong> ${safeText(car.dealer)}</div>
+          <div class="car-meta"><strong>Dealer:</strong> <a href="${dealerLink}">${safeText(car.dealer)}</a></div>
           <div class="car-meta"><strong>Phone:</strong> ${safeText(car.phone)}</div>
 
           <div class="car-buttons">
-            <a href="${detailsLink}" class="details-btn">View Details</a>
-            <a href="${dealerLink}" class="dealer-btn">View Dealer Stock</a>
-            <a href="tel:${phoneClean}" class="call-btn">📞 Call Dealer</a>
-            <a href="${whatsappLink}" target="_blank" class="wa-btn">💬 WhatsApp Dealer</a>
+            <a href="${detailsLink}" class="btn details-btn">View Details</a>
+            <a href="${dealerLink}" class="btn dealer-btn">View Dealer Stock</a>
+            <a href="tel:${phoneClean}" class="btn call-btn">Call Dealer</a>
+            <a href="${whatsappLink}" target="_blank" class="btn wa-btn">WhatsApp Dealer</a>
           </div>
         `;
         container.appendChild(div);
