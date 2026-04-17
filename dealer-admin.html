@@ -47,9 +47,9 @@
       text-decoration: none;
       text-align: center;
       font-weight: 600;
-      font-size: 13px;
-      padding: 9px 12px;
-      border-radius: 8px;
+      font-size: 12px;
+      padding: 6px 10px;
+      border-radius: 6px;
       border: none;
       cursor: pointer;
       color: white;
@@ -58,6 +58,7 @@
     .btn-blue { background: #3f5cc9; }
     .btn-green { background: #16a34a; }
     .btn-dark { background: #1f2937; }
+    .btn-red { background: #dc2626; }
     .btn-orange { background: #f59e0b; }
 
     .status {
@@ -89,6 +90,13 @@
       border-radius: 14px;
       padding: 14px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .vehicle-card:hover,
+    .lead-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.15);
     }
 
     .lead-card h3,
@@ -117,7 +125,7 @@
 
     .card-image-wrap {
       width: 100%;
-      height: 220px;
+      height: 180px;
       background: #eef2f7;
       border-radius: 12px;
       overflow: hidden;
@@ -130,9 +138,10 @@
     .card-image {
       width: 100%;
       height: 100%;
-      object-fit: contain;
+      object-fit: cover;
       background: #eef2f7;
       display: block;
+      border-radius: 12px;
     }
 
     .year-badge {
@@ -142,8 +151,15 @@
       font-weight: bold;
       padding: 6px 10px;
       border-radius: 999px;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       font-size: 12px;
+    }
+
+    .price {
+      font-size: 18px;
+      font-weight: bold;
+      color: #dc2626;
+      margin-bottom: 8px;
     }
 
     .vehicle-buttons {
@@ -159,7 +175,7 @@
       }
 
       .card-image-wrap {
-        height: 190px;
+        height: 180px;
       }
 
       .vehicle-card h3 {
@@ -173,7 +189,7 @@
       }
 
       .card-image-wrap {
-        height: 180px;
+        height: 170px;
       }
 
       .vehicle-card h3 {
@@ -212,8 +228,6 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
-
-    /* IF YOUR KEY DOES NOT WORK, REPLACE THIS WITH YOUR REAL SUPABASE ANON PUBLIC KEY */
     const supabaseKey = "sb_publishable_D7saHOTE_JhSlMnSgBnIhQ_mOAOUD9s";
 
     const client = window.supabase.createClient(supabaseUrl, supabaseKey, {
@@ -342,7 +356,7 @@
 
           <h3>${escapeHtml(car.title || "Untitled Vehicle")}</h3>
           <div class="year-badge">Year: ${escapeHtml(car.year || "Not set")}</div>
-          <div class="meta"><strong>Price:</strong> R${escapeHtml(car.price || "")}</div>
+          <div class="price">R${escapeHtml(car.price || "")}</div>
           <div class="meta"><strong>Mileage:</strong> ${escapeHtml(car.mileage || "")} km</div>
           <div class="meta"><strong>Location:</strong> ${escapeHtml(car.location || "")}</div>
           <div class="meta"><strong>Phone:</strong> ${escapeHtml(car.phone || "")}</div>
@@ -406,4 +420,3 @@
 
 </body>
 </html>
-
