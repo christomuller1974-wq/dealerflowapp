@@ -9,198 +9,214 @@
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: #f3f4f6;
+      background: #e5e7eb;
       color: #111827;
     }
 
-    .header {
-      background: #111827;
+    .hero {
+      background: #2f55c7;
       color: white;
-      padding: 20px;
+      padding: 24px 20px;
+      text-align: center;
     }
 
-    .header h1 {
+    .hero h1 {
       margin: 0 0 8px 0;
+      font-size: 36px;
     }
 
-    .header p {
+    .hero p {
       margin: 0;
+      font-size: 16px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 18px;
     }
 
     .top-actions {
-      padding: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 14px;
     }
 
-    .top-actions a,
-    .top-actions button {
-      background: #2f55c7;
-      color: white;
-      padding: 12px 18px;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: bold;
+    .btn {
       display: inline-block;
-      margin-right: 10px;
-      margin-bottom: 10px;
+      text-decoration: none;
+      text-align: center;
+      font-weight: 600;
+      font-size: 12px;
+      padding: 8px 12px;
+      border-radius: 8px;
       border: none;
       cursor: pointer;
+      color: white;
+    }
+
+    .btn-blue { background: #3f5cc9; }
+    .btn-dark { background: #1f2937; }
+    .btn-green { background: #16a34a; }
+    .btn-red { background: #dc2626; }
+
+    .status {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      font-weight: bold;
       font-size: 14px;
     }
 
-    .status {
-      background: white;
-      margin: 0 20px 20px 20px;
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .summary-card {
+      background: #ffffff;
+      border-radius: 14px;
       padding: 16px;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-      font-weight: bold;
-      line-height: 1.4;
-    }
-
-    .section {
-      padding: 0 20px 20px 20px;
-    }
-
-    .section-title {
-      font-size: 24px;
-      margin: 0 0 14px 0;
-    }
-
-    .card {
-      background: white;
-      border-radius: 12px;
-      padding: 15px;
-      margin-bottom: 20px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
 
-    .card h3 {
-      margin: 0 0 10px 0;
+    .summary-card h3 {
+      margin: 0 0 8px 0;
+      font-size: 16px;
+      color: #475569;
+    }
+
+    .summary-number {
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .dealer-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .dealer-card {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .dealer-name {
       font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      line-height: 1.2;
     }
 
     .meta {
-      color: #6b7280;
+      color: #475569;
       font-size: 14px;
       margin-bottom: 8px;
       line-height: 1.5;
-      white-space: pre-wrap;
+      word-break: break-word;
     }
 
-    .pill {
+    .badge {
       display: inline-block;
       padding: 6px 10px;
       border-radius: 999px;
       font-size: 12px;
       font-weight: bold;
-      margin-right: 8px;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
 
-    .pill-active {
+    .badge-active {
       background: #dcfce7;
       color: #166534;
     }
 
-    .pill-inactive {
+    .badge-inactive {
       background: #fee2e2;
       color: #991b1b;
     }
 
-    .pill-admin {
-      background: #dbeafe;
-      color: #1d4ed8;
-    }
-
-    .buttons {
+    .card-actions {
       display: flex;
-      gap: 10px;
       flex-wrap: wrap;
+      gap: 8px;
       margin-top: 12px;
     }
 
-    .btn-green,
-    .btn-red,
-    .btn-dark {
-      border: none;
-      border-radius: 8px;
-      padding: 12px 16px;
-      font-weight: bold;
-      cursor: pointer;
-      color: white;
-      min-width: 140px;
+    .section-title {
+      font-size: 28px;
+      margin: 0 0 14px 0;
     }
 
-    .btn-green {
-      background: #16a34a;
+    @media (min-width: 700px) {
+      .summary-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .dealer-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
 
-    .btn-red {
-      background: #dc2626;
-    }
-
-    .btn-dark {
-      background: #111827;
-    }
-
-    .vehicle-img {
-      width: 100%;
-      max-height: 220px;
-      object-fit: cover;
-      border-radius: 10px;
-      margin-bottom: 12px;
-      background: #e5e7eb;
+    @media (min-width: 1100px) {
+      .dealer-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
     }
   </style>
 </head>
 <body>
 
-  <div class="header">
-    <h1>DealerFlow Super Admin</h1>
-    <p>Activate dealers, manage vehicles, and review leads</p>
+  <div class="hero">
+    <h1>Super Admin</h1>
+    <p>Activate and manage dealer accounts</p>
   </div>
 
-  <div class="top-actions">
-    <a href="index.html">← Website</a>
-    <a href="dealer-admin.html">Dealer Dashboard</a>
-    <button type="button" onclick="logout()">Logout</button>
-  </div>
+  <div class="container">
+    <div class="top-actions">
+      <a href="index.html" class="btn btn-dark">Back to Website</a>
+      <a href="dealer-admin.html" class="btn btn-blue">Dealer Dashboard</a>
+    </div>
 
-  <div id="status" class="status">Checking admin access...</div>
+    <div id="status" class="status">Loading admin panel...</div>
 
-  <div class="section">
-    <h2 class="section-title">Dealers</h2>
-    <div id="dealerList"></div>
-  </div>
+    <div class="summary-grid">
+      <div class="summary-card">
+        <h3>Total Dealers</h3>
+        <div id="totalDealers" class="summary-number">0</div>
+      </div>
 
-  <div class="section">
-    <h2 class="section-title">Vehicles</h2>
-    <div id="vehicleList"></div>
-  </div>
+      <div class="summary-card">
+        <h3>Active Dealers</h3>
+        <div id="activeDealers" class="summary-number">0</div>
+      </div>
 
-  <div class="section">
-    <h2 class="section-title">Leads</h2>
-    <div id="leadList"></div>
+      <div class="summary-card">
+        <h3>Inactive Dealers</h3>
+        <div id="inactiveDealers" class="summary-number">0</div>
+      </div>
+    </div>
+
+    <h2 class="section-title">Dealer Accounts</h2>
+    <div id="dealerGrid" class="dealer-grid"></div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
     const supabaseKey = "sb_publishable_D7saHOTE_JhSlMnSgBnIhQ_mOAOUD9s";
-
-    const client = window.supabase.createClient(supabaseUrl, supabaseKey, {
-      auth: {
-        persistSession: true,
-        autoRefreshToken: true,
-        detectSessionInUrl: true
-      }
-    });
-
-    let currentUser = null;
-    let currentProfile = null;
+    const client = window.supabase.createClient(supabaseUrl, supabaseKey);
 
     function setStatus(message) {
       document.getElementById("status").textContent = message;
+      console.log(message);
     }
 
     function escapeHtml(value) {
@@ -212,264 +228,98 @@
         .replace(/>/g, "&gt;");
     }
 
-    function formatDate(dateString) {
-      if (!dateString) return "";
-      return new Date(dateString).toLocaleString();
-    }
-
-    async function logout() {
-      await client.auth.signOut();
-      window.location.href = "login.html";
-    }
-
-    async function loadMyProfile(userId) {
-      const { data, error } = await client
-        .from("profiles")
-        .select("*")
-        .eq("id", userId)
-        .single();
-
-      if (error || !data) {
-        console.log("profile error:", error);
-        return false;
-      }
-
-      currentProfile = data;
-      return true;
-    }
-
-    async function checkAdmin() {
-      try {
-        const { data: sessionData } = await client.auth.getSession();
-        const session = sessionData?.session || null;
-
-        if (!session || !session.user) {
-          setStatus("Not logged in. Redirecting...");
-          setTimeout(() => {
-            window.location.href = "login.html";
-          }, 1500);
-          return;
-        }
-
-        currentUser = session.user;
-
-        const ok = await loadMyProfile(currentUser.id);
-        if (!ok) {
-          setStatus("Profile not found.");
-          return;
-        }
-
-        if (!currentProfile.is_admin) {
-          setStatus("Access denied. You are not an admin.");
-          return;
-        }
-
-        setStatus("Admin access granted. Loading platform data...");
-        await loadDealers();
-        await loadVehicles();
-        await loadLeads();
-        setStatus("Admin dashboard loaded.");
-      } catch (err) {
-        console.log("checkAdmin error:", err);
-        setStatus("Could not load admin dashboard.");
-      }
-    }
-
     async function loadDealers() {
-      const dealerList = document.getElementById("dealerList");
-      dealerList.innerHTML = "";
-
       try {
+        setStatus("Loading dealer accounts...");
+
         const { data, error } = await client
           .from("profiles")
           .select("*")
-          .order("created_at", { ascending: false });
+          .order("dealer_name", { ascending: true });
 
         if (error) {
-          console.log("dealers error:", error);
-          dealerList.innerHTML = "<div class='card'>Could not load dealers.</div>";
+          console.log(error);
+          setStatus("Could not load dealer accounts.");
           return;
         }
 
-        if (!data || data.length === 0) {
-          dealerList.innerHTML = "<div class='card'>No dealers found.</div>";
+        const dealers = data || [];
+
+        const total = dealers.length;
+        const active = dealers.filter(d => d.is_active).length;
+        const inactive = total - active;
+
+        document.getElementById("totalDealers").textContent = total;
+        document.getElementById("activeDealers").textContent = active;
+        document.getElementById("inactiveDealers").textContent = inactive;
+
+        const grid = document.getElementById("dealerGrid");
+        grid.innerHTML = "";
+
+        if (dealers.length === 0) {
+          grid.innerHTML = "<div class='dealer-card'>No dealer accounts found.</div>";
+          setStatus("No dealer accounts found.");
           return;
         }
 
-        data.forEach(profile => {
+        dealers.forEach(dealer => {
           const card = document.createElement("div");
-          card.className = "card";
+          card.className = "dealer-card";
 
-          const activePill = profile.is_active
-            ? '<span class="pill pill-active">Active</span>'
-            : '<span class="pill pill-inactive">Inactive</span>';
+          const activeBadge = dealer.is_active
+            ? <div class="badge badge-active">Active</div>
+            : <div class="badge badge-inactive">Inactive</div>;
 
-          const adminPill = profile.is_admin
-            ? '<span class="pill pill-admin">Admin</span>'
-            : '';
+          const actionButton = dealer.is_active
+            ? <button class="btn btn-red" onclick="setDealerStatus('${dealer.id}', false)">Deactivate</button>
+            : <button class="btn btn-green" onclick="setDealerStatus('${dealer.id}', true)">Activate</button>;
 
           card.innerHTML = `
-            <h3>${escapeHtml(profile.dealer_name || "Unnamed Dealer")}</h3>
-            ${activePill}
-            ${adminPill}
-            <div class="meta"><strong>Phone:</strong> ${escapeHtml(profile.phone || "")}</div>
-            <div class="meta"><strong>User ID:</strong> ${escapeHtml(profile.id || "")}</div>
-            <div class="meta"><strong>Created:</strong> ${escapeHtml(formatDate(profile.created_at))}</div>
+            <div class="dealer-name">${escapeHtml(dealer.dealer_name || "No dealer name")}</div>
+            ${activeBadge}
+            <div class="meta"><strong>Phone:</strong> ${escapeHtml(dealer.phone || "")}</div>
+            <div class="meta"><strong>Location:</strong> ${escapeHtml(dealer.location || "")}</div>
+            <div class="meta"><strong>User ID:</strong> ${escapeHtml(dealer.id || "")}</div>
 
-            <div class="buttons">
-              <button class="btn-green" onclick="setDealerActive('${profile.id}', true)">Activate</button>
-              <button class="btn-red" onclick="setDealerActive('${profile.id}', false)">Deactivate</button>
+            <div class="card-actions">
+              ${actionButton}
             </div>
           `;
 
-          dealerList.appendChild(card);
+          grid.appendChild(card);
         });
+
+        setStatus("Admin panel loaded successfully.");
       } catch (err) {
-        console.log("loadDealers catch:", err);
-        dealerList.innerHTML = "<div class='card'>Something went wrong loading dealers.</div>";
+        console.log(err);
+        setStatus("Something went wrong loading admin panel.");
       }
     }
 
-    async function setDealerActive(profileId, isActive) {
-      setStatus((isActive ? "Activating" : "Deactivating") + " dealer...");
-
+    async function setDealerStatus(profileId, makeActive) {
       try {
+        setStatus(makeActive ? "Activating dealer..." : "Deactivating dealer...");
+
         const { error } = await client
           .from("profiles")
-          .update({ is_active: isActive })
+          .update({ is_active: makeActive })
           .eq("id", profileId);
 
         if (error) {
-          console.log("activate error:", error);
+          console.log(error);
           setStatus("Could not update dealer status.");
           return;
         }
 
-        setStatus("Dealer status updated.");
+        setStatus(makeActive ? "Dealer activated successfully." : "Dealer deactivated successfully.");
         await loadDealers();
       } catch (err) {
-        console.log("setDealerActive catch:", err);
+        console.log(err);
         setStatus("Something went wrong updating dealer status.");
       }
     }
 
-    async function loadVehicles() {
-      const vehicleList = document.getElementById("vehicleList");
-      vehicleList.innerHTML = "";
-
-      try {
-        const { data, error } = await client
-          .from("vehicles")
-          .select("*")
-          .order("id", { ascending: false });
-
-        if (error) {
-          console.log("vehicles error:", error);
-          vehicleList.innerHTML = "<div class='card'>Could not load vehicles.</div>";
-          return;
-        }
-
-        if (!data || data.length === 0) {
-          vehicleList.innerHTML = "<div class='card'>No vehicles found.</div>";
-          return;
-        }
-
-        data.forEach(car => {
-          const card = document.createElement("div");
-          card.className = "card";
-
-          card.innerHTML = `
-            <img class="vehicle-img" src="${escapeHtml(car.image || "")}" alt="${escapeHtml(car.title || "")}">
-            <h3>${escapeHtml(car.title || "Untitled Vehicle")}</h3>
-            <div class="meta"><strong>Year:</strong> ${escapeHtml(car.year || "")}</div>
-            <div class="meta"><strong>Price:</strong> ${escapeHtml(car.price || "")}</div>
-            <div class="meta"><strong>Dealer:</strong> ${escapeHtml(car.dealer || "")}</div>
-            <div class="meta"><strong>Phone:</strong> ${escapeHtml(car.phone || "")}</div>
-            <div class="meta"><strong>User ID:</strong> ${escapeHtml(car.user_id || "")}</div>
-
-            <div class="buttons">
-              <button class="btn-red" onclick="deleteVehicle(${car.id})">Delete Vehicle</button>
-            </div>
-          `;
-
-          vehicleList.appendChild(card);
-        });
-      } catch (err) {
-        console.log("loadVehicles catch:", err);
-        vehicleList.innerHTML = "<div class='card'>Something went wrong loading vehicles.</div>";
-      }
-    }
-
-    async function deleteVehicle(id) {
-      if (!confirm("Delete this vehicle?")) return;
-
-      setStatus("Deleting vehicle...");
-
-      try {
-        const { error } = await client
-          .from("vehicles")
-          .delete()
-          .eq("id", id);
-
-        if (error) {
-          console.log("delete vehicle error:", error);
-          setStatus("Could not delete vehicle.");
-          return;
-        }
-
-        setStatus("Vehicle deleted.");
-        await loadVehicles();
-      } catch (err) {
-        console.log("deleteVehicle catch:", err);
-        setStatus("Something went wrong deleting vehicle.");
-      }
-    }
-
-    async function loadLeads() {
-      const leadList = document.getElementById("leadList");
-      leadList.innerHTML = "";
-
-      try {
-        const { data, error } = await client
-          .from("leads")
-          .select("*")
-          .order("id", { ascending: false });
-
-        if (error) {
-          console.log("leads error:", error);
-          leadList.innerHTML = "<div class='card'>Could not load leads.</div>";
-          return;
-        }
-
-        if (!data || data.length === 0) {
-          leadList.innerHTML = "<div class='card'>No leads found.</div>";
-          return;
-        }
-
-        data.forEach(lead => {
-          const card = document.createElement("div");
-          card.className = "card";
-
-          card.innerHTML = `
-            <h3>${escapeHtml(lead.vehicle_title || "Lead")}</h3>
-            <div class="meta"><strong>Dealer:</strong> ${escapeHtml(lead.dealer_name || "")}</div>
-            <div class="meta"><strong>Dealer Phone:</strong> ${escapeHtml(lead.dealer_phone || "")}</div>
-            <div class="meta"><strong>Buyer:</strong> ${escapeHtml(lead.buyer_name || "")}</div>
-            <div class="meta"><strong>Buyer Phone:</strong> ${escapeHtml(lead.buyer_phone || "")}</div>
-            <div class="meta"><strong>Sent:</strong> ${escapeHtml(formatDate(lead.created_at))}</div>
-            <div class="meta"><strong>Message:</strong></div>
-            <div class="meta">${escapeHtml(lead.message || "")}</div>
-          `;
-
-          leadList.appendChild(card);
-        });
-      } catch (err) {
-        console.log("loadLeads catch:", err);
-        leadList.innerHTML = "<div class='card'>Something went wrong loading leads.</div>";
-      }
-    }
-
-    checkAdmin();
+    loadDealers();
   </script>
 
 </body>
