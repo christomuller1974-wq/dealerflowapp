@@ -270,7 +270,7 @@
 
     function setStatus(message) {
       document.getElementById("status").textContent = message;
-      console.log("STATUS:", message);
+      console.log(message);
     }
 
     function escapeHtml(value) {
@@ -301,6 +301,8 @@
         .eq("id", userId)
         .single();
 
+      console.log("PROFILE:", data, error);
+
       if (error || !data) {
         return false;
       }
@@ -320,6 +322,8 @@
         .select("*")
         .eq("dealer_name", currentProfile.dealer_name)
         .order("id", { ascending: false });
+
+      console.log("LEADS:", data, error);
 
       if (error) {
         leadList.innerHTML = "<div class='lead-card'>Could not load leads.</div>";
@@ -356,6 +360,8 @@
         .select("*")
         .eq("user_id", currentUser.id)
         .order("id", { ascending: false });
+
+      console.log("VEHICLES:", data, error);
 
       if (error) {
         vehicleList.innerHTML = "<div class='vehicle-card'>Could not load vehicles.</div>";
@@ -428,21 +434,19 @@
         setStatus("Checking login...");
 
         const { data, error } = await client.auth.getUser();
+        console.log("USER:", data, error);
 
         if (error || !data || !data.user) {
-          setStatus("Not logged in. Please log in again.");
-          document.getElementById("leadList").innerHTML = "<div class='lead-card'>Please log in first.</div>";
-          document.getElementById("vehicleList").innerHTML = "<div class='vehicle-card'>Please log in first.</div>";
+          window.location.href = "login.html";
           return;
         }
 
         currentUser = data.user;
-        setStatus("User found: " + (currentUser.email || currentUser.id));
 
         const profileOk = await loadProfile(currentUser.id);
 
         if (!profileOk) {
-          setStatus("Profile not found for this user.");
+          setStatus("Profile not found.");
           document.getElementById("leadList").innerHTML = "<div class='lead-card'>Profile not found.</div>";
           document.getElementById("vehicleList").innerHTML = "<div class='vehicle-card'>Profile not found.</div>";
           return;
