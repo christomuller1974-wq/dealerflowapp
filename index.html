@@ -48,8 +48,8 @@
       text-decoration: none;
       text-align: center;
       font-weight: 600;
-      font-size: 13px;
-      padding: 9px 12px;
+      font-size: 12px;
+      padding: 8px 12px;
       border-radius: 8px;
       border: none;
       cursor: pointer;
@@ -66,6 +66,10 @@
 
     .btn-dark {
       background: #1f2937;
+    }
+
+    .btn-whatsapp {
+      background: #25d366;
     }
 
     .quick-links {
@@ -123,6 +127,12 @@
       font-size: 14px;
     }
 
+    .section-heading {
+      padding: 0 18px;
+      margin: 18px 0 12px 0;
+      font-size: 28px;
+    }
+
     .cars-wrap {
       padding: 0 18px 24px 18px;
       display: grid;
@@ -135,6 +145,20 @@
       border-radius: 14px;
       padding: 14px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      position: relative;
+    }
+
+    .featured-ribbon {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: #f59e0b;
+      color: white;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: bold;
+      z-index: 2;
     }
 
     .card-image-wrap {
@@ -205,20 +229,14 @@
       margin-top: 12px;
     }
 
-    .details-btn {
-      background: #1f2937;
-    }
-
-    .dealer-btn {
-      background: #16a34a;
-    }
-
-    .call-btn {
-      background: #3f5cc9;
-    }
-
-    .wa-btn {
-      background: #25d366;
+    .empty-box {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 16px;
+      margin: 0 18px 20px 18px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      font-size: 14px;
+      color: #475569;
     }
 
     @media (min-width: 768px) {
@@ -306,9 +324,13 @@
     </select>
   </div>
 
-  <h2 style="padding: 0 18px;">Latest Vehicles</h2>
-
   <div id="status" class="status">Loading vehicles...</div>
+
+  <h2 class="section-heading">Featured Vehicles</h2>
+  <div id="featuredCars" class="cars-wrap"></div>
+  <div id="featuredEmpty" class="empty-box" style="display:none;">No featured vehicles available right now.</div>
+
+  <h2 class="section-heading">All Vehicles</h2>
   <div id="cars" class="cars-wrap"></div>
 
   <script>
@@ -358,8 +380,7 @@
       });
     }
 
-    function renderCars() {
-      const container = document.getElementById("cars");
+    function getFilteredCars() {
       const searchText = document.getElementById("searchInput").value.toLowerCase().trim();
       const yearFilter = document.getElementById("yearFilter").value;
       const priceFilter = document.getElementById("priceFilter").value;
@@ -392,27 +413,21 @@
         filtered = filtered.filter(car => safeText(car.location) === locationFilter);
       }
 
-      container.innerHTML = "";
+      return filtered;
+    }
 
-      if (!filtered.length) {
-        setStatus("No vehicles found.");
-        return;
-      }
+    function buildCarCard(car, isFeaturedSection) {
+      const phoneClean = normalisePhone(car.phone);
+      const whatsappLink = phoneClean
+        ? "https://wa.me/27" + phoneClean.replace(/^0/, "") + "?text=" + encodeURIComponent("Hi, I'm interested in the " + safeText(car.title || "vehicle"))
+        : "#";
 
-      setStatus(filtered.length + " vehicle(s) found.");
+      const detailsLink = "details.html?id=" + car.id;
+      const dealerLink = "dealer.html?dealer=" + encodeURIComponent(safeText(car.dealer));
 
-      filtered.forEach(car => {
-        const phoneClean = normalisePhone(car.phone);
-        const whatsappLink = phoneClean
-          ? "https://wa.me/27" + phoneClean.replace(/^0/, "") + "?text=" + encodeURIComponent("Hi, I'm interested in the " + safeText(car.title || "vehicle"))
-          : "#";
-
-        const detailsLink = "details.html?id=" + car.id;
-        const dealerLink = "dealer.html?dealer=" + encodeURIComponent(safeText(car.dealer));
-
-        const div = document.createElement("div");
-        div.className = "car-card";
-        div.innerHTML = `
+      return `
+        <div class="car-card">
+          ${car.featured ? '<div class="featured-ribbon">FEATURED</div>' : ''}
           <div class="card-image-wrap">
             <img src="${safeText(car.image)}" alt="${safeText(car.title)}" class="card-image">
           </div>
@@ -426,14 +441,50 @@
           <div class="car-meta"><strong>Phone:</strong> ${safeText(car.phone)}</div>
 
           <div class="car-buttons">
-            <a href="${detailsLink}" class="btn details-btn">View Details</a>
-            <a href="${dealerLink}" class="btn dealer-btn">View Dealer Stock</a>
-            <a href="tel:${phoneClean}" class="btn call-btn">Call Dealer</a>
-            <a href="${whatsappLink}" target="_blank" class="btn wa-btn">WhatsApp Dealer</a>
+            <a href="${detailsLink}" class="btn btn-dark">View Details</a>
+            <a href="${dealerLink}" class="btn btn-green">View Dealer Stock</a>
+            <a href="tel:${phoneClean}" class="btn btn-blue">Call Dealer</a>
+            <a href="${whatsappLink}" target="_blank" class="btn btn-whatsapp">WhatsApp Dealer</a>
           </div>
-        `;
-        container.appendChild(div);
-      });
+        </div>
+      `;
+    }
+
+    function renderCars() {
+      const featuredContainer = document.getElementById("featuredCars");
+      const allContainer = document.getElementById("cars");
+      const featuredEmpty = document.getElementById("featuredEmpty");
+
+      const filteredCars = getFilteredCars();
+      const featuredCars = filteredCars.filter(car => car.featured === true);
+      const normalCars = filteredCars.filter(car => car.featured !== true);
+
+      featuredContainer.innerHTML = "";
+      allContainer.innerHTML = "";
+
+      if (!filteredCars.length) {
+        featuredEmpty.style.display = "none";
+        featuredContainer.innerHTML = "";
+        allContainer.innerHTML = '<div class="empty-box" style="grid-column:1/-1;">No vehicles found.</div>';
+        setStatus("No vehicles found.");
+        return;
+      }
+
+      if (featuredCars.length === 0) {
+        featuredEmpty.style.display = "block";
+      } else {
+        featuredEmpty.style.display = "none";
+        featuredContainer.innerHTML = featuredCars.map(car => buildCarCard(car, true)).join("");
+      }
+
+      allContainer.innerHTML = normalCars.map(car => buildCarCard(car, false)).join("");
+
+      const countText = filteredCars.length + " vehicle(s) found.";
+      setStatus(countText);
+
+      if (normalCars.length === 0) {
+        allContainer.innerHTML = '<div class="empty-box" style="grid-column:1/-1;">No additional vehicles outside the featured list.</div>';
+      }
     }
 
     async function loadCars() {
@@ -441,7 +492,7 @@
 
       try {
         const response = await fetch(
-          supabaseUrl + "/rest/v1/vehicles?select=*&order=id.desc",
+          supabaseUrl + "/rest/v1/vehicles?select=*&order=featured.desc,id.desc",
           {
             headers: {
               apikey: supabaseKey,
