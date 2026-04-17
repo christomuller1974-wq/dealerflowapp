@@ -25,150 +25,37 @@
       font-size: 36px;
     }
 
-    .hero p {
-      margin: 0;
-      font-size: 16px;
-    }
-
     .container {
       max-width: 1200px;
       margin: 0 auto;
       padding: 18px;
     }
 
-    .top-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 14px;
-    }
-
     .btn {
-      display: inline-block;
-      text-decoration: none;
-      text-align: center;
-      font-weight: 600;
-      font-size: 12px;
       padding: 8px 12px;
       border-radius: 8px;
       border: none;
       cursor: pointer;
       color: white;
+      font-size: 12px;
     }
 
-    .btn-blue { background: #3f5cc9; }
-    .btn-dark { background: #1f2937; }
     .btn-green { background: #16a34a; }
     .btn-red { background: #dc2626; }
 
     .status {
-      background: #ffffff;
-      border-radius: 12px;
-      padding: 12px 14px;
+      background: white;
+      padding: 12px;
       margin-bottom: 16px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      border-radius: 10px;
       font-weight: bold;
-      font-size: 14px;
-    }
-
-    .summary-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
-      margin-bottom: 18px;
-    }
-
-    .summary-card {
-      background: #ffffff;
-      border-radius: 14px;
-      padding: 16px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
-
-    .summary-card h3 {
-      margin: 0 0 8px 0;
-      font-size: 16px;
-      color: #475569;
-    }
-
-    .summary-number {
-      font-size: 28px;
-      font-weight: bold;
-    }
-
-    .dealer-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 16px;
     }
 
     .dealer-card {
-      background: #ffffff;
-      border-radius: 14px;
-      padding: 16px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
-
-    .dealer-name {
-      font-size: 22px;
-      font-weight: bold;
-      margin-bottom: 10px;
-      line-height: 1.2;
-    }
-
-    .meta {
-      color: #475569;
-      font-size: 14px;
-      margin-bottom: 8px;
-      line-height: 1.5;
-      word-break: break-word;
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: bold;
+      background: white;
+      padding: 14px;
+      border-radius: 12px;
       margin-bottom: 12px;
-    }
-
-    .badge-active {
-      background: #dcfce7;
-      color: #166534;
-    }
-
-    .badge-inactive {
-      background: #fee2e2;
-      color: #991b1b;
-    }
-
-    .card-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 12px;
-    }
-
-    .section-title {
-      font-size: 28px;
-      margin: 0 0 14px 0;
-    }
-
-    @media (min-width: 700px) {
-      .summary-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
-
-      .dealer-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (min-width: 1100px) {
-      .dealer-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
     }
   </style>
 </head>
@@ -176,36 +63,11 @@
 
   <div class="hero">
     <h1>Super Admin</h1>
-    <p>Activate and manage dealer accounts</p>
   </div>
 
   <div class="container">
-    <div class="top-actions">
-      <a href="index.html" class="btn btn-dark">Back to Website</a>
-      <a href="dealer-admin.html" class="btn btn-blue">Dealer Dashboard</a>
-    </div>
-
-    <div id="status" class="status">Loading admin panel...</div>
-
-    <div class="summary-grid">
-      <div class="summary-card">
-        <h3>Total Dealers</h3>
-        <div id="totalDealers" class="summary-number">0</div>
-      </div>
-
-      <div class="summary-card">
-        <h3>Active Dealers</h3>
-        <div id="activeDealers" class="summary-number">0</div>
-      </div>
-
-      <div class="summary-card">
-        <h3>Inactive Dealers</h3>
-        <div id="inactiveDealers" class="summary-number">0</div>
-      </div>
-    </div>
-
-    <h2 class="section-title">Dealer Accounts</h2>
-    <div id="dealerGrid" class="dealer-grid"></div>
+    <div id="status" class="status">Loading...</div>
+    <div id="dealerGrid"></div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -214,112 +76,85 @@
     const supabaseKey = "sb_publishable_D7saHOTE_JhSlMnSgBnIhQ_mOAOUD9s";
     const client = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-    function setStatus(message) {
-      document.getElementById("status").textContent = message;
-      console.log(message);
+    const ADMIN_EMAIL = "autoexcellence@telkomsa.net";
+
+    function setStatus(msg) {
+      document.getElementById("status").textContent = msg;
     }
 
-    function escapeHtml(value) {
-      return String(value ?? "")
-        .replace(/&/g, "&amp;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#39;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;");
+    async function startAdmin() {
+      setStatus("Checking admin access...");
+
+      const { data, error } = await client.auth.getUser();
+
+      if (error || !data || !data.user) {
+        setStatus("Not logged in.");
+        window.location.href = "login.html";
+        return;
+      }
+
+      if (data.user.email !== ADMIN_EMAIL) {
+        setStatus("Access denied.");
+        setTimeout(() => {
+          window.location.href = "index.html";
+        }, 1200);
+        return;
+      }
+
+      setStatus("Admin access granted.");
+      loadDealers();
     }
 
     async function loadDealers() {
-      try {
-        setStatus("Loading dealer accounts...");
+      const { data, error } = await client
+        .from("profiles")
+        .select("*");
 
-        const { data, error } = await client
-          .from("profiles")
-          .select("*")
-          .order("dealer_name", { ascending: true });
-
-        if (error) {
-          console.log(error);
-          setStatus("Could not load dealer accounts.");
-          return;
-        }
-
-        const dealers = data || [];
-
-        const total = dealers.length;
-        const active = dealers.filter(d => d.is_active).length;
-        const inactive = total - active;
-
-        document.getElementById("totalDealers").textContent = total;
-        document.getElementById("activeDealers").textContent = active;
-        document.getElementById("inactiveDealers").textContent = inactive;
-
-        const grid = document.getElementById("dealerGrid");
-        grid.innerHTML = "";
-
-        if (dealers.length === 0) {
-          grid.innerHTML = "<div class='dealer-card'>No dealer accounts found.</div>";
-          setStatus("No dealer accounts found.");
-          return;
-        }
-
-        dealers.forEach(dealer => {
-          const card = document.createElement("div");
-          card.className = "dealer-card";
-
-          const activeBadge = dealer.is_active
-            ? <div class="badge badge-active">Active</div>
-            : <div class="badge badge-inactive">Inactive</div>;
-
-          const actionButton = dealer.is_active
-            ? <button class="btn btn-red" onclick="setDealerStatus('${dealer.id}', false)">Deactivate</button>
-            : <button class="btn btn-green" onclick="setDealerStatus('${dealer.id}', true)">Activate</button>;
-
-          card.innerHTML = `
-            <div class="dealer-name">${escapeHtml(dealer.dealer_name || "No dealer name")}</div>
-            ${activeBadge}
-            <div class="meta"><strong>Phone:</strong> ${escapeHtml(dealer.phone || "")}</div>
-            <div class="meta"><strong>Location:</strong> ${escapeHtml(dealer.location || "")}</div>
-            <div class="meta"><strong>User ID:</strong> ${escapeHtml(dealer.id || "")}</div>
-
-            <div class="card-actions">
-              ${actionButton}
-            </div>
-          `;
-
-          grid.appendChild(card);
-        });
-
-        setStatus("Admin panel loaded successfully.");
-      } catch (err) {
-        console.log(err);
-        setStatus("Something went wrong loading admin panel.");
+      if (error) {
+        setStatus("Error loading dealers.");
+        return;
       }
+
+      const grid = document.getElementById("dealerGrid");
+      grid.innerHTML = "";
+
+      data.forEach(d => {
+        const card = document.createElement("div");
+        card.className = "dealer-card";
+
+        card.innerHTML = `
+          <strong>${d.dealer_name}</strong><br>
+          ${d.phone}<br>
+          ${d.location}<br><br>
+
+          Status: ${d.is_active ? "Active" : "Inactive"}<br><br>
+
+          <button class="btn btn-green" onclick="setStatusDealer('${d.id}', true)">Activate</button>
+          <button class="btn btn-red" onclick="setStatusDealer('${d.id}', false)">Deactivate</button>
+        `;
+
+        grid.appendChild(card);
+      });
     }
 
-    async function setDealerStatus(profileId, makeActive) {
-      try {
-        setStatus(makeActive ? "Activating dealer..." : "Deactivating dealer...");
+    async function setStatusDealer(id, active) {
+      setStatus(active ? "Activating..." : "Deactivating...");
 
-        const { error } = await client
-          .from("profiles")
-          .update({ is_active: makeActive })
-          .eq("id", profileId);
+      const { error } = await client
+        .from("profiles")
+        .update({ is_active: active })
+        .eq("id", id);
 
-        if (error) {
-          console.log(error);
-          setStatus("Could not update dealer status.");
-          return;
-        }
-
-        setStatus(makeActive ? "Dealer activated successfully." : "Dealer deactivated successfully.");
-        await loadDealers();
-      } catch (err) {
-        console.log(err);
-        setStatus("Something went wrong updating dealer status.");
+      if (error) {
+        setStatus("Error updating.");
+        return;
       }
+
+      setStatus("Updated successfully.");
+      loadDealers();
     }
 
-    loadDealers();
+    startAdmin();
   </script>
 
 </body>
