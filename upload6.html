@@ -204,7 +204,7 @@
       <div class="form-grid">
         <div class="field full-width">
           <label for="photoInput">Vehicle Photos</label>
-          <input type="file" id="photoInput" accept="image/*" multiple onchange="handleFiles(event)">
+          <input type="file" id="photoInput" accept="image/*" multiple>
         </div>
 
         <div class="field full-width">
@@ -223,53 +223,18 @@
           <label for="year">Select Year</label>
           <select id="year">
             <option value="">Select Year</option>
-            <option>2026</option>
-            <option>2025</option>
-            <option>2024</option>
-            <option>2023</option>
-            <option>2022</option>
-            <option>2021</option>
-            <option>2020</option>
-            <option>2019</option>
-            <option>2018</option>
-            <option>2017</option>
-            <option>2016</option>
-            <option>2015</option>
-            <option>2014</option>
-            <option>2013</option>
-            <option>2012</option>
-            <option>2011</option>
-            <option>2010</option>
-            <option>2009</option>
-            <option>2008</option>
-            <option>2007</option>
-            <option>2006</option>
-            <option>2005</option>
-            <option>2004</option>
-            <option>2003</option>
-            <option>2002</option>
-            <option>2001</option>
-            <option>2000</option>
-            <option>1999</option>
-            <option>1998</option>
-            <option>1997</option>
-            <option>1996</option>
-            <option>1995</option>
-            <option>1994</option>
-            <option>1993</option>
-            <option>1992</option>
-            <option>1991</option>
-            <option>1990</option>
-            <option>1989</option>
-            <option>1988</option>
-            <option>1987</option>
-            <option>1986</option>
-            <option>1985</option>
-            <option>1984</option>
-            <option>1983</option>
-            <option>1982</option>
-            <option>1981</option>
-            <option>1980</option>
+            <option>2026</option><option>2025</option><option>2024</option><option>2023</option>
+            <option>2022</option><option>2021</option><option>2020</option><option>2019</option>
+            <option>2018</option><option>2017</option><option>2016</option><option>2015</option>
+            <option>2014</option><option>2013</option><option>2012</option><option>2011</option>
+            <option>2010</option><option>2009</option><option>2008</option><option>2007</option>
+            <option>2006</option><option>2005</option><option>2004</option><option>2003</option>
+            <option>2002</option><option>2001</option><option>2000</option><option>1999</option>
+            <option>1998</option><option>1997</option><option>1996</option><option>1995</option>
+            <option>1994</option><option>1993</option><option>1992</option><option>1991</option>
+            <option>1990</option><option>1989</option><option>1988</option><option>1987</option>
+            <option>1986</option><option>1985</option><option>1984</option><option>1983</option>
+            <option>1982</option><option>1981</option><option>1980</option>
           </select>
         </div>
 
@@ -314,14 +279,7 @@
   <script>
     const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
     const supabaseKey = "sb_publishable_D7saHOTE_JhSlMnSgBnIhQ_mOAOUD9s";
-
-    const client = window.supabase.createClient(supabaseUrl, supabaseKey, {
-      auth: {
-        persistSession: true,
-        autoRefreshToken: true,
-        detectSessionInUrl: true
-      }
-    });
+    const client = window.supabase.createClient(supabaseUrl, supabaseKey);
 
     let currentUser = null;
     let currentProfile = null;
@@ -337,10 +295,10 @@
       if (!message) {
         box.style.display = "none";
         box.textContent = "";
-        return;
+      } else {
+        box.style.display = "block";
+        box.textContent = message;
       }
-      box.style.display = "block";
-      box.textContent = message;
     }
 
     function setUploadBusy(isBusy) {
@@ -349,23 +307,24 @@
       btn.textContent = isBusy ? "Saving..." : "Save Vehicle";
     }
 
-    function handleFiles(event) {
-      selectedFiles = Array.from(event.target.files || []);
+    function handleFileChange() {
+      const input = document.getElementById("photoInput");
       const grid = document.getElementById("previewGrid");
+      selectedFiles = Array.from(input.files || []);
       grid.innerHTML = "";
 
-      if (!selectedFiles.length) {
+      if (selectedFiles.length === 0) {
         grid.innerHTML = "<div class='preview-card'>No photos selected yet.</div>";
         return;
       }
 
       selectedFiles.forEach((file, index) => {
-        const url = URL.createObjectURL(file);
+        const imageUrl = URL.createObjectURL(file);
         const card = document.createElement("div");
         card.className = "preview-card";
         card.innerHTML = `
           <div class="preview-image-wrap">
-            <img src="${url}" class="preview-image" alt="Preview">
+            <img src="${imageUrl}" class="preview-image" alt="Preview">
           </div>
           <div class="preview-label">${index === 0 ? "Main image" : "Extra image"}</div>
         `;
@@ -392,8 +351,8 @@
 
     async function uploadSingleFile(file) {
       const ext = file.name.split(".").pop() || "jpg";
-      const fileName = ${Date.now()}-${Math.random().toString(36).slice(2)}.${ext};
-      const filePath = vehicles/${fileName};
+      const fileName = Date.now() + "-" + Math.random().toString(36).slice(2) + "." + ext;
+      const filePath = "vehicles/" + fileName;
 
       const { error } = await client.storage
         .from("vehicle-images")
@@ -433,7 +392,7 @@
         return;
       }
 
-      if (!selectedFiles.length) {
+      if (selectedFiles.length === 0) {
         setStatus("Please select at least one photo.");
         return;
       }
@@ -453,22 +412,20 @@
 
         setStatus("Saving vehicle...");
 
-        const { error } = await client
-          .from("vehicles")
-          .insert([{
-            user_id: currentUser.id,
-            title,
-            year,
-            price,
-            mileage,
-            location,
-            dealer,
-            phone,
-            description,
-            image: mainImage,
-            images: allImages,
-            featured: false
-          }]);
+        const { error } = await client.from("vehicles").insert([{
+          user_id: currentUser.id,
+          title: title,
+          year: year,
+          price: price,
+          mileage: mileage,
+          location: location,
+          dealer: dealer,
+          phone: phone,
+          description: description,
+          image: mainImage,
+          images: allImages,
+          featured: false
+        }]);
 
         if (error) {
           setStatus("Could not save vehicle: " + error.message);
@@ -490,6 +447,7 @@
         document.getElementById("previewGrid").innerHTML = "<div class='preview-card'>No photos selected yet.</div>";
         setUploadBusy(false);
       } catch (err) {
+        console.log(err);
         setStatus("Upload failed: " + err.message);
         setUploadBusy(false);
       }
@@ -497,13 +455,15 @@
 
     async function startUploadPage() {
       try {
+        document.getElementById("photoInput").addEventListener("change", handleFileChange);
+
         setStatus("Checking login...");
 
         const { data, error } = await client.auth.getUser();
 
         if (error || !data || !data.user) {
           setStatus("Not logged in. Redirecting...");
-          setTimeout(() => {
+          setTimeout(function () {
             window.location.href = "login.html";
           }, 1200);
           return;
@@ -531,13 +491,12 @@
 
         setStatus("Upload page ready.");
       } catch (err) {
-        setStatus("Error starting upload page.");
         console.log(err);
+        setStatus("Error starting upload page.");
       }
     }
 
     startUploadPage();
   </script>
-
 </body>
 </html>
