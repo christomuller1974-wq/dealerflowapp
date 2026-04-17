@@ -14,20 +14,60 @@
     }
 
     .hero {
-      background: #2f55c7;
+      background: linear-gradient(135deg, #2f55c7, #1e3a8a);
       color: white;
-      padding: 24px 20px;
+      padding: 42px 20px 34px;
+      text-align: center;
     }
 
     .hero h1 {
-      margin: 0 0 8px 0;
-      font-size: 44px;
+      margin: 0;
+      font-size: 64px;
+      line-height: 1;
+      font-weight: 800;
+      letter-spacing: -1px;
     }
 
     .hero p {
-      margin: 0;
-      font-size: 17px;
+      margin: 16px auto 0;
+      font-size: 22px;
+      max-width: 760px;
+      line-height: 1.4;
+      font-weight: 500;
     }
+
+    .hero .subline {
+      margin-top: 10px;
+      font-size: 15px;
+      opacity: 0.95;
+    }
+
+    .right-quick-links {
+      position: fixed;
+      right: 10px;
+      top: 150px;
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .quick-btn {
+      display: inline-block;
+      text-decoration: none;
+      text-align: center;
+      font-weight: 700;
+      font-size: 11px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      color: white;
+      min-width: 110px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    .quick-blue { background: #3f5cc9; }
+    .quick-dark { background: #1f2937; }
+    .quick-green { background: #16a34a; }
 
     .section {
       background: #ffffff;
@@ -42,8 +82,7 @@
       margin-top: 0;
     }
 
-    .btn,
-    .quick-btn {
+    .btn {
       display: inline-block;
       text-decoration: none;
       text-align: center;
@@ -56,42 +95,10 @@
       color: white;
     }
 
-    .btn-blue {
-      background: #3f5cc9;
-    }
-
-    .btn-green {
-      background: #16a34a;
-    }
-
-    .btn-dark {
-      background: #1f2937;
-    }
-
-    .btn-whatsapp {
-      background: #25d366;
-    }
-
-    .quick-links {
-      background: #ffffff;
-      padding: 18px;
-      margin: 18px;
-      border-radius: 14px;
-      text-align: center;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
-
-    .quick-links h3 {
-      margin: 0 0 12px 0;
-      font-size: 22px;
-    }
-
-    .quick-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-    }
+    .btn-blue { background: #3f5cc9; }
+    .btn-green { background: #16a34a; }
+    .btn-dark { background: #1f2937; }
+    .btn-whatsapp { background: #25d366; }
 
     .search-box,
     .filter-box {
@@ -129,8 +136,8 @@
 
     .section-heading {
       padding: 0 18px;
-      margin: 18px 0 12px 0;
-      font-size: 28px;
+      margin: 22px 0 12px 0;
+      font-size: 30px;
     }
 
     .cars-wrap {
@@ -146,6 +153,12 @@
       padding: 14px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.08);
       position: relative;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .car-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
     }
 
     .featured-ribbon {
@@ -239,6 +252,28 @@
       color: #475569;
     }
 
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 48px;
+      }
+
+      .hero p {
+        font-size: 18px;
+      }
+
+      .right-quick-links {
+        position: static;
+        flex-direction: row;
+        justify-content: center;
+        padding: 14px 18px 0;
+        flex-wrap: wrap;
+      }
+
+      .quick-btn {
+        min-width: auto;
+      }
+    }
+
     @media (min-width: 768px) {
       .cars-wrap {
         grid-template-columns: repeat(2, 1fr);
@@ -280,21 +315,20 @@
 
   <div class="hero">
     <h1>DealerFlow</h1>
-    <p>Turn your stock into sales</p>
+    <p>Move stock faster. Capture real buyer leads. Grow your dealership with confidence.</p>
+    <div class="subline">Premium online vehicle listings for serious dealers.</div>
   </div>
 
-  <div class="quick-links">
-    <h3>Quick Access</h3>
-    <div class="quick-buttons">
-      <a href="login.html" class="quick-btn btn-blue">Dealer Login</a>
-      <a href="dealer-admin.html" class="quick-btn btn-blue">Dealer Dashboard</a>
-      <a href="super-admin.html" class="quick-btn btn-dark">Super Admin</a>
-    </div>
+  <div class="right-quick-links">
+    <a href="login.html" class="quick-btn quick-blue">Dealer Login</a>
+    <a href="signup.html" class="quick-btn quick-green">Sign Up</a>
+    <a href="dealer-admin.html" class="quick-btn quick-blue">Dashboard</a>
+    <a href="super-admin.html" class="quick-btn quick-dark">Admin</a>
   </div>
 
   <div class="section">
-    <h2>For Dealers</h2>
-    <p>Load your vehicle stock and receive real buyer leads directly via call, WhatsApp, or enquiry.</p>
+    <h2>Why DealerFlow?</h2>
+    <p>Show your stock professionally, get direct buyer enquiries, and manage everything from one clean dashboard.</p>
     <a class="btn btn-blue" href="upload6.html">Upload Your Stock</a>
   </div>
 
@@ -302,7 +336,7 @@
     type="text"
     id="searchInput"
     class="search-box"
-    placeholder="Search vehicles (e.g. BMW, Toyota, Urban Cruiser)"
+    placeholder="Search vehicles, dealer, location..."
     oninput="renderCars()"
   >
 
@@ -416,7 +450,7 @@
       return filtered;
     }
 
-    function buildCarCard(car, isFeaturedSection) {
+    function buildCarCard(car) {
       const phoneClean = normalisePhone(car.phone);
       const whatsappLink = phoneClean
         ? "https://wa.me/27" + phoneClean.replace(/^0/, "") + "?text=" + encodeURIComponent("Hi, I'm interested in the " + safeText(car.title || "vehicle"))
@@ -442,9 +476,9 @@
 
           <div class="car-buttons">
             <a href="${detailsLink}" class="btn btn-dark">View Details</a>
-            <a href="${dealerLink}" class="btn btn-green">View Dealer Stock</a>
+            <a href="${dealerLink}" class="btn btn-green">Dealer Stock</a>
             <a href="tel:${phoneClean}" class="btn btn-blue">Call Dealer</a>
-            <a href="${whatsappLink}" target="_blank" class="btn btn-whatsapp">WhatsApp Dealer</a>
+            <a href="${whatsappLink}" target="_blank" class="btn btn-whatsapp">WhatsApp</a>
           </div>
         </div>
       `;
@@ -464,7 +498,6 @@
 
       if (!filteredCars.length) {
         featuredEmpty.style.display = "none";
-        featuredContainer.innerHTML = "";
         allContainer.innerHTML = '<div class="empty-box" style="grid-column:1/-1;">No vehicles found.</div>';
         setStatus("No vehicles found.");
         return;
@@ -474,17 +507,16 @@
         featuredEmpty.style.display = "block";
       } else {
         featuredEmpty.style.display = "none";
-        featuredContainer.innerHTML = featuredCars.map(car => buildCarCard(car, true)).join("");
+        featuredContainer.innerHTML = featuredCars.map(car => buildCarCard(car)).join("");
       }
-
-      allContainer.innerHTML = normalCars.map(car => buildCarCard(car, false)).join("");
-
-      const countText = filteredCars.length + " vehicle(s) found.";
-      setStatus(countText);
 
       if (normalCars.length === 0) {
         allContainer.innerHTML = '<div class="empty-box" style="grid-column:1/-1;">No additional vehicles outside the featured list.</div>';
+      } else {
+        allContainer.innerHTML = normalCars.map(car => buildCarCard(car)).join("");
       }
+
+      setStatus(filteredCars.length + " vehicle(s) found.");
     }
 
     async function loadCars() {
