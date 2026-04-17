@@ -9,69 +9,100 @@
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: #f3f4f6;
+      background: #e5e7eb;
       color: #111827;
     }
 
-    .header {
+    .hero {
       background: #2f55c7;
       color: white;
-      padding: 20px;
+      padding: 24px 20px;
     }
 
-    .header h1 {
+    .hero h1 {
       margin: 0 0 8px 0;
+      font-size: 38px;
     }
 
-    .header p {
+    .hero p {
       margin: 0;
+      font-size: 16px;
+    }
+
+    .container {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 18px;
     }
 
     .top-actions {
-      padding: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 14px;
     }
 
-    .top-actions a,
-    .top-actions button {
-      background: #111827;
-      color: white;
-      padding: 12px 18px;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: bold;
+    .btn {
       display: inline-block;
-      margin-right: 10px;
-      margin-bottom: 10px;
+      text-decoration: none;
+      text-align: center;
+      font-weight: 600;
+      font-size: 13px;
+      padding: 9px 12px;
+      border-radius: 8px;
       border: none;
       cursor: pointer;
-      font-size: 14px;
+      color: white;
+    }
+
+    .btn-blue {
+      background: #3f5cc9;
+    }
+
+    .btn-green {
+      background: #16a34a;
+    }
+
+    .btn-dark {
+      background: #1f2937;
+    }
+
+    .btn-red {
+      background: #dc2626;
+    }
+
+    .btn-orange {
+      background: #f59e0b;
     }
 
     .status {
-      background: white;
-      margin: 0 20px 20px 20px;
-      padding: 16px;
+      background: #ffffff;
       border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      padding: 12px 14px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
       font-weight: bold;
-      line-height: 1.4;
-    }
-
-    .section {
-      padding: 0 20px 20px 20px;
+      font-size: 14px;
     }
 
     .section-title {
-      font-size: 24px;
+      font-size: 28px;
       margin: 0 0 14px 0;
+    }
+
+    .lead-list,
+    .vehicle-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
     }
 
     .lead-card,
     .vehicle-card {
-      background: white;
-      border-radius: 12px;
-      padding: 15px;
-      margin-bottom: 20px;
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 14px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
 
@@ -79,14 +110,15 @@
     .vehicle-card h3 {
       margin: 0 0 10px 0;
       font-size: 22px;
+      line-height: 1.2;
     }
 
     .lead-meta,
     .small {
-      color: #6b7280;
+      color: #475569;
       font-size: 14px;
       margin-bottom: 8px;
-      line-height: 1.4;
+      line-height: 1.5;
     }
 
     .lead-message {
@@ -96,18 +128,30 @@
       margin-top: 10px;
       line-height: 1.5;
       white-space: pre-wrap;
+      font-size: 14px;
     }
 
-    .vehicle-card img {
+    .card-image-wrap {
       width: 100%;
-      max-height: 260px;
-      object-fit: cover;
-      border-radius: 10px;
+      height: 220px;
+      background: #eef2f7;
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       margin-bottom: 12px;
-      background: #e5e7eb;
     }
 
-    .year-pill {
+    .card-image {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #eef2f7;
+      display: block;
+    }
+
+    .year-badge {
       display: inline-block;
       background: #dbeafe;
       color: #1d4ed8;
@@ -115,88 +159,91 @@
       padding: 6px 10px;
       border-radius: 999px;
       margin-bottom: 12px;
-      font-size: 13px;
+      font-size: 12px;
     }
 
-    .grid {
+    .form-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 12px;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 12px;
     }
 
-    .grid input {
+    .form-grid label {
+      font-size: 13px;
+      font-weight: bold;
+      color: #334155;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .form-grid input {
       width: 100%;
       box-sizing: border-box;
-      padding: 12px;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
-      font-size: 15px;
+      padding: 11px;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
       background: white;
-      margin-top: 6px;
+      font-size: 14px;
     }
 
-    .checkbox-row {
-      padding-top: 12px;
-    }
-
-    .buttons {
+    .vehicle-buttons {
       display: flex;
-      gap: 10px;
       flex-wrap: wrap;
-      margin-top: 15px;
+      gap: 8px;
+      margin-top: 12px;
     }
 
-    .save-btn,
-    .delete-btn,
-    .edit-btn {
-      border: none;
-      border-radius: 8px;
-      padding: 12px 16px;
-      font-weight: bold;
-      cursor: pointer;
-      color: white;
-      min-width: 140px;
-      text-decoration: none;
-      text-align: center;
-      display: inline-block;
+    @media (min-width: 768px) {
+      .vehicle-list {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .card-image-wrap {
+        height: 190px;
+      }
+
+      .vehicle-card h3 {
+        font-size: 20px;
+      }
     }
 
-    .save-btn {
-      background: #2f55c7;
-    }
+    @media (min-width: 1100px) {
+      .vehicle-list {
+        grid-template-columns: repeat(3, 1fr);
+      }
 
-    .delete-btn {
-      background: #dc2626;
-    }
+      .card-image-wrap {
+        height: 180px;
+      }
 
-    .edit-btn {
-      background: #f59e0b;
+      .vehicle-card h3 {
+        font-size: 18px;
+      }
     }
   </style>
 </head>
 <body>
 
-  <div class="header">
+  <div class="hero">
     <h1>Dealer Dashboard</h1>
     <p>Manage your stock and view your leads</p>
   </div>
 
-  <div class="top-actions">
-    <a href="index.html">← Back to Website</a>
-    <a href="upload6.html">+ Add Vehicle</a>
-    <button type="button" onclick="logout()">Logout</button>
-  </div>
+  <div class="container">
+    <div class="top-actions">
+      <a href="index.html" class="btn btn-dark">Back to Website</a>
+      <a href="upload6.html" class="btn btn-blue">Add Vehicle</a>
+      <button type="button" class="btn btn-dark" onclick="logout()">Logout</button>
+    </div>
 
-  <div id="status" class="status">Starting dashboard...</div>
+    <div id="status" class="status">Starting dashboard...</div>
 
-  <div class="section">
     <h2 class="section-title">Your Leads</h2>
-    <div id="leadList"></div>
-  </div>
+    <div id="leadList" class="lead-list"></div>
 
-  <div class="section">
     <h2 class="section-title">Your Vehicles</h2>
-    <div id="vehicleList"></div>
+    <div id="vehicleList" class="vehicle-list"></div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -324,12 +371,15 @@
         card.className = "vehicle-card";
 
         card.innerHTML = `
-          <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(car.title || "")}">
+          <div class="card-image-wrap">
+            <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(car.title || "")}" class="card-image">
+          </div>
+
           <h3>${escapeHtml(car.title || "Untitled Vehicle")}</h3>
-          <div class="year-pill">Year: ${escapeHtml(yearValue || "Not set")}</div>
+          <div class="year-badge">Year: ${escapeHtml(yearValue || "Not set")}</div>
           <div class="small">Vehicle ID: ${car.id}</div>
 
-          <div class="grid">
+          <div class="form-grid">
             <div>
               <label>Title</label>
               <input type="text" id="title-${car.id}" value="${escapeHtml(car.title || "")}">
@@ -375,18 +425,18 @@
               <input type="text" id="images-${car.id}" value="${escapeHtml(car.images || "")}">
             </div>
 
-            <div class="checkbox-row">
+            <div>
               <label>
-                <input type="checkbox" id="featured-${car.id}" ${featuredChecked} style="width:auto; transform:scale(1.2); margin-right:8px;">
+                <input type="checkbox" id="featured-${car.id}" ${featuredChecked} style="width:auto; margin-right:8px;">
                 Featured
               </label>
             </div>
           </div>
 
-          <div class="buttons">
-            <a class="edit-btn" href="edit.html?id=${car.id}">Edit</a>
-            <button class="save-btn" onclick="saveVehicle(${car.id})">Save Changes</button>
-            <button class="delete-btn" onclick="deleteVehicle(${car.id})">Delete Vehicle</button>
+          <div class="vehicle-buttons">
+            <a class="btn btn-orange" href="edit.html?id=${car.id}">Edit</a>
+            <button class="btn btn-blue" onclick="saveVehicle(${car.id})">Save Changes</button>
+            <button class="btn btn-red" onclick="deleteVehicle(${car.id})">Delete Vehicle</button>
           </div>
         `;
 
@@ -395,16 +445,16 @@
     }
 
     async function saveVehicle(id) {
-      const title = document.getElementById(`title-${id}`).value.trim();
-      const year = document.getElementById(`year-${id}`).value.trim();
-      const price = document.getElementById(`price-${id}`).value.trim();
-      const mileage = document.getElementById(`mileage-${id}`).value.trim();
-      const location = document.getElementById(`location-${id}`).value.trim();
-      const dealer = document.getElementById(`dealer-${id}`).value.trim();
-      const phone = document.getElementById(`phone-${id}`).value.trim();
-      const image = document.getElementById(`image-${id}`).value.trim();
-      const images = document.getElementById(`images-${id}`).value.trim();
-      const featured = document.getElementById(`featured-${id}`).checked;
+      const title = document.getElementById(title-${id}).value.trim();
+      const year = document.getElementById(year-${id}).value.trim();
+      const price = document.getElementById(price-${id}).value.trim();
+      const mileage = document.getElementById(mileage-${id}).value.trim();
+      const location = document.getElementById(location-${id}).value.trim();
+      const dealer = document.getElementById(dealer-${id}).value.trim();
+      const phone = document.getElementById(phone-${id}).value.trim();
+      const image = document.getElementById(image-${id}).value.trim();
+      const images = document.getElementById(images-${id}).value.trim();
+      const featured = document.getElementById(featured-${id}).checked;
 
       setStatus("Saving vehicle " + id + "...");
 
