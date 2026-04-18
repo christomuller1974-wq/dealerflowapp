@@ -242,8 +242,6 @@
         .eq("id", userId)
         .single();
 
-      console.log("PROFILE RESULT:", result);
-
       if (result.error || !result.data) {
         return false;
       }
@@ -263,8 +261,6 @@
         .select("*")
         .eq("dealer_name", currentProfile.dealer_name)
         .order("id", { ascending: false });
-
-      console.log("LEADS RESULT:", result);
 
       if (result.error) {
         leadList.innerHTML = "<div class='lead-card'>Could not load leads.</div>";
@@ -303,8 +299,6 @@
         .eq("user_id", currentUser.id)
         .order("id", { ascending: false });
 
-      console.log("VEHICLES RESULT:", result);
-
       if (result.error) {
         vehicleList.innerHTML = "<div class='vehicle-card'>Could not load vehicles.</div>";
         return;
@@ -332,6 +326,7 @@
           "<div class='meta'><strong>Location:</strong> " + escapeHtml(car.location || "") + "</div>" +
           "<div class='meta'><strong>Phone:</strong> " + escapeHtml(car.phone || "") + "</div>" +
           "<div class='vehicle-buttons'>" +
+            "<button class='btn btn-dark' onclick='toggleFeatured(" + car.id + ", " + (car.featured ? "true" : "false") + ")'>" + (car.featured ? "★ Featured" : "☆ Feature") + "</button>" +
             "<a class='btn btn-green' href='edit.html?id=" + car.id + "'>Edit</a>" +
             "<a class='btn btn-blue' href='details.html?id=" + car.id + "'>View Details</a>" +
           "</div>";
@@ -340,12 +335,30 @@
       });
     }
 
+    async function toggleFeatured(id, currentValue) {
+      setStatus("Updating featured setting...");
+
+      const result = await client
+        .from("vehicles")
+        .update({ featured: !currentValue })
+        .eq("id", id)
+        .eq("user_id", currentUser.id);
+
+      if (result.error) {
+        console.log(result.error);
+        setStatus("Could not update featured setting.");
+        return;
+      }
+
+      setStatus("Featured setting updated.");
+      await loadVehicles();
+    }
+
     async function startDashboard() {
       try {
         setStatus("Checking login...");
 
         const authResult = await client.auth.getUser();
-        console.log("USER RESULT:", authResult);
 
         if (authResult.error || !authResult.data || !authResult.data.user) {
           setStatus("Not logged in. Redirecting...");
@@ -385,6 +398,5 @@
 
     startDashboard();
   </script>
-
 </body>
 </html>
