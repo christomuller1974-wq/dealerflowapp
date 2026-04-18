@@ -301,12 +301,6 @@
       }
     }
 
-    function setUploadBusy(isBusy) {
-      const btn = document.getElementById("uploadBtn");
-      btn.disabled = isBusy;
-      btn.textContent = isBusy ? "Saving..." : "Save Vehicle";
-    }
-
     function handleFileChange() {
       const input = document.getElementById("photoInput");
       const grid = document.getElementById("previewGrid");
@@ -338,14 +332,14 @@
     }
 
     async function loadProfile(userId) {
-      const { data, error } = await client
+      const result = await client
         .from("profiles")
         .select("*")
         .eq("id", userId)
         .single();
 
-      if (error || !data) return false;
-      currentProfile = data;
+      if (result.error || !result.data) return false;
+      currentProfile = result.data;
       return true;
     }
 
@@ -354,17 +348,17 @@
       const fileName = Date.now() + "-" + Math.random().toString(36).slice(2) + "." + ext;
       const filePath = "vehicles/" + fileName;
 
-      const { error } = await client.storage
+      const uploadResult = await client.storage
         .from("vehicle-images")
         .upload(filePath, file);
 
-      if (error) throw error;
+      if (uploadResult.error) throw uploadResult.error;
 
-      const { data } = client.storage
+      const publicResult = client.storage
         .from("vehicle-images")
         .getPublicUrl(filePath);
 
-      return data.publicUrl;
+      return publicResult.data.publicUrl;
     }
 
     async function submitVehicle() {
@@ -398,7 +392,6 @@
       }
 
       try {
-        setUploadBusy(true);
         setStatus("Uploading photos...");
 
         const uploadedUrls = [];
@@ -410,9 +403,7 @@
         const mainImage = uploadedUrls[0] || "";
         const allImages = uploadedUrls.join(",");
 
-        setStatus("Saving vehicle...");
-
-        const { error } = await client.from("vehicles").insert([{
+        const saveResult = await client.from("vehicles").insert([{
           user_id: currentUser.id,
           title: title,
           year: year,
@@ -427,29 +418,28 @@
           featured: false
         }]);
 
-        if (error) {
-          setStatus("Could not save vehicle: " + error.message);
-          setUploadBusy(false);
+        if (saveResult.error) {
+          setStatus("Could not save vehicle: " + saveResult.error.message);
           return;
         }
 
         setStatus("Vehicle saved successfully.");
+
         document.getElementById("title").value = "";
         document.getElementById("year").value = "";
         document.getElementById("price").value = "";
         document.getElementById("mileage").value = "";
-        document.getElementById("location").value = currentProfile.location || "";
-        document.getElementById("dealer").value = currentProfile.dealer_name || "";
-        document.getElementById("phone").value = currentProfile.phone || "";
         document.getElementById("description").value = "";
         document.getElementById("photoInput").value = "";
         selectedFiles = [];
         document.getElementById("previewGrid").innerHTML = "<div class='preview-card'>No photos selected yet.</div>";
-        setUploadBusy(false);
+
+        document.getElementById("location").value = currentProfile.location || "";
+        document.getElementById("dealer").value = currentProfile.dealer_name || "";
+        document.getElementById("phone").value = currentProfile.phone || "";
       } catch (err) {
         console.log(err);
         setStatus("Upload failed: " + err.message);
-        setUploadBusy(false);
       }
     }
 
@@ -459,9 +449,9 @@
 
         setStatus("Checking login...");
 
-        const { data, error } = await client.auth.getUser();
+        const authResult = await client.auth.getUser();
 
-        if (error || !data || !data.user) {
+        if (authResult.error || !authResult.data || !authResult.data.user) {
           setStatus("Not logged in. Redirecting...");
           setTimeout(function () {
             window.location.href = "login.html";
@@ -469,7 +459,7 @@
           return;
         }
 
-        currentUser = data.user;
+        currentUser = authResult.data.user;
 
         setStatus("Loading dealer profile...");
         const ok = await loadProfile(currentUser.id);
