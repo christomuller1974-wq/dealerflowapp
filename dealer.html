@@ -231,6 +231,7 @@
 
     function setStatus(message) {
       document.getElementById("status").textContent = message;
+      console.log(message);
     }
 
     function safeText(value) {
@@ -241,9 +242,33 @@
       return String(phone || "").replace(/\s+/g, "");
     }
 
-    function getDealerName() {
+    function getDealerNameFromUrl() {
       const params = new URLSearchParams(window.location.search);
       return params.get("dealer");
+    }
+
+    function getVehicleIdFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get("id");
+    }
+
+    async function getDealerFromVehicleId(vehicleId) {
+      const response = await fetch(
+        supabaseUrl + "/rest/v1/vehicles?id=eq." + vehicleId + "&select=dealer",
+        {
+          headers: {
+            apikey: supabaseKey,
+            Authorization: "Bearer " + supabaseKey
+          }
+        }
+      );
+
+      if (!response.ok) return "";
+
+      const data = await response.json();
+      if (!data || !data.length) return "";
+
+      return data[0].dealer || "";
     }
 
     function buildCarCard(car) {
@@ -277,16 +302,22 @@
     }
 
     async function loadDealerPage() {
-      const dealer = getDealerName();
-
-      if (!dealer) {
-        setStatus("Dealer not found.");
-        return;
-      }
-
-      document.getElementById("dealerName").textContent = dealer;
-
       try {
+        let dealer = getDealerNameFromUrl();
+        const vehicleId = getVehicleIdFromUrl();
+
+        if (!dealer && vehicleId) {
+          setStatus("Finding dealer from vehicle...");
+          dealer = await getDealerFromVehicleId(vehicleId);
+        }
+
+        if (!dealer) {
+          setStatus("Dealer not found.");
+          return;
+        }
+
+        document.getElementById("dealerName").textContent = dealer;
+
         const response = await fetch(
           supabaseUrl + "/rest/v1/vehicles?dealer=eq." + encodeURIComponent(dealer) + "&select=*&order=featured.desc,id.desc",
           {
