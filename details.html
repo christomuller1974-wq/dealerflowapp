@@ -1,521 +1,262 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Edit Vehicle</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8" />
+<title>Edit Vehicle</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #dfe3ea;
-      color: #111827;
-    }
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #dfe3ea;
+}
 
-    .hero {
-      background: linear-gradient(135deg, #3156c7, #2042a5);
-      color: white;
-      text-align: center;
-      padding: 26px 16px;
-    }
+/* HEADER */
+.hero {
+  background: linear-gradient(135deg,#3156c7,#2042a5);
+  color: white;
+  text-align: center;
+  padding: 25px;
+}
 
-    .hero h1 {
-      margin: 0;
-      font-size: 30px;
-    }
+.container {
+  max-width: 1000px;
+  margin: 20px auto;
+}
 
-    .hero p {
-      margin: 8px 0 0;
-      font-size: 14px;
-    }
+/* BUTTONS */
+.top-btn {
+  background: #1f2937;
+  color: white;
+  padding: 10px 14px;
+  border-radius: 8px;
+  text-decoration: none;
+  margin-right: 6px;
+  font-weight: bold;
+  font-size: 13px;
+}
 
-    .container {
-      max-width: 1000px;
-      margin: 18px auto;
-      padding: 0 16px 30px;
-    }
+/* STATUS */
+.status {
+  background: white;
+  padding: 12px;
+  border-radius: 12px;
+  margin-bottom: 15px;
+}
 
-    .top-actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 14px;
-    }
+/* CARD */
+.card {
+  background: #f7f7f8;
+  padding: 16px;
+  border-radius: 18px;
+}
 
-    .top-btn {
-      background: #1f2937;
-      color: white;
-      text-decoration: none;
-      border: none;
-      border-radius: 8px;
-      padding: 10px 14px;
-      font-weight: 700;
-      font-size: 13px;
-      cursor: pointer;
-    }
+/* INPUTS */
+input, select, textarea {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  margin-bottom: 12px;
+}
 
-    .status {
-      background: white;
-      border-radius: 14px;
-      padding: 12px 16px;
-      margin-bottom: 16px;
-      font-weight: 700;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
+/* GRID */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
 
-    .card {
-      background: #f7f7f8;
-      border-radius: 18px;
-      padding: 16px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
+/* PREVIEW GRID */
+.preview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill,minmax(140px,1fr));
+  gap: 10px;
+}
 
-    h2 {
-      margin-top: 0;
-      font-size: 22px;
-    }
+/* PREVIEW ITEM */
+.preview-item {
+  background: #eef2f7;
+  border-radius: 12px;
+  padding: 8px;
+  text-align: center;
+  min-height: 170px;
+}
 
-    .field {
-      margin-bottom: 14px;
-    }
+/* IMAGE FIX */
+.preview-item img {
+  width: 100%;
+  max-height: 120px;
+  height: auto;
+  object-fit: contain;
+  border-radius: 8px;
+  background: #e5e7eb;
+}
 
-    label {
-      display: block;
-      font-weight: 700;
-      margin-bottom: 6px;
-      font-size: 14px;
-    }
-
-    input,
-    select,
-    textarea {
-      width: 100%;
-      box-sizing: border-box;
-      border: 1px solid #cbd5e1;
-      border-radius: 12px;
-      padding: 13px 14px;
-      font-size: 15px;
-      background: white;
-    }
-
-    textarea {
-      min-height: 110px;
-      resize: vertical;
-    }
-
-    .two-col {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-    }
-
-    .preview-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 12px;
-      margin-top: 10px;
-      margin-bottom: 10px;
-    }
-
-    .preview-item {
-      background: #eef2f7;
-      border: 1px solid #d1d5db;
-      border-radius: 14px;
-      padding: 10px;
-      text-align: center;
-    }
-
-    .preview-item img {
-      width: 100%;
-      height: 110px;
-      object-fit: cover;
-      border-radius: 10px;
-      display: block;
-      margin-bottom: 8px;
-      background: #e5e7eb;
-    }
-
-    .preview-label {
-      font-size: 13px;
-      color: #334155;
-    }
-
-    .save-btn {
-      width: 100%;
-      border: none;
-      border-radius: 12px;
-      padding: 14px;
-      font-size: 15px;
-      font-weight: 800;
-      background: #3156c7;
-      color: white;
-      cursor: pointer;
-      margin-top: 6px;
-    }
-
-    .save-btn:disabled {
-      opacity: 0.65;
-      cursor: not-allowed;
-    }
-
-    @media (max-width: 700px) {
-      .two-col {
-        grid-template-columns: 1fr;
-      }
-
-      .hero h1 {
-        font-size: 26px;
-      }
-    }
-  </style>
+/* SAVE BUTTON */
+.save-btn {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 10px;
+  background: #3156c7;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+</style>
 </head>
+
 <body>
-  <div class="hero">
-    <h1>Edit Vehicle</h1>
-    <p>Update your vehicle details and photos</p>
-  </div>
 
-  <div class="container">
-    <div class="top-actions">
-      <a class="top-btn" href="dealer-admin.html">Back to Dashboard</a>
-      <a class="top-btn" href="index.html">Website</a>
-      <button class="top-btn" onclick="logout()">Logout</button>
+<div class="hero">
+  <h1>Edit Vehicle</h1>
+</div>
+
+<div class="container">
+
+  <a class="top-btn" href="dealer-admin.html">Back</a>
+  <a class="top-btn" href="index.html">Website</a>
+
+  <div id="status" class="status">Loading...</div>
+
+  <div class="card">
+
+    <input type="file" id="vehiclePhotos" multiple>
+
+    <div class="preview-grid" id="preview"></div>
+
+    <input id="title">
+    <select id="year"></select>
+
+    <div class="two-col">
+      <input id="price">
+      <input id="mileage">
     </div>
 
-    <div id="status" class="status">Starting edit page...</div>
-
-    <div class="card">
-      <h2>Edit Vehicle</h2>
-
-      <div class="field">
-        <label for="vehiclePhotos">Replace Vehicle Photos (optional)</label>
-        <input type="file" id="vehiclePhotos" multiple accept="image/*" />
-      </div>
-
-      <div class="field">
-        <label>Photo Preview</label>
-        <div id="photoPreview" class="preview-grid"></div>
-      </div>
-
-      <div class="field">
-        <label for="title">Vehicle Title</label>
-        <input type="text" id="title" />
-      </div>
-
-      <div class="two-col">
-        <div class="field">
-          <label for="year">Select Year</label>
-          <select id="year"></select>
-        </div>
-
-        <div class="field">
-          <label for="price">Price</label>
-          <input type="text" id="price" />
-        </div>
-      </div>
-
-      <div class="two-col">
-        <div class="field">
-          <label for="mileage">Mileage</label>
-          <input type="text" id="mileage" />
-        </div>
-
-        <div class="field">
-          <label for="location">Location</label>
-          <input type="text" id="location" />
-        </div>
-      </div>
-
-      <div class="two-col">
-        <div class="field">
-          <label for="dealer">Dealer Name</label>
-          <input type="text" id="dealer" />
-        </div>
-
-        <div class="field">
-          <label for="phone">Phone</label>
-          <input type="text" id="phone" />
-        </div>
-      </div>
-
-      <div class="field">
-        <label for="description">Description</label>
-        <textarea id="description"></textarea>
-      </div>
-
-      <button id="saveBtn" class="save-btn" onclick="saveVehicle()">Save Changes</button>
+    <div class="two-col">
+      <input id="location">
+      <input id="phone">
     </div>
+
+    <textarea id="description"></textarea>
+
+    <button class="save-btn" onclick="save()">Save</button>
+
   </div>
+</div>
 
-  <script>
-    const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
-    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
-    const client = window.supabase.createClient(supabaseUrl, supabaseKey);
+<script>
+const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
+const client = supabase.createClient(supabaseUrl, supabaseKey);
 
-    let currentUser = null;
-    let currentVehicle = null;
-    let selectedFiles = [];
+let vehicle;
+let selectedFiles = [];
 
-    function setStatus(message) {
-      document.getElementById("status").textContent = message;
-      console.log(message);
+function setStatus(t){document.getElementById("status").innerText=t;}
+
+function getId(){
+  return new URLSearchParams(location.search).get("id");
+}
+
+function years(){
+  let y=document.getElementById("year");
+  for(let i=2026;i>1980;i--){
+    let o=document.createElement("option");
+    o.value=i;o.text=i;
+    y.appendChild(o);
+  }
+}
+
+function preview(urls){
+  let p=document.getElementById("preview");
+  p.innerHTML="";
+
+  urls.forEach((u,i)=>{
+    p.innerHTML+=`
+      <div class="preview-item">
+        <img src="${u}">
+        ${i==0?"Main":"Extra"}
+      </div>`;
+  });
+}
+
+function getImages(v){
+  let arr=[];
+  if(v.image) arr.push(v.image);
+  if(v.images){
+    v.images.split(",").forEach(x=>arr.push(x));
+  }
+  return arr;
+}
+
+document.getElementById("vehiclePhotos").onchange=e=>{
+  selectedFiles=[...e.target.files];
+  preview(selectedFiles.map(f=>URL.createObjectURL(f)));
+};
+
+async function load(){
+  let {data}=await client.from("vehicles").select("*").eq("id",getId()).single();
+
+  vehicle=data;
+
+  document.getElementById("title").value=data.title||"";
+  document.getElementById("year").value=data.year||"";
+  document.getElementById("price").value=data.price||"";
+  document.getElementById("mileage").value=data.mileage||"";
+  document.getElementById("location").value=data.location||"";
+  document.getElementById("phone").value=data.phone||"";
+  document.getElementById("description").value=data.description||"";
+
+  preview(getImages(data));
+
+  setStatus("Ready");
+}
+
+async function upload(f){
+  let name=Date.now()+"-"+f.name;
+  await client.storage.from("vehicle-images").upload("vehicles/"+name,f);
+  return client.storage.from("vehicle-images").getPublicUrl("vehicles/"+name).data.publicUrl;
+}
+
+async function save(){
+  setStatus("Saving...");
+
+  let main=vehicle.image;
+  let extras=getImages(vehicle).slice(1);
+
+  if(selectedFiles.length>0){
+    let urls=[];
+    for(let f of selectedFiles){
+      urls.push(await upload(f));
     }
 
-    function getVehicleId() {
-      const params = new URLSearchParams(window.location.search);
-      return parseInt(params.get("id"), 10);
-    }
+    main=urls[0];
+    extras=[...extras,...urls.slice(1)];
+  }
 
-    function populateYears() {
-      const yearSelect = document.getElementById("year");
-      yearSelect.innerHTML = '<option value="">Select year</option>';
+  await client.from("vehicles").update({
+    title:title.value,
+    year:year.value,
+    price:price.value,
+    mileage:mileage.value,
+    location:location.value,
+    phone:phone.value,
+    description:description.value,
+    image:main,
+    images:extras.join(",")
+  }).eq("id",vehicle.id);
 
-      const currentYear = new Date().getFullYear();
-      for (let y = currentYear; y >= 1980; y--) {
-        const option = document.createElement("option");
-        option.value = y;
-        option.textContent = y;
-        yearSelect.appendChild(option);
-      }
-    }
+  setStatus("Saved!");
+}
 
-    function renderPreview(urls, filesMode = false) {
-      const preview = document.getElementById("photoPreview");
-      preview.innerHTML = "";
+years();
+load();
+</script>
 
-      if (!urls.length) {
-        preview.innerHTML = '<div class="preview-item"><div class="preview-label">No photos selected.</div></div>';
-        return;
-      }
-
-      urls.forEach((src, index) => {
-        const div = document.createElement("div");
-        div.className = "preview-item";
-
-        const label = index === 0 ? "Main image" : "Extra image";
-
-        div.innerHTML = `
-          <img src="${src}" alt="Vehicle photo ${index + 1}">
-          <div class="preview-label">${label}</div>
-        `;
-
-        preview.appendChild(div);
-      });
-    }
-
-    function getExistingImages(vehicle) {
-      const urls = [];
-
-      if (vehicle.image && vehicle.image.trim() !== "") {
-        urls.push(vehicle.image.trim());
-      }
-
-      if (vehicle.images && vehicle.images.trim() !== "") {
-        vehicle.images
-          .split(",")
-          .map(x => x.trim())
-          .filter(Boolean)
-          .forEach(url => {
-            if (!urls.includes(url)) urls.push(url);
-          });
-      }
-
-      return urls;
-    }
-
-    function setupPhotoInput() {
-      const fileInput = document.getElementById("vehiclePhotos");
-
-      fileInput.addEventListener("change", function () {
-        selectedFiles = Array.from(fileInput.files || []);
-
-        if (!selectedFiles.length) {
-          if (currentVehicle) {
-            renderPreview(getExistingImages(currentVehicle));
-          } else {
-            renderPreview([]);
-          }
-          return;
-        }
-
-        const previewUrls = selectedFiles.map(file => URL.createObjectURL(file));
-        renderPreview(previewUrls, true);
-      });
-    }
-
-    async function requireUser() {
-      const { data, error } = await client.auth.getUser();
-
-      if (error || !data.user) {
-        window.location.href = "login.html";
-        return false;
-      }
-
-      currentUser = data.user;
-      return true;
-    }
-
-    async function loadVehicle() {
-      const vehicleId = getVehicleId();
-
-      if (!vehicleId) {
-        setStatus("Vehicle ID missing.");
-        return;
-      }
-
-      setStatus("Loading vehicle...");
-
-      const { data, error } = await client
-        .from("vehicles")
-        .select("*")
-        .eq("id", vehicleId)
-        .single();
-
-      if (error || !data) {
-        console.log(error);
-        setStatus("Vehicle not found.");
-        return;
-      }
-
-      currentVehicle = data;
-
-      document.getElementById("title").value = data.title || "";
-      document.getElementById("year").value = data.year || "";
-      document.getElementById("price").value = data.price || "";
-      document.getElementById("mileage").value = data.mileage || "";
-      document.getElementById("location").value = data.location || "";
-      document.getElementById("dealer").value = data.dealer || data.dealer_name || "";
-      document.getElementById("phone").value = data.phone || "";
-      document.getElementById("description").value = data.description || "";
-
-      renderPreview(getExistingImages(data));
-      setStatus("Edit page ready.");
-    }
-
-    async function uploadOneFile(file) {
-      const ext = file.name.split(".").pop();
-      const fileName = Date.now() + "-" + Math.random().toString(36).slice(2) + "." + ext;
-      const filePath = "vehicles/" + fileName;
-
-      const { error } = await client.storage
-        .from("vehicle-images")
-        .upload(filePath, file);
-
-      if (error) {
-        throw error;
-      }
-
-      const { data } = client.storage
-        .from("vehicle-images")
-        .getPublicUrl(filePath);
-
-      return data.publicUrl;
-    }
-
-    async function uploadAllFiles(files) {
-      const urls = [];
-
-      for (const file of files) {
-        const url = await uploadOneFile(file);
-        urls.push(url);
-      }
-
-      return urls;
-    }
-
-    async function saveVehicle() {
-      if (!currentVehicle) {
-        setStatus("Vehicle not ready.");
-        return;
-      }
-
-      const saveBtn = document.getElementById("saveBtn");
-      saveBtn.disabled = true;
-
-      try {
-        setStatus("Saving vehicle changes...");
-
-        let mainImage = currentVehicle.image || "";
-        let extraImages = [];
-
-       if (selectedFiles.length > 0) {
-  setStatus("Uploading photos...");
-  const uploadedUrls = await uploadAllFiles(selectedFiles);
-
-  // ALWAYS replace main image
-  mainImage = uploadedUrls[0] || currentVehicle.image;
-
-  // KEEP existing extras
-  const existing = getExistingImages(currentVehicle).slice(1);
-
-  // ADD any extra uploaded images
-  const newExtras = uploadedUrls.slice(1);
-
-  extraImages = [...existing, ...newExtras];
-} else {
-          const existing = getExistingImages(currentVehicle);
-          mainImage = existing[0] || "";
-          extraImages = existing.slice(1);
-        }
-
-        const payload = {
-          title: document.getElementById("title").value.trim(),
-          year: document.getElementById("year").value,
-          price: document.getElementById("price").value.trim(),
-          mileage: document.getElementById("mileage").value.trim(),
-          location: document.getElementById("location").value.trim(),
-          dealer: document.getElementById("dealer").value.trim(),
-          phone: document.getElementById("phone").value.trim(),
-          description: document.getElementById("description").value.trim(),
-          image: mainImage,
-          images: extraImages.join(",")
-        };
-
-        const { error } = await client
-          .from("vehicles")
-          .update(payload)
-          .eq("id", currentVehicle.id);
-
-        if (error) {
-          console.log(error);
-          setStatus("Could not save vehicle.");
-          saveBtn.disabled = false;
-          return;
-        }
-
-        currentVehicle = { ...currentVehicle, ...payload };
-        selectedFiles = [];
-        document.getElementById("vehiclePhotos").value = "";
-        renderPreview(getExistingImages(currentVehicle));
-
-        setStatus("Vehicle updated successfully.");
-      } catch (err) {
-        console.log(err);
-        setStatus("Something went wrong while saving.");
-      }
-
-      saveBtn.disabled = false;
-    }
-
-    async function logout() {
-      await client.auth.signOut();
-      window.location.href = "login.html";
-    }
-
-    async function startPage() {
-      populateYears();
-      setupPhotoInput();
-
-      const ok = await requireUser();
-      if (!ok) return;
-
-      await loadVehicle();
-    }
-
-    startPage();
-  </script>
 </body>
 </html>
