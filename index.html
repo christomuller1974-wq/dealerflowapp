@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Auto Excellence - Vehicles</title>
+<title>Auto Excellence</title>
 
 <style>
 body {
@@ -14,7 +14,7 @@ body {
 header {
   background: #1e3a8a;
   color: white;
-  padding: 20px;
+  padding: 25px;
   text-align: center;
 }
 
@@ -30,6 +30,11 @@ header {
   border-radius: 10px;
   padding: 12px;
   box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  transition: 0.2s;
+}
+
+.vehicle-card:hover {
+  transform: translateY(-3px);
 }
 
 .vehicle-thumb {
@@ -37,10 +42,12 @@ header {
   height: 180px;
   object-fit: cover;
   border-radius: 8px;
+  background: #ddd;
 }
 
 .vehicle-card h3 {
   margin: 10px 0 5px;
+  font-size: 16px;
 }
 
 .price {
@@ -57,9 +64,6 @@ header {
   border-radius: 6px;
   text-decoration: none;
   color: white;
-}
-
-.btn-view {
   background: #2563eb;
 }
 </style>
@@ -76,42 +80,58 @@ header {
 
 <script>
 const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w"; // 🔥 PUT YOUR REAL KEY HERE
 
 async function loadVehicles() {
-  const res = await fetch(
-    supabaseUrl + "/rest/v1/vehicles?select=*",
-    {
-      headers: {
-        apikey: supabaseKey,
-        Authorization: "Bearer " + supabaseKey
+  try {
+    const res = await fetch(
+      supabaseUrl + "/rest/v1/vehicles?select=*",
+      {
+        headers: {
+          apikey: supabaseKey,
+          Authorization: "Bearer " + supabaseKey
+        }
       }
-    }
-  );
+    );
 
-  const vehicles = await res.json();
-  const container = document.getElementById("vehicle-list");
-  container.innerHTML = "";
+    const vehicles = await res.json();
+    const container = document.getElementById("vehicle-list");
+    container.innerHTML = "";
 
-  vehicles.forEach(v => {
-    const mainImage = v.images?.[0] || "";
+    vehicles.forEach(v => {
 
-    const card = document.createElement("div");
-    card.className = "vehicle-card";
+      // ✅ FIXED IMAGE HANDLING
+      let mainImage = "";
 
-    card.innerHTML = `
-      <img src="${mainImage}" class="vehicle-thumb">
+      if (v.images) {
+        if (Array.isArray(v.images)) {
+          mainImage = v.images[0];
+        } else if (typeof v.images === "string") {
+          mainImage = v.images.split(",")[0];
+        }
+      }
 
-      <h3>${v.title}</h3>
-      <div class="price">R${v.price}</div>
+      const card = document.createElement("div");
+      card.className = "vehicle-card";
 
-      <a href="details.html?id=${v.id}" class="btn btn-view">
-        View Details
-      </a>
-    `;
+      card.innerHTML = `
+        <img src="${mainImage}" class="vehicle-thumb"
+             onerror="this.src='https://via.placeholder.com/300x180?text=No+Image'">
 
-    container.appendChild(card);
-  });
+        <h3>${v.title || "No Title"}</h3>
+        <div class="price">R${v.price || 0}</div>
+
+        <a href="details.html?id=${v.id}" class="btn">
+          View Details
+        </a>
+      `;
+
+      container.appendChild(card);
+    });
+
+  } catch (err) {
+    console.error("Error loading vehicles:", err);
+  }
 }
 
 loadVehicles();
@@ -119,4 +139,3 @@ loadVehicles();
 
 </body>
 </html>
-
