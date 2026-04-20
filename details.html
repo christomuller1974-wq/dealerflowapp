@@ -364,34 +364,31 @@
     }
 
     function getImageArray(data) {
-      const images = [];
+      const list = [];
 
-      if (data.image && data.image.trim() !== "") {
-        images.push(data.image.trim());
+      if (typeof data.image === "string" && data.image.trim() !== "") {
+        list.push(data.image.trim());
       }
 
-      if (data.images && data.images.trim() !== "") {
-        const extras = data.images
-          .split(",")
-          .map(item => item.trim())
-          .filter(item => item !== "");
-
-        extras.forEach(url => {
-          if (!images.includes(url)) {
-            images.push(url);
+      if (typeof data.images === "string" && data.images.trim() !== "") {
+        const extras = data.images.split(",");
+        for (let i = 0; i < extras.length; i++) {
+          const url = extras[i].trim();
+          if (url !== "" && !list.includes(url)) {
+            list.push(url);
           }
-        });
+        }
       }
 
-      return images;
+      return list;
     }
 
-    function setMainImage(src, clickedIndex = 0) {
+    function setMainImage(src, activeIndex) {
       document.getElementById("mainImage").src = src;
 
       const thumbs = document.querySelectorAll(".thumb");
       thumbs.forEach((thumb, index) => {
-        if (index === clickedIndex) {
+        if (index === activeIndex) {
           thumb.classList.add("active");
         } else {
           thumb.classList.remove("active");
@@ -403,19 +400,17 @@
       const thumbRow = document.getElementById("thumbRow");
       thumbRow.innerHTML = "";
 
-      if (!images.length) {
-        return;
-      }
+      if (!images.length) return;
 
-      images.forEach((imgUrl, index) => {
+      for (let i = 0; i < images.length; i++) {
         const thumb = document.createElement("div");
-        thumb.className = "thumb" + (index === 0 ? " active" : "");
-        thumb.innerHTML = <img src="${imgUrl}" alt="Vehicle photo ${index + 1}">;
+        thumb.className = "thumb" + (i === 0 ? " active" : "");
+        thumb.innerHTML = '<img src="' + images[i] + '" alt="Vehicle photo">';
         thumb.onclick = function () {
-          setMainImage(imgUrl, index);
+          setMainImage(images[i], i);
         };
         thumbRow.appendChild(thumb);
-      });
+      }
     }
 
     async function loadVehicle() {
@@ -450,7 +445,7 @@
 
         const rows = await response.json();
 
-        if (!rows || !rows.length) {
+        if (!rows || rows.length === 0) {
           setStatus("Vehicle not found.");
           return;
         }
@@ -480,13 +475,13 @@
         galleryImages = getImageArray(data);
 
         if (galleryImages.length > 0) {
-          setMainImage(galleryImages[0], 0);
+          document.getElementById("mainImage").src = galleryImages[0];
           renderThumbnails(galleryImages);
         } else {
           document.getElementById("mainImage").src = "https://via.placeholder.com/1200x700?text=No+Image";
         }
 
-        if (data.description) {
+        if (data.description && String(data.description).trim() !== "") {
           const box = document.getElementById("descriptionBox");
           box.style.display = "block";
           box.textContent = data.description;
