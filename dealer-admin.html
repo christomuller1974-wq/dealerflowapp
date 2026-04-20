@@ -4,8 +4,13 @@
   <meta charset="UTF-8" />
   <title>Dealer Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       font-family: Arial, sans-serif;
@@ -17,7 +22,7 @@
       background: linear-gradient(135deg, #3156c7, #1f3f9e);
       color: white;
       text-align: center;
-      padding: 36px 18px 28px;
+      padding: 38px 18px 28px;
     }
 
     .hero h1 {
@@ -37,10 +42,54 @@
       padding: 18px;
     }
 
+    .top-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .top-btn {
+      background: #1f2937;
+      color: white;
+      text-decoration: none;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .top-btn.blue {
+      background: #3156c7;
+    }
+
+    .top-btn.green {
+      background: #16a34a;
+    }
+
+    .status {
+      background: white;
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 16px;
+      font-weight: bold;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .section-title {
+      font-size: 34px;
+      font-weight: 800;
+      margin: 18px 0 14px;
+      color: #111827;
+    }
+
     .vehicle-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
       gap: 18px;
+      align-items: start;
     }
 
     .vehicle-card {
@@ -67,8 +116,14 @@
       min-height: 46px;
     }
 
+    .vehicle-meta {
+      font-size: 14px;
+      color: #475569;
+      margin-bottom: 4px;
+    }
+
     .price {
-      color: #111827;
+      color: #dc2626;
       font-size: 18px;
       font-weight: 800;
       margin: 8px 0 10px;
@@ -77,7 +132,7 @@
     .button-stack {
       display: grid;
       gap: 8px;
-      margin-top: 8px;
+      margin-top: 10px;
     }
 
     .btn {
@@ -105,22 +160,65 @@
     .btn-red {
       background: #dc2626;
     }
+
+    .empty-box {
+      background: white;
+      border-radius: 14px;
+      padding: 24px;
+      text-align: center;
+      color: #475569;
+      font-weight: 700;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    @media (max-width: 700px) {
+      .hero h1 {
+        font-size: 38px;
+      }
+
+      .section-title {
+        font-size: 28px;
+      }
+
+      .vehicle-grid {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
 <body>
 
   <div class="hero">
     <h1>Dealer Dashboard</h1>
-    <p>Manage your vehicles</p>
+    <p>Manage your stock quickly and easily</p>
   </div>
 
   <div class="container">
+    <div class="top-actions">
+      <a href="index.html" class="top-btn">Back to Website</a>
+      <a href="upload6.html" class="top-btn blue">Add Vehicle</a>
+      <a href="super-admin.html" class="top-btn green">Super Admin</a>
+      <button class="top-btn" onclick="logout()">Logout</button>
+    </div>
+
+    <div id="status" class="status">Starting dashboard...</div>
+
+    <div class="section-title">Your Vehicles</div>
     <div id="vehicleList" class="vehicle-grid"></div>
   </div>
 
   <script>
     const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
     const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
+    const client = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+    let currentUser = null;
+    let currentProfile = null;
+
+    function setStatus(message) {
+      document.getElementById("status").textContent = message;
+      console.log(message);
+    }
 
     function getMainImage(vehicle) {
       if (vehicle.image && typeof vehicle.image === "string" && vehicle.image.trim() !== "") {
@@ -134,23 +232,70 @@
       return "https://via.placeholder.com/400x250?text=No+Image";
     }
 
-    async function loadVehicles() {
-      const res = await fetch(
-        supabaseUrl + "/rest/v1/vehicles?select=*&order=id.desc",
-        {
-          headers: {
-            apikey: supabaseKey,
-            Authorization: "Bearer " + supabaseKey
-          }
-        }
-      );
+    async function requireUser() {
+      const { data, error } = await client.auth.getUser();
 
-      const vehicles = await res.json();
+      if (error || !data.user) {
+        window.location.href = "login.html";
+        return false;
+      }
+
+      currentUser = data.user;
+      return true;
+    }
+
+    async function loadProfile() {
+      setStatus("Loading your profile...");
+
+      const { data, error } = await client
+        .from("profiles")
+        .select("*")
+        .eq("id", currentUser.id)
+        .single();
+
+      if (error || !data) {
+        console.log(error);
+        setStatus("Could not load your dealer profile.");
+        return false;
+      }
+
+      currentProfile = data;
+      return true;
+    }
+
+    async function loadVehicles() {
+      if (!currentUser) {
+        setStatus("User not ready.");
+        return;
+      }
+
+      setStatus("Loading your vehicles...");
+
+      const { data, error } = await client
+        .from("vehicles")
+        .select("*")
+        .eq("user_id", currentUser.id)
+        .order("id", { ascending: false });
+
       const container = document.getElementById("vehicleList");
       container.innerHTML = "";
 
-      vehicles.forEach(v => {
-        const mainImage = getMainImage(v);
+      if (error) {
+        console.log(error);
+        setStatus("Could not load vehicles.");
+        container.innerHTML = '<div class="empty-box">Could not load your vehicles.</div>';
+        return;
+      }
+
+      if (!data || data.length === 0) {
+        setStatus("No vehicles found.");
+        container.innerHTML = '<div class="empty-box">You have not added any vehicles yet.</div>';
+        return;
+      }
+
+      data.forEach(vehicle => {
+        const mainImage = getMainImage(vehicle);
+
         const card = document.createElement("div");
         card.className = "vehicle-card";
 
@@ -158,43 +303,69 @@
           <img
             src="${mainImage}"
             class="vehicle-thumb"
-            alt="${v.title || "Vehicle"}"
+            alt="${vehicle.title || "Vehicle"}"
             onerror="this.src='https://via.placeholder.com/400x250?text=No+Image'"
           >
 
-          <div class="vehicle-title">${v.title || "No Title"}</div>
-          <div class="price">R${v.price || 0}</div>
+          <div class="vehicle-title">${vehicle.title || "No Title"}</div>
+
+          <div class="vehicle-meta">Year: ${vehicle.year || "-"}</div>
+          <div class="vehicle-meta">Location: ${vehicle.location || "-"}</div>
+          <div class="vehicle-meta">Mileage: ${vehicle.mileage || "-"}</div>
+
+          <div class="price">R${vehicle.price || 0}</div>
 
           <div class="button-stack">
-            <a href="details.html?id=${v.id}" class="btn btn-blue">View</a>
-            <a href="edit.html?id=${v.id}" class="btn btn-green">Edit</a>
-            <button class="btn btn-red" onclick="deleteVehicle(${v.id})">Delete</button>
+            <a href="details.html?id=${vehicle.id}" class="btn btn-blue">View</a>
+            <a href="edit.html?id=${vehicle.id}" class="btn btn-green">Edit</a>
+            <button class="btn btn-red" onclick="deleteVehicle(${vehicle.id})">Delete</button>
           </div>
         `;
 
         container.appendChild(card);
       });
+
+      setStatus("Dashboard loaded successfully.");
     }
 
-    async function deleteVehicle(id) {
-      if (!confirm("Delete this vehicle?")) return;
+    async function deleteVehicle(vehicleId) {
+      const confirmed = confirm("Delete this vehicle?");
+      if (!confirmed) return;
 
-      await fetch(
-        supabaseUrl + "/rest/v1/vehicles?id=eq." + id,
-        {
-          method: "DELETE",
-          headers: {
-            apikey: supabaseKey,
-            Authorization: "Bearer " + supabaseKey
-          }
-        }
-      );
+      setStatus("Deleting vehicle...");
 
+      const { error } = await client
+        .from("vehicles")
+        .delete()
+        .eq("id", vehicleId)
+        .eq("user_id", currentUser.id);
+
+      if (error) {
+        console.log(error);
+        setStatus("Could not delete vehicle.");
+        return;
+      }
+
+      setStatus("Vehicle deleted successfully.");
       loadVehicles();
     }
 
-    loadVehicles();
-  </script>
+    async function logout() {
+      await client.auth.signOut();
+      window.location.href = "login.html";
+    }
 
+    async function startDashboard() {
+      const okUser = await requireUser();
+      if (!okUser) return;
+
+      const okProfile = await loadProfile();
+      if (!okProfile) return;
+
+      await loadVehicles();
+    }
+
+    startDashboard();
+  </script>
 </body>
 </html>
