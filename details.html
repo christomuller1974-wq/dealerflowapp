@@ -516,8 +516,8 @@
       <button class="lightbox-close" onclick="closeLightboxDirect()">×</button>
 
       <div class="lightbox-arrows">
-        <button class="lightbox-arrow" onclick="event.stopPropagation(); prevImage(true)">‹</button>
-        <button class="lightbox-arrow" onclick="event.stopPropagation(); nextImage(true)">›</button>
+        <button class="lightbox-arrow" onclick="event.stopPropagation(); prevImage()">‹</button>
+        <button class="lightbox-arrow" onclick="event.stopPropagation(); nextImage()">›</button>
       </div>
 
       <img id="lightboxImage" src="" alt="Fullscreen vehicle image" />
@@ -526,7 +526,7 @@
 
   <script>
     const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
-    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
+    const supabaseKey = "sb_publishable_D7saHOTE_JhSlMnSgBnIrQ_mOAOUD9s";
 
     let currentVehicle = null;
     let galleryImages = [];
@@ -642,8 +642,7 @@
         return;
       }
 
-      const whatsappUrl =
-        "https://wa.me/?text=" + encodeURIComponent(title + " - " + shareUrl);
+      const whatsappUrl = "https://wa.me/?text=" + encodeURIComponent(title + " - " + shareUrl);
       window.open(whatsappUrl, "_blank");
     }
 
