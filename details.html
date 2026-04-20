@@ -5,8 +5,6 @@
   <title>Vehicle Details</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
   <style>
     body {
       margin: 0;
@@ -78,6 +76,34 @@
       width: 100%;
       height: 100%;
       object-fit: contain;
+      display: block;
+      background: #eef2f7;
+    }
+
+    .thumb-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .thumb {
+      height: 80px;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #eef2f7;
+      border: 2px solid transparent;
+      cursor: pointer;
+    }
+
+    .thumb.active {
+      border-color: #3f5cc9;
+    }
+
+    .thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
       display: block;
       background: #eef2f7;
     }
@@ -230,21 +256,11 @@
     }
 
     @media (max-width: 700px) {
-      .hero h1 {
-        font-size: 34px;
-      }
-
-      .title {
-        font-size: 32px;
-      }
-
-      .price {
-        font-size: 32px;
-      }
-
-      .main-image-wrap {
-        height: 280px;
-      }
+      .hero h1 { font-size: 34px; }
+      .title { font-size: 32px; }
+      .price { font-size: 32px; }
+      .main-image-wrap { height: 280px; }
+      .thumb { height: 70px; }
     }
   </style>
 </head>
@@ -262,8 +278,9 @@
       <div class="left-side">
         <div class="gallery-card">
           <div class="main-image-wrap">
-            <img id="mainImage" class="main-image" src="" alt="Vehicle image">
+            <img id="mainImage" class="main-image" src="https://via.placeholder.com/1200x700?text=Loading+Image" alt="Vehicle image">
           </div>
+          <div id="thumbRow" class="thumb-row"></div>
         </div>
       </div>
 
@@ -324,10 +341,10 @@
 
   <script>
     const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
-    const supabaseKey = "sb_publishable_D7saHOTE_JhSlMnSgBnIhQ_mOAOUD9s";
-    const client = window.supabase.createClient(supabaseUrl, supabaseKey);
+    const supabaseKey = "sb_publishable_D7saHOTE_JhSlMnSgBnIrQ_mOAOUD9s";
 
     let currentVehicle = null;
+    let galleryImages = [];
 
     function setStatus(message) {
       document.getElementById("status").textContent = message;
@@ -346,8 +363,64 @@
       return params.get("id");
     }
 
+    function getImageArray(data) {
+      const images = [];
+
+      if (data.image && data.image.trim() !== "") {
+        images.push(data.image.trim());
+      }
+
+      if (data.images && data.images.trim() !== "") {
+        const extras = data.images
+          .split(",")
+          .map(item => item.trim())
+          .filter(item => item !== "");
+
+        extras.forEach(url => {
+          if (!images.includes(url)) {
+            images.push(url);
+          }
+        });
+      }
+
+      return images;
+    }
+
+    function setMainImage(src, clickedIndex = 0) {
+      document.getElementById("mainImage").src = src;
+
+      const thumbs = document.querySelectorAll(".thumb");
+      thumbs.forEach((thumb, index) => {
+        if (index === clickedIndex) {
+          thumb.classList.add("active");
+        } else {
+          thumb.classList.remove("active");
+        }
+      });
+    }
+
+    function renderThumbnails(images) {
+      const thumbRow = document.getElementById("thumbRow");
+      thumbRow.innerHTML = "";
+
+      if (!images.length) {
+        return;
+      }
+
+      images.forEach((imgUrl, index) => {
+        const thumb = document.createElement("div");
+        thumb.className = "thumb" + (index === 0 ? " active" : "");
+        thumb.innerHTML = <img src="${imgUrl}" alt="Vehicle photo ${index + 1}">;
+        thumb.onclick = function () {
+          setMainImage(imgUrl, index);
+        };
+        thumbRow.appendChild(thumb);
+      });
+    }
+
     async function loadVehicle() {
-      const id = getVehicleId();
+      const rawId = getVehicleId();
+      const id = parseInt(rawId, 10);
 
       if (!id) {
         setStatus("Vehicle ID missing.");
@@ -357,18 +430,32 @@
       try {
         setStatus("Loading vehicle...");
 
-        const { data, error } = await client
-          .from("vehicles")
-          .select("*")
-          .eq("id", id)
-          .single();
+        const response = await fetch(
+          supabaseUrl + "/rest/v1/vehicles?id=eq." + id + "&select=*",
+          {
+            headers: {
+              apikey: supabaseKey,
+              Authorization: "Bearer " + supabaseKey,
+              Accept: "application/json"
+            }
+          }
+        );
 
-        if (error || !data) {
-          console.log(error);
+        if (!response.ok) {
+          const text = await response.text();
+          console.log("REST ERROR:", text);
+          setStatus("Could not load vehicle.");
+          return;
+        }
+
+        const rows = await response.json();
+
+        if (!rows || !rows.length) {
           setStatus("Vehicle not found.");
           return;
         }
 
+        const data = rows[0];
         currentVehicle = data;
 
         document.getElementById("vehicleTitle").textContent = safeText(data.title);
@@ -390,11 +477,13 @@
           ? "https://wa.me/27" + phoneClean.replace(/^0/, "") + "?text=" + encodeURIComponent("Hi, I'm interested in the " + safeText(data.title))
           : "#";
 
-        const img = document.getElementById("mainImage");
-        if (data.image) {
-          img.src = data.image;
+        galleryImages = getImageArray(data);
+
+        if (galleryImages.length > 0) {
+          setMainImage(galleryImages[0], 0);
+          renderThumbnails(galleryImages);
         } else {
-          img.src = "https://via.placeholder.com/1200x700?text=No+Image";
+          document.getElementById("mainImage").src = "https://via.placeholder.com/1200x700?text=No+Image";
         }
 
         if (data.description) {
@@ -408,7 +497,7 @@
 
         setStatus("Vehicle loaded successfully.");
       } catch (err) {
-        console.log(err);
+        console.log("LOAD VEHICLE ERROR:", err);
         setStatus("Could not load vehicle.");
       }
     }
@@ -431,20 +520,26 @@
       try {
         setStatus("Sending enquiry...");
 
-        const { error } = await client
-          .from("leads")
-          .insert([
-            {
-              dealer_name: currentVehicle.dealer || currentVehicle.dealer_name || "Dealer",
-              vehicle_title: currentVehicle.title,
-              buyer_name: buyerName,
-              buyer_phone: buyerPhone,
-              message: message
-            }
-          ]);
+        const response = await fetch(supabaseUrl + "/rest/v1/leads", {
+          method: "POST",
+          headers: {
+            apikey: supabaseKey,
+            Authorization: "Bearer " + supabaseKey,
+            "Content-Type": "application/json",
+            Prefer: "return=minimal"
+          },
+          body: JSON.stringify({
+            dealer_name: currentVehicle.dealer || currentVehicle.dealer_name || "Dealer",
+            vehicle_title: currentVehicle.title,
+            buyer_name: buyerName,
+            buyer_phone: buyerPhone,
+            message: message
+          })
+        });
 
-        if (error) {
-          console.log(error);
+        if (!response.ok) {
+          const text = await response.text();
+          console.log("ENQUIRY ERROR:", text);
           setStatus("Could not send enquiry.");
           return;
         }
@@ -453,7 +548,7 @@
         document.getElementById("buyerName").value = "";
         document.getElementById("buyerPhone").value = "";
       } catch (err) {
-        console.log(err);
+        console.log("SEND ENQUIRY ERROR:", err);
         setStatus("Something went wrong sending enquiry.");
       }
     }
