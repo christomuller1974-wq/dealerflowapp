@@ -1,517 +1,177 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Vehicle Details</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>Vehicle Details</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #e5e7eb;
-      color: #111827;
-    }
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    .hero {
-      background: linear-gradient(135deg, #2f55c7, #1e3a8a);
-      color: white;
-      padding: 24px 20px;
-    }
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f6fb;
+}
 
-    .hero h1 {
-      margin: 0 0 8px 0;
-      font-size: 42px;
-    }
+.hero {
+    background: linear-gradient(135deg,#2f55c7,#1e3a8a);
+    color: white;
+    padding: 20px;
+}
 
-    .hero p {
-      margin: 0;
-      font-size: 16px;
-    }
+.container {
+    padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
 
-    .container {
-      max-width: 1300px;
-      margin: 0 auto;
-      padding: 18px;
-    }
+.left {
+    flex: 2;
+}
 
-    .status {
-      background: #ffffff;
-      border-radius: 12px;
-      padding: 12px 14px;
-      margin-bottom: 16px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      font-weight: bold;
-      font-size: 14px;
-    }
+.right {
+    flex: 1;
+}
 
-    .layout {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 18px;
-      align-items: start;
-    }
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
 
-    .gallery-card,
-    .info-card,
-    .enquiry-card {
-      background: #ffffff;
-      border-radius: 16px;
-      padding: 16px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
+img {
+    width: 100%;
+    border-radius: 10px;
+}
 
-    .main-image-wrap {
-      width: 100%;
-      height: 440px;
-      background: #eef2f7;
-      border-radius: 14px;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+.price {
+    color: red;
+    font-size: 24px;
+    font-weight: bold;
+}
 
-    .main-image {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      display: block;
-      background: #eef2f7;
-    }
+button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
 
-    .thumb-row {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-      gap: 10px;
-      margin-top: 12px;
-    }
+.call { background: #2563eb; color: white; }
+.whatsapp { background: #16a34a; color: white; }
+.back { background: #111827; color: white; }
 
-    .thumb {
-      height: 90px;
-      border-radius: 10px;
-      overflow: hidden;
-      background: #eef2f7;
-      border: 2px solid transparent;
-      cursor: pointer;
-    }
-
-    .thumb.active {
-      border-color: #3f5cc9;
-    }
-
-    .thumb img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      display: block;
-      background: #eef2f7;
-    }
-
-    .title {
-      font-size: 42px;
-      font-weight: 800;
-      line-height: 1.05;
-      margin-bottom: 10px;
-    }
-
-    .year-badge {
-      display: inline-block;
-      background: #dbeafe;
-      color: #1d4ed8;
-      font-weight: bold;
-      padding: 6px 10px;
-      border-radius: 999px;
-      margin-bottom: 12px;
-      font-size: 12px;
-    }
-
-    .price {
-      color: #c53030;
-      font-size: 42px;
-      font-weight: 800;
-      margin-bottom: 16px;
-    }
-
-    .meta-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      margin-bottom: 14px;
-    }
-
-    .meta-box {
-      background: #f8fafc;
-      border-radius: 12px;
-      padding: 12px;
-      font-size: 14px;
-      line-height: 1.5;
-    }
-
-    .meta-box strong {
-      display: block;
-      color: #475569;
-      font-size: 12px;
-      margin-bottom: 3px;
-      text-transform: uppercase;
-    }
-
-    .meta-line {
-      font-size: 16px;
-      margin-bottom: 10px;
-      line-height: 1.5;
-    }
-
-    .meta-line a {
-      color: #1d4ed8;
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    .button-stack {
-      display: grid;
-      gap: 8px;
-      margin-top: 16px;
-    }
-
-    .btn {
-      display: inline-block;
-      text-decoration: none;
-      text-align: center;
-      font-weight: 700;
-      font-size: 13px;
-      padding: 10px 12px;
-      border-radius: 10px;
-      border: none;
-      cursor: pointer;
-      color: white;
-    }
-
-    .btn-blue { background: #3f5cc9; }
-    .btn-green { background: #16a34a; }
-    .btn-dark { background: #1f2937; }
-    .btn-whatsapp { background: #25d366; }
-
-    .enquiry-card h3 {
-      margin-top: 0;
-      margin-bottom: 8px;
-      font-size: 26px;
-    }
-
-    .muted {
-      color: #64748b;
-      font-size: 14px;
-      margin-bottom: 14px;
-    }
-
-    .field {
-      margin-bottom: 12px;
-    }
-
-    .field label {
-      display: block;
-      font-size: 13px;
-      font-weight: bold;
-      color: #334155;
-      margin-bottom: 5px;
-    }
-
-    .field input,
-    .field textarea {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 12px;
-      border: 1px solid #cbd5e1;
-      border-radius: 10px;
-      background: white;
-      font-size: 14px;
-      font-family: Arial, sans-serif;
-      color: #111827;
-    }
-
-    .field textarea {
-      min-height: 110px;
-      resize: vertical;
-    }
-
-    .description-box {
-      background: #f8fafc;
-      border-radius: 12px;
-      padding: 14px;
-      font-size: 15px;
-      line-height: 1.6;
-      margin-top: 16px;
-      white-space: pre-wrap;
-    }
-
-    @media (min-width: 1000px) {
-      .layout {
-        grid-template-columns: 1.35fr 0.9fr;
-      }
-
-      .right-side {
-        position: sticky;
-        top: 16px;
-      }
-    }
-
-    @media (max-width: 700px) {
-      .hero h1 { font-size: 34px; }
-      .title { font-size: 32px; }
-      .price { font-size: 32px; }
-      .main-image-wrap { height: 280px; }
-    }
-  </style>
+.status {
+    background: #fff3cd;
+    padding: 10px;
+    border-radius: 8px;
+    margin: 10px;
+}
+</style>
 </head>
+
 <body>
 
-  <div class="hero">
-    <h1>Vehicle Details</h1>
-    <p>View this vehicle and contact the dealer</p>
-  </div>
+<div class="hero">
+    <h2>Vehicle Details</h2>
+</div>
 
-  <div class="container">
-    <div id="status" class="status">Loading vehicle...</div>
+<div id="status" class="status">Loading vehicle...</div>
 
-    <div class="layout">
-      <div class="left-side">
-        <div class="gallery-card">
-          <div class="main-image-wrap">
-            <img id="mainImage" class="main-image" src="" alt="Vehicle image">
-          </div>
-          <div id="thumbRow" class="thumb-row"></div>
-        </div>
-      </div>
+<div class="container">
 
-      <div class="right-side">
-        <div class="info-card">
-          <div id="vehicleTitle" class="title">Loading...</div>
-          <div id="vehicleYear" class="year-badge">Year</div>
-          <div id="vehiclePrice" class="price">R0</div>
-
-          <div class="meta-line"><strong>Dealer:</strong> <a id="dealerLink" href="#">Dealer</a></div>
-          <div class="meta-line"><strong>Phone:</strong> <span id="vehiclePhone">-</span></div>
-
-          <div class="meta-grid">
-            <div class="meta-box">
-              <strong>Mileage</strong>
-              <span id="vehicleMileage">-</span>
-            </div>
-            <div class="meta-box">
-              <strong>Location</strong>
-              <span id="vehicleLocation">-</span>
-            </div>
-          </div>
-
-          <div class="button-stack">
-            <a id="callBtn" href="#" class="btn btn-blue">Call Dealer</a>
-            <a id="whatsappBtn" href="#" target="_blank" class="btn btn-whatsapp">WhatsApp Dealer</a>
-            <a id="stockBtn" href="#" class="btn btn-green">View Dealer Stock</a>
-            <a href="index.html" class="btn btn-dark">Back to Listings</a>
-          </div>
-
-          <div id="descriptionBox" class="description-box" style="display:none;"></div>
-        </div>
-
-        <div class="enquiry-card">
-          <h3>Send an Enquiry</h3>
-          <div class="muted">Interested in this vehicle? Send your details and message directly to the dealer.</div>
-
-          <div class="field">
-            <label for="buyerName">Your Name</label>
-            <input type="text" id="buyerName" placeholder="Your full name">
-          </div>
-
-          <div class="field">
-            <label for="buyerPhone">Your Phone Number</label>
-            <input type="text" id="buyerPhone" placeholder="Your phone number">
-          </div>
-
-          <div class="field">
-            <label for="buyerMessage">Message</label>
-            <textarea id="buyerMessage"></textarea>
-          </div>
-
-          <button class="btn btn-blue" style="width:100%;" onclick="sendEnquiry()">Send Enquiry</button>
-        </div>
-      </div>
+    <!-- LEFT -->
+    <div class="left card">
+        <img id="mainImage" src="">
     </div>
-  </div>
 
-  <script>
-    const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
-    const supabaseKey = "sb_publishable_D7saHOTE_JhSlMnSgBnIhQ_mOAOUD9s";
+    <!-- RIGHT -->
+    <div class="right card">
+        <h2 id="title">Loading...</h2>
+        <div id="year"></div>
+        <div class="price" id="price">R0</div>
 
-    let currentVehicle = null;
-    let allImages = [];
+        <p><b>Dealer:</b> <span id="dealerName"></span></p>
+        <p><b>Phone:</b> <span id="phone"></span></p>
 
-    function setStatus(message) {
-      document.getElementById("status").textContent = message;
-    }
+        <p><b>Mileage:</b> <span id="mileage"></span></p>
+        <p><b>Location:</b> <span id="location"></span></p>
 
-    function safeText(value) {
-      return String(value || "");
-    }
+        <button class="call" id="callBtn">Call Dealer</button>
+        <button class="whatsapp" id="whatsappBtn">WhatsApp Dealer</button>
+        <button class="back" onclick="window.history.back()">Back</button>
+    </div>
 
-    function normalisePhone(phone) {
-      return String(phone || "").replace(/\s+/g, "");
-    }
+</div>
 
-    function getVehicleId() {
-      const params = new URLSearchParams(window.location.search);
-      return params.get("id");
-    }
+<script>
+const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
+const supabaseKey = "sb_publishable_D7saHOTE_JhSlMnSgBnIhQ_mOAOUD9s";
+const client = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-    function setMainImage(src, index) {
-      document.getElementById("mainImage").src = src || "";
-      const thumbs = document.querySelectorAll(".thumb");
-      thumbs.forEach((thumb, i) => {
-        thumb.classList.toggle("active", i === index);
-      });
-    }
+// GET ID FROM URL
+function getVehicleId() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("id");
+}
 
-    function renderGallery(images) {
-      const thumbRow = document.getElementById("thumbRow");
-      thumbRow.innerHTML = "";
+// LOAD VEHICLE
+async function loadVehicle() {
+    const id = getVehicleId();
 
-      if (!images.length) return;
-
-      setMainImage(images[0], 0);
-
-      images.forEach((img, index) => {
-        const thumb = document.createElement("div");
-        thumb.className = "thumb" + (index === 0 ? " active" : "");
-        thumb.innerHTML = <img src="${img}" alt="Vehicle photo">;
-        thumb.onclick = function () {
-          setMainImage(img, index);
-        };
-        thumbRow.appendChild(thumb);
-      });
-    }
-
-    async function loadVehicle() {
-      const id = getVehicleId();
-
-      if (!id) {
-        setStatus("Vehicle ID missing.");
+    if (!id) {
+        document.getElementById("status").textContent = "No vehicle ID found.";
         return;
-      }
-
-      try {
-        const response = await fetch(
-          supabaseUrl + "/rest/v1/vehicles?id=eq." + id + "&select=*",
-          {
-            headers: {
-              apikey: supabaseKey,
-              Authorization: "Bearer " + supabaseKey
-            }
-          }
-        );
-
-        const data = await response.json();
-
-        if (!data || !data.length) {
-          setStatus("Vehicle not found.");
-          return;
-        }
-
-        currentVehicle = data[0];
-
-        allImages = currentVehicle.images
-          ? currentVehicle.images.split(",").map(x => x.trim()).filter(Boolean)
-          : [];
-
-        if (!allImages.length && currentVehicle.image) {
-          allImages = [currentVehicle.image];
-        }
-
-        renderGallery(allImages);
-
-        document.getElementById("vehicleTitle").textContent = safeText(currentVehicle.title);
-        document.getElementById("vehicleYear").textContent = "Year: " + safeText(currentVehicle.year);
-        document.getElementById("vehiclePrice").textContent = "R" + safeText(currentVehicle.price);
-        document.getElementById("vehicleMileage").textContent = safeText(currentVehicle.mileage) + " km";
-        document.getElementById("vehicleLocation").textContent = safeText(currentVehicle.location);
-        document.getElementById("vehiclePhone").textContent = safeText(currentVehicle.phone);
-
-        const dealerUrl = "dealer.html?dealer=" + encodeURIComponent(safeText(currentVehicle.dealer));
-        document.getElementById("dealerLink").href = dealerUrl;
-        document.getElementById("dealerLink").textContent = safeText(currentVehicle.dealer);
-        document.getElementById("stockBtn").href = dealerUrl;
-
-        const phoneClean = normalisePhone(currentVehicle.phone);
-        document.getElementById("callBtn").href = "tel:" + phoneClean;
-        document.getElementById("whatsappBtn").href =
-          "https://wa.me/27" + phoneClean.replace(/^0/, "") +
-          "?text=" + encodeURIComponent("Hi, I'm interested in the " + safeText(currentVehicle.title));
-
-        if (currentVehicle.description) {
-          const box = document.getElementById("descriptionBox");
-          box.style.display = "block";
-          box.textContent = currentVehicle.description;
-        }
-
-        document.getElementById("buyerMessage").value =
-          "Hi, I'm interested in the " + safeText(currentVehicle.title) + ". Please contact me.";
-
-        setStatus("Vehicle loaded successfully.");
-      } catch (err) {
-        console.log(err);
-        setStatus("Could not load vehicle.");
-      }
     }
 
-    async function sendEnquiry() {
-      if (!currentVehicle) {
-        setStatus("Vehicle not ready.");
+    const { data, error } = await client
+        .from("vehicles")
+        .select("*")
+        .eq("id", id)
+        .single();
+
+    if (error || !data) {
+        document.getElementById("status").textContent = "Vehicle not found.";
+        console.error(error);
         return;
-      }
-
-      const buyerName = document.getElementById("buyerName").value.trim();
-      const buyerPhone = document.getElementById("buyerPhone").value.trim();
-      const message = document.getElementById("buyerMessage").value.trim();
-
-      if (!buyerName || !buyerPhone || !message) {
-        setStatus("Please complete all enquiry fields.");
-        return;
-      }
-
-      try {
-        setStatus("Sending enquiry...");
-
-        const response = await fetch(supabaseUrl + "/rest/v1/leads", {
-          method: "POST",
-          headers: {
-            apikey: supabaseKey,
-            Authorization: "Bearer " + supabaseKey,
-            "Content-Type": "application/json",
-            Prefer: "return=minimal"
-          },
-          body: JSON.stringify({
-            dealer_name: currentVehicle.dealer,
-            vehicle_title: currentVehicle.title,
-            buyer_name: buyerName,
-            buyer_phone: buyerPhone,
-            message: message
-          })
-        });
-
-        if (!response.ok) {
-          const text = await response.text();
-          setStatus("Could not send enquiry: " + text);
-          return;
-        }
-
-        setStatus("Enquiry sent successfully.");
-        document.getElementById("buyerName").value = "";
-        document.getElementById("buyerPhone").value = "";
-      } catch (err) {
-        console.log(err);
-        setStatus("Something went wrong sending enquiry.");
-      }
     }
 
-    loadVehicle();
-  </script>
+    // FILL DATA
+    document.getElementById("title").textContent = data.title || "No title";
+    document.getElementById("price").textContent = "R" + (data.price || 0);
+    document.getElementById("year").textContent = "Year: " + (data.year || "-");
+    document.getElementById("mileage").textContent = data.mileage || "-";
+    document.getElementById("location").textContent = data.location || "-";
+    document.getElementById("dealerName").textContent = data.dealer_name || "Dealer";
+    document.getElementById("phone").textContent = data.phone || "-";
+
+    // IMAGE FIX
+    if (data.images) {
+        document.getElementById("mainImage").src = data.images;
+    }
+
+    // CALL BUTTON
+    document.getElementById("callBtn").onclick = () => {
+        window.location.href = "tel:" + data.phone;
+    };
+
+    // WHATSAPP BUTTON
+    document.getElementById("whatsappBtn").onclick = () => {
+        const msg = encodeURIComponent("Hi, I'm interested in your vehicle: " + data.title);
+        window.open(`https://wa.me/${data.phone}?text=${msg}`, "_blank");
+    };
+
+    document.getElementById("status").textContent = "";
+}
+
+loadVehicle();
+</script>
+
 </body>
 </html>
