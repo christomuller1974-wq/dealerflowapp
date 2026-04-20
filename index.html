@@ -1,153 +1,366 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>DealerFlow</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <title>DealerFlow</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<style>
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  background: #f5f6fa;
-}
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-header {
-  background: #1e3a8a;
-  color: white;
-  padding: 25px;
-  text-align: center;
-}
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #dfe3ea;
+      color: #111827;
+    }
 
-header h1 {
-  margin: 0;
-  font-size: 32px;
-}
+    .hero {
+      background: linear-gradient(135deg, #3156c7, #1f3f9e);
+      color: white;
+      text-align: center;
+      padding: 42px 18px 34px;
+      position: relative;
+    }
 
-header p {
-  margin-top: 8px;
-  font-size: 18px;
-}
+    .hero h1 {
+      margin: 0;
+      font-size: 56px;
+      font-weight: 800;
+      letter-spacing: -1px;
+    }
 
-.vehicle-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 20px;
-  padding: 20px;
-}
+    .hero p {
+      margin: 14px auto 0;
+      max-width: 760px;
+      font-size: 24px;
+      line-height: 1.35;
+      font-weight: 500;
+    }
 
-.vehicle-card {
-  background: white;
-  border-radius: 12px;
-  padding: 12px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-  transition: 0.2s;
-}
+    .hero .sub {
+      margin-top: 10px;
+      font-size: 15px;
+      opacity: 0.95;
+    }
 
-.vehicle-card:hover {
-  transform: translateY(-3px);
-}
+    .quick-buttons {
+      position: fixed;
+      right: 14px;
+      top: 180px;
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
 
-.vehicle-thumb {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-  border-radius: 8px;
-  background: #ddd;
-}
+    .quick-buttons a {
+      text-decoration: none;
+      color: white;
+      background: #1f2937;
+      padding: 10px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.18);
+      text-align: center;
+      min-width: 110px;
+    }
 
-.vehicle-card h3 {
-  margin: 10px 0 5px;
-  font-size: 16px;
-  min-height: 44px;
-}
+    .quick-buttons a.blue {
+      background: #3156c7;
+    }
 
-.price {
-  color: red;
-  font-size: 18px;
-  font-weight: bold;
-}
+    .quick-buttons a.green {
+      background: #16a34a;
+    }
 
-.btn {
-  display: block;
-  margin-top: 10px;
-  padding: 10px;
-  text-align: center;
-  border-radius: 6px;
-  text-decoration: none;
-  color: white;
-  background: #2563eb;
-}
-</style>
+    .quick-buttons a.dark {
+      background: #111827;
+    }
+
+    .section-bar {
+      padding: 14px 18px;
+      background: #eef2ff;
+      border-top: 1px solid rgba(255,255,255,0.15);
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      text-align: center;
+      font-weight: 700;
+      color: #1f2937;
+    }
+
+    .vehicle-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 18px;
+      padding: 18px;
+      align-items: start;
+    }
+
+    .vehicle-card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 14px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.10);
+      transition: transform 0.2s ease;
+    }
+
+    .vehicle-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .vehicle-thumb {
+      width: 100%;
+      height: 210px;
+      object-fit: cover;
+      border-radius: 12px;
+      background: #e5e7eb;
+      display: block;
+    }
+
+    .vehicle-title {
+      margin: 12px 0 8px;
+      font-size: 18px;
+      font-weight: 800;
+      line-height: 1.25;
+      min-height: 46px;
+    }
+
+    .vehicle-meta {
+      font-size: 14px;
+      color: #475569;
+      margin-bottom: 4px;
+    }
+
+    .price {
+      color: #dc2626;
+      font-size: 18px;
+      font-weight: 800;
+      margin: 8px 0 10px;
+    }
+
+    .button-stack {
+      display: grid;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .btn {
+      display: block;
+      width: 100%;
+      text-align: center;
+      text-decoration: none;
+      color: white;
+      padding: 11px 12px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .btn-blue {
+      background: #3156c7;
+    }
+
+    .btn-green {
+      background: #16a34a;
+    }
+
+    .btn-whatsapp {
+      background: #25d366;
+    }
+
+    .btn-dark {
+      background: #1f2937;
+    }
+
+    .empty {
+      padding: 30px 18px;
+      text-align: center;
+      color: #475569;
+      font-weight: 700;
+    }
+
+    @media (max-width: 900px) {
+      .hero h1 {
+        font-size: 44px;
+      }
+
+      .hero p {
+        font-size: 20px;
+      }
+
+      .quick-buttons {
+        right: 10px;
+        top: auto;
+        bottom: 14px;
+      }
+
+      .quick-buttons a {
+        min-width: 92px;
+        font-size: 11px;
+        padding: 9px 10px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .hero {
+        padding: 34px 14px 28px;
+      }
+
+      .hero h1 {
+        font-size: 38px;
+      }
+
+      .hero p {
+        font-size: 18px;
+      }
+
+      .vehicle-grid {
+        grid-template-columns: 1fr;
+        padding: 14px;
+      }
+
+      .vehicle-thumb {
+        height: 220px;
+      }
+
+      .quick-buttons {
+        gap: 8px;
+      }
+
+      .quick-buttons a {
+        min-width: 86px;
+      }
+    }
+  </style>
 </head>
-
 <body>
 
-<header>
-  <h1>DealerFlow</h1>
-  <p>Browse our vehicles</p>
-</header>
+  <div class="hero">
+    <h1>DealerFlow</h1>
+    <p>Drive your dream. Find the right vehicle fast.</p>
+    <div class="sub">Trusted listings. Quick contact. Serious deals.</div>
+  </div>
 
-<div id="vehicle-list" class="vehicle-grid"></div>
+  <div class="quick-buttons">
+    <a href="index.html" class="blue">Home</a>
+    <a href="dealer-admin.html" class="dark">Dealer Login</a>
+    <a href="https://wa.me/27825744526" target="_blank" class="green">WhatsApp</a>
+  </div>
 
-<script>
-const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
+  <div class="section-bar">Browse our latest stock</div>
 
-function getMainImage(vehicle) {
-  if (vehicle.image && typeof vehicle.image === "string" && vehicle.image.trim() !== "") {
-    return vehicle.image.trim();
-  }
+  <div id="vehicle-list" class="vehicle-grid"></div>
 
-  if (vehicle.images && typeof vehicle.images === "string" && vehicle.images.trim() !== "") {
-    return vehicle.images.split(",")[0].trim();
-  }
+  <script>
+    const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
+    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
 
-  return "https://via.placeholder.com/300x180?text=No+Image";
-}
+    function getMainImage(vehicle) {
+      if (vehicle.image && typeof vehicle.image === "string" && vehicle.image.trim() !== "") {
+        return vehicle.image.trim();
+      }
 
-async function loadVehicles() {
-  try {
-    const res = await fetch(
-      supabaseUrl + "/rest/v1/vehicles?select=*",
-      {
-        headers: {
-          apikey: supabaseKey,
-          Authorization: "Bearer " + supabaseKey
+      if (vehicle.images) {
+        if (Array.isArray(vehicle.images) && vehicle.images.length > 0) {
+          return vehicle.images[0];
+        }
+
+        if (typeof vehicle.images === "string" && vehicle.images.trim() !== "") {
+          return vehicle.images.split(",")[0].trim();
         }
       }
-    );
 
-    const vehicles = await res.json();
-    const container = document.getElementById("vehicle-list");
-    container.innerHTML = "";
+      return "https://via.placeholder.com/400x250?text=No+Image";
+    }
 
-    vehicles.forEach(v => {
-      const mainImage = getMainImage(v);
+    function cleanPhone(phone) {
+      return String(phone || "").replace(/\s+/g, "");
+    }
 
-      const card = document.createElement("div");
-      card.className = "vehicle-card";
+    function whatsappLink(phone, title) {
+      const phoneClean = cleanPhone(phone);
+      if (!phoneClean) return "#";
+      return "https://wa.me/27" + phoneClean.replace(/^0/, "") +
+        "?text=" + encodeURIComponent("Hi, I'm interested in the " + (title || "vehicle") + ".");
+    }
 
-      card.innerHTML = `
-        <img src="${mainImage}" class="vehicle-thumb"
-             onerror="this.src='https://via.placeholder.com/300x180?text=No+Image'">
+    function callLink(phone) {
+      const phoneClean = cleanPhone(phone);
+      if (!phoneClean) return "#";
+      return "tel:" + phoneClean;
+    }
 
-        <h3>${v.title || "No Title"}</h3>
-        <div class="price">R${v.price || 0}</div>
+    function dealerStockLink(vehicle) {
+      const dealerName = vehicle.dealer || vehicle.dealer_name || "Dealer";
+      return "dealer.html?dealer=" + encodeURIComponent(dealerName);
+    }
 
-        <a href="details.html?id=${v.id}" class="btn">View Details</a>
-      `;
+    async function loadVehicles() {
+      try {
+        const res = await fetch(
+          supabaseUrl + "/rest/v1/vehicles?select=*&order=id.desc",
+          {
+            headers: {
+              apikey: supabaseKey,
+              Authorization: "Bearer " + supabaseKey
+            }
+          }
+        );
 
-      container.appendChild(card);
-    });
+        const vehicles = await res.json();
+        const container = document.getElementById("vehicle-list");
+        container.innerHTML = "";
 
-  } catch (err) {
-    console.error("Error loading vehicles:", err);
-  }
-}
+        if (!vehicles || !vehicles.length) {
+          container.innerHTML = '<div class="empty">No vehicles available yet.</div>';
+          return;
+        }
 
-loadVehicles();
-</script>
+        vehicles.forEach(v => {
+          const mainImage = getMainImage(v);
+          const dealerName = v.dealer || v.dealer_name || "Dealer";
+          const card = document.createElement("div");
+          card.className = "vehicle-card";
+
+          card.innerHTML = `
+            <img
+              src="${mainImage}"
+              class="vehicle-thumb"
+              alt="${v.title || "Vehicle"}"
+              onerror="this.src='https://via.placeholder.com/400x250?text=No+Image'"
+            >
+
+            <div class="vehicle-title">${v.title || "No Title"}</div>
+
+            <div class="vehicle-meta">Year: ${v.year || "-"}</div>
+            <div class="vehicle-meta">Location: ${v.location || "-"}</div>
+            <div class="vehicle-meta">Dealer: ${dealerName}</div>
+
+            <div class="price">R${v.price || 0}</div>
+
+            <div class="button-stack">
+              <a href="details.html?id=${v.id}" class="btn btn-blue">View Details</a>
+              <a href="${dealerStockLink(v)}" class="btn btn-green">Dealer Stock</a>
+              <a href="${callLink(v.phone)}" class="btn btn-dark">Call Dealer</a>
+              <a href="${whatsappLink(v.phone, v.title)}" target="_blank" class="btn btn-whatsapp">WhatsApp</a>
+            </div>
+          `;
+
+          container.appendChild(card);
+        });
+
+      } catch (err) {
+        console.error("Error loading vehicles:", err);
+        document.getElementById("vehicle-list").innerHTML =
+          '<div class="empty">Could not load vehicles.</div>';
+      }
+    }
+
+    loadVehicles();
+  </script>
 
 </body>
 </html>
