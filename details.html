@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Vehicle Details</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <style>
     body {
@@ -40,7 +40,7 @@
       border-radius: 12px;
       padding: 12px 14px;
       margin-bottom: 16px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
       font-weight: bold;
       font-size: 14px;
     }
@@ -58,19 +58,20 @@
       background: #ffffff;
       border-radius: 16px;
       padding: 16px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     }
 
     .main-image-wrap {
-  width: 100%;
-  height: 340px;
-  background: #eef2f7;
-  border-radius: 14px;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+      position: relative;
+      width: 100%;
+      height: 340px;
+      background: #eef2f7;
+      border-radius: 14px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
     .main-image {
       width: 100%;
@@ -78,35 +79,87 @@
       object-fit: contain;
       display: block;
       background: #eef2f7;
+      transition: transform 0.3s ease;
+      image-rendering: auto;
     }
 
-   .thumb-row {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 8px;
-  margin-top: 12px;
-}
+    .main-image:hover {
+      transform: scale(1.05);
+    }
 
-   .thumb {
-  height: 68px;
-  border-radius: 8px;
-  overflow: hidden;
-  background: #eef2f7;
-  border: 2px solid transparent;
-  cursor: pointer;
-}
+    .gallery-controls {
+      position: absolute;
+      top: 50%;
+      left: 10px;
+      right: 10px;
+      display: flex;
+      justify-content: space-between;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+
+    .gallery-arrow {
+      pointer-events: auto;
+      width: 42px;
+      height: 42px;
+      border: none;
+      border-radius: 999px;
+      background: rgba(17, 24, 39, 0.75);
+      color: white;
+      font-size: 22px;
+      cursor: pointer;
+    }
+
+    .gallery-top-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    .small-action-btn {
+      background: #1f2937;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .small-action-btn.green {
+      background: #16a34a;
+    }
+
+    .thumb-row {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .thumb {
+      height: 68px;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #eef2f7;
+      border: 2px solid transparent;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    }
 
     .thumb.active {
-      border-color: #3f5cc9;
+      border: 3px solid #3b82f6;
     }
 
-   .thumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  display: block;
-  background: #eef2f7;
-}
+    .thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      background: #eef2f7;
+    }
 
     .title {
       font-size: 42px;
@@ -187,10 +240,21 @@
       color: white;
     }
 
-    .btn-blue { background: #3f5cc9; }
-    .btn-green { background: #16a34a; }
-    .btn-dark { background: #1f2937; }
-    .btn-whatsapp { background: #25d366; }
+    .btn-blue {
+      background: #3f5cc9;
+    }
+
+    .btn-green {
+      background: #16a34a;
+    }
+
+    .btn-dark {
+      background: #1f2937;
+    }
+
+    .btn-whatsapp {
+      background: #25d366;
+    }
 
     .enquiry-card h3 {
       margin-top: 0;
@@ -244,6 +308,72 @@
       white-space: pre-wrap;
     }
 
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.92);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 30px;
+    }
+
+    .lightbox.show {
+      display: flex;
+    }
+
+    .lightbox-content {
+      position: relative;
+      width: 100%;
+      max-width: 1100px;
+      height: 85vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .lightbox img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: -8px;
+      right: 0;
+      width: 42px;
+      height: 42px;
+      border: none;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.15);
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .lightbox-arrows {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 50%;
+      display: flex;
+      justify-content: space-between;
+      transform: translateY(-50%);
+    }
+
+    .lightbox-arrow {
+      width: 48px;
+      height: 48px;
+      border: none;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.15);
+      color: white;
+      font-size: 26px;
+      cursor: pointer;
+    }
+
     @media (min-width: 1000px) {
       .layout {
         grid-template-columns: 1.35fr 0.9fr;
@@ -255,18 +385,34 @@
       }
     }
 
-   @media (max-width: 700px) {
-  .hero h1 { font-size: 34px; }
-  .title { font-size: 32px; }
-  .price { font-size: 32px; }
-  .main-image-wrap { height: 250px; }
-  .thumb-row { grid-template-columns: repeat(4, 1fr); }
-  .thumb { height: 60px; }
-}
+    @media (max-width: 700px) {
+      .hero h1 {
+        font-size: 34px;
+      }
+
+      .title {
+        font-size: 32px;
+      }
+
+      .price {
+        font-size: 32px;
+      }
+
+      .main-image-wrap {
+        height: 250px;
+      }
+
+      .thumb-row {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      .thumb {
+        height: 60px;
+      }
+    }
   </style>
 </head>
 <body>
-
   <div class="hero">
     <h1>Vehicle Details</h1>
     <p>View this vehicle and contact the dealer</p>
@@ -279,8 +425,25 @@
       <div class="left-side">
         <div class="gallery-card">
           <div class="main-image-wrap">
-            <img id="mainImage" class="main-image" src="https://via.placeholder.com/1200x700?text=Loading+Image" alt="Vehicle image">
+            <img
+              id="mainImage"
+              class="main-image"
+              src="https://via.placeholder.com/1200x700?text=Loading+Image"
+              alt="Vehicle image"
+            />
+
+            <div class="gallery-controls">
+              <button class="gallery-arrow" onclick="prevImage()">‹</button>
+              <button class="gallery-arrow" onclick="nextImage()">›</button>
+            </div>
           </div>
+
+          <div class="gallery-top-actions">
+            <button class="small-action-btn" onclick="openLightbox()">Fullscreen</button>
+            <button class="small-action-btn green" onclick="shareVehicle()">Share Vehicle</button>
+            <button class="small-action-btn" onclick="saveVehicle()">Save Vehicle</button>
+          </div>
+
           <div id="thumbRow" class="thumb-row"></div>
         </div>
       </div>
@@ -291,8 +454,12 @@
           <div id="vehicleYear" class="year-badge">Year</div>
           <div id="vehiclePrice" class="price">R0</div>
 
-          <div class="meta-line"><strong>Dealer:</strong> <a id="dealerLink" href="#">Dealer</a></div>
-          <div class="meta-line"><strong>Phone:</strong> <span id="vehiclePhone">-</span></div>
+          <div class="meta-line">
+            <strong>Dealer:</strong> <a id="dealerLink" href="#">Dealer</a>
+          </div>
+          <div class="meta-line">
+            <strong>Phone:</strong> <span id="vehiclePhone">-</span>
+          </div>
 
           <div class="meta-grid">
             <div class="meta-box">
@@ -317,16 +484,18 @@
 
         <div class="enquiry-card">
           <h3>Send an Enquiry</h3>
-          <div class="muted">Interested in this vehicle? Send your details and message directly to the dealer.</div>
+          <div class="muted">
+            Interested in this vehicle? Send your details and message directly to the dealer.
+          </div>
 
           <div class="field">
             <label for="buyerName">Your Name</label>
-            <input type="text" id="buyerName" placeholder="Your full name">
+            <input type="text" id="buyerName" placeholder="Your full name" />
           </div>
 
           <div class="field">
             <label for="buyerPhone">Your Phone Number</label>
-            <input type="text" id="buyerPhone" placeholder="Your phone number">
+            <input type="text" id="buyerPhone" placeholder="Your phone number" />
           </div>
 
           <div class="field">
@@ -334,18 +503,34 @@
             <textarea id="buyerMessage"></textarea>
           </div>
 
-          <button class="btn btn-blue" style="width:100%;" onclick="sendEnquiry()">Send Enquiry</button>
+          <button class="btn btn-blue" style="width:100%;" onclick="sendEnquiry()">
+            Send Enquiry
+          </button>
         </div>
       </div>
     </div>
   </div>
 
+  <div id="lightbox" class="lightbox" onclick="closeLightbox(event)">
+    <div class="lightbox-content">
+      <button class="lightbox-close" onclick="closeLightboxDirect()">×</button>
+
+      <div class="lightbox-arrows">
+        <button class="lightbox-arrow" onclick="event.stopPropagation(); prevImage(true)">‹</button>
+        <button class="lightbox-arrow" onclick="event.stopPropagation(); nextImage(true)">›</button>
+      </div>
+
+      <img id="lightboxImage" src="" alt="Fullscreen vehicle image" />
+    </div>
+  </div>
+
   <script>
     const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
-    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
+    const supabaseKey = "sb_publishable_D7saHOTE_JhSlMnSgBnIrQ_mOAOUD9s";
 
     let currentVehicle = null;
     let galleryImages = [];
+    let currentImageIndex = 0;
 
     function setStatus(message) {
       document.getElementById("status").textContent = message;
@@ -385,7 +570,9 @@
     }
 
     function setMainImage(src, activeIndex) {
+      currentImageIndex = activeIndex;
       document.getElementById("mainImage").src = src;
+      document.getElementById("lightboxImage").src = src;
 
       const thumbs = document.querySelectorAll(".thumb");
       thumbs.forEach((thumb, index) => {
@@ -411,6 +598,66 @@
           setMainImage(images[i], i);
         };
         thumbRow.appendChild(thumb);
+      }
+    }
+
+    function prevImage() {
+      if (!galleryImages.length) return;
+      currentImageIndex = (currentImageIndex - 1 + galleryImages.length) % galleryImages.length;
+      setMainImage(galleryImages[currentImageIndex], currentImageIndex);
+    }
+
+    function nextImage() {
+      if (!galleryImages.length) return;
+      currentImageIndex = (currentImageIndex + 1) % galleryImages.length;
+      setMainImage(galleryImages[currentImageIndex], currentImageIndex);
+    }
+
+    function openLightbox() {
+      if (!galleryImages.length) return;
+      document.getElementById("lightboxImage").src = galleryImages[currentImageIndex];
+      document.getElementById("lightbox").classList.add("show");
+    }
+
+    function closeLightbox(event) {
+      if (event.target.id === "lightbox") {
+        document.getElementById("lightbox").classList.remove("show");
+      }
+    }
+
+    function closeLightboxDirect() {
+      document.getElementById("lightbox").classList.remove("show");
+    }
+
+    function shareVehicle() {
+      const shareUrl = window.location.href;
+      const title = document.getElementById("vehicleTitle").textContent || "Vehicle";
+
+      if (navigator.share) {
+        navigator.share({
+          title: title,
+          text: "Check out this vehicle:",
+          url: shareUrl
+        }).catch(() => {});
+        return;
+      }
+
+      const whatsappUrl =
+        "https://wa.me/?text=" + encodeURIComponent(title + " - " + shareUrl);
+      window.open(whatsappUrl, "_blank");
+    }
+
+    function saveVehicle() {
+      if (!currentVehicle || !currentVehicle.id) return;
+
+      let saved = JSON.parse(localStorage.getItem("savedVehicles") || "[]");
+
+      if (!saved.includes(currentVehicle.id)) {
+        saved.push(currentVehicle.id);
+        localStorage.setItem("savedVehicles", JSON.stringify(saved));
+        alert("Vehicle saved.");
+      } else {
+        alert("Vehicle already saved.");
       }
     }
 
@@ -476,10 +723,13 @@
         galleryImages = getImageArray(data);
 
         if (galleryImages.length > 0) {
-          document.getElementById("mainImage").src = galleryImages[0];
+          setMainImage(galleryImages[0], 0);
           renderThumbnails(galleryImages);
         } else {
-          document.getElementById("mainImage").src = "https://via.placeholder.com/1200x700?text=No+Image";
+          document.getElementById("mainImage").src =
+            "https://via.placeholder.com/1200x700?text=No+Image";
+          document.getElementById("lightboxImage").src =
+            "https://via.placeholder.com/1200x700?text=No+Image";
         }
 
         if (data.description && String(data.description).trim() !== "") {
