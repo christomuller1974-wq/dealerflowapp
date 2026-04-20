@@ -441,13 +441,21 @@
         let mainImage = currentVehicle.image || "";
         let extraImages = [];
 
-        if (selectedFiles.length > 0) {
-          setStatus("Uploading photos...");
-          const uploadedUrls = await uploadAllFiles(selectedFiles);
+       if (selectedFiles.length > 0) {
+  setStatus("Uploading photos...");
+  const uploadedUrls = await uploadAllFiles(selectedFiles);
 
-          mainImage = uploadedUrls[0] || "";
-          extraImages = uploadedUrls.slice(1);
-        } else {
+  // ALWAYS replace main image
+  mainImage = uploadedUrls[0] || currentVehicle.image;
+
+  // KEEP existing extras
+  const existing = getExistingImages(currentVehicle).slice(1);
+
+  // ADD any extra uploaded images
+  const newExtras = uploadedUrls.slice(1);
+
+  extraImages = [...existing, ...newExtras];
+} else {
           const existing = getExistingImages(currentVehicle);
           mainImage = existing[0] || "";
           extraImages = existing.slice(1);
