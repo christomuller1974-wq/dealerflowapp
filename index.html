@@ -2,11 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Auto Excellence</title>
+<title>DealerFlow</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 body {
-  font-family: Arial;
+  font-family: Arial, sans-serif;
   margin: 0;
   background: #f5f6fa;
 }
@@ -18,6 +19,16 @@ header {
   text-align: center;
 }
 
+header h1 {
+  margin: 0;
+  font-size: 32px;
+}
+
+header p {
+  margin-top: 8px;
+  font-size: 18px;
+}
+
 .vehicle-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -27,7 +38,7 @@ header {
 
 .vehicle-card {
   background: white;
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 12px;
   box-shadow: 0 3px 10px rgba(0,0,0,0.1);
   transition: 0.2s;
@@ -48,6 +59,7 @@ header {
 .vehicle-card h3 {
   margin: 10px 0 5px;
   font-size: 16px;
+  min-height: 44px;
 }
 
 .price {
@@ -72,7 +84,7 @@ header {
 <body>
 
 <header>
-  <h1>Auto Excellence</h1>
+  <h1>DealerFlow</h1>
   <p>Browse our vehicles</p>
 </header>
 
@@ -80,7 +92,19 @@ header {
 
 <script>
 const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w"; // 🔥 PUT YOUR REAL KEY HERE
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
+
+function getMainImage(vehicle) {
+  if (vehicle.image && typeof vehicle.image === "string" && vehicle.image.trim() !== "") {
+    return vehicle.image.trim();
+  }
+
+  if (vehicle.images && typeof vehicle.images === "string" && vehicle.images.trim() !== "") {
+    return vehicle.images.split(",")[0].trim();
+  }
+
+  return "https://via.placeholder.com/300x180?text=No+Image";
+}
 
 async function loadVehicles() {
   try {
@@ -99,17 +123,7 @@ async function loadVehicles() {
     container.innerHTML = "";
 
     vehicles.forEach(v => {
-
-      // ✅ FIXED IMAGE HANDLING
-      let mainImage = "";
-
-      if (v.images) {
-        if (Array.isArray(v.images)) {
-          mainImage = v.images[0];
-        } else if (typeof v.images === "string") {
-          mainImage = v.images.split(",")[0];
-        }
-      }
+      const mainImage = getMainImage(v);
 
       const card = document.createElement("div");
       card.className = "vehicle-card";
@@ -121,9 +135,7 @@ async function loadVehicles() {
         <h3>${v.title || "No Title"}</h3>
         <div class="price">R${v.price || 0}</div>
 
-        <a href="details.html?id=${v.id}" class="btn">
-          View Details
-        </a>
+        <a href="details.html?id=${v.id}" class="btn">View Details</a>
       `;
 
       container.appendChild(card);
