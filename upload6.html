@@ -1,182 +1,208 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>DealerFlow Upload</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: #e5e7eb;
+      background: #dfe3ea;
       color: #111827;
     }
 
     .hero {
-      background: #2f55c7;
+      background: linear-gradient(135deg, #3156c7, #1f3f9e);
       color: white;
-      padding: 24px 20px;
       text-align: center;
+      padding: 42px 18px 32px;
     }
 
     .hero h1 {
-      margin: 0 0 8px 0;
-      font-size: 34px;
+      margin: 0;
+      font-size: 48px;
+      font-weight: 800;
     }
 
     .hero p {
-      margin: 0;
-      font-size: 16px;
+      margin: 10px 0 0;
+      font-size: 18px;
     }
 
     .container {
-      max-width: 1000px;
+      max-width: 1100px;
       margin: 0 auto;
       padding: 18px;
     }
 
     .top-actions {
       display: flex;
-      flex-wrap: wrap;
       gap: 10px;
+      flex-wrap: wrap;
       margin-bottom: 14px;
     }
 
-    .btn {
-      display: inline-block;
-      text-decoration: none;
-      text-align: center;
-      font-weight: 600;
-      font-size: 12px;
-      padding: 8px 12px;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
+    .top-btn {
+      background: #1f2937;
       color: white;
+      text-decoration: none;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
     }
 
-    .btn-blue { background: #3f5cc9; }
-    .btn-dark { background: #1f2937; }
-
-    .card {
-      background: #ffffff;
-      border-radius: 14px;
-      padding: 16px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      margin-bottom: 18px;
+    .top-btn.blue {
+      background: #3156c7;
     }
 
     .status {
-      background: #ffffff;
+      background: white;
       border-radius: 12px;
       padding: 12px 14px;
       margin-bottom: 16px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
       font-weight: bold;
-      font-size: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
 
-    .warning {
-      background: #fff7ed;
-      color: #9a3412;
-      border-radius: 12px;
-      padding: 12px 14px;
-      margin-bottom: 16px;
+    .card {
+      background: #f7f7f8;
+      border-radius: 18px;
+      padding: 18px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      font-weight: bold;
-      font-size: 14px;
-      display: none;
     }
 
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
+    .card h2 {
+      margin: 0 0 14px;
+      font-size: 30px;
+    }
+
+    .field {
+      margin-bottom: 14px;
     }
 
     .field label {
       display: block;
-      font-size: 13px;
-      font-weight: bold;
-      color: #334155;
-      margin-bottom: 5px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      font-size: 14px;
     }
 
-    .field input,
-    .field select,
-    .field textarea {
+    input,
+    select,
+    textarea {
       width: 100%;
       box-sizing: border-box;
-      padding: 12px;
+      padding: 13px 14px;
+      border-radius: 12px;
       border: 1px solid #cbd5e1;
-      border-radius: 10px;
+      font-size: 15px;
       background: white;
-      font-size: 14px;
-      font-family: Arial, sans-serif;
       color: #111827;
     }
 
-    .field textarea {
-      min-height: 100px;
+    textarea {
+      min-height: 120px;
       resize: vertical;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .three-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 14px;
     }
 
     .preview-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       gap: 12px;
-      margin-top: 14px;
-    }
-
-    .preview-card {
-      background: #f8fafc;
-      border-radius: 12px;
-      padding: 10px;
-      box-shadow: inset 0 0 0 1px #e5e7eb;
-    }
-
-    .preview-image-wrap {
-      width: 100%;
-      height: 120px;
-      background: #eef2f7;
-      border-radius: 10px;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      margin-top: 10px;
       margin-bottom: 8px;
     }
 
-    .preview-image {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
+    .preview-item {
       background: #eef2f7;
+      border: 1px solid #d1d5db;
+      border-radius: 14px;
+      padding: 10px;
+      text-align: center;
+      min-height: 190px;
+    }
+
+    .preview-item img {
+      width: 100%;
+      max-height: 130px;
+      height: auto;
+      object-fit: contain;
+      border-radius: 10px;
       display: block;
+      margin-bottom: 8px;
+      background: #e5e7eb;
     }
 
     .preview-label {
-      font-size: 12px;
-      color: #475569;
-      text-align: center;
-      word-break: break-word;
+      font-size: 13px;
+      color: #334155;
+      font-weight: 700;
     }
 
-    .submit-row {
-      margin-top: 16px;
+    .checkbox-row {
       display: flex;
-      flex-wrap: wrap;
+      align-items: center;
       gap: 10px;
+      background: white;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid #cbd5e1;
     }
 
-    @media (min-width: 768px) {
-      .form-grid {
-        grid-template-columns: repeat(2, 1fr);
+    .checkbox-row input[type="checkbox"] {
+      width: auto;
+      margin: 0;
+      transform: scale(1.2);
+    }
+
+    .save-btn {
+      width: 100%;
+      border: none;
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 15px;
+      font-weight: 800;
+      background: #3156c7;
+      color: white;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
+    .save-btn:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+
+    @media (max-width: 800px) {
+      .hero h1 {
+        font-size: 38px;
       }
 
-      .full-width {
-        grid-column: 1 / -1;
+      .two-col,
+      .three-col {
+        grid-template-columns: 1fr;
       }
     }
   </style>
@@ -185,100 +211,96 @@
 
   <div class="hero">
     <h1>DealerFlow Upload</h1>
-    <p>Add vehicles to your own dealer account</p>
+    <p>Add vehicles to your stock in minutes</p>
   </div>
 
   <div class="container">
     <div class="top-actions">
-      <a href="dealer-admin.html" class="btn btn-dark">Back to Dashboard</a>
-      <a href="index.html" class="btn btn-dark">Website</a>
-      <button type="button" class="btn btn-dark" onclick="logoutUser()">Logout</button>
+      <a href="dealer-admin.html" class="top-btn">Back to Dashboard</a>
+      <a href="index.html" class="top-btn blue">Website</a>
+      <button class="top-btn" onclick="logout()">Logout</button>
     </div>
 
     <div id="status" class="status">Starting upload page...</div>
-    <div id="warningBox" class="warning"></div>
 
     <div class="card">
-      <h2 style="margin-top:0;">Vehicle Upload</h2>
+      <h2>Vehicle Upload</h2>
 
-      <div class="form-grid">
-        <div class="field full-width">
-          <label for="photoInput">Vehicle Photos</label>
-          <input type="file" id="photoInput" accept="image/*" multiple>
-        </div>
+      <div class="field">
+        <label for="vehiclePhotos">Vehicle Photos</label>
+        <input type="file" id="vehiclePhotos" multiple accept="image/*" />
+      </div>
 
-        <div class="field full-width">
-          <label>Photo Preview</label>
-          <div id="previewGrid" class="preview-grid">
-            <div class="preview-card">No photos selected yet.</div>
+      <div class="field">
+        <label>Photo Preview</label>
+        <div id="photoPreview" class="preview-grid">
+          <div class="preview-item">
+            <div class="preview-label">No photos selected yet.</div>
           </div>
         </div>
+      </div>
 
-        <div class="field full-width">
-          <label for="title">Vehicle Title</label>
-          <input type="text" id="title" placeholder="e.g. Chev Ute 1.4">
-        </div>
+      <div class="field">
+        <label for="title">Vehicle Title</label>
+        <input type="text" id="title" placeholder="e.g. Toyota Hilux 2.8 GD-6 4x4" />
+      </div>
 
+      <div class="two-col">
         <div class="field">
           <label for="year">Select Year</label>
-          <select id="year">
-            <option value="">Select Year</option>
-            <option>2026</option><option>2025</option><option>2024</option><option>2023</option>
-            <option>2022</option><option>2021</option><option>2020</option><option>2019</option>
-            <option>2018</option><option>2017</option><option>2016</option><option>2015</option>
-            <option>2014</option><option>2013</option><option>2012</option><option>2011</option>
-            <option>2010</option><option>2009</option><option>2008</option><option>2007</option>
-            <option>2006</option><option>2005</option><option>2004</option><option>2003</option>
-            <option>2002</option><option>2001</option><option>2000</option><option>1999</option>
-            <option>1998</option><option>1997</option><option>1996</option><option>1995</option>
-            <option>1994</option><option>1993</option><option>1992</option><option>1991</option>
-            <option>1990</option><option>1989</option><option>1988</option><option>1987</option>
-            <option>1986</option><option>1985</option><option>1984</option><option>1983</option>
-            <option>1982</option><option>1981</option><option>1980</option>
-          </select>
+          <select id="year"></select>
         </div>
 
         <div class="field">
           <label for="price">Price</label>
-          <input type="number" id="price" placeholder="e.g. 169900">
+          <input type="text" id="price" placeholder="e.g. 349900" />
         </div>
+      </div>
 
+      <div class="two-col">
         <div class="field">
           <label for="mileage">Mileage</label>
-          <input type="number" id="mileage" placeholder="e.g. 155000">
+          <input type="text" id="mileage" placeholder="e.g. 120000" />
         </div>
 
         <div class="field">
           <label for="location">Location</label>
-          <input type="text" id="location" placeholder="e.g. Kimberley">
+          <input type="text" id="location" placeholder="e.g. Kimberley" />
         </div>
+      </div>
 
+      <div class="two-col">
         <div class="field">
           <label for="dealer">Dealer Name</label>
-          <input type="text" id="dealer" placeholder="Dealer name">
+          <input type="text" id="dealer" placeholder="Dealer name" />
         </div>
 
         <div class="field">
           <label for="phone">Phone</label>
-          <input type="text" id="phone" placeholder="e.g. 0825744526">
-        </div>
-
-        <div class="field full-width">
-          <label for="description">Description</label>
-          <textarea id="description" placeholder="Optional vehicle description"></textarea>
+          <input type="text" id="phone" placeholder="e.g. 0825744526" />
         </div>
       </div>
 
-      <div class="submit-row">
-        <button type="button" id="uploadBtn" class="btn btn-blue" onclick="submitVehicle()">Save Vehicle</button>
+      <div class="field">
+        <label for="description">Description</label>
+        <textarea id="description" placeholder="Optional vehicle description"></textarea>
       </div>
+
+      <div class="field">
+        <label>Featured Vehicle</label>
+        <div class="checkbox-row">
+          <input type="checkbox" id="featured" />
+          <span>Show this vehicle as featured</span>
+        </div>
+      </div>
+
+      <button id="saveBtn" class="save-btn" onclick="submitVehicle()">Save Vehicle</button>
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
-    const supabaseKey = "sb_publishable_D7saHOTE_JhSlMnSgBnIhQ_mOAOUD9s";
+    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
     const client = window.supabase.createClient(supabaseUrl, supabaseKey);
 
     let currentUser = null;
@@ -287,124 +309,174 @@
 
     function setStatus(message) {
       document.getElementById("status").textContent = message;
-      console.log(message);
+      console.log("[STATUS]", message);
     }
 
-    function setWarning(message) {
-      const box = document.getElementById("warningBox");
-      if (!message) {
-        box.style.display = "none";
-        box.textContent = "";
-      } else {
-        box.style.display = "block";
-        box.textContent = message;
+    function populateYears() {
+      const yearSelect = document.getElementById("year");
+      yearSelect.innerHTML = '<option value="">Select year</option>';
+
+      const currentYear = new Date().getFullYear();
+      for (let y = currentYear; y >= 1980; y--) {
+        const option = document.createElement("option");
+        option.value = y;
+        option.textContent = y;
+        yearSelect.appendChild(option);
       }
     }
 
-    function handleFileChange() {
-      const input = document.getElementById("photoInput");
-      const grid = document.getElementById("previewGrid");
-      selectedFiles = Array.from(input.files || []);
-      grid.innerHTML = "";
+    function renderPreview(files) {
+      const preview = document.getElementById("photoPreview");
+      preview.innerHTML = "";
 
-      if (selectedFiles.length === 0) {
-        grid.innerHTML = "<div class='preview-card'>No photos selected yet.</div>";
+      if (!files.length) {
+        preview.innerHTML = `
+          <div class="preview-item">
+            <div class="preview-label">No photos selected yet.</div>
+          </div>
+        `;
         return;
       }
 
-      selectedFiles.forEach((file, index) => {
-        const imageUrl = URL.createObjectURL(file);
-        const card = document.createElement("div");
-        card.className = "preview-card";
-        card.innerHTML = `
-          <div class="preview-image-wrap">
-            <img src="${imageUrl}" class="preview-image" alt="Preview">
-          </div>
-          <div class="preview-label">${index === 0 ? "Main image" : "Extra image"}</div>
+      files.forEach((file, index) => {
+        const url = URL.createObjectURL(file);
+        const label = index === 0 ? "Main image" : "Extra image";
+
+        const div = document.createElement("div");
+        div.className = "preview-item";
+        div.innerHTML = `
+          <img src="${url}" alt="Preview ${index + 1}">
+          <div class="preview-label">${label}</div>
         `;
-        grid.appendChild(card);
+        preview.appendChild(div);
       });
     }
 
-    async function logoutUser() {
-      await client.auth.signOut();
-      window.location.href = "login.html";
+    function setupPhotoInput() {
+      const fileInput = document.getElementById("vehiclePhotos");
+
+      fileInput.addEventListener("change", function () {
+        selectedFiles = Array.from(fileInput.files || []);
+        renderPreview(selectedFiles);
+      });
     }
 
-    async function loadProfile(userId) {
-      const result = await client
-        .from("profiles")
-        .select("*")
-        .eq("id", userId)
-        .single();
+    async function requireUser() {
+      const { data, error } = await client.auth.getUser();
 
-      if (result.error || !result.data) return false;
-      currentProfile = result.data;
+      if (error || !data.user) {
+        window.location.href = "login.html";
+        return false;
+      }
+
+      currentUser = data.user;
       return true;
     }
 
-    async function uploadSingleFile(file) {
-      const ext = file.name.split(".").pop() || "jpg";
-      const fileName = Date.now() + "-" + Math.random().toString(36).slice(2) + "." + ext;
+    async function loadProfile() {
+      setStatus("Loading your profile...");
+
+      const { data, error } = await client
+        .from("profiles")
+        .select("*")
+        .eq("id", currentUser.id)
+        .single();
+
+      if (error || !data) {
+        console.log(error);
+        setStatus("Could not load dealer profile.");
+        return false;
+      }
+
+      currentProfile = data;
+
+      // Auto-fill dealer fields
+      document.getElementById("dealer").value =
+        data.dealer_name || data.name || "Auto Excellence";
+
+      document.getElementById("location").value =
+        data.location || "Kimberley";
+
+      document.getElementById("phone").value =
+        data.phone || "";
+
+      return true;
+    }
+
+    async function uploadOneFile(file) {
+      const extension = file.name.split(".").pop();
+      const randomPart = Math.random().toString(36).slice(2);
+      const fileName = Date.now() + "-" + randomPart + "." + extension;
       const filePath = "vehicles/" + fileName;
 
-      const uploadResult = await client.storage
+      const { error } = await client.storage
         .from("vehicle-images")
         .upload(filePath, file);
 
-      if (uploadResult.error) throw uploadResult.error;
+      if (error) {
+        throw error;
+      }
 
-      const publicResult = client.storage
+      const { data } = client.storage
         .from("vehicle-images")
         .getPublicUrl(filePath);
 
-      return publicResult.data.publicUrl;
+      return data.publicUrl;
+    }
+
+    async function uploadAllFiles(files) {
+      const urls = [];
+
+      for (const file of files) {
+        const url = await uploadOneFile(file);
+        urls.push(url);
+      }
+
+      return urls;
     }
 
     async function submitVehicle() {
-      if (!currentUser || !currentProfile) {
-        setStatus("User not ready yet.");
-        return;
-      }
-
-      if (!currentProfile.is_active) {
-        setWarning("Your account is not active yet. Please contact admin after payment.");
-        return;
-      }
-
-      const title = document.getElementById("title").value.trim();
-      const year = document.getElementById("year").value.trim();
-      const price = document.getElementById("price").value.trim();
-      const mileage = document.getElementById("mileage").value.trim();
-      const location = document.getElementById("location").value.trim();
-      const dealer = document.getElementById("dealer").value.trim();
-      const phone = document.getElementById("phone").value.trim();
-      const description = document.getElementById("description").value.trim();
-
-      if (!title || !year || !price || !mileage || !location || !dealer || !phone) {
-        setStatus("Please complete all required fields.");
-        return;
-      }
-
-      if (selectedFiles.length === 0) {
-        setStatus("Please select at least one photo.");
-        return;
-      }
+      const saveBtn = document.getElementById("saveBtn");
+      saveBtn.disabled = true;
 
       try {
-        setStatus("Uploading photos...");
-
-        const uploadedUrls = [];
-        for (const file of selectedFiles) {
-          const url = await uploadSingleFile(file);
-          uploadedUrls.push(url);
+        if (!currentUser) {
+          setStatus("User not ready.");
+          saveBtn.disabled = false;
+          return;
         }
 
-        const mainImage = uploadedUrls[0] || "";
-        const allImages = uploadedUrls.join(",");
+        const title = document.getElementById("title").value.trim();
+        const year = document.getElementById("year").value;
+        const price = document.getElementById("price").value.trim();
+        const mileage = document.getElementById("mileage").value.trim();
+        const location = document.getElementById("location").value.trim();
+        const dealer = document.getElementById("dealer").value.trim();
+        const phone = document.getElementById("phone").value.trim();
+        const description = document.getElementById("description").value.trim();
+        const featured = document.getElementById("featured").checked;
 
-        const saveResult = await client.from("vehicles").insert([{
-          user_id: currentUser.id,
+        if (!title || !year || !price || !mileage || !location || !dealer || !phone) {
+          setStatus("Please complete all required fields.");
+          saveBtn.disabled = false;
+          return;
+        }
+
+        if (!selectedFiles.length) {
+          setStatus("Please choose at least one vehicle photo.");
+          saveBtn.disabled = false;
+          return;
+        }
+
+        setStatus("Uploading photos...");
+        const uploadedUrls = await uploadAllFiles(selectedFiles);
+
+        const mainImage = uploadedUrls[0] || "";
+        const extraImages = uploadedUrls.slice(1);
+
+        setStatus("Saving vehicle...");
+
+        const payload = {
           title: title,
           year: year,
           price: price,
@@ -413,80 +485,70 @@
           dealer: dealer,
           phone: phone,
           description: description,
+          featured: featured,
           image: mainImage,
-          images: allImages,
-          featured: false
-        }]);
+          images: extraImages.join(","),
+          user_id: currentUser.id
+        };
 
-        if (saveResult.error) {
-          setStatus("Could not save vehicle: " + saveResult.error.message);
+        const { error } = await client
+          .from("vehicles")
+          .insert([payload]);
+
+        if (error) {
+          console.log(error);
+          setStatus("Could not save vehicle.");
+          saveBtn.disabled = false;
           return;
         }
 
-        setStatus("Vehicle saved successfully.");
-
+        // Reset form after success
         document.getElementById("title").value = "";
         document.getElementById("year").value = "";
         document.getElementById("price").value = "";
         document.getElementById("mileage").value = "";
         document.getElementById("description").value = "";
-        document.getElementById("photoInput").value = "";
+        document.getElementById("featured").checked = false;
+        document.getElementById("vehiclePhotos").value = "";
         selectedFiles = [];
-        document.getElementById("previewGrid").innerHTML = "<div class='preview-card'>No photos selected yet.</div>";
+        renderPreview([]);
 
-        document.getElementById("location").value = currentProfile.location || "";
-        document.getElementById("dealer").value = currentProfile.dealer_name || "";
-        document.getElementById("phone").value = currentProfile.phone || "";
+        // keep autofilled dealer details
+        document.getElementById("dealer").value =
+          currentProfile?.dealer_name || currentProfile?.name || dealer;
+        document.getElementById("location").value =
+          currentProfile?.location || location;
+        document.getElementById("phone").value =
+          currentProfile?.phone || phone;
+
+        setStatus("Vehicle saved successfully.");
       } catch (err) {
         console.log(err);
-        setStatus("Upload failed: " + err.message);
+        setStatus("Something went wrong while saving.");
       }
+
+      saveBtn.disabled = false;
     }
 
-    async function startUploadPage() {
-      try {
-        document.getElementById("photoInput").addEventListener("change", handleFileChange);
-
-        setStatus("Checking login...");
-
-        const authResult = await client.auth.getUser();
-
-        if (authResult.error || !authResult.data || !authResult.data.user) {
-          setStatus("Not logged in. Redirecting...");
-          setTimeout(function () {
-            window.location.href = "login.html";
-          }, 1200);
-          return;
-        }
-
-        currentUser = authResult.data.user;
-
-        setStatus("Loading dealer profile...");
-        const ok = await loadProfile(currentUser.id);
-
-        if (!ok) {
-          setStatus("Profile not found.");
-          return;
-        }
-
-        document.getElementById("dealer").value = currentProfile.dealer_name || "";
-        document.getElementById("phone").value = currentProfile.phone || "";
-        document.getElementById("location").value = currentProfile.location || "";
-
-        if (!currentProfile.is_active) {
-          setWarning("Your account is not active yet. Please contact admin after payment.");
-        } else {
-          setWarning("");
-        }
-
-        setStatus("Upload page ready.");
-      } catch (err) {
-        console.log(err);
-        setStatus("Error starting upload page.");
-      }
+    async function logout() {
+      await client.auth.signOut();
+      window.location.href = "login.html";
     }
 
-    startUploadPage();
+    async function startPage() {
+      populateYears();
+      setupPhotoInput();
+
+      const okUser = await requireUser();
+      if (!okUser) return;
+
+      const okProfile = await loadProfile();
+      if (!okProfile) return;
+
+      setStatus("Upload page ready.");
+    }
+
+    startPage();
   </script>
 </body>
 </html>
