@@ -1,328 +1,269 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Dealer Stock</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8" />
+<title>Dealer Stock</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #dfe3ea;
-      color: #111827;
-    }
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #dfe3ea;
+}
 
-    .hero {
-      background: linear-gradient(135deg, #3156c7, #1f3f9e);
-      color: white;
-      text-align: center;
-      padding: 36px 18px 28px;
-    }
+/* HERO */
+.hero {
+  background: linear-gradient(135deg, #3156c7, #1f3f9e);
+  color: white;
+  padding: 40px 18px 30px;
+  position: relative;
+}
 
-    .hero h1 {
-      margin: 0;
-      font-size: 46px;
-      font-weight: 800;
-    }
+.hero-inner {
+  max-width: 1100px;
+  margin: auto;
+  text-align: center;
+  position: relative;
+}
 
-    .hero p {
-      margin: 10px 0 0;
-      font-size: 18px;
-    }
+.hero h1 {
+  margin: 0;
+  font-size: 44px;
+}
 
-    .container {
-      max-width: 1300px;
-      margin: 0 auto;
-      padding: 18px;
-    }
+.hero-buttons {
+  position: absolute;
+  right: 0;
+  top: 0;
+  display: flex;
+  gap: 10px;
+}
 
-    .status {
-      background: white;
-      border-radius: 12px;
-      padding: 12px 14px;
-      margin-bottom: 16px;
-      font-weight: bold;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
+.hero-btn {
+  padding: 9px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: bold;
+  text-decoration: none;
+  color: white;
+}
 
-    .dealer-box {
-      background: white;
-      border-radius: 16px;
-      padding: 18px;
-      margin-bottom: 18px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
+.dark { background:#111827; }
+.green { background:#16a34a; }
 
-    .dealer-box h2 {
-      margin: 0 0 8px;
-      font-size: 34px;
-    }
+/* SEARCH */
+.search-panel {
+  margin-top: 20px;
+}
 
-    .dealer-box p {
-      margin: 6px 0;
-      font-size: 16px;
-    }
+.hidden { display:none; }
 
-    .top-actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 12px;
-    }
+.search-input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+}
 
-    .top-btn {
-      display: inline-block;
-      text-decoration: none;
-      color: white;
-      background: #1f2937;
-      padding: 10px 14px;
-      border-radius: 10px;
-      font-size: 14px;
-      font-weight: 700;
-    }
+/* DEALER BOX */
+.dealer-box {
+  background: white;
+  margin: 15px;
+  padding: 15px;
+  border-radius: 14px;
+}
 
-    .top-btn.green {
-      background: #25d366;
-    }
+.dealer-box h2 {
+  margin: 0 0 6px;
+}
 
-    .top-btn.blue {
-      background: #3156c7;
-    }
+/* GRID */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill,minmax(280px,1fr));
+  gap: 15px;
+  padding: 15px;
+}
 
-    .vehicle-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
-      gap: 18px;
-    }
+.card {
+  background: white;
+  padding: 12px;
+  border-radius: 14px;
+}
 
-    .vehicle-card {
-      background: white;
-      border-radius: 16px;
-      padding: 14px;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.10);
-    }
+.card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+}
 
-    .vehicle-thumb {
-      width: 100%;
-      height: 210px;
-      object-fit: cover;
-      border-radius: 12px;
-      background: #e5e7eb;
-      display: block;
-    }
+.title {
+  font-weight: bold;
+  margin: 10px 0;
+}
 
-    .vehicle-title {
-      margin: 12px 0 8px;
-      font-size: 18px;
-      font-weight: 800;
-      line-height: 1.25;
-      min-height: 46px;
-    }
+.price {
+  color: red;
+  font-weight: bold;
+}
 
-    .vehicle-meta {
-      font-size: 14px;
-      color: #475569;
-      margin-bottom: 4px;
-    }
+/* BUTTONS */
+.btn {
+  display: block;
+  margin-top: 6px;
+  padding: 10px;
+  text-align: center;
+  border-radius: 8px;
+  text-decoration: none;
+  color: white;
+  font-size: 13px;
+  font-weight: bold;
+}
 
-    .price {
-      color: #dc2626;
-      font-size: 18px;
-      font-weight: 800;
-      margin: 8px 0 10px;
-    }
+.blue { background:#3156c7; }
+.green2 { background:#16a34a; }
+.dark2 { background:#1f2937; }
+.whatsapp { background:#25d366; }
 
-    .button-stack {
-      display: grid;
-      gap: 8px;
-      margin-top: 8px;
-    }
-
-    .btn {
-      display: block;
-      width: 100%;
-      text-align: center;
-      text-decoration: none;
-      color: white;
-      padding: 11px 12px;
-      border-radius: 10px;
-      font-weight: 700;
-      font-size: 14px;
-    }
-
-    .btn-blue {
-      background: #3156c7;
-    }
-
-    .btn-whatsapp {
-      background: #25d366;
-    }
-
-    .btn-dark {
-      background: #1f2937;
-    }
-
-    .empty {
-      background: white;
-      border-radius: 14px;
-      padding: 25px;
-      text-align: center;
-      font-weight: 700;
-      color: #475569;
-    }
-
-    @media (max-width: 700px) {
-      .hero h1 {
-        font-size: 36px;
-      }
-
-      .dealer-box h2 {
-        font-size: 28px;
-      }
-
-      .vehicle-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
+</style>
 </head>
 <body>
 
-  <div class="hero">
-    <h1>Dealer Stock</h1>
-    <p>View this dealer’s available vehicles</p>
-  </div>
+<div class="hero">
+  <div class="hero-inner">
 
-  <div class="container">
-    <div id="status" class="status">Loading dealer...</div>
-
-    <div id="dealerBox" class="dealer-box" style="display:none;">
-      <h2 id="dealerName">Dealer</h2>
-      <p><strong>Phone:</strong> <span id="dealerPhone">-</span></p>
-
-      <div class="top-actions">
-        <a href="index.html" class="top-btn">Back</a>
-        <a id="dealerWhatsapp" href="#" target="_blank" class="top-btn green">WhatsApp</a>
-        <a id="dealerCall" href="#" class="top-btn blue">Call Dealer</a>
-      </div>
+    <div class="hero-buttons">
+      <a href="dealer-admin.html" class="hero-btn dark">Dealer Login</a>
+      <button id="searchBtn" class="hero-btn green">Search Vehicle</button>
     </div>
 
-    <div id="vehicleList" class="vehicle-grid"></div>
+    <h1 id="dealerName">Dealer Stock</h1>
+
+    <div id="searchPanel" class="search-panel hidden">
+      <input id="searchInput" class="search-input" placeholder="Search vehicles..." />
+    </div>
+
   </div>
+</div>
 
-  <script>
-    const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
-    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
+<div class="dealer-box">
+  <h2 id="dealerTitle"></h2>
+  <div id="dealerPhone"></div>
+</div>
 
-    function setStatus(message) {
-      document.getElementById("status").textContent = message;
-    }
+<div id="grid" class="grid"></div>
 
-    function getDealerNameFromUrl() {
-      const params = new URLSearchParams(window.location.search);
-      return params.get("dealer");
-    }
+<script>
+const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
 
-    function cleanPhone(phone) {
-      return String(phone || "").replace(/\s+/g, "");
-    }
+let allVehicles = [];
 
-    function getMainImage(vehicle) {
-      if (vehicle.image && typeof vehicle.image === "string" && vehicle.image.trim() !== "") {
-        return vehicle.image.trim();
-      }
+function getParam(name) {
+  return new URLSearchParams(window.location.search).get(name);
+}
 
-      if (vehicle.images && typeof vehicle.images === "string" && vehicle.images.trim() !== "") {
-        return vehicle.images.split(",")[0].trim();
-      }
+function getImage(v) {
+  if (v.image) return v.image;
+  if (v.images) return v.images.split(",")[0];
+  return "https://via.placeholder.com/400x250";
+}
 
-      return "https://via.placeholder.com/400x250?text=No+Image";
-    }
+function cleanPhone(p){
+  return (p||"").replace(/\s+/g,"");
+}
 
-    async function loadDealerStock() {
-      const dealer = getDealerNameFromUrl();
+function callLink(p){
+  return "tel:"+cleanPhone(p);
+}
 
-      if (!dealer) {
-        setStatus("Dealer name missing.");
-        return;
-      }
+function whatsapp(p,title){
+  return "https://wa.me/27"+cleanPhone(p).replace(/^0/,"")+
+  "?text="+encodeURIComponent("Hi I'm interested in "+title);
+}
 
-      try {
-        setStatus("Loading dealer stock...");
+function render(list){
+  const grid = document.getElementById("grid");
+  grid.innerHTML = "";
 
-        const res = await fetch(
-          supabaseUrl + "/rest/v1/vehicles?dealer=eq." + encodeURIComponent(dealer) + "&select=*&order=id.desc",
-          {
-            headers: {
-              apikey: supabaseKey,
-              Authorization: "Bearer " + supabaseKey
-            }
-          }
-        );
+  if(!list.length){
+    grid.innerHTML = "No vehicles found";
+    return;
+  }
 
-        const vehicles = await res.json();
+  list.forEach(v=>{
+    const div = document.createElement("div");
+    div.className = "card";
 
-        if (!vehicles || vehicles.length === 0) {
-          setStatus("No vehicles found for this dealer.");
-          document.getElementById("vehicleList").innerHTML = '<div class="empty">No vehicles found.</div>';
-          return;
-        }
+    div.innerHTML = `
+      <img src="${getImage(v)}">
+      <div class="title">${v.title}</div>
+      <div>Year: ${v.year}</div>
+      <div>Location: ${v.location}</div>
+      <div class="price">R${v.price}</div>
 
-        const firstVehicle = vehicles[0];
-        const dealerPhone = firstVehicle.phone || "";
+      <a href="details.html?id=${v.id}" class="btn blue">View Details</a>
+      <a href="${callLink(v.phone)}" class="btn dark2">Call</a>
+      <a href="${whatsapp(v.phone,v.title)}" class="btn whatsapp">WhatsApp</a>
+    `;
 
-        document.getElementById("dealerBox").style.display = "block";
-        document.getElementById("dealerName").textContent = dealer;
-        document.getElementById("dealerPhone").textContent = dealerPhone || "-";
-        document.getElementById("dealerCall").href = dealerPhone ? "tel:" + cleanPhone(dealerPhone) : "#";
-        document.getElementById("dealerWhatsapp").href = dealerPhone
-          ? "https://wa.me/27" + cleanPhone(dealerPhone).replace(/^0/, "") + "?text=" + encodeURIComponent("Hi, I'm interested in your available vehicles.")
-          : "#";
+    grid.appendChild(div);
+  });
+}
 
-        const container = document.getElementById("vehicleList");
-        container.innerHTML = "";
+function filter(text){
+  text = text.toLowerCase();
 
-        vehicles.forEach(v => {
-          const mainImage = getMainImage(v);
+  const filtered = allVehicles.filter(v=>{
+    return (
+      (v.title||"").toLowerCase().includes(text) ||
+      (v.year||"").toString().includes(text)
+    );
+  });
 
-          const card = document.createElement("div");
-          card.className = "vehicle-card";
+  render(filtered);
+}
 
-          card.innerHTML = `
-            <img
-              src="${mainImage}"
-              class="vehicle-thumb"
-              alt="${v.title || "Vehicle"}"
-              onerror="this.src='https://via.placeholder.com/400x250?text=No+Image'"
-            >
+async function load(){
+  const dealer = getParam("dealer");
 
-            <div class="vehicle-title">${v.title || "No Title"}</div>
+  document.getElementById("dealerName").textContent = dealer;
+  document.getElementById("dealerTitle").textContent = dealer;
 
-            <div class="vehicle-meta">Year: ${v.year || "-"}</div>
-            <div class="vehicle-meta">Location: ${v.location || "-"}</div>
-
-            <div class="price">R${v.price || 0}</div>
-
-            <div class="button-stack">
-              <a href="details.html?id=${v.id}" class="btn btn-blue">View Details</a>
-              <a href="${dealerPhone ? "tel:" + cleanPhone(dealerPhone) : "#"}" class="btn btn-dark">Call Dealer</a>
-              <a href="${dealerPhone ? "https://wa.me/27" + cleanPhone(dealerPhone).replace(/^0/, "") + "?text=" + encodeURIComponent("Hi, I'm interested in the " + (v.title || "vehicle") + ".") : "#"}" target="_blank" class="btn btn-whatsapp">WhatsApp</a>
-            </div>
-          `;
-
-          container.appendChild(card);
-        });
-
-        setStatus("Dealer stock loaded successfully.");
-      } catch (err) {
-        console.error(err);
-        setStatus("Could not load dealer stock.");
+  const res = await fetch(
+    supabaseUrl + "/rest/v1/vehicles?dealer=eq." + encodeURIComponent(dealer),
+    {
+      headers:{
+        apikey:supabaseKey,
+        Authorization:"Bearer "+supabaseKey
       }
     }
+  );
 
-    loadDealerStock();
-  </script>
+  const data = await res.json();
+
+  allVehicles = data;
+  render(allVehicles);
+
+  if(data.length){
+    document.getElementById("dealerPhone").textContent =
+      "Phone: " + data[0].phone;
+  }
+}
+
+/* SEARCH TOGGLE */
+document.getElementById("searchBtn").onclick = () => {
+  document.getElementById("searchPanel").classList.toggle("hidden");
+};
+
+document.getElementById("searchInput").oninput = (e)=>{
+  filter(e.target.value);
+};
+
+load();
+</script>
 
 </body>
 </html>
