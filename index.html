@@ -85,7 +85,7 @@
     }
 
     .search-panel {
-      max-width: 620px;
+      max-width: 900px;
       margin: 22px auto 0;
     }
 
@@ -94,14 +94,16 @@
     }
 
     .search-row {
-      display: flex;
+      display: grid;
+      grid-template-columns: 1.5fr 1fr auto;
       gap: 10px;
       align-items: center;
       justify-content: center;
     }
 
-    .search-input {
-      flex: 1;
+    .search-input,
+    .search-select {
+      width: 100%;
       min-width: 0;
       padding: 12px 14px;
       border-radius: 12px;
@@ -245,10 +247,11 @@
       }
 
       .search-row {
-        flex-direction: column;
+        grid-template-columns: 1fr;
       }
 
       .search-input,
+      .search-select,
       .search-clear-btn {
         width: 100%;
       }
@@ -305,6 +308,20 @@
             class="search-input"
             placeholder="Search by title, dealer, location, year..."
           />
+
+          <select id="provinceFilter" class="search-select">
+            <option value="">All Provinces</option>
+            <option value="Gauteng">Gauteng</option>
+            <option value="Western Cape">Western Cape</option>
+            <option value="KwaZulu-Natal">KwaZulu-Natal</option>
+            <option value="Eastern Cape">Eastern Cape</option>
+            <option value="Free State">Free State</option>
+            <option value="Limpopo">Limpopo</option>
+            <option value="Mpumalanga">Mpumalanga</option>
+            <option value="North West">North West</option>
+            <option value="Northern Cape">Northern Cape</option>
+          </select>
+
           <button type="button" id="clearSearchBtn" class="search-clear-btn">Clear</button>
         </div>
       </div>
@@ -404,16 +421,13 @@
       });
     }
 
-    function filterVehicles(searchText) {
-      const text = searchText.trim().toLowerCase();
-
-      if (!text) {
-        renderVehicles(allVehicles);
-        return;
-      }
+    function filterVehicles() {
+      const text = document.getElementById("vehicleSearch").value.trim().toLowerCase();
+      const province = document.getElementById("provinceFilter").value.trim().toLowerCase();
 
       const filtered = allVehicles.filter(v => {
         const dealerName = v.dealer || v.dealer_name || "";
+
         const haystack = [
           v.title || "",
           v.year || "",
@@ -422,7 +436,13 @@
           v.price || ""
         ].join(" ").toLowerCase();
 
-        return haystack.includes(text);
+        const matchesText = haystack.includes(text);
+
+        const matchesProvince = province
+          ? String(v.location || "").toLowerCase().includes(province)
+          : true;
+
+        return matchesText && matchesProvince;
       });
 
       renderVehicles(filtered);
@@ -461,6 +481,7 @@
     const searchToggleBtn = document.getElementById("searchToggleBtn");
     const searchPanel = document.getElementById("searchPanel");
     const vehicleSearch = document.getElementById("vehicleSearch");
+    const provinceFilter = document.getElementById("provinceFilter");
     const clearSearchBtn = document.getElementById("clearSearchBtn");
 
     searchToggleBtn.addEventListener("click", function () {
@@ -471,14 +492,14 @@
       }
     });
 
+    vehicleSearch.addEventListener("input", filterVehicles);
+    provinceFilter.addEventListener("change", filterVehicles);
+
     clearSearchBtn.addEventListener("click", function () {
       vehicleSearch.value = "";
-      filterVehicles("");
+      provinceFilter.value = "";
+      renderVehicles(allVehicles);
       vehicleSearch.focus();
-    });
-
-    vehicleSearch.addEventListener("input", function () {
-      filterVehicles(vehicleSearch.value);
     });
 
     loadVehicles();
