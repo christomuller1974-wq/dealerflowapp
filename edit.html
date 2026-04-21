@@ -149,7 +149,7 @@
       font-size: 13px;
       color: #475569;
       margin-top: 4px;
-      line-height: 1.5;
+      line-height: 1.55;
     }
 
     .preview-grid {
@@ -291,7 +291,7 @@
 
   <div class="hero">
     <h1>Edit Vehicle</h1>
-    <p>Ultra image manager with drag-and-drop sorting</p>
+    <p>Ultra image manager with validation and compression</p>
   </div>
 
   <div class="container">
@@ -310,7 +310,10 @@
         <label for="vehiclePhotos">Add More Vehicle Photos</label>
         <input type="file" id="vehiclePhotos" multiple accept="image/*" />
         <div class="manager-note">
-          Drag cards to reorder them. The first image is the main image. New uploads are compressed before upload.
+          Maximum <strong>10 images total</strong> per vehicle.<br>
+          Maximum <strong>8MB per image</strong>.<br>
+          Only image files are allowed.<br>
+          Drag cards to reorder them. The first image is the main image.
         </div>
       </div>
 
@@ -384,6 +387,10 @@
     const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
     const client = window.supabase.createClient(supabaseUrl, supabaseKey);
     const STORAGE_BUCKET = "vehicle-images";
+
+    const MAX_IMAGES_PER_VEHICLE = 10;
+    const MAX_FILE_SIZE_MB = 8;
+    const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
 
     let currentUser = null;
     let vehicleId = null;
@@ -461,6 +468,35 @@
       if (item && item.isNew && item.url && item.url.startsWith("blob:")) {
         URL.revokeObjectURL(item.url);
       }
+    }
+
+    function validateNewFiles(files) {
+      if (!files.length) {
+        return { ok: true, message: "" };
+      }
+
+      const currentCount = imageList.length;
+      if (currentCount + files.length > MAX_IMAGES_PER_VEHICLE) {
+        return {
+          ok: false,
+          message: "Maximum " + MAX_IMAGES_PER_VEHICLE + " images allowed per vehicle."
+        };
+      }
+
+      for (const file of files) {
+        if (!file.type.startsWith("image/")) {
+          return { ok: false, message: "Only image files are allowed." };
+        }
+
+        if (file.size > MAX_FILE_SIZE_BYTES) {
+          return {
+            ok: false,
+            message: "Each image must be smaller than " + MAX_FILE_SIZE_MB + "MB."
+          };
+        }
+      }
+
+      return { ok: true, message: "" };
     }
 
     function handleDragStart(index, event) {
@@ -564,6 +600,13 @@
 
       fileInput.addEventListener("change", function () {
         const files = Array.from(fileInput.files || []);
+        const validation = validateNewFiles(files);
+
+        if (!validation.ok) {
+          fileInput.value = "";
+          setStatus(validation.message);
+          return;
+        }
 
         files.forEach(file => {
           const localUrl = URL.createObjectURL(file);
@@ -576,6 +619,7 @@
 
         renderImageManager();
         fileInput.value = "";
+        setStatus("Images added successfully.");
       });
     }
 
