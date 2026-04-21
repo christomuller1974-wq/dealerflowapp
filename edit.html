@@ -149,6 +149,7 @@
       font-size: 13px;
       color: #475569;
       margin-top: 4px;
+      line-height: 1.5;
     }
 
     .preview-grid {
@@ -164,11 +165,22 @@
       border-radius: 16px;
       padding: 10px;
       box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+      transition: transform 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
     }
 
     .preview-card.main {
       border-color: #3156c7;
       box-shadow: 0 0 0 3px rgba(49, 86, 199, 0.12);
+    }
+
+    .preview-card.dragging {
+      opacity: 0.45;
+      transform: scale(0.98);
+    }
+
+    .preview-card.drag-over {
+      border-color: #0f766e;
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.14);
     }
 
     .preview-card img {
@@ -179,6 +191,7 @@
       background: #e5e7eb;
       display: block;
       margin-bottom: 10px;
+      pointer-events: none;
     }
 
     .img-label {
@@ -187,6 +200,23 @@
       color: #334155;
       margin-bottom: 8px;
       text-align: center;
+    }
+
+    .drag-handle {
+      background: #111827;
+      color: white;
+      border-radius: 10px;
+      padding: 8px 10px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      cursor: grab;
+      user-select: none;
+    }
+
+    .drag-handle:active {
+      cursor: grabbing;
     }
 
     .img-actions {
@@ -261,7 +291,7 @@
 
   <div class="hero">
     <h1>Edit Vehicle</h1>
-    <p>Ultra image manager with compression</p>
+    <p>Ultra image manager with drag-and-drop sorting</p>
   </div>
 
   <div class="container">
@@ -280,7 +310,7 @@
         <label for="vehiclePhotos">Add More Vehicle Photos</label>
         <input type="file" id="vehiclePhotos" multiple accept="image/*" />
         <div class="manager-note">
-          First image is the main image. Images are compressed before upload.
+          Drag cards to reorder them. The first image is the main image. New uploads are compressed before upload.
         </div>
       </div>
 
@@ -360,6 +390,7 @@
     let currentVehicle = null;
     let originalStorageUrls = [];
     let imageList = [];
+    let draggedIndex = null;
 
     function setStatus(message) {
       document.getElementById("status").textContent = message;
@@ -432,6 +463,48 @@
       }
     }
 
+    function handleDragStart(index, event) {
+      draggedIndex = index;
+      event.dataTransfer.effectAllowed = "move";
+      event.dataTransfer.setData("text/plain", String(index));
+      event.currentTarget.classList.add("dragging");
+    }
+
+    function handleDragEnd(event) {
+      draggedIndex = null;
+      document.querySelectorAll(".preview-card").forEach(card => {
+        card.classList.remove("dragging", "drag-over");
+      });
+    }
+
+    function handleDragOver(index, event) {
+      event.preventDefault();
+      event.dataTransfer.dropEffect = "move";
+      event.currentTarget.classList.add("drag-over");
+    }
+
+    function handleDragLeave(event) {
+      event.currentTarget.classList.remove("drag-over");
+    }
+
+    function handleDrop(targetIndex, event) {
+      event.preventDefault();
+      event.currentTarget.classList.remove("drag-over");
+
+      let sourceIndex = draggedIndex;
+      if (sourceIndex === null) {
+        sourceIndex = parseInt(event.dataTransfer.getData("text/plain"), 10);
+      }
+
+      if (isNaN(sourceIndex) || sourceIndex === targetIndex) return;
+      if (sourceIndex < 0 || sourceIndex >= imageList.length) return;
+      if (targetIndex < 0 || targetIndex >= imageList.length) return;
+
+      const moved = imageList.splice(sourceIndex, 1)[0];
+      imageList.splice(targetIndex, 0, moved);
+      renderImageManager();
+    }
+
     function renderImageManager() {
       const preview = document.getElementById("photoPreview");
       preview.innerHTML = "";
@@ -448,6 +521,13 @@
       imageList.forEach((item, index) => {
         const card = document.createElement("div");
         card.className = "preview-card" + (index === 0 ? " main" : "");
+        card.setAttribute("draggable", "true");
+
+        card.addEventListener("dragstart", (event) => handleDragStart(index, event));
+        card.addEventListener("dragend", handleDragEnd);
+        card.addEventListener("dragover", (event) => handleDragOver(index, event));
+        card.addEventListener("dragleave", handleDragLeave);
+        card.addEventListener("drop", (event) => handleDrop(index, event));
 
         const mainButtonHtml = index === 0
           ? `<button type="button" class="small-btn btn-disabled">Main image</button>`
@@ -462,6 +542,7 @@
           : `<button type="button" class="small-btn btn-move" onclick="moveRight(${index})">Move Right</button>`;
 
         card.innerHTML = `
+          <div class="drag-handle">Drag to reorder</div>
           <img src="${item.url}" alt="Vehicle image ${index + 1}">
           <div class="img-label">${index === 0 ? "Main image" : "Extra image " + index}</div>
           <div class="img-actions">
