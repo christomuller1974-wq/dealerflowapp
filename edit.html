@@ -254,10 +254,6 @@
       .two-col {
         grid-template-columns: 1fr;
       }
-
-      .action-row {
-        grid-template-columns: 1fr 1fr;
-      }
     }
   </style>
 </head>
@@ -265,7 +261,7 @@
 
   <div class="hero">
     <h1>Edit Vehicle</h1>
-    <p>Professional image manager and vehicle editor</p>
+    <p>Ultra image manager and vehicle editor</p>
   </div>
 
   <div class="container">
@@ -284,7 +280,7 @@
         <label for="vehiclePhotos">Add More Vehicle Photos</label>
         <input type="file" id="vehiclePhotos" multiple accept="image/*" />
         <div class="manager-note">
-          First image is the main image. Use Set as Main or Move Left/Right to change the order.
+          First image is the main image. Removed old images are also removed from Storage when possible.
         </div>
       </div>
 
@@ -357,12 +353,12 @@
     const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
     const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
     const client = window.supabase.createClient(supabaseUrl, supabaseKey);
+    const STORAGE_BUCKET = "vehicle-images";
 
     let currentUser = null;
     let vehicleId = null;
     let currentVehicle = null;
-
-    // display order; first item is main image
+    let originalStorageUrls = [];
     let imageList = [];
 
     function setStatus(message) {
@@ -428,6 +424,12 @@
       }
 
       return arr;
+    }
+
+    function revokeBlobIfNeeded(item) {
+      if (item && item.isNew && item.url && item.url.startsWith("blob:")) {
+        URL.revokeObjectURL(item.url);
+      }
     }
 
     function renderImageManager() {
@@ -521,14 +523,26 @@
 
     function removeImage(index) {
       if (index < 0 || index >= imageList.length) return;
-
       const removed = imageList[index];
-      if (removed.isNew && removed.url.startsWith("blob:")) {
-        URL.revokeObjectURL(removed.url);
-      }
-
+      revokeBlobIfNeeded(removed);
       imageList.splice(index, 1);
       renderImageManager();
+    }
+
+    function extractStoragePath(publicUrl) {
+      try {
+        if (!publicUrl || typeof publicUrl !== "string") return null;
+        const marker = `/storage/v1/object/public/${STORAGE_BUCKET}/`;
+        const idx = publicUrl.indexOf(marker);
+        if (idx === -1) return null;
+        return publicUrl.substring(idx + marker.length);
+      } catch {
+        return null;
+      }
+    }
+
+    function getStorageBackedUrls(urls) {
+      return urls.filter(url => extractStoragePath(url));
     }
 
     async function loadVehicle() {
@@ -559,6 +573,7 @@
       document.getElementById("featured").checked = !!data.featured;
 
       imageList = parseImages(data.image, data.images);
+      originalStorageUrls = getStorageBackedUrls(imageList.map(item => item.url));
       renderImageManager();
 
       return true;
@@ -571,13 +586,13 @@
       const filePath = "vehicles/" + fileName;
 
       const { error } = await client.storage
-        .from("vehicle-images")
+        .from(STORAGE_BUCKET)
         .upload(filePath, file);
 
       if (error) throw error;
 
       const { data } = client.storage
-        .from("vehicle-images")
+        .from(STORAGE_BUCKET)
         .getPublicUrl(filePath);
 
       return data.publicUrl;
@@ -596,6 +611,26 @@
       }
 
       return finalUrls;
+    }
+
+    function getDeletedStoragePaths(finalUrls) {
+      const finalSet = new Set(getStorageBackedUrls(finalUrls));
+      const deleted = originalStorageUrls.filter(url => !finalSet.has(url));
+      return deleted
+        .map(url => extractStoragePath(url))
+        .filter(Boolean);
+    }
+
+    async function deleteRemovedStorageFiles(paths) {
+      if (!paths.length) return;
+
+      const { error } = await client.storage
+        .from(STORAGE_BUCKET)
+        .remove(paths);
+
+      if (error) {
+        console.log("Storage remove warning:", error);
+      }
     }
 
     async function saveVehicle() {
@@ -632,7 +667,6 @@
         const extraImages = finalUrls.slice(1);
 
         setStatus("Updating vehicle...");
-
         const { error } = await client
           .from("vehicles")
           .update({
@@ -657,12 +691,19 @@
           return;
         }
 
+        setStatus("Removing deleted images from storage...");
+        const deletedPaths = getDeletedStoragePaths(finalUrls);
+        await deleteRemovedStorageFiles(deletedPaths);
+
+        imageList.forEach(item => revokeBlobIfNeeded(item));
+
         imageList = finalUrls.map(url => ({
           url,
           isNew: false,
           file: null
         }));
 
+        originalStorageUrls = getStorageBackedUrls(finalUrls);
         renderImageManager();
         setStatus("Vehicle updated successfully.");
       } catch (err) {
@@ -696,6 +737,11 @@
 
       setStatus("Edit page ready.");
     }
+
+    window.makeMain = makeMain;
+    window.moveLeft = moveLeft;
+    window.moveRight = moveRight;
+    window.removeImage = removeImage;
 
     startPage();
   </script>
