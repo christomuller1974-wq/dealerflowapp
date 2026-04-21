@@ -20,9 +20,15 @@
     .hero {
       background: linear-gradient(135deg, #3156c7, #1f3f9e);
       color: white;
-      text-align: center;
       padding: 42px 18px 34px;
       position: relative;
+    }
+
+    .hero-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+      text-align: center;
     }
 
     .hero h1 {
@@ -32,7 +38,7 @@
       letter-spacing: -1px;
     }
 
-    .hero p {
+    .hero-tagline {
       margin: 14px auto 0;
       max-width: 760px;
       font-size: 24px;
@@ -40,45 +46,80 @@
       font-weight: 500;
     }
 
-    .hero .sub {
+    .hero-sub {
       margin-top: 10px;
       font-size: 15px;
       opacity: 0.95;
     }
 
-    .quick-buttons {
-      position: fixed;
-      right: 14px;
-      top: 180px;
-      z-index: 999;
+    .hero-buttons {
+      position: absolute;
+      top: 0;
+      right: 0;
       display: flex;
-      flex-direction: column;
       gap: 10px;
+      align-items: center;
+      z-index: 20;
     }
 
-    .quick-buttons a {
+    .hero-btn {
       text-decoration: none;
       color: white;
-      background: #1f2937;
-      padding: 10px 12px;
+      border: none;
       border-radius: 999px;
+      padding: 10px 14px;
       font-size: 12px;
       font-weight: 700;
       box-shadow: 0 4px 10px rgba(0,0,0,0.18);
       text-align: center;
-      min-width: 110px;
+      min-width: 118px;
+      cursor: pointer;
     }
 
-    .quick-buttons a.blue {
-      background: #3156c7;
+    .hero-btn.dark {
+      background: #111827;
     }
 
-    .quick-buttons a.green {
+    .hero-btn.green {
       background: #16a34a;
     }
 
-    .quick-buttons a.dark {
+    .search-panel {
+      max-width: 620px;
+      margin: 22px auto 0;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .search-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .search-input {
+      flex: 1;
+      min-width: 0;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: none;
+      outline: none;
+      font-size: 15px;
+      color: #111827;
+    }
+
+    .search-clear-btn {
+      border: none;
+      border-radius: 12px;
       background: #111827;
+      color: white;
+      padding: 12px 16px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
     }
 
     .section-bar {
@@ -183,37 +224,46 @@
     }
 
     @media (max-width: 900px) {
+      .hero {
+        padding-top: 88px;
+      }
+
       .hero h1 {
         font-size: 44px;
       }
 
-      .hero p {
+      .hero-tagline {
         font-size: 20px;
       }
 
-      .quick-buttons {
-        right: 10px;
-        top: auto;
-        bottom: 14px;
+      .hero-buttons {
+        top: -8px;
+        right: 0;
+        left: 0;
+        justify-content: center;
+        flex-wrap: wrap;
       }
 
-      .quick-buttons a {
-        min-width: 92px;
-        font-size: 11px;
-        padding: 9px 10px;
+      .search-row {
+        flex-direction: column;
+      }
+
+      .search-input,
+      .search-clear-btn {
+        width: 100%;
       }
     }
 
     @media (max-width: 640px) {
       .hero {
-        padding: 34px 14px 28px;
+        padding: 82px 14px 28px;
       }
 
       .hero h1 {
         font-size: 38px;
       }
 
-      .hero p {
+      .hero-tagline {
         font-size: 18px;
       }
 
@@ -226,12 +276,10 @@
         height: 220px;
       }
 
-      .quick-buttons {
-        gap: 8px;
-      }
-
-      .quick-buttons a {
-        min-width: 86px;
+      .hero-btn {
+        min-width: 110px;
+        font-size: 11px;
+        padding: 9px 12px;
       }
     }
   </style>
@@ -239,15 +287,28 @@
 <body>
 
   <div class="hero">
-    <h1>DealerFlow</h1>
-    <p>Drive your dream. Find the right vehicle fast.</p>
-    <div class="sub">Trusted listings. Quick contact. Serious deals.</div>
-  </div>
+    <div class="hero-inner">
+      <div class="hero-buttons">
+        <a href="dealer-admin.html" class="hero-btn dark">Dealer Login</a>
+        <button id="searchToggleBtn" class="hero-btn green" type="button">Search Vehicle</button>
+      </div>
 
-  <div class="quick-buttons">
-    <a href="index.html" class="blue">Home</a>
-    <a href="dealer-admin.html" class="dark">Dealer Login</a>
-    <a href="https://wa.me/27825744526" target="_blank" class="green">WhatsApp</a>
+      <h1>DealerFlow</h1>
+      <div class="hero-tagline">Drive your dream. Find the right vehicle fast.</div>
+      <div class="hero-sub">Trusted listings. Quick contact. Serious deals.</div>
+
+      <div id="searchPanel" class="search-panel hidden">
+        <div class="search-row">
+          <input
+            type="text"
+            id="vehicleSearch"
+            class="search-input"
+            placeholder="Search by title, dealer, location, year..."
+          />
+          <button type="button" id="clearSearchBtn" class="search-clear-btn">Clear</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="section-bar">Browse our latest stock</div>
@@ -257,6 +318,8 @@
   <script>
     const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
     const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
+
+    let allVehicles = [];
 
     function getMainImage(vehicle) {
       if (vehicle.image && typeof vehicle.image === "string" && vehicle.image.trim() !== "") {
@@ -298,6 +361,73 @@
       return "dealer.html?dealer=" + encodeURIComponent(dealerName);
     }
 
+    function renderVehicles(vehicles) {
+      const container = document.getElementById("vehicle-list");
+      container.innerHTML = "";
+
+      if (!vehicles || !vehicles.length) {
+        container.innerHTML = '<div class="empty">No vehicles found.</div>';
+        return;
+      }
+
+      vehicles.forEach(v => {
+        const mainImage = getMainImage(v);
+        const dealerName = v.dealer || v.dealer_name || "Dealer";
+        const card = document.createElement("div");
+        card.className = "vehicle-card";
+
+        card.innerHTML = `
+          <img
+            src="${mainImage}"
+            class="vehicle-thumb"
+            alt="${v.title || "Vehicle"}"
+            onerror="this.src='https://via.placeholder.com/400x250?text=No+Image'"
+          >
+
+          <div class="vehicle-title">${v.title || "No Title"}</div>
+
+          <div class="vehicle-meta">Year: ${v.year || "-"}</div>
+          <div class="vehicle-meta">Location: ${v.location || "-"}</div>
+          <div class="vehicle-meta">Dealer: ${dealerName}</div>
+
+          <div class="price">R${v.price || 0}</div>
+
+          <div class="button-stack">
+            <a href="details.html?id=${v.id}" class="btn btn-blue">View Details</a>
+            <a href="${dealerStockLink(v)}" class="btn btn-green">Dealer Stock</a>
+            <a href="${callLink(v.phone)}" class="btn btn-dark">Call Dealer</a>
+            <a href="${whatsappLink(v.phone, v.title)}" target="_blank" class="btn btn-whatsapp">WhatsApp</a>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    function filterVehicles(searchText) {
+      const text = searchText.trim().toLowerCase();
+
+      if (!text) {
+        renderVehicles(allVehicles);
+        return;
+      }
+
+      const filtered = allVehicles.filter(v => {
+        const dealerName = v.dealer || v.dealer_name || "";
+        const haystack = [
+          v.title || "",
+          v.year || "",
+          v.location || "",
+          dealerName,
+          v.price || ""
+        ].join(" ").toLowerCase();
+
+        return haystack.includes(text);
+      });
+
+      renderVehicles(filtered);
+    }
+
     async function loadVehicles() {
       try {
         const res = await fetch(
@@ -311,46 +441,15 @@
         );
 
         const vehicles = await res.json();
-        const container = document.getElementById("vehicle-list");
-        container.innerHTML = "";
 
-        if (!vehicles || !vehicles.length) {
-          container.innerHTML = '<div class="empty">No vehicles available yet.</div>';
+        if (!Array.isArray(vehicles)) {
+          document.getElementById("vehicle-list").innerHTML =
+            '<div class="empty">Could not load vehicles.</div>';
           return;
         }
 
-        vehicles.forEach(v => {
-          const mainImage = getMainImage(v);
-          const dealerName = v.dealer || v.dealer_name || "Dealer";
-          const card = document.createElement("div");
-          card.className = "vehicle-card";
-
-          card.innerHTML = `
-            <img
-              src="${mainImage}"
-              class="vehicle-thumb"
-              alt="${v.title || "Vehicle"}"
-              onerror="this.src='https://via.placeholder.com/400x250?text=No+Image'"
-            >
-
-            <div class="vehicle-title">${v.title || "No Title"}</div>
-
-            <div class="vehicle-meta">Year: ${v.year || "-"}</div>
-            <div class="vehicle-meta">Location: ${v.location || "-"}</div>
-            <div class="vehicle-meta">Dealer: ${dealerName}</div>
-
-            <div class="price">R${v.price || 0}</div>
-
-            <div class="button-stack">
-              <a href="details.html?id=${v.id}" class="btn btn-blue">View Details</a>
-              <a href="${dealerStockLink(v)}" class="btn btn-green">Dealer Stock</a>
-              <a href="${callLink(v.phone)}" class="btn btn-dark">Call Dealer</a>
-              <a href="${whatsappLink(v.phone, v.title)}" target="_blank" class="btn btn-whatsapp">WhatsApp</a>
-            </div>
-          `;
-
-          container.appendChild(card);
-        });
+        allVehicles = vehicles;
+        renderVehicles(allVehicles);
 
       } catch (err) {
         console.error("Error loading vehicles:", err);
@@ -358,6 +457,29 @@
           '<div class="empty">Could not load vehicles.</div>';
       }
     }
+
+    const searchToggleBtn = document.getElementById("searchToggleBtn");
+    const searchPanel = document.getElementById("searchPanel");
+    const vehicleSearch = document.getElementById("vehicleSearch");
+    const clearSearchBtn = document.getElementById("clearSearchBtn");
+
+    searchToggleBtn.addEventListener("click", function () {
+      searchPanel.classList.toggle("hidden");
+
+      if (!searchPanel.classList.contains("hidden")) {
+        setTimeout(() => vehicleSearch.focus(), 100);
+      }
+    });
+
+    clearSearchBtn.addEventListener("click", function () {
+      vehicleSearch.value = "";
+      filterVehicles("");
+      vehicleSearch.focus();
+    });
+
+    vehicleSearch.addEventListener("input", function () {
+      filterVehicles(vehicleSearch.value);
+    });
 
     loadVehicles();
   </script>
