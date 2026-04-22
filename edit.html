@@ -324,11 +324,6 @@
         </div>
       </div>
 
-      <div class="field">
-        <label for="title">Vehicle Title</label>
-        <input type="text" id="title" />
-      </div>
-
       <div class="two-col">
         <div class="field">
           <label for="make">Make</label>
@@ -715,7 +710,6 @@
       const profile = await loadDealerProfile();
       currentVehicle = data;
 
-      document.getElementById("title").value = data.title || "";
       document.getElementById("make").value = data.make || "";
       document.getElementById("model").value = data.model || "";
       document.getElementById("year").value = data.year || "";
@@ -869,7 +863,6 @@
       saveBtn.disabled = true;
 
       try {
-        const title = document.getElementById("title").value.trim();
         const make = document.getElementById("make").value.trim();
         const model = document.getElementById("model").value.trim();
         const year = document.getElementById("year").value;
@@ -881,7 +874,9 @@
         const description = document.getElementById("description").value.trim();
         const featured = document.getElementById("featured").checked;
 
-        if (!title || !make || !model || !year || !price || !mileage || !location || !dealer || !phone) {
+        const title = [year, make, model].filter(Boolean).join(" ");
+
+        if (!make || !model || !year || !price || !mileage || !location || !dealer || !phone) {
           setStatus("Please complete all required fields.");
           saveBtn.disabled = false;
           return;
