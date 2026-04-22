@@ -59,6 +59,7 @@
       font-size: 14px;
       font-weight: 700;
       cursor: pointer;
+      display: inline-block;
     }
 
     .top-btn.blue {
@@ -197,7 +198,7 @@
     <div class="top-actions">
       <a href="index.html" class="top-btn">Back to Website</a>
       <a href="upload6.html" class="top-btn blue">Add Vehicle</a>
-      <a href="super-admin.html" class="top-btn green">Super Admin</a>
+      <a href="super-admin.html" id="superAdminBtn" class="top-btn green" style="display:none;">Super Admin</a>
       <button class="top-btn" onclick="logout()">Logout</button>
     </div>
 
@@ -211,6 +212,8 @@
     const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
     const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
     const client = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+    const MAIN_ADMIN_EMAIL = "yourmainemail@example.com";
 
     let currentUser = null;
     let currentProfile = null;
@@ -261,6 +264,19 @@
 
       currentProfile = data;
       return true;
+    }
+
+    async function showSuperAdminButtonIfAllowed() {
+      const btn = document.getElementById("superAdminBtn");
+      if (!btn || !currentUser) return;
+
+      const email = (currentUser.email || "").toLowerCase().trim();
+
+      if (email === MAIN_ADMIN_EMAIL.toLowerCase()) {
+        btn.style.display = "inline-block";
+      } else {
+        btn.style.display = "none";
+      }
     }
 
     async function loadVehicles() {
@@ -362,6 +378,7 @@
       const okProfile = await loadProfile();
       if (!okProfile) return;
 
+      await showSuperAdminButtonIfAllowed();
       await loadVehicles();
     }
 
