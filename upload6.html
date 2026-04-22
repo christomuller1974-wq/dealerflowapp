@@ -10,15 +10,26 @@
 <style>
 body {
   margin:0;
-  font-family: Arial;
+  font-family: Arial, sans-serif;
   background:#dfe3ea;
+  color:#111827;
 }
 
 .hero {
   background:#3156c7;
   color:white;
   text-align:center;
-  padding:40px;
+  padding:40px 20px;
+}
+
+.hero h1 {
+  margin:0;
+  font-size:42px;
+}
+
+.hero p {
+  margin:10px 0 0;
+  font-size:16px;
 }
 
 .container {
@@ -27,10 +38,33 @@ body {
   padding:20px;
 }
 
+.top-actions {
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:15px;
+}
+
+.top-btn {
+  display:inline-block;
+  text-decoration:none;
+  background:#1f2937;
+  color:white;
+  padding:10px 14px;
+  border-radius:10px;
+  font-size:13px;
+  font-weight:bold;
+}
+
+.top-btn.blue {
+  background:#3156c7;
+}
+
 .card {
   background:white;
   padding:20px;
   border-radius:14px;
+  box-shadow:0 2px 10px rgba(0,0,0,0.08);
 }
 
 .status {
@@ -39,14 +73,40 @@ body {
   border-radius:10px;
   margin-bottom:15px;
   font-weight:bold;
+  box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+
+.field {
+  margin-bottom:14px;
+}
+
+.field label {
+  display:block;
+  margin-bottom:6px;
+  font-size:13px;
+  font-weight:bold;
+  color:#334155;
 }
 
 input, select, textarea {
   width:100%;
   padding:12px;
-  margin-bottom:10px;
   border-radius:8px;
   border:1px solid #ccc;
+  font-size:14px;
+  font-family:Arial, sans-serif;
+  box-sizing:border-box;
+}
+
+textarea {
+  min-height:100px;
+  resize:vertical;
+}
+
+.two-col {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
 }
 
 button {
@@ -58,6 +118,12 @@ button {
   font-weight:bold;
   width:100%;
   cursor:pointer;
+  font-size:14px;
+}
+
+button:disabled {
+  opacity:0.65;
+  cursor:not-allowed;
 }
 
 .preview-grid {
@@ -73,7 +139,19 @@ button {
 
 .preview-item img {
   width:100%;
+  height:100px;
+  object-fit:cover;
   border-radius:10px;
+  display:block;
+  background:#e5e7eb;
+}
+
+.preview-label {
+  text-align:center;
+  font-size:12px;
+  font-weight:bold;
+  margin-top:6px;
+  color:#334155;
 }
 
 .remove-btn {
@@ -87,10 +165,33 @@ button {
   width:22px;
   height:22px;
   cursor:pointer;
+  padding:0;
+  line-height:22px;
 }
 
 .dragging {
   opacity:0.4;
+}
+
+.help-box {
+  background:#eef2f7;
+  border:1px solid #d1d5db;
+  border-radius:12px;
+  padding:12px;
+  font-size:13px;
+  color:#334155;
+  line-height:1.5;
+  margin-top:8px;
+}
+
+@media (max-width: 700px) {
+  .two-col {
+    grid-template-columns:1fr;
+  }
+
+  .hero h1 {
+    font-size:34px;
+  }
 }
 </style>
 </head>
@@ -99,88 +200,150 @@ button {
 
 <div class="hero">
   <h1>DealerFlow Upload</h1>
+  <p>Add vehicles to your stock in minutes</p>
 </div>
 
 <div class="container">
 
-<div id="status" class="status">Loading...</div>
+  <div class="top-actions">
+    <a href="dealer-admin.html" class="top-btn">Back to Dashboard</a>
+    <a href="index.html" class="top-btn blue">Website</a>
+  </div>
 
-<div class="card">
+  <div id="status" class="status">Loading...</div>
 
-<input type="file" id="photos" multiple />
+  <div class="card">
 
-<div id="preview" class="preview-grid"></div>
+    <div class="field">
+      <label for="photos">Vehicle Photos</label>
+      <input type="file" id="photos" multiple accept="image/*">
+      <div class="help-box">
+        Maximum 10 images per vehicle.<br>
+        Maximum 8MB per image.<br>
+        Only image files are allowed.<br>
+        Drag images to reorder them. The first image becomes the main image.
+      </div>
+    </div>
 
-<input id="title" placeholder="Vehicle Title">
-<select id="year"></select>
-<input id="price" placeholder="Price">
-<input id="mileage" placeholder="Mileage">
-<input id="location" placeholder="Location">
-<input id="dealer" placeholder="Dealer">
-<input id="phone" placeholder="Phone">
-<textarea id="description"></textarea>
+    <div id="preview" class="preview-grid"></div>
 
-<button onclick="saveVehicle()">Save Vehicle</button>
+    <div class="field">
+      <label for="title">Vehicle Title</label>
+      <input id="title" placeholder="Vehicle Title">
+    </div>
 
-</div>
+    <div class="two-col">
+      <div class="field">
+        <label for="year">Year</label>
+        <select id="year"></select>
+      </div>
+      <div class="field">
+        <label for="price">Price</label>
+        <input id="price" placeholder="Price">
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="field">
+        <label for="mileage">Mileage</label>
+        <input id="mileage" placeholder="Mileage">
+      </div>
+      <div class="field">
+        <label for="location">Location</label>
+        <input id="location" placeholder="Town, Province">
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="field">
+        <label for="dealer">Dealer</label>
+        <input id="dealer" placeholder="Dealer">
+      </div>
+      <div class="field">
+        <label for="phone">Phone</label>
+        <input id="phone" placeholder="Phone">
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="description">Description</label>
+      <textarea id="description" placeholder="Vehicle description"></textarea>
+    </div>
+
+    <button onclick="saveVehicle()" id="saveBtn">Save Vehicle</button>
+
+  </div>
 </div>
 
 <script>
-
 const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
 const client = supabase.createClient(supabaseUrl, supabaseKey);
 
+const MAX_VEHICLES = 40;
+const MAX_IMAGES = 10;
+const MAX_FILE_SIZE = 8 * 1024 * 1024;
+
 let files = [];
 let user = null;
+let profile = null;
 
-const MAX = 40;
-
-function setStatus(t){
+function setStatus(t) {
   document.getElementById("status").innerText = t;
 }
 
-function initYears(){
-  let y = new Date().getFullYear();
-  let select = document.getElementById("year");
-  for(let i=y;i>=1980;i--){
-    let o=document.createElement("option");
-    o.value=i;o.text=i;
+function initYears() {
+  const y = new Date().getFullYear();
+  const select = document.getElementById("year");
+  select.innerHTML = '<option value="">Select year</option>';
+
+  for (let i = y; i >= 1980; i--) {
+    let o = document.createElement("option");
+    o.value = i;
+    o.text = i;
     select.appendChild(o);
   }
 }
 
-document.getElementById("photos").addEventListener("change", e=>{
-  files = Array.from(e.target.files);
-  render();
-});
+function render() {
+  let preview = document.getElementById("preview");
+  preview.innerHTML = "";
 
-function render(){
-  let preview=document.getElementById("preview");
-  preview.innerHTML="";
+  if (!files.length) {
+    preview.innerHTML = `
+      <div class="preview-item">
+        <div class="preview-label">No photos selected yet.</div>
+      </div>
+    `;
+    return;
+  }
 
-  files.forEach((f,i)=>{
-    let div=document.createElement("div");
-    div.className="preview-item";
-    div.draggable=true;
+  files.forEach((f, i) => {
+    let div = document.createElement("div");
+    div.className = "preview-item";
+    div.draggable = true;
 
-    div.innerHTML=`
-      <img src="${URL.createObjectURL(f)}">
-      <button class="remove-btn" onclick="removeImg(${i})">x</button>
+    div.innerHTML = `
+      <img src="${URL.createObjectURL(f)}" alt="Preview ${i + 1}">
+      <button class="remove-btn" type="button" onclick="removeImg(${i})">×</button>
+      <div class="preview-label">${i === 0 ? "Main image" : "Extra image"}</div>
     `;
 
-    div.addEventListener("dragstart", ()=>div.classList.add("dragging"));
-    div.addEventListener("dragend", ()=>div.classList.remove("dragging"));
+    div.addEventListener("dragstart", () => div.classList.add("dragging"));
+    div.addEventListener("dragend", () => div.classList.remove("dragging"));
 
-    div.addEventListener("dragover", e=>{
+    div.addEventListener("dragover", e => {
       e.preventDefault();
       const dragging = document.querySelector(".dragging");
-      if(dragging !== div){
-        let nodes=[...preview.children];
+      if (dragging !== div) {
+        let nodes = [...preview.children];
         let dragIndex = nodes.indexOf(dragging);
         let dropIndex = nodes.indexOf(div);
-        files.splice(dropIndex,0,files.splice(dragIndex,1)[0]);
-        render();
+
+        if (dragIndex !== -1 && dropIndex !== -1) {
+          files.splice(dropIndex, 0, files.splice(dragIndex, 1)[0]);
+          render();
+        }
       }
     });
 
@@ -188,111 +351,279 @@ function render(){
   });
 }
 
-function removeImg(i){
-  files.splice(i,1);
+function removeImg(i) {
+  files.splice(i, 1);
   render();
 }
 
-async function compress(file){
-  return new Promise(res=>{
-    let reader=new FileReader();
-    reader.onload=e=>{
-      let img=new Image();
-      img.onload=()=>{
-        let canvas=document.createElement("canvas");
-        let ctx=canvas.getContext("2d");
+function validateFiles(selected) {
+  if (!selected.length) {
+    return { ok: false, message: "Please choose at least one image." };
+  }
 
-        let w=1600;
-        let h=(img.height/img.width)*w;
+  if (selected.length > MAX_IMAGES) {
+    return { ok: false, message: "Maximum " + MAX_IMAGES + " images allowed per vehicle." };
+  }
 
-        canvas.width=w;
-        canvas.height=h;
-        ctx.drawImage(img,0,0,w,h);
+  for (const file of selected) {
+    if (!file.type.startsWith("image/")) {
+      return { ok: false, message: "Only image files are allowed." };
+    }
 
-        canvas.toBlob(b=>{
-          res(new File([b],file.name,{type:"image/jpeg"}));
-        },"image/jpeg",0.8);
+    if (file.size > MAX_FILE_SIZE) {
+      return { ok: false, message: "Each image must be smaller than 8MB." };
+    }
+  }
+
+  return { ok: true, message: "" };
+}
+
+document.getElementById("photos").addEventListener("change", e => {
+  files = Array.from(e.target.files);
+  const validation = validateFiles(files);
+
+  if (!validation.ok) {
+    files = [];
+    document.getElementById("photos").value = "";
+    render();
+    setStatus(validation.message);
+    return;
+  }
+
+  render();
+  setStatus("Images ready to upload.");
+});
+
+async function compress(file) {
+  return new Promise((resolve, reject) => {
+    let reader = new FileReader();
+
+    reader.onload = e => {
+      let img = new Image();
+
+      img.onload = () => {
+        let canvas = document.createElement("canvas");
+        let ctx = canvas.getContext("2d");
+
+        let width = img.width;
+        let height = img.height;
+        let maxWidth = 1600;
+
+        if (width > maxWidth) {
+          height = Math.round((height / width) * maxWidth);
+          width = maxWidth;
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        ctx.drawImage(img, 0, 0, width, height);
+
+        canvas.toBlob(blob => {
+          if (!blob) {
+            reject(new Error("Compression failed"));
+            return;
+          }
+          resolve(new File([blob], file.name.replace(/\.\w+$/, "") + ".jpg", {
+            type: "image/jpeg"
+          }));
+        }, "image/jpeg", 0.8);
       };
-      img.src=e.target.result;
+
+      img.onerror = () => reject(new Error("Could not load image"));
+      img.src = e.target.result;
     };
+
+    reader.onerror = () => reject(new Error("Could not read file"));
     reader.readAsDataURL(file);
   });
 }
 
-async function upload(file){
+async function upload(file) {
   let c = await compress(file);
-  let name=Date.now()+"-"+Math.random()+".jpg";
+  let name = "vehicles/" + Date.now() + "-" + Math.random().toString(36).slice(2) + ".jpg";
 
-  await client.storage.from("vehicle-images")
-  .upload(name,c);
+  const { error } = await client.storage
+    .from("vehicle-images")
+    .upload(name, c, {
+      contentType: "image/jpeg",
+      upsert: false
+    });
 
-  let {data}=client.storage.from("vehicle-images")
-  .getPublicUrl(name);
+  if (error) {
+    throw error;
+  }
 
+  let { data } = client.storage.from("vehicle-images").getPublicUrl(name);
   return data.publicUrl;
 }
 
-async function countVehicles(){
-  let {count}=await client.from("vehicles")
-  .select("*",{count:"exact",head:true})
-  .eq("user_id",user.id);
-  return count;
+async function countVehicles() {
+  let { count, error } = await client
+    .from("vehicles")
+    .select("*", { count: "exact", head: true })
+    .eq("user_id", user.id);
+
+  if (error) {
+    throw error;
+  }
+
+  return count || 0;
 }
 
-async function saveVehicle(){
+async function loadProfile() {
+  const { data, error } = await client
+    .from("profiles")
+    .select("*")
+    .eq("id", user.id)
+    .single();
 
-  let count = await countVehicles();
-
-  if(count>=MAX){
-    setStatus("LIMIT REACHED (40)");
-    return;
-  }
-
-  setStatus("Uploading...");
-
-  let urls=[];
-
-  for(let f of files){
-    urls.push(await upload(f));
-  }
-
-  let payload={
-    title: title.value,
-    year: year.value,
-    price: price.value,
-    mileage: mileage.value,
-    location: location.value,
-    dealer: dealer.value,
-    phone: phone.value,
-    description: description.value,
-    image: urls[0],
-    images: urls.slice(1).join(","),
-    user_id: user.id
-  };
-
-  let {error}=await client.from("vehicles").insert([payload]);
-
-  if(error){
+  if (error) {
     console.log(error);
-    setStatus("ERROR saving");
-    return;
+    setStatus("Could not load dealer profile.");
+    return false;
   }
 
-  setStatus("Saved successfully!");
+  profile = data;
+
+  document.getElementById("dealer").value =
+    data.dealer_name || data.name || "";
+
+  document.getElementById("phone").value =
+    data.phone || "";
+
+  document.getElementById("location").value =
+    [data.town, data.province].filter(Boolean).join(", ") || data.location || "Kimberley";
+
+  return true;
 }
 
-async function init(){
-  let {data}=await client.auth.getUser();
-  if(!data.user){
-    location.href="login.html";
-    return;
+async function saveVehicle() {
+  const saveBtn = document.getElementById("saveBtn");
+  saveBtn.disabled = true;
+
+  try {
+    let count = await countVehicles();
+
+    if (count >= MAX_VEHICLES) {
+      setStatus("Vehicle limit reached. Maximum " + MAX_VEHICLES + " vehicles allowed.");
+      saveBtn.disabled = false;
+      return;
+    }
+
+    const title = document.getElementById("title").value.trim();
+    const year = document.getElementById("year").value;
+    const price = document.getElementById("price").value.trim();
+    const mileage = document.getElementById("mileage").value.trim();
+    const location = document.getElementById("location").value.trim();
+    const dealer = document.getElementById("dealer").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const description = document.getElementById("description").value.trim();
+
+    if (!title || !year || !price || !mileage || !location || !dealer || !phone) {
+      setStatus("Please complete all required fields.");
+      saveBtn.disabled = false;
+      return;
+    }
+
+    const validation = validateFiles(files);
+    if (!validation.ok) {
+      setStatus(validation.message);
+      saveBtn.disabled = false;
+      return;
+    }
+
+    setStatus("Uploading...");
+
+    let urls = [];
+
+    for (let i = 0; i < files.length; i++) {
+      setStatus("Compressing and uploading image " + (i + 1) + "...");
+      urls.push(await upload(files[i]));
+    }
+
+    let payload = {
+      title: title,
+      year: year,
+      price: price,
+      mileage: mileage,
+      location: location,
+      dealer: dealer,
+      phone: phone,
+      description: description,
+      image: urls[0] || "",
+      images: urls.slice(1).join(","),
+      user_id: user.id
+    };
+
+    setStatus("Saving vehicle...");
+
+    let { error } = await client.from("vehicles").insert([payload]);
+
+    if (error) {
+      console.log(error);
+
+      if (error.message && error.message.includes("Vehicle limit reached")) {
+        setStatus("Vehicle limit reached. Maximum 40 vehicles allowed.");
+      } else {
+        setStatus("Error saving vehicle.");
+      }
+
+      saveBtn.disabled = false;
+      return;
+    }
+
+    document.getElementById("title").value = "";
+    document.getElementById("year").value = "";
+    document.getElementById("price").value = "";
+    document.getElementById("mileage").value = "";
+    document.getElementById("description").value = "";
+    document.getElementById("photos").value = "";
+    files = [];
+    render();
+
+    document.getElementById("dealer").value =
+      profile?.dealer_name || profile?.name || dealer;
+
+    document.getElementById("phone").value =
+      profile?.phone || phone;
+
+    document.getElementById("location").value =
+      [profile?.town, profile?.province].filter(Boolean).join(", ") || profile?.location || location;
+
+    count = count + 1;
+    setStatus("Saved successfully! Vehicles: " + count + " / " + MAX_VEHICLES);
+  } catch (err) {
+    console.log(err);
+    setStatus("Something went wrong while saving.");
   }
-  user=data.user;
 
-  let c=await countVehicles();
-  setStatus("Vehicles: "+c+" / 40");
+  saveBtn.disabled = false;
+}
 
-  initYears();
+async function init() {
+  try {
+    let { data, error } = await client.auth.getUser();
+
+    if (error || !data.user) {
+      location.href = "login.html";
+      return;
+    }
+
+    user = data.user;
+
+    initYears();
+
+    const ok = await loadProfile();
+    if (!ok) return;
+
+    let c = await countVehicles();
+    setStatus("Upload page ready. Vehicles: " + c + " / " + MAX_VEHICLES);
+
+    render();
+  } catch (err) {
+    console.log(err);
+    setStatus("Could not load upload page.");
+  }
 }
 
 init();
