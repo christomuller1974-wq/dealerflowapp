@@ -85,7 +85,7 @@
     }
 
     .search-panel {
-      max-width: 900px;
+      max-width: 760px;
       margin: 22px auto 0;
     }
 
@@ -95,13 +95,12 @@
 
     .search-row {
       display: grid;
-      grid-template-columns: 1.5fr 1fr auto;
+      grid-template-columns: 1fr auto;
       gap: 10px;
       align-items: center;
       justify-content: center;
     }
 
-    .search-input,
     .search-select {
       width: 100%;
       min-width: 0;
@@ -111,6 +110,7 @@
       outline: none;
       font-size: 15px;
       color: #111827;
+      background: white;
     }
 
     .search-clear-btn {
@@ -250,7 +250,6 @@
         grid-template-columns: 1fr;
       }
 
-      .search-input,
       .search-select,
       .search-clear-btn {
         width: 100%;
@@ -302,13 +301,6 @@
 
       <div id="searchPanel" class="search-panel hidden">
         <div class="search-row">
-          <input
-            type="text"
-            id="vehicleSearch"
-            class="search-input"
-            placeholder="Search by title, dealer, location, year..."
-          />
-
           <select id="provinceFilter" class="search-select">
             <option value="">All Provinces</option>
             <option value="Gauteng">Gauteng</option>
@@ -422,27 +414,11 @@
     }
 
     function filterVehicles() {
-      const text = document.getElementById("vehicleSearch").value.trim().toLowerCase();
-      const province = document.getElementById("provinceFilter").value.trim().toLowerCase();
+      const province = document.getElementById("provinceFilter").value.toLowerCase();
 
       const filtered = allVehicles.filter(v => {
-        const dealerName = v.dealer || v.dealer_name || "";
-
-        const haystack = [
-          v.title || "",
-          v.year || "",
-          v.location || "",
-          dealerName,
-          v.price || ""
-        ].join(" ").toLowerCase();
-
-        const matchesText = haystack.includes(text);
-
-        const matchesProvince = province
-          ? String(v.location || "").toLowerCase().includes(province)
-          : true;
-
-        return matchesText && matchesProvince;
+        if (!province) return true;
+        return (v.location || "").toLowerCase().includes(province);
       });
 
       renderVehicles(filtered);
@@ -480,26 +456,18 @@
 
     const searchToggleBtn = document.getElementById("searchToggleBtn");
     const searchPanel = document.getElementById("searchPanel");
-    const vehicleSearch = document.getElementById("vehicleSearch");
     const provinceFilter = document.getElementById("provinceFilter");
     const clearSearchBtn = document.getElementById("clearSearchBtn");
 
     searchToggleBtn.addEventListener("click", function () {
       searchPanel.classList.toggle("hidden");
-
-      if (!searchPanel.classList.contains("hidden")) {
-        setTimeout(() => vehicleSearch.focus(), 100);
-      }
     });
 
-    vehicleSearch.addEventListener("input", filterVehicles);
     provinceFilter.addEventListener("change", filterVehicles);
 
     clearSearchBtn.addEventListener("click", function () {
-      vehicleSearch.value = "";
       provinceFilter.value = "";
       renderVehicles(allVehicles);
-      vehicleSearch.focus();
     });
 
     loadVehicles();
