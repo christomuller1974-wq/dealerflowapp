@@ -234,6 +234,18 @@ button:disabled {
 
     <div class="two-col">
       <div class="field">
+        <label for="make">Make</label>
+        <input id="make" placeholder="e.g. Toyota">
+      </div>
+
+      <div class="field">
+        <label for="model">Model</label>
+        <input id="model" placeholder="e.g. Hilux">
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="field">
         <label for="year">Year</label>
         <select id="year"></select>
       </div>
@@ -511,6 +523,8 @@ async function saveVehicle() {
     }
 
     const title = document.getElementById("title").value.trim();
+    const make = document.getElementById("make").value.trim();
+    const model = document.getElementById("model").value.trim();
     const year = document.getElementById("year").value;
     const price = document.getElementById("price").value.trim();
     const mileage = document.getElementById("mileage").value.trim();
@@ -519,7 +533,7 @@ async function saveVehicle() {
     const phone = document.getElementById("phone").value.trim();
     const description = document.getElementById("description").value.trim();
 
-    if (!title || !year || !price || !mileage || !location || !dealer || !phone) {
+    if (!title || !make || !model || !year || !price || !mileage || !location || !dealer || !phone) {
       setStatus("Please complete all required fields.");
       saveBtn.disabled = false;
       return;
@@ -543,6 +557,8 @@ async function saveVehicle() {
 
     let payload = {
       title: title,
+      make: make,
+      model: model,
       year: year,
       price: price,
       mileage: mileage,
@@ -573,6 +589,8 @@ async function saveVehicle() {
     }
 
     document.getElementById("title").value = "";
+    document.getElementById("make").value = "";
+    document.getElementById("model").value = "";
     document.getElementById("year").value = "";
     document.getElementById("price").value = "";
     document.getElementById("mileage").value = "";
@@ -627,7 +645,6 @@ async function init() {
 }
 
 init();
-
 </script>
 </body>
 </html>
