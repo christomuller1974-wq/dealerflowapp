@@ -97,7 +97,8 @@
       margin-bottom: 6px;
     }
 
-    .field input {
+    .field input,
+    .field select {
       width: 100%;
       box-sizing: border-box;
       padding: 13px;
@@ -167,8 +168,24 @@
       </div>
 
       <div class="field">
-        <label>Location</label>
-        <input type="text" id="location">
+        <label>Province</label>
+        <select id="province">
+          <option value="">Select province</option>
+          <option value="Gauteng">Gauteng</option>
+          <option value="Western Cape">Western Cape</option>
+          <option value="KwaZulu-Natal">KwaZulu-Natal</option>
+          <option value="Eastern Cape">Eastern Cape</option>
+          <option value="Free State">Free State</option>
+          <option value="Limpopo">Limpopo</option>
+          <option value="Mpumalanga">Mpumalanga</option>
+          <option value="North West">North West</option>
+          <option value="Northern Cape">Northern Cape</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Town / City</label>
+        <input type="text" id="town">
       </div>
 
       <div class="field">
@@ -214,14 +231,17 @@
     async function signupDealer() {
       const dealer = document.getElementById("dealer").value.trim();
       const phone = document.getElementById("phone").value.trim();
-      const location = document.getElementById("location").value.trim();
+      const province = document.getElementById("province").value.trim();
+      const town = document.getElementById("town").value.trim();
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value;
 
-      if (!dealer || !phone || !location || !email || !password) {
+      if (!dealer || !phone || !province || !town || !email || !password) {
         setStatus("Please fill in all fields.");
         return;
       }
+
+      const location = town + ", " + province;
 
       try {
         setBusy(true);
@@ -240,6 +260,12 @@
 
         const user = data.user;
 
+        if (!user) {
+          setStatus("Signup failed: user not created.");
+          setBusy(false);
+          return;
+        }
+
         setStatus("Creating dealer profile...");
 
         const { error: profileError } = await client
@@ -248,6 +274,8 @@
             id: user.id,
             dealer_name: dealer,
             phone: phone,
+            province: province,
+            town: town,
             location: location,
             is_active: false
           }]);
