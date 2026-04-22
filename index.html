@@ -27,7 +27,6 @@
     .hero-inner {
       max-width: 1200px;
       margin: 0 auto;
-      position: relative;
       text-align: center;
     }
 
@@ -52,14 +51,12 @@
       opacity: 0.95;
     }
 
-    .hero-buttons {
-      position: absolute;
-      top: 0;
-      right: 0;
+    .hero-buttons-bottom {
+      margin-top: 20px;
       display: flex;
-      gap: 10px;
-      align-items: center;
-      z-index: 20;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
     }
 
     .hero-btn {
@@ -67,12 +64,12 @@
       color: white;
       border: none;
       border-radius: 999px;
-      padding: 10px 14px;
-      font-size: 12px;
+      padding: 11px 16px;
+      font-size: 13px;
       font-weight: 700;
       box-shadow: 0 4px 10px rgba(0,0,0,0.18);
       text-align: center;
-      min-width: 118px;
+      min-width: 150px;
       cursor: pointer;
     }
 
@@ -87,6 +84,10 @@
     .search-panel {
       max-width: 1100px;
       margin: 22px auto 0;
+      background: white;
+      padding: 16px;
+      border-radius: 16px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.10);
     }
 
     .hidden {
@@ -106,11 +107,17 @@
       min-width: 0;
       padding: 12px 14px;
       border-radius: 12px;
-      border: none;
+      border: 1px solid #cbd5e1;
       outline: none;
       font-size: 15px;
       color: #111827;
       background: white;
+    }
+
+    .search-actions {
+      margin-top: 12px;
+      display: flex;
+      justify-content: flex-end;
     }
 
     .search-clear-btn {
@@ -118,11 +125,10 @@
       border-radius: 12px;
       background: #111827;
       color: white;
-      padding: 12px 16px;
+      padding: 12px 18px;
       font-size: 14px;
       font-weight: 700;
       cursor: pointer;
-      width: 100%;
     }
 
     .section-bar {
@@ -234,7 +240,7 @@
 
     @media (max-width: 900px) {
       .hero {
-        padding: 120px 14px 28px;
+        padding: 42px 14px 28px;
       }
 
       .hero h1 {
@@ -245,35 +251,24 @@
         font-size: 20px;
       }
 
-      .hero-buttons {
-        position: absolute;
-        top: 18px;
-        left: 14px;
-        right: 14px;
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        gap: 10px;
-      }
-
-      .hero-btn {
-        min-width: 140px;
-      }
-
       .search-grid {
         grid-template-columns: 1fr;
       }
 
-      .search-select,
       .search-input,
+      .search-select,
       .search-clear-btn {
         width: 100%;
+      }
+
+      .search-actions {
+        justify-content: stretch;
       }
     }
 
     @media (max-width: 640px) {
       .hero {
-        padding: 132px 14px 28px;
+        padding: 34px 14px 28px;
       }
 
       .hero h1 {
@@ -298,7 +293,7 @@
       }
 
       .hero-btn {
-        min-width: 132px;
+        min-width: 140px;
         font-size: 11px;
         padding: 10px 12px;
       }
@@ -309,14 +304,14 @@
 
   <div class="hero">
     <div class="hero-inner">
-      <div class="hero-buttons">
-        <a href="dealer-admin.html" class="hero-btn dark">Dealer Login</a>
-        <button id="searchToggleBtn" class="hero-btn green" type="button">Search Vehicle</button>
-      </div>
-
       <h1>DealerFlow</h1>
       <div class="hero-tagline">Drive your dream. Find the right vehicle fast.</div>
       <div class="hero-sub">Trusted listings. Quick contact. Serious deals.</div>
+
+      <div class="hero-buttons-bottom">
+        <a href="dealer-admin.html" class="hero-btn dark">Dealer Login</a>
+        <button id="searchToggleBtn" class="hero-btn green" type="button">Search Vehicle</button>
+      </div>
 
       <div id="searchPanel" class="search-panel hidden">
         <div class="search-grid">
@@ -335,9 +330,16 @@
 
           <input
             type="text"
-            id="makeModelFilter"
+            id="makeFilter"
             class="search-input"
-            placeholder="Make / Model"
+            placeholder="Make"
+          />
+
+          <input
+            type="text"
+            id="modelFilter"
+            class="search-input"
+            placeholder="Model"
           />
 
           <select id="yearFilter" class="search-select">
@@ -346,19 +348,21 @@
 
           <input
             type="number"
-            id="minPriceFilter"
+            id="minPrice"
             class="search-input"
             placeholder="Min Price"
           />
 
           <input
             type="number"
-            id="maxPriceFilter"
+            id="maxPrice"
             class="search-input"
             placeholder="Max Price"
           />
+        </div>
 
-          <button type="button" id="clearSearchBtn" class="search-clear-btn">Clear</button>
+        <div class="search-actions">
+          <button type="button" id="clearSearchBtn" class="search-clear-btn">Clear Filters</button>
         </div>
       </div>
     </div>
@@ -472,26 +476,29 @@
 
     function filterVehicles() {
       const province = document.getElementById("provinceFilter").value.trim().toLowerCase();
-      const makeModel = document.getElementById("makeModelFilter").value.trim().toLowerCase();
+      const make = document.getElementById("makeFilter").value.trim().toLowerCase();
+      const model = document.getElementById("modelFilter").value.trim().toLowerCase();
       const year = document.getElementById("yearFilter").value.trim();
-      const minPrice = document.getElementById("minPriceFilter").value.trim();
-      const maxPrice = document.getElementById("maxPriceFilter").value.trim();
+      const minPriceVal = parseInt(document.getElementById("minPrice").value, 10) || 0;
+      const maxPriceVal = parseInt(document.getElementById("maxPrice").value, 10) || 999999999;
 
       const filtered = allVehicles.filter(v => {
         const location = String(v.location || "").toLowerCase();
         const title = String(v.title || "").toLowerCase();
         const vehicleYear = String(v.year || "").trim();
-        const vehiclePrice = Number(v.price || 0);
+        const vehiclePrice = parseInt(v.price, 10) || 0;
 
-        const matchesProvince = province ? location.includes(province) : true;
-        const matchesMakeModel = makeModel ? title.includes(makeModel) : true;
-        const matchesYear = year ? vehicleYear === year : true;
-        const matchesMinPrice = minPrice ? vehiclePrice >= Number(minPrice) : true;
-        const matchesMaxPrice = maxPrice ? vehiclePrice <= Number(maxPrice) : true;
+        const matchesProvince = !province || location.includes(province);
+        const matchesMake = !make || title.includes(make);
+        const matchesModel = !model || title.includes(model);
+        const matchesYear = !year || vehicleYear === year;
+        const matchesMinPrice = vehiclePrice >= minPriceVal;
+        const matchesMaxPrice = vehiclePrice <= maxPriceVal;
 
         return (
           matchesProvince &&
-          matchesMakeModel &&
+          matchesMake &&
+          matchesModel &&
           matchesYear &&
           matchesMinPrice &&
           matchesMaxPrice
@@ -499,6 +506,16 @@
       });
 
       renderVehicles(filtered);
+    }
+
+    function clearFilters() {
+      document.getElementById("provinceFilter").value = "";
+      document.getElementById("makeFilter").value = "";
+      document.getElementById("modelFilter").value = "";
+      document.getElementById("yearFilter").value = "";
+      document.getElementById("minPrice").value = "";
+      document.getElementById("maxPrice").value = "";
+      renderVehicles(allVehicles);
     }
 
     async function loadVehicles() {
@@ -534,30 +551,24 @@
     const searchToggleBtn = document.getElementById("searchToggleBtn");
     const searchPanel = document.getElementById("searchPanel");
     const provinceFilter = document.getElementById("provinceFilter");
-    const makeModelFilter = document.getElementById("makeModelFilter");
+    const makeFilter = document.getElementById("makeFilter");
+    const modelFilter = document.getElementById("modelFilter");
     const yearFilter = document.getElementById("yearFilter");
-    const minPriceFilter = document.getElementById("minPriceFilter");
-    const maxPriceFilter = document.getElementById("maxPriceFilter");
+    const minPrice = document.getElementById("minPrice");
+    const maxPrice = document.getElementById("maxPrice");
     const clearSearchBtn = document.getElementById("clearSearchBtn");
 
-    searchToggleBtn.addEventListener("click", function () {
+    searchToggleBtn.addEventListener("click", () => {
       searchPanel.classList.toggle("hidden");
     });
 
     provinceFilter.addEventListener("change", filterVehicles);
-    makeModelFilter.addEventListener("input", filterVehicles);
+    makeFilter.addEventListener("input", filterVehicles);
+    modelFilter.addEventListener("input", filterVehicles);
     yearFilter.addEventListener("change", filterVehicles);
-    minPriceFilter.addEventListener("input", filterVehicles);
-    maxPriceFilter.addEventListener("input", filterVehicles);
-
-    clearSearchBtn.addEventListener("click", function () {
-      provinceFilter.value = "";
-      makeModelFilter.value = "";
-      yearFilter.value = "";
-      minPriceFilter.value = "";
-      maxPriceFilter.value = "";
-      renderVehicles(allVehicles);
-    });
+    minPrice.addEventListener("input", filterVehicles);
+    maxPrice.addEventListener("input", filterVehicles);
+    clearSearchBtn.addEventListener("click", clearFilters);
 
     populateYearFilter();
     loadVehicles();
