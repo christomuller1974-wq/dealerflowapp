@@ -434,6 +434,21 @@
       return true;
     }
 
+    async function loadDealerProfile() {
+      const { data, error } = await client
+        .from("profiles")
+        .select("*")
+        .eq("id", currentUser.id)
+        .single();
+
+      if (error) {
+        console.log(error);
+        return null;
+      }
+
+      return data;
+    }
+
     function parseImages(mainImage, imagesText) {
       const arr = [];
 
@@ -685,15 +700,26 @@
         return false;
       }
 
+      const profile = await loadDealerProfile();
       currentVehicle = data;
 
       document.getElementById("title").value = data.title || "";
       document.getElementById("year").value = data.year || "";
       document.getElementById("price").value = data.price || "";
       document.getElementById("mileage").value = data.mileage || "";
-      document.getElementById("location").value = data.location || "";
-      document.getElementById("dealer").value = data.dealer || "";
-      document.getElementById("phone").value = data.phone || "";
+
+      document.getElementById("location").value =
+        data.location ||
+        [profile?.town, profile?.province].filter(Boolean).join(", ") ||
+        profile?.location ||
+        "";
+
+      document.getElementById("dealer").value =
+        data.dealer || profile?.dealer_name || profile?.name || "";
+
+      document.getElementById("phone").value =
+        data.phone || profile?.phone || "";
+
       document.getElementById("description").value = data.description || "";
       document.getElementById("featured").checked = !!data.featured;
 
@@ -937,3 +963,4 @@
   </script>
 </body>
 </html>
+
