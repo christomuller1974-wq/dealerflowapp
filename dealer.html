@@ -1,321 +1,336 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<title>Dealer Stock</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8" />
+  <title>Dealer Stock</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<style>
-  * {
-    box-sizing: border-box;
-  }
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-  body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #dfe3ea;
-    color: #111827;
-  }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #dfe3ea;
+      color: #111827;
+    }
 
-  .hero {
-    background: linear-gradient(135deg, #3156c7, #1f3f9e);
-    color: white;
-    padding: 42px 18px 34px;
-    position: relative;
-  }
-
-  .hero-inner {
-    max-width: 1200px;
-    margin: 0 auto;
-    position: relative;
-    text-align: center;
-  }
-
-  .hero h1 {
-    margin: 0;
-    font-size: 48px;
-    font-weight: 800;
-  }
-
-  .hero-sub {
-    margin-top: 12px;
-    font-size: 16px;
-    opacity: 0.95;
-  }
-
-  .hero-buttons {
-    position: absolute;
-    top: 0;
-    right: 0;
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    z-index: 20;
-  }
-
-  .hero-btn {
-    text-decoration: none;
-    color: white;
-    border: none;
-    border-radius: 999px;
-    padding: 10px 14px;
-    font-size: 12px;
-    font-weight: 700;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.18);
-    text-align: center;
-    min-width: 118px;
-    cursor: pointer;
-  }
-
-  .hero-btn.dark {
-    background: #111827;
-  }
-
-  .hero-btn.green {
-    background: #16a34a;
-  }
-
-  .search-panel {
-    max-width: 760px;
-    margin: 22px auto 0;
-  }
-
-  .hidden {
-    display: none;
-  }
-
-  .search-row {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 10px;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .search-select {
-    width: 100%;
-    min-width: 0;
-    padding: 12px 14px;
-    border-radius: 12px;
-    border: none;
-    outline: none;
-    font-size: 15px;
-    color: #111827;
-    background: white;
-  }
-
-  .search-clear-btn {
-    border: none;
-    border-radius: 12px;
-    background: #111827;
-    color: white;
-    padding: 12px 16px;
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-  }
-
-  .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 18px;
-  }
-
-  .dealer-box {
-    background: white;
-    border-radius: 16px;
-    padding: 18px;
-    margin-bottom: 18px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  }
-
-  .dealer-box h2 {
-    margin: 0 0 8px;
-    font-size: 34px;
-  }
-
-  .dealer-box p {
-    margin: 6px 0;
-    font-size: 16px;
-  }
-
-  .top-actions {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-top: 12px;
-  }
-
-  .top-btn {
-    display: inline-block;
-    text-decoration: none;
-    color: white;
-    background: #1f2937;
-    padding: 10px 14px;
-    border-radius: 10px;
-    font-size: 14px;
-    font-weight: 700;
-  }
-
-  .top-btn.green {
-    background: #25d366;
-  }
-
-  .top-btn.blue {
-    background: #3156c7;
-  }
-
-  .status {
-    background: white;
-    border-radius: 12px;
-    padding: 12px 14px;
-    margin-bottom: 16px;
-    font-weight: bold;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  }
-
-  .vehicle-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
-    gap: 18px;
-  }
-
-  .vehicle-card {
-    background: #ffffff;
-    border-radius: 16px;
-    padding: 14px;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.10);
-    transition: transform 0.2s ease;
-  }
-
-  .vehicle-card:hover {
-    transform: translateY(-4px);
-  }
-
-  .vehicle-thumb {
-    width: 100%;
-    height: 210px;
-    object-fit: cover;
-    border-radius: 12px;
-    background: #e5e7eb;
-    display: block;
-  }
-
-  .vehicle-title {
-    margin: 12px 0 8px;
-    font-size: 18px;
-    font-weight: 800;
-    line-height: 1.25;
-    min-height: 46px;
-  }
-
-  .vehicle-meta {
-    font-size: 14px;
-    color: #475569;
-    margin-bottom: 4px;
-  }
-
-  .price {
-    color: #dc2626;
-    font-size: 18px;
-    font-weight: 800;
-    margin: 8px 0 10px;
-  }
-
-  .button-stack {
-    display: grid;
-    gap: 8px;
-    margin-top: 8px;
-  }
-
-  .btn {
-    display: block;
-    width: 100%;
-    text-align: center;
-    text-decoration: none;
-    color: white;
-    padding: 11px 12px;
-    border-radius: 10px;
-    font-weight: 700;
-    font-size: 14px;
-  }
-
-  .btn-blue {
-    background: #3156c7;
-  }
-
-  .btn-whatsapp {
-    background: #25d366;
-  }
-
-  .btn-dark {
-    background: #1f2937;
-  }
-
-  .empty {
-    padding: 30px 18px;
-    text-align: center;
-    color: #475569;
-    font-weight: 700;
-    background: white;
-    border-radius: 14px;
-  }
-
-  @media (max-width: 900px) {
     .hero {
-      padding-top: 88px;
+      background: linear-gradient(135deg, #3156c7, #1f3f9e);
+      color: white;
+      padding: 42px 18px 34px;
+      position: relative;
+    }
+
+    .hero-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+      text-align: center;
     }
 
     .hero h1 {
-      font-size: 40px;
+      margin: 0;
+      font-size: 48px;
+      font-weight: 800;
+    }
+
+    .hero-sub {
+      margin-top: 12px;
+      font-size: 16px;
+      opacity: 0.95;
     }
 
     .hero-buttons {
-      top: -8px;
+      position: absolute;
+      top: 0;
       right: 0;
-      left: 0;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    .search-row {
-      grid-template-columns: 1fr;
-    }
-
-    .search-select,
-    .search-clear-btn {
-      width: 100%;
-    }
-  }
-
-  @media (max-width: 640px) {
-    .hero {
-      padding: 82px 14px 28px;
-    }
-
-    .hero h1 {
-      font-size: 34px;
-    }
-
-    .vehicle-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .vehicle-thumb {
-      height: 220px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      z-index: 20;
     }
 
     .hero-btn {
-      min-width: 110px;
-      font-size: 11px;
-      padding: 9px 12px;
+      text-decoration: none;
+      color: white;
+      border: none;
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.18);
+      text-align: center;
+      min-width: 118px;
+      cursor: pointer;
+    }
+
+    .hero-btn.dark {
+      background: #111827;
+    }
+
+    .hero-btn.green {
+      background: #16a34a;
+    }
+
+    .search-panel {
+      max-width: 1100px;
+      margin: 22px auto 0;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .search-grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 10px;
+      align-items: center;
+    }
+
+    .search-input,
+    .search-select {
+      width: 100%;
+      min-width: 0;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: none;
+      outline: none;
+      font-size: 15px;
+      color: #111827;
+      background: white;
+    }
+
+    .search-clear-btn {
+      border: none;
+      border-radius: 12px;
+      background: #111827;
+      color: white;
+      padding: 12px 16px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 18px;
+    }
+
+    .dealer-box {
+      background: white;
+      border-radius: 16px;
+      padding: 18px;
+      margin-bottom: 18px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
 
     .dealer-box h2 {
-      font-size: 28px;
+      margin: 0 0 8px;
+      font-size: 34px;
     }
-  }
-</style>
+
+    .dealer-box p {
+      margin: 6px 0;
+      font-size: 16px;
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .top-btn {
+      display: inline-block;
+      text-decoration: none;
+      color: white;
+      background: #1f2937;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .top-btn.green {
+      background: #25d366;
+    }
+
+    .top-btn.blue {
+      background: #3156c7;
+    }
+
+    .status {
+      background: white;
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 16px;
+      font-weight: bold;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .vehicle-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 18px;
+    }
+
+    .vehicle-card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 14px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.10);
+      transition: transform 0.2s ease;
+    }
+
+    .vehicle-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .vehicle-thumb {
+      width: 100%;
+      height: 210px;
+      object-fit: cover;
+      border-radius: 12px;
+      background: #e5e7eb;
+      display: block;
+    }
+
+    .vehicle-title {
+      margin: 12px 0 8px;
+      font-size: 18px;
+      font-weight: 800;
+      line-height: 1.25;
+      min-height: 46px;
+    }
+
+    .vehicle-meta {
+      font-size: 14px;
+      color: #475569;
+      margin-bottom: 4px;
+    }
+
+    .price {
+      color: #dc2626;
+      font-size: 18px;
+      font-weight: 800;
+      margin: 8px 0 10px;
+    }
+
+    .button-stack {
+      display: grid;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .btn {
+      display: block;
+      width: 100%;
+      text-align: center;
+      text-decoration: none;
+      color: white;
+      padding: 11px 12px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .btn-blue {
+      background: #3156c7;
+    }
+
+    .btn-whatsapp {
+      background: #25d366;
+    }
+
+    .btn-dark {
+      background: #1f2937;
+    }
+
+    .empty {
+      padding: 30px 18px;
+      text-align: center;
+      color: #475569;
+      font-weight: 700;
+      background: white;
+      border-radius: 14px;
+    }
+
+    @media (max-width: 1100px) {
+      .search-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 900px) {
+      .hero {
+        padding: 120px 14px 28px;
+      }
+
+      .hero h1 {
+        font-size: 40px;
+      }
+
+      .hero-buttons {
+        position: absolute;
+        top: 18px;
+        left: 14px;
+        right: 14px;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .hero-btn {
+        min-width: 140px;
+      }
+
+      .search-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .search-select,
+      .search-input,
+      .search-clear-btn {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .hero {
+        padding: 132px 14px 28px;
+      }
+
+      .hero h1 {
+        font-size: 34px;
+      }
+
+      .vehicle-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .vehicle-thumb {
+        height: 220px;
+      }
+
+      .hero-btn {
+        min-width: 132px;
+        font-size: 11px;
+        padding: 10px 12px;
+      }
+
+      .dealer-box h2 {
+        font-size: 28px;
+      }
+    }
+  </style>
 </head>
 <body>
 
@@ -330,7 +345,7 @@
       <div class="hero-sub">View this dealer’s available vehicles</div>
 
       <div id="searchPanel" class="search-panel hidden">
-        <div class="search-row">
+        <div class="search-grid">
           <select id="provinceFilter" class="search-select">
             <option value="">All Provinces</option>
             <option value="Gauteng">Gauteng</option>
@@ -343,6 +358,31 @@
             <option value="North West">North West</option>
             <option value="Northern Cape">Northern Cape</option>
           </select>
+
+          <input
+            type="text"
+            id="makeModelFilter"
+            class="search-input"
+            placeholder="Make / Model"
+          />
+
+          <select id="yearFilter" class="search-select">
+            <option value="">All Years</option>
+          </select>
+
+          <input
+            type="number"
+            id="minPriceFilter"
+            class="search-input"
+            placeholder="Min Price"
+          />
+
+          <input
+            type="number"
+            id="maxPriceFilter"
+            class="search-input"
+            placeholder="Max Price"
+          />
 
           <button type="button" id="clearSearchBtn" class="search-clear-btn">Clear</button>
         </div>
@@ -398,6 +438,19 @@
       return "https://via.placeholder.com/400x250?text=No+Image";
     }
 
+    function populateYearFilter() {
+      const yearFilter = document.getElementById("yearFilter");
+      yearFilter.innerHTML = '<option value="">All Years</option>';
+
+      const currentYear = new Date().getFullYear();
+      for (let y = currentYear; y >= 1980; y--) {
+        const option = document.createElement("option");
+        option.value = String(y);
+        option.textContent = String(y);
+        yearFilter.appendChild(option);
+      }
+    }
+
     function renderVehicles(vehicles, dealerPhone) {
       const container = document.getElementById("vehicleList");
       container.innerHTML = "";
@@ -441,12 +494,33 @@
     }
 
     function filterVehicles() {
-      const province = document.getElementById("provinceFilter").value.toLowerCase();
+      const province = document.getElementById("provinceFilter").value.trim().toLowerCase();
+      const makeModel = document.getElementById("makeModelFilter").value.trim().toLowerCase();
+      const year = document.getElementById("yearFilter").value.trim();
+      const minPrice = document.getElementById("minPriceFilter").value.trim();
+      const maxPrice = document.getElementById("maxPriceFilter").value.trim();
+
       const dealerPhone = (allVehicles[0] && allVehicles[0].phone) ? allVehicles[0].phone : "";
 
       const filtered = allVehicles.filter(v => {
-        if (!province) return true;
-        return (v.location || "").toLowerCase().includes(province);
+        const location = String(v.location || "").toLowerCase();
+        const title = String(v.title || "").toLowerCase();
+        const vehicleYear = String(v.year || "").trim();
+        const vehiclePrice = Number(v.price || 0);
+
+        const matchesProvince = province ? location.includes(province) : true;
+        const matchesMakeModel = makeModel ? title.includes(makeModel) : true;
+        const matchesYear = year ? vehicleYear === year : true;
+        const matchesMinPrice = minPrice ? vehiclePrice >= Number(minPrice) : true;
+        const matchesMaxPrice = maxPrice ? vehiclePrice <= Number(maxPrice) : true;
+
+        return (
+          matchesProvince &&
+          matchesMakeModel &&
+          matchesYear &&
+          matchesMinPrice &&
+          matchesMaxPrice
+        );
       });
 
       renderVehicles(filtered, dealerPhone);
@@ -506,6 +580,10 @@
     const searchToggleBtn = document.getElementById("searchToggleBtn");
     const searchPanel = document.getElementById("searchPanel");
     const provinceFilter = document.getElementById("provinceFilter");
+    const makeModelFilter = document.getElementById("makeModelFilter");
+    const yearFilter = document.getElementById("yearFilter");
+    const minPriceFilter = document.getElementById("minPriceFilter");
+    const maxPriceFilter = document.getElementById("maxPriceFilter");
     const clearSearchBtn = document.getElementById("clearSearchBtn");
 
     searchToggleBtn.addEventListener("click", function () {
@@ -513,13 +591,23 @@
     });
 
     provinceFilter.addEventListener("change", filterVehicles);
+    makeModelFilter.addEventListener("input", filterVehicles);
+    yearFilter.addEventListener("change", filterVehicles);
+    minPriceFilter.addEventListener("input", filterVehicles);
+    maxPriceFilter.addEventListener("input", filterVehicles);
 
     clearSearchBtn.addEventListener("click", function () {
       provinceFilter.value = "";
+      makeModelFilter.value = "";
+      yearFilter.value = "";
+      minPriceFilter.value = "";
+      maxPriceFilter.value = "";
+
       const dealerPhone = (allVehicles[0] && allVehicles[0].phone) ? allVehicles[0].phone : "";
       renderVehicles(allVehicles, dealerPhone);
     });
 
+    populateYearFilter();
     loadDealerStock();
   </script>
 
