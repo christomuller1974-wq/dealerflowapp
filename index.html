@@ -85,7 +85,7 @@
     }
 
     .search-panel {
-      max-width: 760px;
+      max-width: 1100px;
       margin: 22px auto 0;
     }
 
@@ -93,14 +93,14 @@
       display: none;
     }
 
-    .search-row {
+    .search-grid {
       display: grid;
-      grid-template-columns: 1fr auto;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
       gap: 10px;
       align-items: center;
-      justify-content: center;
     }
 
+    .search-input,
     .search-select {
       width: 100%;
       min-width: 0;
@@ -122,6 +122,7 @@
       font-size: 14px;
       font-weight: 700;
       cursor: pointer;
+      width: 100%;
     }
 
     .section-bar {
@@ -225,9 +226,15 @@
       font-weight: 700;
     }
 
+    @media (max-width: 1100px) {
+      .search-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
     @media (max-width: 900px) {
       .hero {
-        padding-top: 88px;
+        padding: 120px 14px 28px;
       }
 
       .hero h1 {
@@ -239,18 +246,26 @@
       }
 
       .hero-buttons {
-        top: -8px;
-        right: 0;
-        left: 0;
+        position: absolute;
+        top: 18px;
+        left: 14px;
+        right: 14px;
+        display: flex;
         justify-content: center;
         flex-wrap: wrap;
+        gap: 10px;
       }
 
-      .search-row {
+      .hero-btn {
+        min-width: 140px;
+      }
+
+      .search-grid {
         grid-template-columns: 1fr;
       }
 
       .search-select,
+      .search-input,
       .search-clear-btn {
         width: 100%;
       }
@@ -258,7 +273,7 @@
 
     @media (max-width: 640px) {
       .hero {
-        padding: 82px 14px 28px;
+        padding: 132px 14px 28px;
       }
 
       .hero h1 {
@@ -267,6 +282,10 @@
 
       .hero-tagline {
         font-size: 18px;
+      }
+
+      .hero-sub {
+        font-size: 14px;
       }
 
       .vehicle-grid {
@@ -279,9 +298,9 @@
       }
 
       .hero-btn {
-        min-width: 110px;
+        min-width: 132px;
         font-size: 11px;
-        padding: 9px 12px;
+        padding: 10px 12px;
       }
     }
   </style>
@@ -300,7 +319,7 @@
       <div class="hero-sub">Trusted listings. Quick contact. Serious deals.</div>
 
       <div id="searchPanel" class="search-panel hidden">
-        <div class="search-row">
+        <div class="search-grid">
           <select id="provinceFilter" class="search-select">
             <option value="">All Provinces</option>
             <option value="Gauteng">Gauteng</option>
@@ -313,6 +332,31 @@
             <option value="North West">North West</option>
             <option value="Northern Cape">Northern Cape</option>
           </select>
+
+          <input
+            type="text"
+            id="makeModelFilter"
+            class="search-input"
+            placeholder="Make / Model"
+          />
+
+          <select id="yearFilter" class="search-select">
+            <option value="">All Years</option>
+          </select>
+
+          <input
+            type="number"
+            id="minPriceFilter"
+            class="search-input"
+            placeholder="Min Price"
+          />
+
+          <input
+            type="number"
+            id="maxPriceFilter"
+            class="search-input"
+            placeholder="Max Price"
+          />
 
           <button type="button" id="clearSearchBtn" class="search-clear-btn">Clear</button>
         </div>
@@ -370,6 +414,19 @@
       return "dealer.html?dealer=" + encodeURIComponent(dealerName);
     }
 
+    function populateYearFilter() {
+      const yearFilter = document.getElementById("yearFilter");
+      yearFilter.innerHTML = '<option value="">All Years</option>';
+
+      const currentYear = new Date().getFullYear();
+      for (let y = currentYear; y >= 1980; y--) {
+        const option = document.createElement("option");
+        option.value = String(y);
+        option.textContent = String(y);
+        yearFilter.appendChild(option);
+      }
+    }
+
     function renderVehicles(vehicles) {
       const container = document.getElementById("vehicle-list");
       container.innerHTML = "";
@@ -414,11 +471,31 @@
     }
 
     function filterVehicles() {
-      const province = document.getElementById("provinceFilter").value.toLowerCase();
+      const province = document.getElementById("provinceFilter").value.trim().toLowerCase();
+      const makeModel = document.getElementById("makeModelFilter").value.trim().toLowerCase();
+      const year = document.getElementById("yearFilter").value.trim();
+      const minPrice = document.getElementById("minPriceFilter").value.trim();
+      const maxPrice = document.getElementById("maxPriceFilter").value.trim();
 
       const filtered = allVehicles.filter(v => {
-        if (!province) return true;
-        return (v.location || "").toLowerCase().includes(province);
+        const location = String(v.location || "").toLowerCase();
+        const title = String(v.title || "").toLowerCase();
+        const vehicleYear = String(v.year || "").trim();
+        const vehiclePrice = Number(v.price || 0);
+
+        const matchesProvince = province ? location.includes(province) : true;
+        const matchesMakeModel = makeModel ? title.includes(makeModel) : true;
+        const matchesYear = year ? vehicleYear === year : true;
+        const matchesMinPrice = minPrice ? vehiclePrice >= Number(minPrice) : true;
+        const matchesMaxPrice = maxPrice ? vehiclePrice <= Number(maxPrice) : true;
+
+        return (
+          matchesProvince &&
+          matchesMakeModel &&
+          matchesYear &&
+          matchesMinPrice &&
+          matchesMaxPrice
+        );
       });
 
       renderVehicles(filtered);
@@ -457,6 +534,10 @@
     const searchToggleBtn = document.getElementById("searchToggleBtn");
     const searchPanel = document.getElementById("searchPanel");
     const provinceFilter = document.getElementById("provinceFilter");
+    const makeModelFilter = document.getElementById("makeModelFilter");
+    const yearFilter = document.getElementById("yearFilter");
+    const minPriceFilter = document.getElementById("minPriceFilter");
+    const maxPriceFilter = document.getElementById("maxPriceFilter");
     const clearSearchBtn = document.getElementById("clearSearchBtn");
 
     searchToggleBtn.addEventListener("click", function () {
@@ -464,12 +545,21 @@
     });
 
     provinceFilter.addEventListener("change", filterVehicles);
+    makeModelFilter.addEventListener("input", filterVehicles);
+    yearFilter.addEventListener("change", filterVehicles);
+    minPriceFilter.addEventListener("input", filterVehicles);
+    maxPriceFilter.addEventListener("input", filterVehicles);
 
     clearSearchBtn.addEventListener("click", function () {
       provinceFilter.value = "";
+      makeModelFilter.value = "";
+      yearFilter.value = "";
+      minPriceFilter.value = "";
+      maxPriceFilter.value = "";
       renderVehicles(allVehicles);
     });
 
+    populateYearFilter();
     loadVehicles();
   </script>
 
