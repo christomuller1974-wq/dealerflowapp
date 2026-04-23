@@ -4,12 +4,7 @@
   <meta charset="UTF-8" />
   <title>Dealer Stock</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
     body {
       margin: 0;
       font-family: Arial, sans-serif;
@@ -20,100 +15,19 @@
     .hero {
       background: linear-gradient(135deg, #3156c7, #1f3f9e);
       color: white;
-      padding: 42px 18px 34px;
-      position: relative;
-    }
-
-    .hero-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      position: relative;
       text-align: center;
+      padding: 34px 18px 24px;
     }
 
     .hero h1 {
       margin: 0;
-      font-size: 48px;
+      font-size: 42px;
       font-weight: 800;
     }
 
-    .hero-sub {
-      margin-top: 12px;
-      font-size: 16px;
-      opacity: 0.95;
-    }
-
-    .hero-buttons {
-      position: absolute;
-      top: 0;
-      right: 0;
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      z-index: 20;
-    }
-
-    .hero-btn {
-      text-decoration: none;
-      color: white;
-      border: none;
-      border-radius: 999px;
-      padding: 10px 14px;
-      font-size: 12px;
-      font-weight: 700;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.18);
-      text-align: center;
-      min-width: 118px;
-      cursor: pointer;
-    }
-
-    .hero-btn.dark {
-      background: #111827;
-    }
-
-    .hero-btn.green {
-      background: #16a34a;
-    }
-
-    .search-panel {
-      max-width: 1100px;
-      margin: 22px auto 0;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    .search-grid {
-      display: grid;
-      grid-template-columns: repeat(6, minmax(0, 1fr));
-      gap: 10px;
-      align-items: center;
-    }
-
-    .search-input,
-    .search-select {
-      width: 100%;
-      min-width: 0;
-      padding: 12px 14px;
-      border-radius: 12px;
-      border: none;
-      outline: none;
-      font-size: 15px;
-      color: #111827;
-      background: white;
-    }
-
-    .search-clear-btn {
-      border: none;
-      border-radius: 12px;
-      background: #111827;
-      color: white;
-      padding: 12px 16px;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      width: 100%;
+    .hero p {
+      margin: 10px 0 0;
+      font-size: 18px;
     }
 
     .container {
@@ -122,44 +36,22 @@
       padding: 18px;
     }
 
-    .dealer-box {
-      background: white;
-      border-radius: 16px;
-      padding: 18px;
-      margin-bottom: 18px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
-
-    .dealer-box h2 {
-      margin: 0 0 8px;
-      font-size: 34px;
-    }
-
-    .dealer-box p {
-      margin: 6px 0;
-      font-size: 16px;
-    }
-
     .top-actions {
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
-      margin-top: 12px;
+      margin-bottom: 16px;
     }
 
     .top-btn {
       display: inline-block;
       text-decoration: none;
-      color: white;
       background: #1f2937;
+      color: white;
       padding: 10px 14px;
       border-radius: 10px;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 700;
-    }
-
-    .top-btn.green {
-      background: #25d366;
     }
 
     .top-btn.blue {
@@ -182,15 +74,10 @@
     }
 
     .vehicle-card {
-      background: #ffffff;
+      background: white;
       border-radius: 16px;
       padding: 14px;
       box-shadow: 0 4px 14px rgba(0,0,0,0.10);
-      transition: transform 0.2s ease;
-    }
-
-    .vehicle-card:hover {
-      transform: translateY(-4px);
     }
 
     .vehicle-thumb {
@@ -207,7 +94,6 @@
       font-size: 18px;
       font-weight: 800;
       line-height: 1.25;
-      min-height: 46px;
     }
 
     .vehicle-meta {
@@ -226,7 +112,7 @@
     .button-stack {
       display: grid;
       gap: 8px;
-      margin-top: 8px;
+      margin-top: 10px;
     }
 
     .btn {
@@ -241,73 +127,21 @@
       font-size: 14px;
     }
 
-    .btn-blue {
-      background: #3156c7;
-    }
+    .btn-blue { background: #3156c7; }
+    .btn-dark { background: #1f2937; }
+    .btn-whatsapp { background: #25d366; }
 
-    .btn-whatsapp {
-      background: #25d366;
-    }
-
-    .btn-dark {
-      background: #1f2937;
-    }
-
-    .empty {
-      padding: 30px 18px;
+    .empty-box {
+      background: white;
+      border-radius: 14px;
+      padding: 24px;
       text-align: center;
       color: #475569;
       font-weight: 700;
-      background: white;
-      border-radius: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
 
-    @media (max-width: 1100px) {
-      .search-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 900px) {
-      .hero {
-        padding: 120px 14px 28px;
-      }
-
-      .hero h1 {
-        font-size: 40px;
-      }
-
-      .hero-buttons {
-        position: absolute;
-        top: 18px;
-        left: 14px;
-        right: 14px;
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        gap: 10px;
-      }
-
-      .hero-btn {
-        min-width: 140px;
-      }
-
-      .search-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .search-select,
-      .search-input,
-      .search-clear-btn {
-        width: 100%;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .hero {
-        padding: 132px 14px 28px;
-      }
-
+    @media (max-width: 700px) {
       .hero h1 {
         font-size: 34px;
       }
@@ -315,95 +149,23 @@
       .vehicle-grid {
         grid-template-columns: 1fr;
       }
-
-      .vehicle-thumb {
-        height: 220px;
-      }
-
-      .hero-btn {
-        min-width: 132px;
-        font-size: 11px;
-        padding: 10px 12px;
-      }
-
-      .dealer-box h2 {
-        font-size: 28px;
-      }
     }
   </style>
 </head>
 <body>
 
   <div class="hero">
-    <div class="hero-inner">
-      <div class="hero-buttons">
-        <a href="dealer-admin.html" class="hero-btn dark">Dealer Login</a>
-        <button id="searchToggleBtn" class="hero-btn green" type="button">Search Vehicle</button>
-      </div>
-
-      <h1 id="heroDealerName">Dealer Stock</h1>
-      <div class="hero-sub">View this dealer’s available vehicles</div>
-
-      <div id="searchPanel" class="search-panel hidden">
-        <div class="search-grid">
-          <select id="provinceFilter" class="search-select">
-            <option value="">All Provinces</option>
-            <option value="Gauteng">Gauteng</option>
-            <option value="Western Cape">Western Cape</option>
-            <option value="KwaZulu-Natal">KwaZulu-Natal</option>
-            <option value="Eastern Cape">Eastern Cape</option>
-            <option value="Free State">Free State</option>
-            <option value="Limpopo">Limpopo</option>
-            <option value="Mpumalanga">Mpumalanga</option>
-            <option value="North West">North West</option>
-            <option value="Northern Cape">Northern Cape</option>
-          </select>
-
-          <input
-            type="text"
-            id="makeModelFilter"
-            class="search-input"
-            placeholder="Make / Model"
-          />
-
-          <select id="yearFilter" class="search-select">
-            <option value="">All Years</option>
-          </select>
-
-          <input
-            type="number"
-            id="minPriceFilter"
-            class="search-input"
-            placeholder="Min Price"
-          />
-
-          <input
-            type="number"
-            id="maxPriceFilter"
-            class="search-input"
-            placeholder="Max Price"
-          />
-
-          <button type="button" id="clearSearchBtn" class="search-clear-btn">Clear</button>
-        </div>
-      </div>
-    </div>
+    <h1 id="dealerTitle">Dealer Stock</h1>
+    <p>Browse available vehicles from this dealer</p>
   </div>
 
   <div class="container">
-    <div id="status" class="status">Loading dealer stock...</div>
-
-    <div id="dealerBox" class="dealer-box" style="display:none;">
-      <h2 id="dealerName">Dealer</h2>
-      <p><strong>Phone:</strong> <span id="dealerPhone">-</span></p>
-
-      <div class="top-actions">
-        <a href="index.html" class="top-btn">Back</a>
-        <a id="dealerWhatsapp" href="#" target="_blank" class="top-btn green">WhatsApp</a>
-        <a id="dealerCall" href="#" class="top-btn blue">Call Dealer</a>
-      </div>
+    <div class="top-actions">
+      <a href="index.html" class="top-btn">Back to Website</a>
+      <a href="dealer-admin.html" class="top-btn blue">Dealer Login</a>
     </div>
 
+    <div id="status" class="status">Loading dealer stock...</div>
     <div id="vehicleList" class="vehicle-grid"></div>
   </div>
 
@@ -411,19 +173,13 @@
     const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
     const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
 
-    let allVehicles = [];
-
     function setStatus(message) {
       document.getElementById("status").textContent = message;
     }
 
-    function getDealerNameFromUrl() {
+    function getDealerFromUrl() {
       const params = new URLSearchParams(window.location.search);
-      return params.get("dealer");
-    }
-
-    function cleanPhone(phone) {
-      return String(phone || "").replace(/\s+/g, "");
+      return params.get("dealer") || "";
     }
 
     function getMainImage(vehicle) {
@@ -438,177 +194,99 @@
       return "https://via.placeholder.com/400x250?text=No+Image";
     }
 
-    function populateYearFilter() {
-      const yearFilter = document.getElementById("yearFilter");
-      yearFilter.innerHTML = '<option value="">All Years</option>';
-
-      const currentYear = new Date().getFullYear();
-      for (let y = currentYear; y >= 1980; y--) {
-        const option = document.createElement("option");
-        option.value = String(y);
-        option.textContent = String(y);
-        yearFilter.appendChild(option);
-      }
+    function cleanPhone(phone) {
+      return String(phone || "").replace(/\s+/g, "");
     }
 
-    function renderVehicles(vehicles, dealerPhone) {
+    function whatsappLink(phone, title) {
+      const phoneClean = cleanPhone(phone);
+      if (!phoneClean) return "#";
+      return "https://wa.me/27" + phoneClean.replace(/^0/, "") +
+        "?text=" + encodeURIComponent("Hi, I'm interested in the " + (title || "vehicle") + ".");
+    }
+
+    function callLink(phone) {
+      const phoneClean = cleanPhone(phone);
+      if (!phoneClean) return "#";
+      return "tel:" + phoneClean;
+    }
+
+    async function loadDealerVehicles() {
+      const dealerName = getDealerFromUrl();
       const container = document.getElementById("vehicleList");
-      container.innerHTML = "";
 
-      if (!vehicles || !vehicles.length) {
-        container.innerHTML = '<div class="empty">No vehicles found.</div>';
+      if (!dealerName) {
+        setStatus("Missing dealer name.");
+        container.innerHTML = '<div class="empty-box">Dealer not found.</div>';
         return;
       }
 
-      vehicles.forEach(v => {
-        const mainImage = getMainImage(v);
-        const phone = v.phone || dealerPhone || "";
-
-        const card = document.createElement("div");
-        card.className = "vehicle-card";
-
-        card.innerHTML = `
-          <img
-            src="${mainImage}"
-            class="vehicle-thumb"
-            alt="${v.title || "Vehicle"}"
-            onerror="this.src='https://via.placeholder.com/400x250?text=No+Image'"
-          >
-
-          <div class="vehicle-title">${v.title || "No Title"}</div>
-
-          <div class="vehicle-meta">Year: ${v.year || "-"}</div>
-          <div class="vehicle-meta">Location: ${v.location || "-"}</div>
-
-          <div class="price">R${v.price || 0}</div>
-
-          <div class="button-stack">
-            <a href="details.html?id=${v.id}" class="btn btn-blue">View Details</a>
-            <a href="${phone ? "tel:" + cleanPhone(phone) : "#"}" class="btn btn-dark">Call</a>
-            <a href="${phone ? "https://wa.me/27" + cleanPhone(phone).replace(/^0/, "") + "?text=" + encodeURIComponent("Hi, I'm interested in the " + (v.title || "vehicle") + ".") : "#"}" target="_blank" class="btn btn-whatsapp">WhatsApp</a>
-          </div>
-        `;
-
-        container.appendChild(card);
-      });
-    }
-
-    function filterVehicles() {
-      const province = document.getElementById("provinceFilter").value.trim().toLowerCase();
-      const makeModel = document.getElementById("makeModelFilter").value.trim().toLowerCase();
-      const year = document.getElementById("yearFilter").value.trim();
-      const minPrice = document.getElementById("minPriceFilter").value.trim();
-      const maxPrice = document.getElementById("maxPriceFilter").value.trim();
-
-      const dealerPhone = (allVehicles[0] && allVehicles[0].phone) ? allVehicles[0].phone : "";
-
-      const filtered = allVehicles.filter(v => {
-        const location = String(v.location || "").toLowerCase();
-        const title = String(v.title || "").toLowerCase();
-        const vehicleYear = String(v.year || "").trim();
-        const vehiclePrice = Number(v.price || 0);
-
-        const matchesProvince = province ? location.includes(province) : true;
-        const matchesMakeModel = makeModel ? title.includes(makeModel) : true;
-        const matchesYear = year ? vehicleYear === year : true;
-        const matchesMinPrice = minPrice ? vehiclePrice >= Number(minPrice) : true;
-        const matchesMaxPrice = maxPrice ? vehiclePrice <= Number(maxPrice) : true;
-
-        return (
-          matchesProvince &&
-          matchesMakeModel &&
-          matchesYear &&
-          matchesMinPrice &&
-          matchesMaxPrice
-        );
-      });
-
-      renderVehicles(filtered, dealerPhone);
-    }
-
-    async function loadDealerStock() {
-      const dealer = getDealerNameFromUrl();
-
-      if (!dealer) {
-        setStatus("Dealer name missing.");
-        return;
-      }
+      document.getElementById("dealerTitle").textContent = dealerName;
+      setStatus("Loading dealer stock...");
 
       try {
-        document.getElementById("heroDealerName").textContent = dealer;
-        setStatus("Loading dealer stock...");
+        const url =
+          supabaseUrl +
+          "/rest/v1/active_vehicles?select=*&dealer=eq." +
+          encodeURIComponent(dealerName) +
+          "&order=id.desc";
 
-        const res = await fetch(
-          supabaseUrl + "/rest/v1/vehicles?dealer=eq." + encodeURIComponent(dealer) + "&select=*&order=id.desc",
-          {
-            headers: {
-              apikey: supabaseKey,
-              Authorization: "Bearer " + supabaseKey
-            }
+        const res = await fetch(url, {
+          headers: {
+            apikey: supabaseKey,
+            Authorization: "Bearer " + supabaseKey
           }
-        );
+        });
 
-        const vehicles = await res.json();
+        const data = await res.json();
+        container.innerHTML = "";
 
-        if (!vehicles || vehicles.length === 0) {
-          setStatus("No vehicles found for this dealer.");
-          document.getElementById("vehicleList").innerHTML = '<div class="empty">No vehicles found.</div>';
+        if (!Array.isArray(data) || data.length === 0) {
+          setStatus("No vehicles found.");
+          container.innerHTML = '<div class="empty-box">No vehicles found for this dealer.</div>';
           return;
         }
 
-        allVehicles = vehicles;
+        data.forEach(vehicle => {
+          const mainImage = getMainImage(vehicle);
+          const fallbackTitle = [vehicle.year, vehicle.make, vehicle.model].filter(Boolean).join(" ");
+          const title = vehicle.title || fallbackTitle || "No Title";
 
-        const firstVehicle = vehicles[0];
-        const dealerPhone = firstVehicle.phone || "";
+          const card = document.createElement("div");
+          card.className = "vehicle-card";
 
-        document.getElementById("dealerBox").style.display = "block";
-        document.getElementById("dealerName").textContent = dealer;
-        document.getElementById("dealerPhone").textContent = dealerPhone || "-";
-        document.getElementById("dealerCall").href = dealerPhone ? "tel:" + cleanPhone(dealerPhone) : "#";
-        document.getElementById("dealerWhatsapp").href = dealerPhone
-          ? "https://wa.me/27" + cleanPhone(dealerPhone).replace(/^0/, "") + "?text=" + encodeURIComponent("Hi, I'm interested in your available vehicles.")
-          : "#";
+          card.innerHTML = `
+            <img
+              src="${mainImage}"
+              class="vehicle-thumb"
+              alt="${title}"
+              onerror="this.src='https://via.placeholder.com/400x250?text=No+Image'"
+            >
 
-        renderVehicles(allVehicles, dealerPhone);
-        setStatus("Dealer stock loaded successfully.");
+            <div class="vehicle-title">${title}</div>
+            <div class="vehicle-meta">Year: ${vehicle.year || "-"}</div>
+            <div class="vehicle-meta">Location: ${vehicle.location || "-"}</div>
+            <div class="price">R${vehicle.price || 0}</div>
+
+            <div class="button-stack">
+              <a href="details.html?id=${vehicle.id}" class="btn btn-blue">View</a>
+              <a href="${callLink(vehicle.phone)}" class="btn btn-dark">Call</a>
+              <a href="${whatsappLink(vehicle.phone, title)}" target="_blank" class="btn btn-whatsapp">WhatsApp</a>
+            </div>
+          `;
+
+          container.appendChild(card);
+        });
+
+        setStatus("Dealer stock loaded.");
       } catch (err) {
         console.error(err);
         setStatus("Could not load dealer stock.");
+        container.innerHTML = '<div class="empty-box">Could not load dealer stock.</div>';
       }
     }
 
-    const searchToggleBtn = document.getElementById("searchToggleBtn");
-    const searchPanel = document.getElementById("searchPanel");
-    const provinceFilter = document.getElementById("provinceFilter");
-    const makeModelFilter = document.getElementById("makeModelFilter");
-    const yearFilter = document.getElementById("yearFilter");
-    const minPriceFilter = document.getElementById("minPriceFilter");
-    const maxPriceFilter = document.getElementById("maxPriceFilter");
-    const clearSearchBtn = document.getElementById("clearSearchBtn");
-
-    searchToggleBtn.addEventListener("click", function () {
-      searchPanel.classList.toggle("hidden");
-    });
-
-    provinceFilter.addEventListener("change", filterVehicles);
-    makeModelFilter.addEventListener("input", filterVehicles);
-    yearFilter.addEventListener("change", filterVehicles);
-    minPriceFilter.addEventListener("input", filterVehicles);
-    maxPriceFilter.addEventListener("input", filterVehicles);
-
-    clearSearchBtn.addEventListener("click", function () {
-      provinceFilter.value = "";
-      makeModelFilter.value = "";
-      yearFilter.value = "";
-      minPriceFilter.value = "";
-      maxPriceFilter.value = "";
-
-      const dealerPhone = (allVehicles[0] && allVehicles[0].phone) ? allVehicles[0].phone : "";
-      renderVehicles(allVehicles, dealerPhone);
-    });
-
-    populateYearFilter();
-    loadDealerStock();
+    loadDealerVehicles();
   </script>
 
 </body>
