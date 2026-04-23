@@ -172,6 +172,46 @@
       box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
 
+    .approval-wrap {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: #f1f5f9;
+    }
+
+    .approval-card {
+      max-width: 520px;
+      width: 100%;
+      background: white;
+      border-radius: 18px;
+      padding: 28px 24px;
+      text-align: center;
+      box-shadow: 0 8px 22px rgba(0,0,0,0.10);
+    }
+
+    .approval-card h2 {
+      margin: 0 0 12px;
+      font-size: 32px;
+      color: #111827;
+    }
+
+    .approval-card p {
+      margin: 8px 0;
+      font-size: 17px;
+      color: #475569;
+      line-height: 1.5;
+    }
+
+    .approval-actions {
+      margin-top: 18px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
     @media (max-width: 700px) {
       .hero h1 {
         font-size: 38px;
@@ -183,6 +223,10 @@
 
       .vehicle-grid {
         grid-template-columns: 1fr;
+      }
+
+      .approval-card h2 {
+        font-size: 28px;
       }
     }
   </style>
@@ -235,6 +279,22 @@
       return "https://via.placeholder.com/400x250?text=No+Image";
     }
 
+    function showPendingApprovalScreen() {
+      document.body.innerHTML = `
+        <div class="approval-wrap">
+          <div class="approval-card">
+            <h2>Account Pending Approval</h2>
+            <p>Your dealer account has not been approved yet.</p>
+            <p>Please wait for admin approval before loading vehicles.</p>
+            <div class="approval-actions">
+              <a href="index.html" class="top-btn">Back to Website</a>
+              <button class="top-btn" onclick="logout()">Logout</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
     async function requireUser() {
       const { data, error } = await client.auth.getUser();
 
@@ -275,7 +335,7 @@
       if (email === MAIN_ADMIN_EMAIL.toLowerCase()) {
         adminHost.innerHTML = '<a href="super-admin.html" class="top-btn green">Super Admin</a>';
       } else {
-        adminHost.innerHTML = "";
+        adminHost.innerHTML = '';
       }
     }
 
@@ -379,6 +439,12 @@
       if (!okProfile) return;
 
       showAdminButton();
+
+      if (!currentProfile.is_active) {
+        showPendingApprovalScreen();
+        return;
+      }
+
       await loadVehicles();
     }
 
