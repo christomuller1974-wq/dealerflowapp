@@ -184,6 +184,46 @@ button:disabled {
   margin-top:8px;
 }
 
+.approval-wrap {
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  background:#f1f5f9;
+}
+
+.approval-card {
+  max-width:520px;
+  width:100%;
+  background:white;
+  border-radius:18px;
+  padding:28px 24px;
+  text-align:center;
+  box-shadow:0 8px 22px rgba(0,0,0,0.10);
+}
+
+.approval-card h2 {
+  margin:0 0 12px;
+  font-size:32px;
+  color:#111827;
+}
+
+.approval-card p {
+  margin:8px 0;
+  font-size:17px;
+  color:#475569;
+  line-height:1.5;
+}
+
+.approval-actions {
+  margin-top:18px;
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
 @media (max-width: 700px) {
   .two-col {
     grid-template-columns:1fr;
@@ -191,6 +231,10 @@ button:disabled {
 
   .hero h1 {
     font-size:34px;
+  }
+
+  .approval-card h2 {
+    font-size:28px;
   }
 }
 </style>
@@ -297,6 +341,22 @@ let profile = null;
 
 function setStatus(t) {
   document.getElementById("status").innerText = t;
+}
+
+function showPendingApprovalScreen() {
+  document.body.innerHTML = `
+    <div class="approval-wrap">
+      <div class="approval-card">
+        <h2>Account Pending Approval</h2>
+        <p>Your dealer account has not been approved yet.</p>
+        <p>Please wait for admin approval before loading vehicles.</p>
+        <div class="approval-actions">
+          <a href="index.html" class="top-btn">Back to Website</a>
+          <button class="top-btn" onclick="logout()">Logout</button>
+        </div>
+      </div>
+    </div>
+  `;
 }
 
 function initYears() {
@@ -613,6 +673,11 @@ async function saveVehicle() {
   saveBtn.disabled = false;
 }
 
+async function logout() {
+  await client.auth.signOut();
+  window.location.href = "login.html";
+}
+
 async function init() {
   try {
     let { data, error } = await client.auth.getUser();
@@ -628,6 +693,11 @@ async function init() {
 
     const ok = await loadProfile();
     if (!ok) return;
+
+    if (!profile.is_active) {
+      showPendingApprovalScreen();
+      return;
+    }
 
     let c = await countVehicles();
     setStatus("Upload page ready. Vehicles: " + c + " / " + MAX_VEHICLES);
