@@ -1,281 +1,465 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<title>DealerFlow</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8" />
+  <title>DealerFlow</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<style>
-body {
-  margin:0;
-  font-family:Arial;
-  background:#dfe3ea;
-}
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-.hero {
-  background:#3156c7;
-  color:white;
-  text-align:center;
-  padding:40px 20px 30px;
-}
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #dfe3ea;
+      color: #111827;
+    }
 
-.hero h1 {
-  margin:0;
-  font-size:46px;
-}
+    .hero {
+      background: linear-gradient(135deg, #3156c7, #1f3f9e);
+      color: white;
+      padding: 42px 18px 34px;
+      text-align: center;
+    }
 
-.hero p {
-  margin:10px 0;
-}
+    .hero h1 {
+      margin: 0;
+      font-size: 56px;
+      font-weight: 800;
+      letter-spacing: -1px;
+    }
 
-.hero-buttons {
-  margin-top:15px;
-  display:flex;
-  justify-content:center;
-  gap:10px;
-  flex-wrap:wrap;
-}
+    .hero-tagline {
+      margin: 14px auto 0;
+      max-width: 760px;
+      font-size: 24px;
+      line-height: 1.35;
+      font-weight: 500;
+    }
 
-.hero-btn {
-  background:#111827;
-  color:white;
-  border:none;
-  padding:10px 14px;
-  border-radius:999px;
-  font-weight:bold;
-  cursor:pointer;
-}
+    .hero-buttons {
+      margin-top: 18px;
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
 
-.hero-btn.green {
-  background:#16a34a;
-}
+    .hero-btn {
+      text-decoration: none;
+      color: white;
+      border: none;
+      border-radius: 999px;
+      padding: 12px 18px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      min-width: 150px;
+      text-align: center;
+    }
 
-.search-panel {
-  margin-top:15px;
-}
+    .hero-btn.dark {
+      background: #111827;
+    }
 
-.hidden {
-  display:none;
-}
+    .hero-btn.green {
+      background: #16a34a;
+    }
 
-.search-grid {
-  display:grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px,1fr));
-  gap:10px;
-  margin-top:10px;
-}
+    .search-panel {
+      max-width: 760px;
+      margin: 20px auto 0;
+    }
 
-input, select {
-  padding:10px;
-  border-radius:10px;
-  border:none;
-}
+    .hidden {
+      display: none;
+    }
 
-.search-clear {
-  background:#111827;
-  color:white;
-  border:none;
-  padding:10px;
-  border-radius:10px;
-  font-weight:bold;
-  cursor:pointer;
-}
+    .search-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-top: 10px;
+    }
 
-.vehicle-grid {
-  display:grid;
-  grid-template-columns: repeat(auto-fill,minmax(280px,1fr));
-  gap:15px;
-  padding:15px;
-}
+    .search-select,
+    .search-input,
+    .search-clear-btn {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 18px;
+      border: none;
+      font-size: 15px;
+      background: white;
+      color: #111827;
+    }
 
-.vehicle-card {
-  background:white;
-  padding:12px;
-  border-radius:12px;
-}
+    .search-clear-btn {
+      background: #111827;
+      color: white;
+      font-weight: 800;
+      cursor: pointer;
+    }
 
-.vehicle-thumb {
-  width:100%;
-  height:200px;
-  object-fit:cover;
-  border-radius:10px;
-}
+    .section-bar {
+      padding: 16px 18px;
+      background: #eef2ff;
+      text-align: center;
+      font-weight: 800;
+      color: #1f2937;
+      font-size: 18px;
+    }
 
-.price {
-  color:red;
-  font-weight:bold;
-  margin:8px 0;
-}
+    .vehicle-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 18px;
+      padding: 18px;
+      align-items: start;
+    }
 
-.btn {
-  display:block;
-  margin-top:6px;
-  padding:10px;
-  text-align:center;
-  border-radius:8px;
-  text-decoration:none;
-  color:white;
-}
+    .vehicle-card {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 14px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.10);
+    }
 
-.btn-blue { background:#3156c7; }
-.btn-green { background:#16a34a; }
-.btn-dark { background:#1f2937; }
-.btn-whatsapp { background:#25d366; }
-</style>
-</head>
+    .vehicle-thumb {
+      width: 100%;
+      height: 210px;
+      object-fit: cover;
+      border-radius: 14px;
+      background: #e5e7eb;
+      display: block;
+    }
 
-<body>
+    .vehicle-title {
+      margin: 12px 0 8px;
+      font-size: 18px;
+      font-weight: 800;
+      line-height: 1.25;
+      min-height: 46px;
+    }
 
-<div class="hero">
-  <h1>DealerFlow</h1>
-  <p>Drive your dream. Find the right vehicle fast.</p>
+    .vehicle-meta {
+      font-size: 14px;
+      color: #475569;
+      margin-bottom: 4px;
+    }
 
-  <div class="hero-buttons">
-    <a href="dealer-admin.html" class="hero-btn">Dealer Login</a>
-    <button id="searchToggle" class="hero-btn green">Search Vehicle</button>
-  </div>
+    .price {
+      color: #dc2626;
+      font-size: 18px;
+      font-weight: 800;
+      margin: 10px 0 10px;
+    }
 
-  <div id="searchPanel" class="search-panel hidden">
-    <div class="search-grid">
-      
-      <select id="provinceFilter">
-        <option value="">Province</option>
-        <option>Gauteng</option>
-        <option>Western Cape</option>
-        <option>KwaZulu-Natal</option>
-        <option>Eastern Cape</option>
-        <option>Free State</option>
-        <option>Limpopo</option>
-        <option>Mpumalanga</option>
-        <option>North West</option>
-        <option>Northern Cape</option>
-      </select>
+    .button-stack {
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+    }
 
-      <input id="makeFilter" placeholder="Make">
-      <input id="modelFilter" placeholder="Model">
+    .btn {
+      display: block;
+      width: 100%;
+      text-align: center;
+      text-decoration: none;
+      color: white;
+      padding: 12px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 14px;
+    }
 
-      <select id="yearFilter"></select>
+    .btn-blue { background: #3156c7; }
+    .btn-green { background: #16a34a; }
+    .btn-dark { background: #1f2937; }
+    .btn-whatsapp { background: #25d366; }
 
-      <input id="minPrice" placeholder="Min Price">
-      <input id="maxPrice" placeholder="Max Price">
+    .empty {
+      padding: 30px 18px;
+      text-align: center;
+      color: #475569;
+      font-weight: 700;
+      font-size: 18px;
+    }
 
-      <button class="search-clear" onclick="clearSearch()">Clear</button>
+    @media (max-width: 640px) {
+      .hero {
+        padding: 32px 14px 28px;
+      }
 
-    </div>
-  </div>
-</div>
+      .hero h1 {
+        font-size: 38px;
+      }
 
-<div id="vehicle-list" class="vehicle-grid"></div>
+      .hero-tagline {
+        font-size: 18px;
+      }
 
-<script>
-const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
+      .vehicle-grid {
+        grid-template-columns: 1fr;
+        padding: 14px;
+      }
 
-let allVehicles = [];
-
-// populate years
-const yearSelect = document.getElementById("yearFilter");
-yearSelect.innerHTML = '<option value="">Year</option>';
-for(let y=new Date().getFullYear(); y>=1980; y--){
-  let o=document.createElement("option");
-  o.value=y;
-  o.text=y;
-  yearSelect.appendChild(o);
-}
-
-// toggle search
-document.getElementById("searchToggle").onclick = ()=>{
-  document.getElementById("searchPanel").classList.toggle("hidden");
-};
-
-// filter
-function filterVehicles(){
-  const province = provinceFilter.value.toLowerCase();
-  const make = makeFilter.value.toLowerCase();
-  const model = modelFilter.value.toLowerCase();
-  const year = yearFilter.value;
-  const min = parseInt(minPrice.value) || 0;
-  const max = parseInt(maxPrice.value) || 999999999;
-
-  let filtered = allVehicles.filter(v=>{
-    return (
-      (!province || (v.location||"").toLowerCase().includes(province)) &&
-      (!make || (v.make||"").toLowerCase().includes(make)) &&
-      (!model || (v.model||"").toLowerCase().includes(model)) &&
-      (!year || String(v.year)===year) &&
-      ((v.price||0) >= min) &&
-      ((v.price||0) <= max)
-    );
-  });
-
-  render(filtered);
-}
-
-// attach listeners
-["provinceFilter","makeFilter","modelFilter","yearFilter","minPrice","maxPrice"]
-.forEach(id=>{
-  document.getElementById(id).addEventListener("input", filterVehicles);
-});
-
-// clear
-function clearSearch(){
-  provinceFilter.value="";
-  makeFilter.value="";
-  modelFilter.value="";
-  yearFilter.value="";
-  minPrice.value="";
-  maxPrice.value="";
-  render(allVehicles);
-}
-
-// render vehicles
-function render(vehicles){
-  let container=document.getElementById("vehicle-list");
-  container.innerHTML="";
-
-  if(!vehicles.length){
-    container.innerHTML="<p>No vehicles found</p>";
-    return;
-  }
-
-  vehicles.forEach(v=>{
-    let img = v.image || "https://via.placeholder.com/400x250";
-
-    container.innerHTML += `
-      <div class="vehicle-card">
-        <img src="${img}" class="vehicle-thumb">
-        <h3>${v.make || ""} ${v.model || ""}</h3>
-        <div>${v.year || ""} | ${v.location || ""}</div>
-        <div class="price">R${v.price || 0}</div>
-
-        <a href="details.html?id=${v.id}" class="btn btn-blue">View</a>
-        <a href="dealer.html?dealer=${encodeURIComponent(v.dealer||"")}" class="btn btn-green">Dealer</a>
-        <a href="tel:${v.phone||""}" class="btn btn-dark">Call</a>
-        <a href="https://wa.me/27${(v.phone||"").replace(/^0/,"")}" class="btn btn-whatsapp">WhatsApp</a>
-      </div>
-    `;
-  });
-}
-
-// load data
-async function load(){
-  let res = await fetch(
-    supabaseUrl + "/rest/v1/vehicles?select=*&order=id.desc",
-    {
-      headers:{
-        apikey:supabaseKey,
-        Authorization:"Bearer "+supabaseKey
+      .vehicle-thumb {
+        height: 220px;
       }
     }
-  );
+  </style>
+</head>
+<body>
 
-  let data = await res.json();
-  allVehicles = data;
-  render(allVehicles);
-}
+  <div class="hero">
+    <h1>DealerFlow</h1>
+    <div class="hero-tagline">Drive your dream. Find the right vehicle fast.</div>
 
-load();
-</script>
+    <div class="hero-buttons">
+      <a href="dealer-admin.html" class="hero-btn dark">Dealer Login</a>
+      <button id="searchToggleBtn" class="hero-btn green" type="button">Search Vehicle</button>
+    </div>
+
+    <div id="searchPanel" class="search-panel hidden">
+      <div class="search-grid">
+        <select id="provinceFilter" class="search-select">
+          <option value="">Province</option>
+          <option value="Gauteng">Gauteng</option>
+          <option value="Western Cape">Western Cape</option>
+          <option value="KwaZulu-Natal">KwaZulu-Natal</option>
+          <option value="Eastern Cape">Eastern Cape</option>
+          <option value="Free State">Free State</option>
+          <option value="Limpopo">Limpopo</option>
+          <option value="Mpumalanga">Mpumalanga</option>
+          <option value="North West">North West</option>
+          <option value="Northern Cape">Northern Cape</option>
+        </select>
+
+        <input id="makeFilter" class="search-input" placeholder="Make">
+        <input id="modelFilter" class="search-input" placeholder="Model">
+
+        <select id="yearFilter" class="search-select"></select>
+
+        <input id="minPrice" class="search-input" placeholder="Min Price">
+        <input id="maxPrice" class="search-input" placeholder="Max Price">
+
+        <button type="button" id="clearSearchBtn" class="search-clear-btn">Clear</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-bar">Browse our latest stock</div>
+
+  <div id="vehicle-list" class="vehicle-grid"></div>
+
+  <script>
+    const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
+    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
+
+    let allVehicles = [];
+
+    function populateYearFilter() {
+      const yearSelect = document.getElementById("yearFilter");
+      yearSelect.innerHTML = '<option value="">Year</option>';
+
+      const currentYear = new Date().getFullYear();
+      for (let y = currentYear; y >= 1980; y--) {
+        const option = document.createElement("option");
+        option.value = y;
+        option.textContent = y;
+        yearSelect.appendChild(option);
+      }
+    }
+
+    function getMainImage(vehicle) {
+      if (vehicle.image && typeof vehicle.image === "string" && vehicle.image.trim() !== "") {
+        return vehicle.image.trim();
+      }
+
+      if (vehicle.images) {
+        if (Array.isArray(vehicle.images) && vehicle.images.length > 0) {
+          return vehicle.images[0];
+        }
+
+        if (typeof vehicle.images === "string" && vehicle.images.trim() !== "") {
+          return vehicle.images.split(",")[0].trim();
+        }
+      }
+
+      return "https://via.placeholder.com/400x250?text=No+Image";
+    }
+
+    function cleanPhone(phone) {
+      return String(phone || "").replace(/\s+/g, "");
+    }
+
+    function whatsappLink(phone, title) {
+      const phoneClean = cleanPhone(phone);
+      if (!phoneClean) return "#";
+      return "https://wa.me/27" + phoneClean.replace(/^0/, "") +
+        "?text=" + encodeURIComponent("Hi, I'm interested in the " + (title || "vehicle") + ".");
+    }
+
+    function callLink(phone) {
+      const phoneClean = cleanPhone(phone);
+      if (!phoneClean) return "#";
+      return "tel:" + phoneClean;
+    }
+
+    function dealerStockLink(vehicle) {
+      const dealerName = vehicle.dealer || vehicle.dealer_name || "Dealer";
+      return "dealer.html?dealer=" + encodeURIComponent(dealerName);
+    }
+
+    function renderVehicles(vehicles) {
+      const container = document.getElementById("vehicle-list");
+      container.innerHTML = "";
+
+      if (!vehicles || !vehicles.length) {
+        container.innerHTML = '<div class="empty">No vehicles found</div>';
+        return;
+      }
+
+      vehicles.forEach(v => {
+        const mainImage = getMainImage(v);
+        const dealerName = v.dealer || v.dealer_name || "Dealer";
+        const fallbackTitle = [v.year, v.make, v.model].filter(Boolean).join(" ");
+        const title = v.title || fallbackTitle || "No Title";
+
+        const card = document.createElement("div");
+        card.className = "vehicle-card";
+
+        card.innerHTML = `
+          <img
+            src="${mainImage}"
+            class="vehicle-thumb"
+            alt="${title}"
+            onerror="this.src='https://via.placeholder.com/400x250?text=No+Image'"
+          >
+
+          <div class="vehicle-title">${title}</div>
+
+          <div class="vehicle-meta">Year: ${v.year || "-"}</div>
+          <div class="vehicle-meta">Location: ${v.location || "-"}</div>
+          <div class="vehicle-meta">Dealer: ${dealerName}</div>
+
+          <div class="price">R${v.price || 0}</div>
+
+          <div class="button-stack">
+            <a href="details.html?id=${v.id}" class="btn btn-blue">View</a>
+            <a href="${dealerStockLink(v)}" class="btn btn-green">Dealer</a>
+            <a href="${callLink(v.phone)}" class="btn btn-dark">Call</a>
+            <a href="${whatsappLink(v.phone, title)}" target="_blank" class="btn btn-whatsapp">WhatsApp</a>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    function filterVehicles() {
+      const province = document.getElementById("provinceFilter").value.trim().toLowerCase();
+      const make = document.getElementById("makeFilter").value.trim().toLowerCase();
+      const model = document.getElementById("modelFilter").value.trim().toLowerCase();
+      const year = document.getElementById("yearFilter").value.trim();
+      const minPriceVal = parseInt(document.getElementById("minPrice").value, 10) || 0;
+      const maxPriceVal = parseInt(document.getElementById("maxPrice").value, 10) || 999999999;
+
+      const filtered = allVehicles.filter(v => {
+        const location = String(v.location || "").toLowerCase();
+        const vehicleMake = String(v.make || "").toLowerCase();
+        const vehicleModel = String(v.model || "").toLowerCase();
+        const vehicleTitle = String(v.title || "").toLowerCase();
+        const vehicleYear = String(v.year || "").trim();
+        const vehiclePrice = parseInt(v.price, 10) || 0;
+
+        const matchesProvince = !province || location.includes(province);
+        const matchesMake = !make || vehicleMake.includes(make) || vehicleTitle.includes(make);
+        const matchesModel = !model || vehicleModel.includes(model) || vehicleTitle.includes(model);
+        const matchesYear = !year || vehicleYear === year;
+        const matchesMinPrice = vehiclePrice >= minPriceVal;
+        const matchesMaxPrice = vehiclePrice <= maxPriceVal;
+
+        return (
+          matchesProvince &&
+          matchesMake &&
+          matchesModel &&
+          matchesYear &&
+          matchesMinPrice &&
+          matchesMaxPrice
+        );
+      });
+
+      renderVehicles(filtered);
+    }
+
+    async function loadVehicles() {
+      try {
+        const res = await fetch(
+          supabaseUrl + "/rest/v1/active_vehicles?select=*&order=id.desc",
+          {
+            headers: {
+              apikey: supabaseKey,
+              Authorization: "Bearer " + supabaseKey
+            }
+          }
+        );
+
+        const vehicles = await res.json();
+
+        if (!Array.isArray(vehicles)) {
+          document.getElementById("vehicle-list").innerHTML =
+            '<div class="empty">Could not load vehicles.</div>';
+          return;
+        }
+
+        allVehicles = vehicles;
+        renderVehicles(allVehicles);
+
+      } catch (err) {
+        console.error("Error loading vehicles:", err);
+        document.getElementById("vehicle-list").innerHTML =
+          '<div class="empty">Could not load vehicles.</div>';
+      }
+    }
+
+    const searchToggleBtn = document.getElementById("searchToggleBtn");
+    const searchPanel = document.getElementById("searchPanel");
+    const provinceFilter = document.getElementById("provinceFilter");
+    const makeFilter = document.getElementById("makeFilter");
+    const modelFilter = document.getElementById("modelFilter");
+    const yearFilter = document.getElementById("yearFilter");
+    const minPrice = document.getElementById("minPrice");
+    const maxPrice = document.getElementById("maxPrice");
+    const clearSearchBtn = document.getElementById("clearSearchBtn");
+
+    searchToggleBtn.addEventListener("click", function () {
+      searchPanel.classList.toggle("hidden");
+    });
+
+    provinceFilter.addEventListener("change", filterVehicles);
+    yearFilter.addEventListener("change", filterVehicles);
+    makeFilter.addEventListener("input", filterVehicles);
+    modelFilter.addEventListener("input", filterVehicles);
+    minPrice.addEventListener("input", filterVehicles);
+    maxPrice.addEventListener("input", filterVehicles);
+
+    clearSearchBtn.addEventListener("click", function () {
+      provinceFilter.value = "";
+      makeFilter.value = "";
+      modelFilter.value = "";
+      yearFilter.value = "";
+      minPrice.value = "";
+      maxPrice.value = "";
+      renderVehicles(allVehicles);
+    });
+
+    populateYearFilter();
+    loadVehicles();
+  </script>
 
 </body>
 </html>
