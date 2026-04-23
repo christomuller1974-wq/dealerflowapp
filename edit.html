@@ -276,6 +276,46 @@
       cursor: not-allowed;
     }
 
+    .approval-wrap {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: #f1f5f9;
+    }
+
+    .approval-card {
+      max-width: 520px;
+      width: 100%;
+      background: white;
+      border-radius: 18px;
+      padding: 28px 24px;
+      text-align: center;
+      box-shadow: 0 8px 22px rgba(0,0,0,0.10);
+    }
+
+    .approval-card h2 {
+      margin: 0 0 12px;
+      font-size: 32px;
+      color: #111827;
+    }
+
+    .approval-card p {
+      margin: 8px 0;
+      font-size: 17px;
+      color: #475569;
+      line-height: 1.5;
+    }
+
+    .approval-actions {
+      margin-top: 18px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
     @media (max-width: 800px) {
       .hero h1 {
         font-size: 30px;
@@ -283,6 +323,10 @@
 
       .two-col {
         grid-template-columns: 1fr;
+      }
+
+      .approval-card h2 {
+        font-size: 28px;
       }
     }
   </style>
@@ -402,6 +446,7 @@
     let currentUser = null;
     let vehicleId = null;
     let currentVehicle = null;
+    let currentProfile = null;
     let originalStorageUrls = [];
     let imageList = [];
     let draggedIndex = null;
@@ -409,6 +454,22 @@
     function setStatus(message) {
       document.getElementById("status").textContent = message;
       console.log("[STATUS]", message);
+    }
+
+    function showPendingApprovalScreen() {
+      document.body.innerHTML = `
+        <div class="approval-wrap">
+          <div class="approval-card">
+            <h2>Account Pending Approval</h2>
+            <p>Your dealer account has not been approved yet.</p>
+            <p>Please wait for admin approval before editing vehicles.</p>
+            <div class="approval-actions">
+              <a href="index.html" class="top-btn">Back to Website</a>
+              <button class="top-btn" onclick="logout()">Logout</button>
+            </div>
+          </div>
+        </div>
+      `;
     }
 
     function getIdFromUrl() {
@@ -453,6 +514,7 @@
         return null;
       }
 
+      currentProfile = data;
       return data;
     }
 
@@ -528,7 +590,7 @@
       event.currentTarget.classList.add("dragging");
     }
 
-    function handleDragEnd(event) {
+    function handleDragEnd() {
       draggedIndex = null;
       document.querySelectorAll(".preview-card").forEach(card => {
         card.classList.remove("dragging", "drag-over");
@@ -699,6 +761,7 @@
         .from("vehicles")
         .select("*")
         .eq("id", vehicleId)
+        .eq("user_id", currentUser.id)
         .single();
 
       if (error || !data) {
@@ -911,7 +974,8 @@
             image: mainImage,
             images: extraImages.join(",")
           })
-          .eq("id", vehicleId);
+          .eq("id", vehicleId)
+          .eq("user_id", currentUser.id);
 
         if (error) {
           console.log(error);
@@ -960,6 +1024,17 @@
 
       const okUser = await requireUser();
       if (!okUser) return;
+
+      const profile = await loadDealerProfile();
+      if (!profile) {
+        setStatus("Could not load dealer profile.");
+        return;
+      }
+
+      if (!profile.is_active) {
+        showPendingApprovalScreen();
+        return;
+      }
 
       const okVehicle = await loadVehicle();
       if (!okVehicle) return;
