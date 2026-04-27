@@ -1,513 +1,235 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>DealerFlow</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<title>DealerFlow</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    * { box-sizing: border-box; }
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f1f5f9;
+}
 
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #eef1f5;
-      color: #111827;
-    }
+/* HEADER */
+.header {
+  background: #3156c7;
+  color: white;
+  text-align: center;
+  padding: 30px 15px;
+}
 
-    .hero {
-      background: linear-gradient(135deg, #3156c7, #1f3f9e);
-      color: white;
-      padding: 42px 18px 34px;
-      text-align: center;
-    }
+.header h1 {
+  margin: 0;
+  font-size: 40px;
+  font-weight: 900;
+}
 
-    .hero h1 {
-      margin: 0;
-      font-size: 56px;
-      font-weight: 800;
-    }
+.header p {
+  margin: 6px 0 0;
+  font-size: 16px;
+}
 
-    .hero-tagline {
-      margin: 14px auto 0;
-      max-width: 760px;
-      font-size: 24px;
-      line-height: 1.35;
-    }
+/* GRID */
+.container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px;
+}
 
-    .hero-buttons {
-      margin-top: 18px;
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
 
-    .hero-btn {
-      text-decoration: none;
-      color: white;
-      border: none;
-      border-radius: 999px;
-      padding: 12px 18px;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      min-width: 150px;
-      text-align: center;
-    }
+/* CARD */
+.card {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+  transition: 0.2s;
+}
 
-    .hero-btn.dark { background: #111827; }
-    .hero-btn.green { background: #16a34a; }
+.card:hover {
+  transform: translateY(-5px);
+}
 
-    .search-panel {
-      max-width: 760px;
-      margin: 20px auto 0;
-    }
+/* IMAGE */
+.card-img {
+  position: relative;
+}
 
-    .hidden { display: none; }
+.card-img img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
 
-    .search-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
-      margin-top: 10px;
-    }
+.thumb-row {
+  display: flex;
+  gap: 6px;
+  padding: 8px;
+}
 
-    .search-select,
-    .search-input,
-    .search-clear-btn {
-      width: 100%;
-      padding: 14px 16px;
-      border-radius: 14px;
-      border: none;
-      font-size: 15px;
-      background: white;
-      color: #111827;
-    }
+.thumb-row img {
+  width: 50px;
+  height: 38px;
+  object-fit: cover;
+  border-radius: 6px;
+}
 
-    .search-clear-btn {
-      background: #111827;
-      color: white;
-      font-weight: 800;
-      cursor: pointer;
-    }
+/* CONTENT */
+.card-body {
+  padding: 14px;
+}
 
-    .section-bar {
-      padding: 16px 18px;
-      background: #eef2ff;
-      text-align: center;
-      font-weight: 800;
-      color: #1f2937;
-      font-size: 18px;
-    }
+.title {
+  font-size: 18px;
+  font-weight: 900;
+  margin-bottom: 6px;
+}
 
-    .vehicle-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 20px;
-      padding: 24px;
-      align-items: stretch;
-    }
+.price {
+  color: #dc2626;
+  font-size: 22px;
+  font-weight: 900;
+  margin-bottom: 8px;
+}
 
-    .car-card {
-      background: white;
-      border-radius: 18px;
-      overflow: hidden;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.10);
-      display: flex;
-      flex-direction: column;
-      transition: 0.2s ease;
-      min-height: 100%;
-    }
+.meta {
+  font-size: 13px;
+  color: #475569;
+  margin-bottom: 6px;
+}
 
-    .car-card:hover {
-      transform: translateY(-4px);
-    }
+/* BUTTON */
+.btn {
+  display: block;
+  width: 100%;
+  text-align: center;
+  background: linear-gradient(135deg, #3156c7, #4f7cff);
+  color: white;
+  text-decoration: none;
+  padding: 12px;
+  border-radius: 10px;
+  font-weight: 900;
+  margin-top: 10px;
+}
 
-    .car-img-wrap {
-      position: relative;
-      background: #e5e7eb;
-    }
-
-    .car-img {
-      width: 100%;
-      height: 210px;
-      object-fit: cover;
-      display: block;
-    }
-
-    .photo-badge {
-      position: absolute;
-      right: 10px;
-      bottom: 10px;
-      background: rgba(17,24,39,0.85);
-      color: white;
-      font-size: 12px;
-      font-weight: 700;
-      padding: 6px 9px;
-      border-radius: 999px;
-    }
-
-    .car-body {
-      padding: 14px 16px;
-      flex: 1;
-    }
-
-    .car-title {
-      font-size: 19px;
-      font-weight: 800;
-      margin: 0 0 8px;
-      color: #111827;
-      line-height: 1.25;
-    }
-
-    .car-subtitle {
-      font-size: 13px;
-      color: #64748b;
-      margin-bottom: 12px;
-    }
-
-    .car-meta {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 7px;
-      font-size: 13px;
-      color: #475569;
-      margin-bottom: 12px;
-    }
-
-    .car-price {
-      color: #dc2626;
-      font-size: 22px;
-      font-weight: 900;
-      margin: 8px 0 0;
-    }
-
-    .car-actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      padding: 0 14px 14px;
-    }
-
-    .card-btn {
-      display: block;
-      text-align: center;
-      text-decoration: none;
-      border: none;
-      border-radius: 10px;
-      padding: 9px 10px;
-      font-size: 13px;
-      font-weight: 800;
-      color: white;
-      cursor: pointer;
-    }
-
-    .btn-view {
-      grid-column: span 2;
-      background: #3156c7;
-    }
-
-    .btn-dealer {
-      background: #16a34a;
-    }
-
-    .btn-call {
-      background: #1f2937;
-    }
-
-    .btn-whatsapp {
-      grid-column: span 2;
-      background: #25d366;
-    }
-
-    .empty {
-      padding: 30px 18px;
-      text-align: center;
-      color: #475569;
-      font-weight: 700;
-      font-size: 18px;
-    }
-
-    @media (max-width: 640px) {
-      .hero {
-        padding: 32px 14px 28px;
-      }
-
-      .hero h1 {
-        font-size: 40px;
-      }
-
-      .hero-tagline {
-        font-size: 18px;
-      }
-
-      .vehicle-grid {
-        grid-template-columns: 1fr;
-        padding: 14px;
-      }
-
-      .car-img {
-        height: 220px;
-      }
-    }
-  </style>
+/* EMPTY */
+.empty {
+  text-align: center;
+  padding: 40px;
+  font-weight: 700;
+}
+</style>
 </head>
+
 <body>
 
-  <div class="hero">
-    <h1>DealerFlow</h1>
-    <div class="hero-tagline">Drive your dream. Find the right vehicle fast.</div>
+<div class="header">
+  <h1>DealerFlow</h1>
+  <p>Find your next vehicle</p>
+</div>
 
-    <div class="hero-buttons">
-      <a href="dealer-admin.html" class="hero-btn dark">Dealer Login</a>
-      <button id="searchToggleBtn" class="hero-btn green" type="button">Search Vehicle</button>
-    </div>
+<div class="container">
+  <div id="grid" class="grid"></div>
+</div>
 
-    <div id="searchPanel" class="search-panel hidden">
-      <div class="search-grid">
-        <select id="provinceFilter" class="search-select">
-          <option value="">Province</option>
-          <option value="Gauteng">Gauteng</option>
-          <option value="Western Cape">Western Cape</option>
-          <option value="KwaZulu-Natal">KwaZulu-Natal</option>
-          <option value="Eastern Cape">Eastern Cape</option>
-          <option value="Free State">Free State</option>
-          <option value="Limpopo">Limpopo</option>
-          <option value="Mpumalanga">Mpumalanga</option>
-          <option value="North West">North West</option>
-          <option value="Northern Cape">Northern Cape</option>
-        </select>
+<script>
+const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
+const supabaseKey = "sb_publishable_D7saHOTE_JhSlMnSgBnIhQ_mOAOUD9s";
 
-        <input id="makeFilter" class="search-input" placeholder="Make">
-        <input id="modelFilter" class="search-input" placeholder="Model">
-        <select id="yearFilter" class="search-select"></select>
-        <input id="minPrice" class="search-input" placeholder="Min Price">
-        <input id="maxPrice" class="search-input" placeholder="Max Price">
+/* HELPERS */
+function formatPrice(price) {
+  const num = Number(String(price || "").replace(/\D/g, ""));
+  if (!num) return "R0";
+  return "R" + num.toLocaleString("en-ZA");
+}
 
-        <button type="button" id="clearSearchBtn" class="search-clear-btn">Clear</button>
+function getImages(v) {
+  const arr = [];
+
+  if (v.image) arr.push(v.image);
+
+  if (v.images) {
+    v.images.split(",").forEach(x => {
+      const img = x.trim();
+      if (img && !arr.includes(img)) arr.push(img);
+    });
+  }
+
+  if (!arr.length) {
+    arr.push("https://via.placeholder.com/400x300?text=No+Image");
+  }
+
+  return arr;
+}
+
+/* LOAD VEHICLES */
+async function loadVehicles() {
+  const res = await fetch(
+    supabaseUrl + "/rest/v1/active_vehicles?select=*",
+    {
+      headers: {
+        apikey: supabaseKey,
+        Authorization: "Bearer " + supabaseKey
+      }
+    }
+  );
+
+  const data = await res.json();
+
+  const grid = document.getElementById("grid");
+
+  if (!data.length) {
+    grid.innerHTML = '<div class="empty">No vehicles found</div>';
+    return;
+  }
+
+  let html = "";
+
+  data.forEach(v => {
+    const images = getImages(v);
+    const dealer = v.dealer || "Dealer";
+
+    let thumbs = "";
+    images.slice(0,4).forEach(img => {
+      thumbs += <img src="${img}">;
+    });
+
+    html += `
+      <div class="card">
+
+        <div class="card-img">
+          <img src="${images[0]}">
+          <div class="thumb-row">${thumbs}</div>
+        </div>
+
+        <div class="card-body">
+          <div class="title">${v.year || ""} ${v.make || ""} ${v.model || ""}</div>
+
+          <div class="price">${formatPrice(v.price)}</div>
+
+          <div class="meta">📍 ${v.location || "-"}</div>
+          <div class="meta">🚗 ${v.mileage || "-"}</div>
+          <div class="meta">🏢 ${dealer}</div>
+
+          <a href="details.html?id=${v.id}" class="btn">View Details</a>
+        </div>
+
       </div>
-    </div>
-  </div>
+    `;
+  });
 
-  <div class="section-bar">Browse our latest stock</div>
+  grid.innerHTML = html;
+}
 
-  <div id="vehicle-list" class="vehicle-grid"></div>
-
-  <script>
-    const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
-    const supabaseKey = "sb_publishable_D7saHOTE_JhSlMnSgBnIhQ_mOAOUD9s";
-
-    let allVehicles = [];
-
-    function populateYearFilter() {
-      const yearSelect = document.getElementById("yearFilter");
-      yearSelect.innerHTML = '<option value="">Year</option>';
-
-      const currentYear = new Date().getFullYear();
-      for (let y = currentYear; y >= 1980; y--) {
-        const option = document.createElement("option");
-        option.value = y;
-        option.textContent = y;
-        yearSelect.appendChild(option);
-      }
-    }
-
-    function getMainImage(vehicle) {
-      if (vehicle.image && String(vehicle.image).trim()) {
-        return String(vehicle.image).trim();
-      }
-
-      if (vehicle.images && String(vehicle.images).trim()) {
-        return String(vehicle.images).split(",")[0].trim();
-      }
-
-      return "https://via.placeholder.com/400x250?text=No+Image";
-    }
-
-    function getImageCount(vehicle) {
-      let count = 0;
-
-      if (vehicle.image && String(vehicle.image).trim()) count++;
-
-      if (vehicle.images && String(vehicle.images).trim()) {
-        count += String(vehicle.images).split(",").filter(x => x.trim()).length;
-      }
-
-      return count || 1;
-    }
-
-    function cleanPhone(phone) {
-      return String(phone || "").replace(/\s+/g, "");
-    }
-
-    function whatsappLink(phone, title) {
-      const phoneClean = cleanPhone(phone);
-      if (!phoneClean) return "#";
-
-      return "https://wa.me/27" + phoneClean.replace(/^0/, "") +
-        "?text=" + encodeURIComponent("Hi, I'm interested in the " + (title || "vehicle") + ".");
-    }
-
-    function callLink(phone) {
-      const phoneClean = cleanPhone(phone);
-      if (!phoneClean) return "#";
-      return "tel:" + phoneClean;
-    }
-
-    function dealerStockLink(vehicle) {
-      const dealerName = vehicle.dealer || vehicle.dealer_name || "Dealer";
-      return "dealer.html?dealer=" + encodeURIComponent(dealerName);
-    }
-
-    function formatPrice(price) {
-      const num = Number(String(price || "").replace(/\D/g, ""));
-      if (!num) return "R0";
-      return "R" + num.toLocaleString("en-ZA");
-    }
-
-    function renderVehicles(vehicles) {
-      const container = document.getElementById("vehicle-list");
-      container.innerHTML = "";
-
-      if (!vehicles || !vehicles.length) {
-        container.innerHTML = '<div class="empty">No vehicles found</div>';
-        return;
-      }
-
-      vehicles.forEach(v => {
-        const mainImage = getMainImage(v);
-        const dealerName = v.dealer || v.dealer_name || "Dealer";
-        const fallbackTitle = [v.year, v.make, v.model].filter(Boolean).join(" ");
-        const title = v.title || fallbackTitle || "No Title";
-        const imageCount = getImageCount(v);
-
-        const card = document.createElement("div");
-        card.className = "car-card";
-
-        card.innerHTML = `
-          <div class="car-img-wrap">
-            <img
-              src="${mainImage}"
-              class="car-img"
-              alt="${title}"
-              onerror="this.src='https://via.placeholder.com/400x250?text=No+Image'"
-            >
-            <div class="photo-badge">📷 ${imageCount}</div>
-          </div>
-
-          <div class="car-body">
-            <h3 class="car-title">${title}</h3>
-            <div class="car-subtitle">${v.make || ""} ${v.model || ""}</div>
-
-            <div class="car-meta">
-              <div>📅 ${v.year || "-"}</div>
-              <div>📍 ${v.location || "-"}</div>
-              <div>🛣️ ${v.mileage || "-"}</div>
-              <div>🏢 ${dealerName}</div>
-            </div>
-
-            <div class="car-price">${formatPrice(v.price)}</div>
-          </div>
-
-          <div class="car-actions">
-            <a href="details.html?id=${v.id}" class="card-btn btn-view">View Details</a>
-            <a href="${dealerStockLink(v)}" class="card-btn btn-dealer">Dealer</a>
-            <a href="${callLink(v.phone)}" class="card-btn btn-call">Call</a>
-            <a href="${whatsappLink(v.phone, title)}" target="_blank" class="card-btn btn-whatsapp">WhatsApp</a>
-          </div>
-        `;
-
-        container.appendChild(card);
-      });
-    }
-
-    function filterVehicles() {
-      const province = document.getElementById("provinceFilter").value.trim().toLowerCase();
-      const make = document.getElementById("makeFilter").value.trim().toLowerCase();
-      const model = document.getElementById("modelFilter").value.trim().toLowerCase();
-      const year = document.getElementById("yearFilter").value.trim();
-      const minPriceVal = parseInt(document.getElementById("minPrice").value, 10) || 0;
-      const maxPriceVal = parseInt(document.getElementById("maxPrice").value, 10) || 999999999;
-
-      const filtered = allVehicles.filter(v => {
-        const location = String(v.location || "").toLowerCase();
-        const vehicleMake = String(v.make || "").toLowerCase();
-        const vehicleModel = String(v.model || "").toLowerCase();
-        const vehicleTitle = String(v.title || "").toLowerCase();
-        const vehicleYear = String(v.year || "").trim();
-        const vehiclePrice = parseInt(String(v.price || "").replace(/\D/g, ""), 10) || 0;
-
-        return (
-          (!province || location.includes(province)) &&
-          (!make || vehicleMake.includes(make) || vehicleTitle.includes(make)) &&
-          (!model || vehicleModel.includes(model) || vehicleTitle.includes(model)) &&
-          (!year || vehicleYear === year) &&
-          vehiclePrice >= minPriceVal &&
-          vehiclePrice <= maxPriceVal
-        );
-      });
-
-      renderVehicles(filtered);
-    }
-
-    async function loadVehicles() {
-      try {
-        const res = await fetch(
-          supabaseUrl + "/rest/v1/active_vehicles?select=*&order=id.desc",
-          {
-            headers: {
-              apikey: supabaseKey,
-              Authorization: "Bearer " + supabaseKey
-            }
-          }
-        );
-
-        const vehicles = await res.json();
-
-        if (!Array.isArray(vehicles)) {
-          document.getElementById("vehicle-list").innerHTML =
-            '<div class="empty">Could not load vehicles.</div>';
-          return;
-        }
-
-        allVehicles = vehicles;
-        renderVehicles(allVehicles);
-
-      } catch (err) {
-        console.error("Error loading vehicles:", err);
-        document.getElementById("vehicle-list").innerHTML =
-          '<div class="empty">Could not load vehicles.</div>';
-      }
-    }
-
-    const searchToggleBtn = document.getElementById("searchToggleBtn");
-    const searchPanel = document.getElementById("searchPanel");
-
-    searchToggleBtn.addEventListener("click", function () {
-      searchPanel.classList.toggle("hidden");
-    });
-
-    document.getElementById("provinceFilter").addEventListener("change", filterVehicles);
-    document.getElementById("yearFilter").addEventListener("change", filterVehicles);
-    document.getElementById("makeFilter").addEventListener("input", filterVehicles);
-    document.getElementById("modelFilter").addEventListener("input", filterVehicles);
-    document.getElementById("minPrice").addEventListener("input", filterVehicles);
-    document.getElementById("maxPrice").addEventListener("input", filterVehicles);
-
-    document.getElementById("clearSearchBtn").addEventListener("click", function () {
-      document.getElementById("provinceFilter").value = "";
-      document.getElementById("makeFilter").value = "";
-      document.getElementById("modelFilter").value = "";
-      document.getElementById("yearFilter").value = "";
-      document.getElementById("minPrice").value = "";
-      document.getElementById("maxPrice").value = "";
-      renderVehicles(allVehicles);
-    });
-
-    populateYearFilter();
-    loadVehicles();
-  </script>
+loadVehicles();
+</script>
 
 </body>
 </html>
