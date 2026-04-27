@@ -7,95 +7,108 @@
 
 <style>
 body {
-  font-family: Arial;
   margin: 0;
-  background: #f5f7fb;
+  font-family: Arial, sans-serif;
+  background: #f1f5f9;
+  color: #111827;
 }
 
-/* HEADER */
 .header {
   background: linear-gradient(90deg,#1e3c72,#2a5298);
   color: white;
   text-align: center;
-  padding: 30px;
+  padding: 38px 15px;
 }
 
-/* GRID */
+.header h1 {
+  margin: 0;
+  font-size: 42px;
+  font-weight: 900;
+}
+
+.header p {
+  margin: 8px 0 0;
+  font-size: 17px;
+}
+
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill,minmax(300px,1fr));
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
   gap: 20px;
-  padding: 20px;
+  padding: 22px;
+  max-width: 1250px;
+  margin: auto;
 }
 
-/* CARD */
 .card {
   background: white;
-  border-radius: 12px;
+  border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  transition: 0.3s;
+  box-shadow: 0 5px 16px rgba(0,0,0,0.12);
 }
 
-.card:hover {
-  transform: translateY(-5px);
-}
-
-/* IMAGE */
-.card-img img {
+.main-img {
   width: 100%;
   height: 220px;
   object-fit: cover;
+  display: block;
 }
 
-/* THUMBNAILS */
-.thumb-row {
+.thumbs {
   display: flex;
-  gap: 5px;
+  gap: 6px;
   padding: 8px;
+  overflow-x: auto;
 }
 
-.thumb-row img {
-  width: 50px;
-  height: 40px;
+.thumbs img {
+  width: 54px;
+  height: 42px;
   object-fit: cover;
   border-radius: 6px;
 }
 
-/* BODY */
-.card-body {
-  padding: 15px;
+.body {
+  padding: 14px;
 }
 
 .title {
-  font-weight: bold;
-  font-size: 16px;
+  font-size: 18px;
+  font-weight: 900;
+  margin-bottom: 6px;
 }
 
 .price {
-  color: red;
-  font-size: 18px;
+  color: #dc2626;
+  font-size: 22px;
+  font-weight: 900;
   margin: 8px 0;
 }
 
-/* BUTTON */
-.btn {
-  width: 100%;
-  padding: 10px;
-  background: #2a5298;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
+.meta {
+  font-size: 14px;
+  color: #475569;
+  margin: 5px 0;
 }
 
-.btn:hover {
-  background: #1e3c72;
+.btn {
+  display: block;
+  width: 100%;
+  text-align: center;
+  background: #3156c7;
+  color: white;
+  text-decoration: none;
+  padding: 12px;
+  border-radius: 10px;
+  margin-top: 12px;
+  font-weight: 900;
 }
 
 .empty {
+  padding: 40px;
   text-align: center;
-  padding: 50px;
+  font-weight: 800;
+  color: #475569;
 }
 </style>
 </head>
@@ -110,32 +123,109 @@ body {
 <div id="grid" class="grid"></div>
 
 <script>
-
-/* 🔑 PUT YOUR REAL DETAILS HERE */
-const supabaseUrl = "https://YOUR_PROJECT.supabase.co";
+const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
 
-/* GET IMAGES */
-function getImages(v) {
-  let images = [];
-  if (v.image) images.push(v.image);
+function formatPrice(price) {
+  var num = Number(String(price || "").replace(/\D/g, ""));
+  if (!num) return "R0";
+  return "R" + num.toLocaleString("en-ZA");
+}
 
-  if (v.images) {
-    v.images.split(",").forEach(i => {
-      images.push(i.trim());
+function getImages(v) {
+  var arr = [];
+
+  if (v.image && String(v.image).trim() !== "") {
+    arr.push(String(v.image).trim());
+  }
+
+  if (v.images && String(v.images).trim() !== "") {
+    var extras = String(v.images).split(",");
+    extras.forEach(function(x) {
+      var img = x.trim();
+      if (img && arr.indexOf(img) === -1) {
+        arr.push(img);
+      }
     });
   }
 
-  return images;
+  if (arr.length === 0) {
+    arr.push("https://via.placeholder.com/400x300?text=No+Image");
+  }
+
+  return arr;
 }
 
-/* LOAD DATA */
+function createVehicleCard(v) {
+  var images = getImages(v);
+
+  var card = document.createElement("div");
+  card.className = "card";
+
+  var mainImg = document.createElement("img");
+  mainImg.className = "main-img";
+  mainImg.src = images[0];
+  mainImg.alt = "Vehicle image";
+  card.appendChild(mainImg);
+
+  var thumbs = document.createElement("div");
+  thumbs.className = "thumbs";
+
+  images.slice(0, 4).forEach(function(imgUrl) {
+    var t = document.createElement("img");
+    t.src = imgUrl;
+    t.alt = "Thumbnail";
+    thumbs.appendChild(t);
+  });
+
+  card.appendChild(thumbs);
+
+  var body = document.createElement("div");
+  body.className = "body";
+
+  var title = document.createElement("div");
+  title.className = "title";
+  title.textContent =
+    (v.year || "") + " " + (v.make || "") + " " + (v.model || "");
+  body.appendChild(title);
+
+  var price = document.createElement("div");
+  price.className = "price";
+  price.textContent = formatPrice(v.price);
+  body.appendChild(price);
+
+  var loc = document.createElement("div");
+  loc.className = "meta";
+  loc.textContent = "📍 " + (v.location || "-");
+  body.appendChild(loc);
+
+  var mileage = document.createElement("div");
+  mileage.className = "meta";
+  mileage.textContent = "🚗 " + (v.mileage || "-");
+  body.appendChild(mileage);
+
+  var dealer = document.createElement("div");
+  dealer.className = "meta";
+  dealer.textContent = "🏢 " + (v.dealer || "Dealer");
+  body.appendChild(dealer);
+
+  var btn = document.createElement("a");
+  btn.className = "btn";
+  btn.href = "details.html?id=" + v.id;
+  btn.textContent = "View Details";
+  body.appendChild(btn);
+
+  card.appendChild(body);
+
+  return card;
+}
+
 async function loadCars() {
-  const grid = document.getElementById("grid");
+  var grid = document.getElementById("grid");
 
   try {
-    const res = await fetch(
-      supabaseUrl + "/rest/v1/active_vehicles?select=*",
+    var res = await fetch(
+      supabaseUrl + "/rest/v1/active_vehicles?select=*&order=id.desc",
       {
         headers: {
           apikey: supabaseKey,
@@ -144,58 +234,26 @@ async function loadCars() {
       }
     );
 
-    const data = await res.json();
+    var data = await res.json();
 
-    if (!data.length) {
+    grid.innerHTML = "";
+
+    if (!Array.isArray(data) || data.length === 0) {
       grid.innerHTML = '<div class="empty">No vehicles found</div>';
       return;
     }
 
-    let html = "";
-
-    data.forEach(v => {
-      const images = getImages(v);
-
-      let thumbs = "";
-      images.slice(0,4).forEach(img => {
-        thumbs += <img src="${img}">;
-      });
-
-      html += `
-        <div class="card">
-          <div class="card-img">
-            <img src="${images[0] || ''}">
-            <div class="thumb-row">${thumbs}</div>
-          </div>
-
-          <div class="card-body">
-            <div class="title">
-              ${v.year || ""} ${v.make || ""} ${v.model || ""}
-            </div>
-
-            <div class="price">
-              R ${v.price || ""}
-            </div>
-
-            <button class="btn"
-              onclick="window.location='details.html?id=${v.id}'">
-              View Details
-            </button>
-          </div>
-        </div>
-      `;
+    data.forEach(function(v) {
+      grid.appendChild(createVehicleCard(v));
     });
 
-    grid.innerHTML = html;
-
   } catch (err) {
-    console.error(err);
+    console.log(err);
     grid.innerHTML = '<div class="empty">Error loading vehicles</div>';
   }
 }
 
 loadCars();
-
 </script>
 
 </body>
