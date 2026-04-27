@@ -1,266 +1,231 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>DealerFlow</title>
+<meta charset="UTF-8">
+<title>DealerFlow</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    body {
-      margin:0;
-      font-family: Arial;
-      background:#f5f7fb;
-    }
+<style>
+body{margin:0;font-family:Arial,sans-serif;background:#f5f7fb;color:#111827}
+.header{background:linear-gradient(90deg,#1e3c72,#2563eb);color:white;text-align:center;padding:38px 15px}
+.header h1{margin:0;font-size:42px;font-weight:900}
+.header p{margin:8px 0 0;font-size:17px}
 
-    .header {
-      background: linear-gradient(90deg,#1e3a8a,#2563eb);
-      color:white;
-      text-align:center;
-      padding:40px 20px;
-    }
+.filters{background:white;margin:20px auto;padding:16px;max-width:1200px;border-radius:14px;box-shadow:0 3px 12px rgba(0,0,0,.08);display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+.filters input,.filters button{padding:12px;border-radius:10px;border:1px solid #d1d5db;font-size:14px}
+.filters button{border:none;color:white;font-weight:900;cursor:pointer}
+.btn-search{background:#2563eb}
+.btn-clear{background:#111827}
 
-    .header h1 {
-      margin:0;
-      font-size:36px;
-    }
-
-    .header p {
-      margin-top:10px;
-      opacity:0.9;
-    }
-
-    /* FILTER BAR */
-    .filters {
-      background:white;
-      padding:15px;
-      margin:20px;
-      border-radius:10px;
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      box-shadow:0 2px 8px rgba(0,0,0,0.05);
-    }
-
-    .filters input, .filters select {
-      padding:10px;
-      border-radius:6px;
-      border:1px solid #ddd;
-      min-width:150px;
-    }
-
-    .filters button {
-      padding:10px 15px;
-      border:none;
-      border-radius:6px;
-      cursor:pointer;
-      font-weight:bold;
-    }
-
-    .btn-search {
-      background:#2563eb;
-      color:white;
-    }
-
-    .btn-clear {
-      background:#e5e7eb;
-    }
-
-    /* GRID */
-    .grid {
-      display:grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px,1fr));
-      gap:20px;
-      padding:20px;
-    }
-
-    .card {
-      background:white;
-      border-radius:12px;
-      overflow:hidden;
-      box-shadow:0 2px 10px rgba(0,0,0,0.08);
-      transition:0.25s;
-    }
-
-    .card:hover {
-      transform:translateY(-6px);
-      box-shadow:0 10px 25px rgba(0,0,0,0.15);
-    }
-
-    .card img {
-      width:100%;
-      height:180px;
-      object-fit:cover;
-    }
-
-    .card-body {
-      padding:15px;
-    }
-
-    .title {
-      font-weight:bold;
-      margin-bottom:5px;
-    }
-
-    .price {
-      color:#ef4444;
-      font-weight:bold;
-      margin-bottom:10px;
-    }
-
-    .meta {
-      font-size:13px;
-      color:#666;
-      margin-bottom:10px;
-    }
-
-    .btn {
-      display:block;
-      text-align:center;
-      padding:10px;
-      border-radius:6px;
-      background:linear-gradient(90deg,#4f8dfd,#2563eb);
-      color:white;
-      text-decoration:none;
-      font-weight:bold;
-    }
-
-    .empty {
-      text-align:center;
-      padding:40px;
-      color:#666;
-    }
-
-  </style>
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:20px;padding:22px;max-width:1250px;margin:auto}
+.card{background:white;border-radius:16px;overflow:hidden;box-shadow:0 5px 16px rgba(0,0,0,.12);transition:.25s}
+.card:hover{transform:translateY(-5px);box-shadow:0 10px 25px rgba(0,0,0,.18)}
+.main-img{width:100%;height:220px;object-fit:cover;display:block}
+.thumbs{display:flex;gap:6px;padding:8px;overflow-x:auto}
+.thumbs img{width:54px;height:42px;object-fit:cover;border-radius:6px}
+.body{padding:14px}
+.title{font-size:18px;font-weight:900;margin-bottom:6px}
+.price{color:#dc2626;font-size:22px;font-weight:900;margin:8px 0}
+.meta{font-size:14px;color:#475569;margin:5px 0}
+.btn{display:block;width:100%;text-align:center;background:#3156c7;color:white;text-decoration:none;padding:12px;border-radius:10px;margin-top:12px;font-weight:900}
+.empty{padding:40px;text-align:center;font-weight:800;color:#475569}
+</style>
 </head>
 
 <body>
 
-  <div class="header">
-    <h1>DealerFlow</h1>
-    <p>Find your next vehicle</p>
-  </div>
+<div class="header">
+  <h1>DealerFlow</h1>
+  <p>Find your next vehicle</p>
+</div>
 
-  <!-- FILTERS -->
-  <div class="filters">
-    <input type="text" id="search" placeholder="Search make or model">
+<div class="filters">
+  <input id="searchBox" placeholder="Search make or model">
+  <input id="minPrice" placeholder="Min Price" type="number">
+  <input id="maxPrice" placeholder="Max Price" type="number">
+  <input id="yearBox" placeholder="Year" type="number">
+  <input id="locationBox" placeholder="Location">
+  <button class="btn-search" onclick="applyFilters()">Search</button>
+  <button class="btn-clear" onclick="clearFilters()">Clear</button>
+</div>
 
-    <input type="number" id="minPrice" placeholder="Min Price">
-    <input type="number" id="maxPrice" placeholder="Max Price">
+<div id="grid" class="grid"></div>
 
-    <input type="number" id="year" placeholder="Year">
+<script>
+const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
 
-    <input type="text" id="location" placeholder="Location">
+let allVehicles = [];
 
-    <button class="btn-search" onclick="loadVehicles()">Search</button>
-    <button class="btn-clear" onclick="clearFilters()">Clear</button>
-  </div>
+function formatPrice(price){
+  var num = Number(String(price || "").replace(/\D/g,""));
+  if(!num) return "R0";
+  return "R" + num.toLocaleString("en-ZA");
+}
 
-  <div id="grid" class="grid"></div>
+function getImages(v){
+  var arr = [];
 
-  <script>
-    const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
-    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
+  if(v.image && String(v.image).trim()){
+    arr.push(String(v.image).trim());
+  }
 
-    function getImages(v){
-      let arr = [];
-      if(v.image) arr.push(v.image);
-      if(v.images){
-        arr = arr.concat(v.images.split(","));
+  if(v.images && String(v.images).trim()){
+    String(v.images).split(",").forEach(function(x){
+      var img = x.trim();
+      if(img && arr.indexOf(img) === -1){
+        arr.push(img);
       }
-      return arr;
-    }
+    });
+  }
 
-    async function loadVehicles(){
-      const grid = document.getElementById("grid");
-      grid.innerHTML = "Loading...";
+  if(arr.length === 0){
+    arr.push("https://via.placeholder.com/400x300?text=No+Image");
+  }
 
-      const res = await fetch(
-        supabaseUrl + "/rest/v1/active_vehicles?select=*",
-        {
-          headers:{
-            apikey:supabaseKey,
-            Authorization:"Bearer " + supabaseKey
-          }
+  return arr;
+}
+
+function createCard(v){
+  var images = getImages(v);
+
+  var card = document.createElement("div");
+  card.className = "card";
+
+  var mainImg = document.createElement("img");
+  mainImg.className = "main-img";
+  mainImg.src = images[0];
+  card.appendChild(mainImg);
+
+  var thumbs = document.createElement("div");
+  thumbs.className = "thumbs";
+
+  images.slice(0,4).forEach(function(img){
+    var t = document.createElement("img");
+    t.src = img;
+    thumbs.appendChild(t);
+  });
+
+  card.appendChild(thumbs);
+
+  var body = document.createElement("div");
+  body.className = "body";
+
+  var title = document.createElement("div");
+  title.className = "title";
+  title.textContent = (v.year || "") + " " + (v.make || "") + " " + (v.model || "");
+  body.appendChild(title);
+
+  var price = document.createElement("div");
+  price.className = "price";
+  price.textContent = formatPrice(v.price);
+  body.appendChild(price);
+
+  var loc = document.createElement("div");
+  loc.className = "meta";
+  loc.textContent = "📍 " + (v.location || "-");
+  body.appendChild(loc);
+
+  var mileage = document.createElement("div");
+  mileage.className = "meta";
+  mileage.textContent = "🚗 " + (v.mileage || "-");
+  body.appendChild(mileage);
+
+  var dealer = document.createElement("div");
+  dealer.className = "meta";
+  dealer.textContent = "🏢 " + (v.dealer || "Dealer");
+  body.appendChild(dealer);
+
+  var btn = document.createElement("a");
+  btn.className = "btn";
+  btn.href = "details.html?id=" + v.id;
+  btn.textContent = "View Details";
+  body.appendChild(btn);
+
+  card.appendChild(body);
+  return card;
+}
+
+function renderVehicles(list){
+  var grid = document.getElementById("grid");
+  grid.innerHTML = "";
+
+  if(!list || list.length === 0){
+    var empty = document.createElement("div");
+    empty.className = "empty";
+    empty.textContent = "No vehicles found";
+    grid.appendChild(empty);
+    return;
+  }
+
+  list.forEach(function(v){
+    grid.appendChild(createCard(v));
+  });
+}
+
+function applyFilters(){
+  var search = document.getElementById("searchBox").value.toLowerCase();
+  var minPrice = Number(document.getElementById("minPrice").value) || 0;
+  var maxPrice = Number(document.getElementById("maxPrice").value) || 999999999;
+  var year = document.getElementById("yearBox").value;
+  var location = document.getElementById("locationBox").value.toLowerCase();
+
+  var filtered = allVehicles.filter(function(v){
+    var text = ((v.make || "") + " " + (v.model || "")).toLowerCase();
+    var price = Number(String(v.price || "").replace(/\D/g,"")) || 0;
+    var loc = String(v.location || "").toLowerCase();
+
+    if(search && text.indexOf(search) === -1) return false;
+    if(price < minPrice) return false;
+    if(price > maxPrice) return false;
+    if(year && String(v.year) !== String(year)) return false;
+    if(location && loc.indexOf(location) === -1) return false;
+
+    return true;
+  });
+
+  renderVehicles(filtered);
+}
+
+function clearFilters(){
+  document.getElementById("searchBox").value = "";
+  document.getElementById("minPrice").value = "";
+  document.getElementById("maxPrice").value = "";
+  document.getElementById("yearBox").value = "";
+  document.getElementById("locationBox").value = "";
+  renderVehicles(allVehicles);
+}
+
+async function loadVehicles(){
+  try{
+    var res = await fetch(
+      supabaseUrl + "/rest/v1/active_vehicles?select=*&order=id.desc",
+      {
+        headers:{
+          apikey:supabaseKey,
+          Authorization:"Bearer " + supabaseKey
         }
-      );
-
-      let data = await res.json();
-
-      // FILTERS
-      const search = document.getElementById("search").value.toLowerCase();
-      const minPrice = document.getElementById("minPrice").value;
-      const maxPrice = document.getElementById("maxPrice").value;
-      const year = document.getElementById("year").value;
-      const location = document.getElementById("location").value.toLowerCase();
-
-      data = data.filter(v => {
-
-        if(search && !(v.make + " " + v.model).toLowerCase().includes(search))
-          return false;
-
-        if(minPrice && v.price < minPrice)
-          return false;
-
-        if(maxPrice && v.price > maxPrice)
-          return false;
-
-        if(year && v.year != year)
-          return false;
-
-        if(location && !(v.location || "").toLowerCase().includes(location))
-          return false;
-
-        return true;
-      });
-
-      if(!data.length){
-        grid.innerHTML = <div class="empty">No vehicles found</div>;
-        return;
       }
+    );
 
-      let html = "";
+    var data = await res.json();
 
-      data.forEach(v=>{
-        const images = getImages(v);
-
-        html += `
-        <div class="card">
-          <img src="${images[0] || ''}">
-          
-          <div class="card-body">
-            <div class="title">
-              ${v.year || ''} ${v.make || ''} ${v.model || ''}
-            </div>
-
-            <div class="price">
-              R${Number(v.price).toLocaleString()}
-            </div>
-
-            <div class="meta">
-              📍 ${v.location || ''}
-            </div>
-
-            <a class="btn" href="details.html?id=${v.id}">
-              View Details
-            </a>
-          </div>
-        </div>
-        `;
-      });
-
-      grid.innerHTML = html;
+    if(!Array.isArray(data)){
+      renderVehicles([]);
+      return;
     }
 
-    function clearFilters(){
-      document.getElementById("search").value="";
-      document.getElementById("minPrice").value="";
-      document.getElementById("maxPrice").value="";
-      document.getElementById("year").value="";
-      document.getElementById("location").value="";
+    allVehicles = data;
+    renderVehicles(allVehicles);
 
-      loadVehicles();
-    }
+  }catch(err){
+    console.log(err);
+    renderVehicles([]);
+  }
+}
 
-    loadVehicles();
-  </script>
+loadVehicles();
+</script>
 
 </body>
 </html>
