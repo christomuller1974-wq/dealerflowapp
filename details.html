@@ -51,9 +51,7 @@ body {
   font-weight: 800;
 }
 
-.top-btn.blue {
-  background: #3156c7;
-}
+.top-btn.blue { background: #3156c7; }
 
 .status {
   background: white;
@@ -96,9 +94,9 @@ body {
   cursor: zoom-in;
 }
 
-.image-badge {
+.image-badge,
+.fullscreen-badge {
   position: absolute;
-  left: 12px;
   bottom: 12px;
   background: rgba(17,24,39,0.85);
   color: white;
@@ -108,17 +106,8 @@ body {
   font-weight: 800;
 }
 
-.fullscreen-badge {
-  position: absolute;
-  right: 12px;
-  bottom: 12px;
-  background: rgba(17,24,39,0.85);
-  color: white;
-  padding: 7px 10px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 800;
-}
+.image-badge { left: 12px; }
+.fullscreen-badge { right: 12px; }
 
 .thumb-row {
   display: flex;
@@ -138,9 +127,7 @@ body {
   flex: 0 0 auto;
 }
 
-.thumb.active {
-  border-color: #3156c7;
-}
+.thumb.active { border-color: #3156c7; }
 
 .side-box {
   position: sticky;
@@ -178,10 +165,9 @@ body {
 .btn-call { background: #111827; }
 .btn-whatsapp { background: #25d366; }
 .btn-dealer { background: #3156c7; }
+.btn-enquire { background: #0ea5e9; }
 
-.info-box {
-  margin-top: 18px;
-}
+.info-box { margin-top: 18px; }
 
 .vehicle-title {
   font-size: 30px;
@@ -226,9 +212,7 @@ body {
   padding: 20px;
 }
 
-.modal.show {
-  display: flex;
-}
+.modal.show { display: flex; }
 
 .modal-img {
   max-width: 94vw;
@@ -284,6 +268,33 @@ body {
   font-weight: 800;
 }
 
+.enquire-box {
+  background: white;
+  max-width: 430px;
+  width: 100%;
+  border-radius: 16px;
+  padding: 20px;
+}
+
+.enquire-box h2 {
+  margin: 0 0 14px;
+}
+
+.enquire-box input,
+.enquire-box textarea {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  font-size: 15px;
+}
+
+.enquire-box textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
 .empty-box {
   background: white;
   border-radius: 14px;
@@ -294,30 +305,12 @@ body {
 }
 
 @media(max-width: 900px) {
-  .layout {
-    grid-template-columns: 1fr;
-  }
-
-  .side-box {
-    position: static;
-  }
-
-  .main-image {
-    height: 270px;
-  }
-
-  .vehicle-title {
-    font-size: 24px;
-  }
-
-  .spec-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .thumb {
-    width: 78px;
-    height: 58px;
-  }
+  .layout { grid-template-columns: 1fr; }
+  .side-box { position: static; }
+  .main-image { height: 270px; }
+  .vehicle-title { font-size: 24px; }
+  .spec-grid { grid-template-columns: 1fr; }
+  .thumb { width: 78px; height: 58px; }
 }
 </style>
 </head>
@@ -346,12 +339,27 @@ body {
   <div id="modalCount" class="modal-count"></div>
 </div>
 
+<div id="enquireModal" class="modal">
+  <div class="enquire-box">
+    <h2>Enquire about this vehicle</h2>
+
+    <input id="enqName" placeholder="Your Name">
+    <input id="enqPhone" placeholder="Your Phone">
+    <textarea id="enqMsg">Hi, I'm interested in this vehicle.</textarea>
+
+    <button class="btn btn-whatsapp" onclick="sendEnquiry()">Send via WhatsApp</button>
+    <button class="btn btn-call" onclick="closeEnquire()">Cancel</button>
+  </div>
+</div>
+
 <script>
 const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
 const supabaseKey = "sb_publishable_D7saHOTE_JhSlMnSgBnIhQ_mOAOUD9s";
 
 let images = [];
 let current = 0;
+let currentVehicle = null;
+let currentTitle = "";
 
 function setStatus(message) {
   document.getElementById("status").textContent = message;
@@ -456,17 +464,72 @@ function prevImage() {
   setMain(current);
 }
 
-document.addEventListener("keydown", function(event) {
-  const modal = document.getElementById("imageModal");
-  if (!modal.classList.contains("show")) return;
+function openEnquire() {
+  document.getElementById("enquireModal").classList.add("show");
+}
 
-  if (event.key === "Escape") closeModal();
+function closeEnquire() {
+  document.getElementById("enquireModal").classList.remove("show");
+}
+
+function sendEnquiry() {
+  if (!currentVehicle) {
+    alert("Vehicle not ready yet.");
+    return;
+  }
+
+  const name = document.getElementById("enqName").value.trim();
+  const phone = document.getElementById("enqPhone").value.trim();
+  const msg = document.getElementById("enqMsg").value.trim();
+
+  if (!name || !phone || !msg) {
+    alert("Please fill in your name, phone and message.");
+    return;
+  }
+
+  const dealerPhone = cleanPhone(currentVehicle.phone);
+
+  if (!dealerPhone) {
+    alert("Dealer phone number missing.");
+    return;
+  }
+
+  const fullMsg =
+`Vehicle enquiry: ${currentTitle}
+Price: ${formatPrice(currentVehicle.price)}
+From: ${name}
+Phone: ${phone}
+
+${msg}`;
+
+  const url = "https://wa.me/27" + dealerPhone.replace(/^0/, "") +
+    "?text=" + encodeURIComponent(fullMsg);
+
+  window.open(url, "_blank");
+  closeEnquire();
+}
+
+document.addEventListener("keydown", function(event) {
+  const imageModal = document.getElementById("imageModal");
+  const enquireModal = document.getElementById("enquireModal");
+
+  if (event.key === "Escape") {
+    imageModal.classList.remove("show");
+    enquireModal.classList.remove("show");
+  }
+
+  if (!imageModal.classList.contains("show")) return;
+
   if (event.key === "ArrowRight") nextImage();
   if (event.key === "ArrowLeft") prevImage();
 });
 
 document.getElementById("imageModal").addEventListener("click", function(event) {
   if (event.target.id === "imageModal") closeModal();
+});
+
+document.getElementById("enquireModal").addEventListener("click", function(event) {
+  if (event.target.id === "enquireModal") closeEnquire();
 });
 
 async function loadVehicle() {
@@ -491,8 +554,6 @@ async function loadVehicle() {
     );
 
     const data = await res.json();
-    console.log("Vehicle data:", data);
-
     const v = Array.isArray(data) ? data[0] : null;
 
     if (!v) {
@@ -502,11 +563,15 @@ async function loadVehicle() {
       return;
     }
 
+    currentVehicle = v;
+
     images = getImages(v);
     current = 0;
 
     const fallbackTitle = [v.year, v.make, v.model].filter(Boolean).join(" ");
     const title = v.title || fallbackTitle || "Vehicle";
+    currentTitle = title;
+
     const dealerName = v.dealer || v.dealer_name || "Dealer";
 
     let thumbs = "";
@@ -567,6 +632,7 @@ async function loadVehicle() {
 
           <a href="${callLink(v.phone)}" class="btn btn-call">Call Dealer</a>
           <a href="${whatsappLink(v.phone, title)}" target="_blank" class="btn btn-whatsapp">WhatsApp</a>
+          <button class="btn btn-enquire" onclick="openEnquire()">Enquire</button>
           <a href="${dealerStockLink(v)}" class="btn btn-dealer">View Dealer Stock</a>
         </div>
 
@@ -587,6 +653,9 @@ window.openModal = openModal;
 window.closeModal = closeModal;
 window.nextImage = nextImage;
 window.prevImage = prevImage;
+window.openEnquire = openEnquire;
+window.closeEnquire = closeEnquire;
+window.sendEnquiry = sendEnquiry;
 
 loadVehicle();
 </script>
