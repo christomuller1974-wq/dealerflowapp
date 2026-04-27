@@ -1,600 +1,253 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Vehicle Details</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<title>Vehicle Details</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<style>
+body {
+  margin:0;
+  font-family: Arial, sans-serif;
+  background:#eef1f5;
+}
 
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #dfe3ea;
-      color: #111827;
-    }
+/* HERO */
+.hero {
+  background:#3156c7;
+  color:white;
+  text-align:center;
+  padding:25px;
+  font-size:26px;
+  font-weight:bold;
+}
 
-    .hero {
-      background: linear-gradient(135deg, #3156c7, #1f3f9e);
-      color: white;
-      text-align: center;
-      padding: 28px 18px 22px;
-    }
+/* LAYOUT */
+.container {
+  max-width:1200px;
+  margin:auto;
+  padding:20px;
+}
 
-    .hero h1 {
-      margin: 0;
-      font-size: 34px;
-      font-weight: 800;
-    }
+.layout {
+  display:grid;
+  grid-template-columns:2fr 1fr;
+  gap:20px;
+}
 
-    .container {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 18px;
-    }
+/* IMAGE */
+.main-image {
+  width:100%;
+  height:420px;
+  object-fit:cover;
+  border-radius:12px;
+  cursor:pointer;
+}
 
-    .top-actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 16px;
-    }
+.thumb-row {
+  display:flex;
+  gap:10px;
+  overflow-x:auto;
+  margin-top:10px;
+}
 
-    .top-btn {
-      display: inline-block;
-      text-decoration: none;
-      background: #1f2937;
-      color: white;
-      padding: 10px 14px;
-      border-radius: 10px;
-      font-size: 13px;
-      font-weight: 700;
-      border: none;
-      cursor: pointer;
-    }
+.thumb {
+  width:90px;
+  height:70px;
+  object-fit:cover;
+  border-radius:8px;
+  cursor:pointer;
+  border:3px solid transparent;
+}
 
-    .top-btn.blue {
-      background: #3156c7;
-    }
+.thumb.active {
+  border-color:#3156c7;
+}
 
-    .status {
-      background: white;
-      border-radius: 12px;
-      padding: 12px 14px;
-      margin-bottom: 16px;
-      font-weight: bold;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
+/* RIGHT PANEL */
+.side-box {
+  background:white;
+  padding:20px;
+  border-radius:12px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.1);
+  position:sticky;
+  top:20px;
+}
 
-    .details-card {
-      background: white;
-      border-radius: 18px;
-      padding: 16px;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.10);
-    }
+.price {
+  color:#dc2626;
+  font-size:28px;
+  font-weight:bold;
+  margin-bottom:10px;
+}
 
-    .gallery-main-wrap {
-      position: relative;
-      background: #eef2f7;
-      border-radius: 16px;
-      overflow: hidden;
-      margin-bottom: 12px;
-    }
+.btn {
+  display:block;
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  border:none;
+  border-radius:8px;
+  font-weight:bold;
+  cursor:pointer;
+  text-align:center;
+  text-decoration:none;
+  color:white;
+}
 
-    .gallery-main {
-      width: 100%;
-      height: 390px;
-      object-fit: contain;
-      border-radius: 16px;
-      background: #eef2f7;
-      display: block;
-      cursor: zoom-in;
-    }
+.call { background:#111827; }
+.whatsapp { background:#25d366; }
+.dealer { background:#3156c7; }
 
-    .gallery-hint {
-      position: absolute;
-      right: 12px;
-      bottom: 12px;
-      background: rgba(17, 24, 39, 0.85);
-      color: white;
-      padding: 8px 12px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 700;
-    }
+/* DETAILS */
+.details {
+  margin-top:20px;
+  background:white;
+  padding:20px;
+  border-radius:12px;
+}
 
-    .thumb-row {
-      display: flex;
-      gap: 10px;
-      overflow-x: auto;
-      padding: 4px 2px 12px;
-      margin-bottom: 14px;
-      scrollbar-width: thin;
-    }
+.grid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
 
-    .thumb {
-      flex: 0 0 auto;
-      width: 94px;
-      height: 70px;
-      object-fit: cover;
-      border-radius: 10px;
-      cursor: pointer;
-      border: 3px solid transparent;
-      background: #e5e7eb;
-    }
+.meta {
+  background:#f1f5f9;
+  padding:10px;
+  border-radius:8px;
+}
 
-    .thumb.active {
-      border-color: #3156c7;
-    }
+/* MOBILE */
+@media(max-width:900px){
+  .layout {
+    grid-template-columns:1fr;
+  }
 
-    .vehicle-title {
-      font-size: 30px;
-      font-weight: 800;
-      margin-bottom: 10px;
-    }
-
-    .price {
-      color: #dc2626;
-      font-size: 28px;
-      font-weight: 800;
-      margin-bottom: 14px;
-    }
-
-    .info-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 12px;
-    }
-
-    .meta {
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: 12px;
-      padding: 11px 12px;
-      font-size: 15px;
-      color: #334155;
-    }
-
-    .description {
-      margin-top: 16px;
-      line-height: 1.6;
-      color: #334155;
-      white-space: pre-wrap;
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: 12px;
-      padding: 14px;
-    }
-
-    .button-stack {
-      display: grid;
-      gap: 10px;
-      margin-top: 18px;
-    }
-
-    .btn {
-      display: block;
-      width: 100%;
-      text-align: center;
-      text-decoration: none;
-      color: white;
-      padding: 13px;
-      border-radius: 12px;
-      font-weight: 800;
-      font-size: 15px;
-    }
-
-    .btn-green { background: #16a34a; }
-    .btn-dark { background: #1f2937; }
-    .btn-whatsapp { background: #25d366; }
-
-    .empty-box {
-      background: white;
-      border-radius: 14px;
-      padding: 24px;
-      text-align: center;
-      color: #475569;
-      font-weight: 700;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
-
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 9999;
-      inset: 0;
-      background: rgba(0,0,0,0.92);
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .modal.show {
-      display: flex;
-    }
-
-    .modal-img {
-      max-width: 92vw;
-      max-height: 82vh;
-      object-fit: contain;
-      border-radius: 12px;
-      background: #111827;
-    }
-
-    .modal-close,
-    .modal-prev,
-    .modal-next {
-      position: fixed;
-      border: none;
-      color: white;
-      background: rgba(17,24,39,0.85);
-      cursor: pointer;
-      font-weight: 900;
-      z-index: 10000;
-    }
-
-    .modal-close {
-      top: 18px;
-      right: 18px;
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      font-size: 28px;
-      line-height: 48px;
-    }
-
-    .modal-prev,
-    .modal-next {
-      top: 50%;
-      transform: translateY(-50%);
-      width: 54px;
-      height: 70px;
-      border-radius: 14px;
-      font-size: 34px;
-    }
-
-    .modal-prev {
-      left: 18px;
-    }
-
-    .modal-next {
-      right: 18px;
-    }
-
-    .modal-count {
-      position: fixed;
-      bottom: 18px;
-      left: 50%;
-      transform: translateX(-50%);
-      color: white;
-      background: rgba(17,24,39,0.85);
-      padding: 9px 14px;
-      border-radius: 999px;
-      font-size: 13px;
-      font-weight: 800;
-    }
-
-    @media (max-width: 700px) {
-      .hero h1 {
-        font-size: 30px;
-      }
-
-      .container {
-        padding: 12px;
-      }
-
-      .details-card {
-        padding: 12px;
-        border-radius: 16px;
-      }
-
-      .gallery-main {
-        height: 260px;
-      }
-
-      .gallery-hint {
-        font-size: 11px;
-        padding: 7px 10px;
-      }
-
-      .thumb {
-        width: 78px;
-        height: 58px;
-      }
-
-      .vehicle-title {
-        font-size: 24px;
-      }
-
-      .price {
-        font-size: 24px;
-      }
-
-      .info-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .modal-img {
-        max-width: 96vw;
-        max-height: 76vh;
-      }
-
-      .modal-prev,
-      .modal-next {
-        width: 44px;
-        height: 58px;
-        font-size: 28px;
-      }
-
-      .modal-prev {
-        left: 8px;
-      }
-
-      .modal-next {
-        right: 8px;
-      }
-    }
-  </style>
+  .main-image {
+    height:260px;
+  }
+}
+</style>
 </head>
+
 <body>
 
-  <div class="hero">
-    <h1>Vehicle Details</h1>
-  </div>
+<div class="hero">Vehicle Details</div>
 
-  <div class="container">
-    <div class="top-actions">
-      <a href="index.html" class="top-btn">Back to Website</a>
-      <a href="dealer-admin.html" class="top-btn blue">Dealer Login</a>
+<div class="container">
+
+<div id="content"></div>
+
+</div>
+
+<script>
+const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
+
+let images = [];
+let current = 0;
+
+function getId(){
+  return new URLSearchParams(window.location.search).get("id");
+}
+
+function setMain(i){
+  current = i;
+  document.getElementById("main").src = images[i];
+
+  document.querySelectorAll(".thumb").forEach((t,idx)=>{
+    t.classList.toggle("active", idx===i);
+  });
+}
+
+function whatsapp(phone,title){
+  return "https://wa.me/27"+phone.replace(/^0/,"")+
+  "?text="+encodeURIComponent("Hi I'm interested in "+title);
+}
+
+async function load(){
+
+  const id = getId();
+
+  const res = await fetch(
+    supabaseUrl + "/rest/v1/active_vehicles?id=eq."+id,
+    {
+      headers:{
+        apikey:supabaseKey,
+        Authorization:"Bearer "+supabaseKey
+      }
+    }
+  );
+
+  const data = await res.json();
+  const v = data[0];
+
+  if(!v){
+    document.getElementById("content").innerHTML="Not found";
+    return;
+  }
+
+  images = [];
+
+  if(v.image) images.push(v.image);
+  if(v.images){
+    v.images.split(",").forEach(i=>images.push(i));
+  }
+
+  if(images.length===0){
+    images=["https://via.placeholder.com/800x500"];
+  }
+
+  let thumbs = "";
+  images.forEach((img,i)=>{
+    thumbs += <img src="${img}" class="thumb ${i===0?"active":""}" onclick="setMain(${i})">;
+  });
+
+  document.getElementById("content").innerHTML = `
+  
+  <div class="layout">
+
+    <!-- LEFT -->
+    <div>
+      <img id="main" src="${images[0]}" class="main-image">
+
+      <div class="thumb-row">${thumbs}</div>
+
+      <div class="details">
+        <h2>${v.year} ${v.make} ${v.model}</h2>
+
+        <div class="grid">
+          <div class="meta">Year: ${v.year}</div>
+          <div class="meta">Mileage: ${v.mileage}</div>
+          <div class="meta">Location: ${v.location}</div>
+          <div class="meta">Dealer: ${v.dealer}</div>
+        </div>
+
+        <p style="margin-top:15px">${v.description || ""}</p>
+      </div>
     </div>
 
-    <div id="status" class="status">Loading vehicle details...</div>
-    <div id="detailsWrap"></div>
+    <!-- RIGHT -->
+    <div class="side-box">
+
+      <div class="price">R ${v.price}</div>
+
+      <a href="tel:${v.phone}" class="btn call">Call Dealer</a>
+
+      <a href="${whatsapp(v.phone, v.make+" "+v.model)}" target="_blank" class="btn whatsapp">WhatsApp</a>
+
+      <a href="dealer.html?dealer=${encodeURIComponent(v.dealer)}" class="btn dealer">View Dealer Stock</a>
+
+    </div>
+
   </div>
+  `;
+}
 
-  <div id="imageModal" class="modal">
-    <button class="modal-close" onclick="closeModal()">×</button>
-    <button class="modal-prev" onclick="prevImage()">‹</button>
-    <img id="modalImage" class="modal-img" src="" alt="Vehicle image">
-    <button class="modal-next" onclick="nextImage()">›</button>
-    <div id="modalCount" class="modal-count"></div>
-  </div>
-
-  <script>
-    const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
-    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
-
-    let galleryImages = [];
-    let currentImageIndex = 0;
-
-    function setStatus(message) {
-      document.getElementById("status").textContent = message;
-    }
-
-    function getIdFromUrl() {
-      const params = new URLSearchParams(window.location.search);
-      return params.get("id");
-    }
-
-    function cleanPhone(phone) {
-      return String(phone || "").replace(/\s+/g, "");
-    }
-
-    function whatsappLink(phone, title) {
-      const phoneClean = cleanPhone(phone);
-      if (!phoneClean) return "#";
-      return "https://wa.me/27" + phoneClean.replace(/^0/, "") +
-        "?text=" + encodeURIComponent("Hi, I'm interested in the " + (title || "vehicle") + ".");
-    }
-
-    function callLink(phone) {
-      const phoneClean = cleanPhone(phone);
-      if (!phoneClean) return "#";
-      return "tel:" + phoneClean;
-    }
-
-    function dealerStockLink(vehicle) {
-      const dealerName = vehicle.dealer || vehicle.dealer_name || "Dealer";
-      return "dealer.html?dealer=" + encodeURIComponent(dealerName);
-    }
-
-    function getImages(vehicle) {
-      const images = [];
-
-      if (vehicle.image && String(vehicle.image).trim()) {
-        images.push(String(vehicle.image).trim());
-      }
-
-      if (vehicle.images && String(vehicle.images).trim()) {
-        String(vehicle.images)
-          .split(",")
-          .map(x => x.trim())
-          .filter(Boolean)
-          .forEach(url => {
-            if (!images.includes(url)) {
-              images.push(url);
-            }
-          });
-      }
-
-      if (!images.length) {
-        images.push("https://via.placeholder.com/800x500?text=No+Image");
-      }
-
-      return images;
-    }
-
-    function setMainImage(index) {
-      currentImageIndex = index;
-      const mainImage = document.getElementById("mainImage");
-      if (!mainImage || !galleryImages[index]) return;
-
-      mainImage.src = galleryImages[index];
-
-      document.querySelectorAll(".thumb").forEach((thumb, i) => {
-        thumb.classList.toggle("active", i === index);
-      });
-    }
-
-    function openModal(index) {
-      currentImageIndex = index;
-      updateModalImage();
-      document.getElementById("imageModal").classList.add("show");
-    }
-
-    function closeModal() {
-      document.getElementById("imageModal").classList.remove("show");
-    }
-
-    function updateModalImage() {
-      const modalImage = document.getElementById("modalImage");
-      const modalCount = document.getElementById("modalCount");
-
-      modalImage.src = galleryImages[currentImageIndex];
-      modalCount.textContent = (currentImageIndex + 1) + " / " + galleryImages.length;
-    }
-
-    function nextImage() {
-      if (!galleryImages.length) return;
-      currentImageIndex = (currentImageIndex + 1) % galleryImages.length;
-      updateModalImage();
-      setMainImage(currentImageIndex);
-    }
-
-    function prevImage() {
-      if (!galleryImages.length) return;
-      currentImageIndex = (currentImageIndex - 1 + galleryImages.length) % galleryImages.length;
-      updateModalImage();
-      setMainImage(currentImageIndex);
-    }
-
-    document.addEventListener("keydown", function(event) {
-      const modal = document.getElementById("imageModal");
-      if (!modal.classList.contains("show")) return;
-
-      if (event.key === "Escape") closeModal();
-      if (event.key === "ArrowRight") nextImage();
-      if (event.key === "ArrowLeft") prevImage();
-    });
-
-    document.getElementById("imageModal").addEventListener("click", function(event) {
-      if (event.target.id === "imageModal") {
-        closeModal();
-      }
-    });
-
-    async function loadVehicleDetails() {
-      const vehicleId = getIdFromUrl();
-      const detailsWrap = document.getElementById("detailsWrap");
-
-      if (!vehicleId) {
-        setStatus("Missing vehicle ID.");
-        detailsWrap.innerHTML = '<div class="empty-box">Vehicle not found.</div>';
-        return;
-      }
-
-      try {
-        const url =
-          supabaseUrl +
-          "/rest/v1/active_vehicles?select=*&id=eq." +
-          encodeURIComponent(vehicleId);
-
-        const res = await fetch(url, {
-          headers: {
-            apikey: supabaseKey,
-            Authorization: "Bearer " + supabaseKey
-          }
-        });
-
-        const data = await res.json();
-        const vehicle = Array.isArray(data) ? data[0] : null;
-
-        if (!vehicle) {
-          setStatus("Vehicle not found.");
-          detailsWrap.innerHTML = '<div class="empty-box">Vehicle not found.</div>';
-          return;
-        }
-
-        galleryImages = getImages(vehicle);
-        currentImageIndex = 0;
-
-        const fallbackTitle = [vehicle.year, vehicle.make, vehicle.model].filter(Boolean).join(" ");
-        const title = vehicle.title || fallbackTitle || "No Title";
-
-        detailsWrap.innerHTML = `
-          <div class="details-card">
-            <div class="gallery-main-wrap">
-              <img
-                id="mainImage"
-                src="${galleryImages[0]}"
-                class="gallery-main"
-                alt="${title}"
-                onclick="openModal(currentImageIndex)"
-                onerror="this.src='https://via.placeholder.com/800x500?text=No+Image'"
-              >
-              <div class="gallery-hint">Click image for full screen</div>
-            </div>
-
-            <div class="thumb-row" id="thumbRow"></div>
-
-            <div class="vehicle-title">${title}</div>
-            <div class="price">R${vehicle.price || 0}</div>
-
-            <div class="info-grid">
-              <div class="meta"><strong>Year:</strong> ${vehicle.year || "-"}</div>
-              <div class="meta"><strong>Make:</strong> ${vehicle.make || "-"}</div>
-              <div class="meta"><strong>Model:</strong> ${vehicle.model || "-"}</div>
-              <div class="meta"><strong>Mileage:</strong> ${vehicle.mileage || "-"}</div>
-              <div class="meta"><strong>Location:</strong> ${vehicle.location || "-"}</div>
-              <div class="meta"><strong>Dealer:</strong> ${vehicle.dealer || "-"}</div>
-              <div class="meta"><strong>Phone:</strong> ${vehicle.phone || "-"}</div>
-            </div>
-
-            <div class="description">${vehicle.description || "No description available."}</div>
-
-            <div class="button-stack">
-              <a href="${dealerStockLink(vehicle)}" class="btn btn-green">Dealer Stock</a>
-              <a href="${callLink(vehicle.phone)}" class="btn btn-dark">Call Dealer</a>
-              <a href="${whatsappLink(vehicle.phone, title)}" target="_blank" class="btn btn-whatsapp">WhatsApp</a>
-            </div>
-          </div>
-        `;
-
-        const thumbRow = document.getElementById("thumbRow");
-
-        galleryImages.forEach((img, index) => {
-          const thumb = document.createElement("img");
-          thumb.src = img;
-          thumb.className = "thumb" + (index === 0 ? " active" : "");
-          thumb.alt = "Vehicle image " + (index + 1);
-          thumb.onerror = function () {
-            this.src = "https://via.placeholder.com/120x90?text=No+Image";
-          };
-          thumb.onclick = function () {
-            setMainImage(index);
-          };
-          thumbRow.appendChild(thumb);
-        });
-
-        setStatus("Vehicle details loaded.");
-      } catch (err) {
-        console.error(err);
-        setStatus("Could not load vehicle details.");
-        detailsWrap.innerHTML = '<div class="empty-box">Could not load vehicle details.</div>';
-      }
-    }
-
-    window.openModal = openModal;
-    window.closeModal = closeModal;
-    window.nextImage = nextImage;
-    window.prevImage = prevImage;
-
-    loadVehicleDetails();
-  </script>
+load();
+</script>
 
 </body>
 </html>
