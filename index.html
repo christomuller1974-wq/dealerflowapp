@@ -6,14 +6,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: #dfe3ea;
+      background: #eef1f5;
       color: #111827;
     }
 
@@ -28,7 +26,6 @@
       margin: 0;
       font-size: 56px;
       font-weight: 800;
-      letter-spacing: -1px;
     }
 
     .hero-tagline {
@@ -36,7 +33,6 @@
       max-width: 760px;
       font-size: 24px;
       line-height: 1.35;
-      font-weight: 500;
     }
 
     .hero-buttons {
@@ -60,22 +56,15 @@
       text-align: center;
     }
 
-    .hero-btn.dark {
-      background: #111827;
-    }
-
-    .hero-btn.green {
-      background: #16a34a;
-    }
+    .hero-btn.dark { background: #111827; }
+    .hero-btn.green { background: #16a34a; }
 
     .search-panel {
       max-width: 760px;
       margin: 20px auto 0;
     }
 
-    .hidden {
-      display: none;
-    }
+    .hidden { display: none; }
 
     .search-grid {
       display: grid;
@@ -89,7 +78,7 @@
     .search-clear-btn {
       width: 100%;
       padding: 14px 16px;
-      border-radius: 18px;
+      border-radius: 14px;
       border: none;
       font-size: 15px;
       background: white;
@@ -114,71 +103,123 @@
 
     .vehicle-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
-      gap: 18px;
-      padding: 18px;
-      align-items: start;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+      padding: 24px;
+      align-items: stretch;
     }
 
-    .vehicle-card {
-      background: #ffffff;
+    .car-card {
+      background: white;
       border-radius: 18px;
-      padding: 14px;
+      overflow: hidden;
       box-shadow: 0 4px 14px rgba(0,0,0,0.10);
+      display: flex;
+      flex-direction: column;
+      transition: 0.2s ease;
+      min-height: 100%;
     }
 
-    .vehicle-thumb {
+    .car-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .car-img-wrap {
+      position: relative;
+      background: #e5e7eb;
+    }
+
+    .car-img {
       width: 100%;
       height: 210px;
       object-fit: cover;
-      border-radius: 14px;
-      background: #e5e7eb;
       display: block;
     }
 
-    .vehicle-title {
-      margin: 12px 0 8px;
-      font-size: 18px;
+    .photo-badge {
+      position: absolute;
+      right: 10px;
+      bottom: 10px;
+      background: rgba(17,24,39,0.85);
+      color: white;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 9px;
+      border-radius: 999px;
+    }
+
+    .car-body {
+      padding: 14px 16px;
+      flex: 1;
+    }
+
+    .car-title {
+      font-size: 19px;
       font-weight: 800;
+      margin: 0 0 8px;
+      color: #111827;
       line-height: 1.25;
-      min-height: 46px;
     }
 
-    .vehicle-meta {
-      font-size: 14px;
-      color: #475569;
-      margin-bottom: 4px;
+    .car-subtitle {
+      font-size: 13px;
+      color: #64748b;
+      margin-bottom: 12px;
     }
 
-    .price {
-      color: #dc2626;
-      font-size: 18px;
-      font-weight: 800;
-      margin: 10px 0 10px;
-    }
-
-    .button-stack {
+    .car-meta {
       display: grid;
-      gap: 8px;
-      margin-top: 10px;
+      grid-template-columns: 1fr 1fr;
+      gap: 7px;
+      font-size: 13px;
+      color: #475569;
+      margin-bottom: 12px;
     }
 
-    .btn {
+    .car-price {
+      color: #dc2626;
+      font-size: 22px;
+      font-weight: 900;
+      margin: 8px 0 0;
+    }
+
+    .car-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      padding: 0 14px 14px;
+    }
+
+    .card-btn {
       display: block;
-      width: 100%;
       text-align: center;
       text-decoration: none;
+      border: none;
+      border-radius: 10px;
+      padding: 9px 10px;
+      font-size: 13px;
+      font-weight: 800;
       color: white;
-      padding: 12px;
-      border-radius: 12px;
-      font-weight: 700;
-      font-size: 14px;
+      cursor: pointer;
     }
 
-    .btn-blue { background: #3156c7; }
-    .btn-green { background: #16a34a; }
-    .btn-dark { background: #1f2937; }
-    .btn-whatsapp { background: #25d366; }
+    .btn-view {
+      grid-column: span 2;
+      background: #3156c7;
+    }
+
+    .btn-dealer {
+      background: #16a34a;
+    }
+
+    .btn-call {
+      background: #1f2937;
+    }
+
+    .btn-whatsapp {
+      grid-column: span 2;
+      background: #25d366;
+    }
 
     .empty {
       padding: 30px 18px;
@@ -194,7 +235,7 @@
       }
 
       .hero h1 {
-        font-size: 38px;
+        font-size: 40px;
       }
 
       .hero-tagline {
@@ -206,7 +247,7 @@
         padding: 14px;
       }
 
-      .vehicle-thumb {
+      .car-img {
         height: 220px;
       }
     }
@@ -240,9 +281,7 @@
 
         <input id="makeFilter" class="search-input" placeholder="Make">
         <input id="modelFilter" class="search-input" placeholder="Model">
-
         <select id="yearFilter" class="search-select"></select>
-
         <input id="minPrice" class="search-input" placeholder="Min Price">
         <input id="maxPrice" class="search-input" placeholder="Max Price">
 
@@ -257,7 +296,7 @@
 
   <script>
     const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
-    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
+    const supabaseKey = "sb_publishable_D7saHOTE_JhSlMnSgBnIhQ_mOAOUD9s";
 
     let allVehicles = [];
 
@@ -275,21 +314,27 @@
     }
 
     function getMainImage(vehicle) {
-      if (vehicle.image && typeof vehicle.image === "string" && vehicle.image.trim() !== "") {
-        return vehicle.image.trim();
+      if (vehicle.image && String(vehicle.image).trim()) {
+        return String(vehicle.image).trim();
       }
 
-      if (vehicle.images) {
-        if (Array.isArray(vehicle.images) && vehicle.images.length > 0) {
-          return vehicle.images[0];
-        }
-
-        if (typeof vehicle.images === "string" && vehicle.images.trim() !== "") {
-          return vehicle.images.split(",")[0].trim();
-        }
+      if (vehicle.images && String(vehicle.images).trim()) {
+        return String(vehicle.images).split(",")[0].trim();
       }
 
       return "https://via.placeholder.com/400x250?text=No+Image";
+    }
+
+    function getImageCount(vehicle) {
+      let count = 0;
+
+      if (vehicle.image && String(vehicle.image).trim()) count++;
+
+      if (vehicle.images && String(vehicle.images).trim()) {
+        count += String(vehicle.images).split(",").filter(x => x.trim()).length;
+      }
+
+      return count || 1;
     }
 
     function cleanPhone(phone) {
@@ -299,6 +344,7 @@
     function whatsappLink(phone, title) {
       const phoneClean = cleanPhone(phone);
       if (!phoneClean) return "#";
+
       return "https://wa.me/27" + phoneClean.replace(/^0/, "") +
         "?text=" + encodeURIComponent("Hi, I'm interested in the " + (title || "vehicle") + ".");
     }
@@ -312,6 +358,12 @@
     function dealerStockLink(vehicle) {
       const dealerName = vehicle.dealer || vehicle.dealer_name || "Dealer";
       return "dealer.html?dealer=" + encodeURIComponent(dealerName);
+    }
+
+    function formatPrice(price) {
+      const num = Number(String(price || "").replace(/\D/g, ""));
+      if (!num) return "R0";
+      return "R" + num.toLocaleString("en-ZA");
     }
 
     function renderVehicles(vehicles) {
@@ -328,31 +380,41 @@
         const dealerName = v.dealer || v.dealer_name || "Dealer";
         const fallbackTitle = [v.year, v.make, v.model].filter(Boolean).join(" ");
         const title = v.title || fallbackTitle || "No Title";
+        const imageCount = getImageCount(v);
 
         const card = document.createElement("div");
-        card.className = "vehicle-card";
+        card.className = "car-card";
 
         card.innerHTML = `
-          <img
-            src="${mainImage}"
-            class="vehicle-thumb"
-            alt="${title}"
-            onerror="this.src='https://via.placeholder.com/400x250?text=No+Image'"
-          >
+          <div class="car-img-wrap">
+            <img
+              src="${mainImage}"
+              class="car-img"
+              alt="${title}"
+              onerror="this.src='https://via.placeholder.com/400x250?text=No+Image'"
+            >
+            <div class="photo-badge">📷 ${imageCount}</div>
+          </div>
 
-          <div class="vehicle-title">${title}</div>
+          <div class="car-body">
+            <h3 class="car-title">${title}</h3>
+            <div class="car-subtitle">${v.make || ""} ${v.model || ""}</div>
 
-          <div class="vehicle-meta">Year: ${v.year || "-"}</div>
-          <div class="vehicle-meta">Location: ${v.location || "-"}</div>
-          <div class="vehicle-meta">Dealer: ${dealerName}</div>
+            <div class="car-meta">
+              <div>📅 ${v.year || "-"}</div>
+              <div>📍 ${v.location || "-"}</div>
+              <div>🛣️ ${v.mileage || "-"}</div>
+              <div>🏢 ${dealerName}</div>
+            </div>
 
-          <div class="price">R${v.price || 0}</div>
+            <div class="car-price">${formatPrice(v.price)}</div>
+          </div>
 
-          <div class="button-stack">
-            <a href="details.html?id=${v.id}" class="btn btn-blue">View</a>
-            <a href="${dealerStockLink(v)}" class="btn btn-green">Dealer</a>
-            <a href="${callLink(v.phone)}" class="btn btn-dark">Call</a>
-            <a href="${whatsappLink(v.phone, title)}" target="_blank" class="btn btn-whatsapp">WhatsApp</a>
+          <div class="car-actions">
+            <a href="details.html?id=${v.id}" class="card-btn btn-view">View Details</a>
+            <a href="${dealerStockLink(v)}" class="card-btn btn-dealer">Dealer</a>
+            <a href="${callLink(v.phone)}" class="card-btn btn-call">Call</a>
+            <a href="${whatsappLink(v.phone, title)}" target="_blank" class="card-btn btn-whatsapp">WhatsApp</a>
           </div>
         `;
 
@@ -374,22 +436,15 @@
         const vehicleModel = String(v.model || "").toLowerCase();
         const vehicleTitle = String(v.title || "").toLowerCase();
         const vehicleYear = String(v.year || "").trim();
-        const vehiclePrice = parseInt(v.price, 10) || 0;
-
-        const matchesProvince = !province || location.includes(province);
-        const matchesMake = !make || vehicleMake.includes(make) || vehicleTitle.includes(make);
-        const matchesModel = !model || vehicleModel.includes(model) || vehicleTitle.includes(model);
-        const matchesYear = !year || vehicleYear === year;
-        const matchesMinPrice = vehiclePrice >= minPriceVal;
-        const matchesMaxPrice = vehiclePrice <= maxPriceVal;
+        const vehiclePrice = parseInt(String(v.price || "").replace(/\D/g, ""), 10) || 0;
 
         return (
-          matchesProvince &&
-          matchesMake &&
-          matchesModel &&
-          matchesYear &&
-          matchesMinPrice &&
-          matchesMaxPrice
+          (!province || location.includes(province)) &&
+          (!make || vehicleMake.includes(make) || vehicleTitle.includes(make)) &&
+          (!model || vehicleModel.includes(model) || vehicleTitle.includes(model)) &&
+          (!year || vehicleYear === year) &&
+          vehiclePrice >= minPriceVal &&
+          vehiclePrice <= maxPriceVal
         );
       });
 
@@ -428,32 +483,25 @@
 
     const searchToggleBtn = document.getElementById("searchToggleBtn");
     const searchPanel = document.getElementById("searchPanel");
-    const provinceFilter = document.getElementById("provinceFilter");
-    const makeFilter = document.getElementById("makeFilter");
-    const modelFilter = document.getElementById("modelFilter");
-    const yearFilter = document.getElementById("yearFilter");
-    const minPrice = document.getElementById("minPrice");
-    const maxPrice = document.getElementById("maxPrice");
-    const clearSearchBtn = document.getElementById("clearSearchBtn");
 
     searchToggleBtn.addEventListener("click", function () {
       searchPanel.classList.toggle("hidden");
     });
 
-    provinceFilter.addEventListener("change", filterVehicles);
-    yearFilter.addEventListener("change", filterVehicles);
-    makeFilter.addEventListener("input", filterVehicles);
-    modelFilter.addEventListener("input", filterVehicles);
-    minPrice.addEventListener("input", filterVehicles);
-    maxPrice.addEventListener("input", filterVehicles);
+    document.getElementById("provinceFilter").addEventListener("change", filterVehicles);
+    document.getElementById("yearFilter").addEventListener("change", filterVehicles);
+    document.getElementById("makeFilter").addEventListener("input", filterVehicles);
+    document.getElementById("modelFilter").addEventListener("input", filterVehicles);
+    document.getElementById("minPrice").addEventListener("input", filterVehicles);
+    document.getElementById("maxPrice").addEventListener("input", filterVehicles);
 
-    clearSearchBtn.addEventListener("click", function () {
-      provinceFilter.value = "";
-      makeFilter.value = "";
-      modelFilter.value = "";
-      yearFilter.value = "";
-      minPrice.value = "";
-      maxPrice.value = "";
+    document.getElementById("clearSearchBtn").addEventListener("click", function () {
+      document.getElementById("provinceFilter").value = "";
+      document.getElementById("makeFilter").value = "";
+      document.getElementById("modelFilter").value = "";
+      document.getElementById("yearFilter").value = "";
+      document.getElementById("minPrice").value = "";
+      document.getElementById("maxPrice").value = "";
       renderVehicles(allVehicles);
     });
 
