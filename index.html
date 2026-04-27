@@ -42,17 +42,13 @@ body {
 }
 
 /* IMAGE */
-.card-img {
-  position: relative;
-}
-
 .card-img img {
   width: 100%;
   height: 220px;
   object-fit: cover;
 }
 
-/* THUMBS */
+/* THUMBNAILS */
 .thumb-row {
   display: flex;
   gap: 5px;
@@ -114,77 +110,92 @@ body {
 <div id="grid" class="grid"></div>
 
 <script>
+
+/* 🔑 PUT YOUR REAL DETAILS HERE */
 const supabaseUrl = "https://YOUR_PROJECT.supabase.co";
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
 
+/* GET IMAGES */
 function getImages(v) {
   let images = [];
   if (v.image) images.push(v.image);
+
   if (v.images) {
-    v.images.split(",").forEach(i => images.push(i.trim()));
+    v.images.split(",").forEach(i => {
+      images.push(i.trim());
+    });
   }
+
   return images;
 }
 
+/* LOAD DATA */
 async function loadCars() {
   const grid = document.getElementById("grid");
 
-  const res = await fetch(
-    supabaseUrl + "/rest/v1/active_vehicles?select=*",
-    {
-      headers: {
-        apikey: supabaseKey,
-        Authorization: "Bearer " + supabaseKey
+  try {
+    const res = await fetch(
+      supabaseUrl + "/rest/v1/active_vehicles?select=*",
+      {
+        headers: {
+          apikey: supabaseKey,
+          Authorization: "Bearer " + supabaseKey
+        }
       }
+    );
+
+    const data = await res.json();
+
+    if (!data.length) {
+      grid.innerHTML = '<div class="empty">No vehicles found</div>';
+      return;
     }
-  );
 
-  const data = await res.json();
+    let html = "";
 
-  if (!data.length) {
-    grid.innerHTML = '<div class="empty">No vehicles found</div>';
-    return;
-  }
+    data.forEach(v => {
+      const images = getImages(v);
 
-  let html = "";
+      let thumbs = "";
+      images.slice(0,4).forEach(img => {
+        thumbs += <img src="${img}">;
+      });
 
-  data.forEach(v => {
-    const images = getImages(v);
+      html += `
+        <div class="card">
+          <div class="card-img">
+            <img src="${images[0] || ''}">
+            <div class="thumb-row">${thumbs}</div>
+          </div>
 
-    let thumbs = "";
-    images.slice(0,4).forEach(img => {
-      thumbs += <img src="${img}">;
+          <div class="card-body">
+            <div class="title">
+              ${v.year || ""} ${v.make || ""} ${v.model || ""}
+            </div>
+
+            <div class="price">
+              R ${v.price || ""}
+            </div>
+
+            <button class="btn"
+              onclick="window.location='details.html?id=${v.id}'">
+              View Details
+            </button>
+          </div>
+        </div>
+      `;
     });
 
-    html += `
-      <div class="card">
-        <div class="card-img">
-          <img src="${images[0] || ''}">
-          <div class="thumb-row">${thumbs}</div>
-        </div>
+    grid.innerHTML = html;
 
-        <div class="card-body">
-          <div class="title">
-            ${v.year || ""} ${v.make || ""} ${v.model || ""}
-          </div>
-
-          <div class="price">
-            R ${v.price || ""}
-          </div>
-
-          <button class="btn"
-            onclick="window.location='details.html?id=${v.id}'">
-            View Details
-          </button>
-        </div>
-      </div>
-    `;
-  });
-
-  grid.innerHTML = html;
+  } catch (err) {
+    console.error(err);
+    grid.innerHTML = '<div class="empty">Error loading vehicles</div>';
+  }
 }
 
 loadCars();
+
 </script>
 
 </body>
