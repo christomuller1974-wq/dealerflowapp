@@ -6,6 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+* { box-sizing: border-box; }
+
 body {
   margin:0;
   font-family:Arial, sans-serif;
@@ -15,13 +17,14 @@ body {
 .header {
   background:linear-gradient(135deg,#1e3a8a,#2563eb);
   color:white;
-  padding:40px 20px;
+  padding:42px 20px 58px;
   text-align:center;
 }
 
 .header h1 {
   margin:0;
-  font-size:36px;
+  font-size:40px;
+  font-weight:900;
 }
 
 .header p {
@@ -32,65 +35,59 @@ body {
   display:inline-block;
   margin-top:20px;
   background:#111827;
-  padding:12px 22px;
+  padding:12px 24px;
   border-radius:30px;
   color:white;
   text-decoration:none;
-  font-weight:bold;
+  font-weight:900;
 }
 
 .search-bar {
   background:white;
-  margin:-30px auto 20px;
-  max-width:1000px;
-  padding:15px;
-  border-radius:12px;
+  margin:-34px auto 22px;
+  max-width:1050px;
+  padding:16px;
+  border-radius:16px;
   display:flex;
   flex-wrap:wrap;
   gap:10px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.08);
+  box-shadow:0 12px 30px rgba(0,0,0,0.10);
 }
 
 .search-bar input {
   flex:1;
   min-width:150px;
-  padding:10px;
-  border-radius:8px;
-  border:1px solid #ddd;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid #dbe1ea;
+  font-size:14px;
 }
 
-.search-btn {
-  background:#2563eb;
-  color:white;
-  border:none;
-  padding:10px 20px;
-  border-radius:8px;
-  cursor:pointer;
-  font-weight:bold;
-}
-
+.search-btn,
 .clear-btn {
-  background:#111827;
   color:white;
   border:none;
-  padding:10px 20px;
-  border-radius:8px;
+  padding:12px 22px;
+  border-radius:10px;
   cursor:pointer;
-  font-weight:bold;
+  font-weight:900;
 }
+
+.search-btn { background:#2563eb; }
+.clear-btn { background:#111827; }
 
 .grid {
-  max-width:1200px;
+  max-width:1250px;
   margin:auto;
   padding:20px;
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-  gap:20px;
+  grid-template-columns:repeat(auto-fit,minmax(270px,1fr));
+  gap:22px;
 }
 
 .card {
   background:white;
-  border-radius:16px;
+  border-radius:18px;
   overflow:hidden;
   box-shadow:0 8px 25px rgba(0,0,0,0.08);
   transition:0.25s;
@@ -98,65 +95,85 @@ body {
 
 .card:hover {
   transform:translateY(-5px);
-  box-shadow:0 12px 28px rgba(0,0,0,0.14);
+  box-shadow:0 14px 32px rgba(0,0,0,0.16);
 }
 
-.card-img img {
+.card-img {
+  position:relative;
+  background:#e5e7eb;
+}
+
+.card-img > img {
   width:100%;
-  height:180px;
+  height:190px;
   object-fit:cover;
   display:block;
+}
+
+.photo-badge {
+  position:absolute;
+  right:10px;
+  bottom:58px;
+  background:rgba(17,24,39,0.88);
+  color:white;
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:900;
 }
 
 .thumb-row {
   display:flex;
   gap:5px;
-  padding:7px;
+  padding:8px;
   overflow-x:auto;
 }
 
 .thumb-row img {
-  width:52px;
-  height:40px;
+  width:54px;
+  height:42px;
   object-fit:cover;
-  border-radius:6px;
+  border-radius:7px;
+  border:1px solid #e5e7eb;
 }
 
 .card-body {
-  padding:13px;
+  padding:15px;
 }
 
 .title {
   font-weight:900;
-  font-size:17px;
+  font-size:18px;
   color:#111827;
+  min-height:44px;
 }
 
 .price {
-  color:#ef4444;
-  font-size:20px;
+  color:#dc2626;
+  font-size:22px;
   font-weight:900;
-  margin-top:8px;
+  margin-top:10px;
 }
 
 .meta {
-  font-size:13px;
-  color:#64748b;
-  margin-top:6px;
+  font-size:14px;
+  color:#475569;
+  margin-top:7px;
 }
 
 .btn {
   display:block;
-  width:90%;
-  margin:12px auto 16px;
-  padding:12px;
+  width:92%;
+  margin:16px auto 18px;
+  padding:13px;
   background:linear-gradient(135deg,#3b82f6,#2563eb);
   color:white;
   border:none;
-  border-radius:11px;
+  border-radius:13px;
   cursor:pointer;
   font-weight:900;
   text-align:center;
+  box-shadow:0 6px 14px rgba(37,99,235,0.32);
 }
 
 .empty {
@@ -169,16 +186,20 @@ body {
 }
 
 @media(max-width:600px){
-  .header h1 {
-    font-size:32px;
-  }
+  .header h1 { font-size:34px; }
+  .header { padding-bottom:48px; }
 
-  .card-img img {
-    height:160px;
+  .card-img > img {
+    height:170px;
   }
 
   .search-bar {
-    margin:-20px 10px 15px;
+    margin:-24px 10px 15px;
+  }
+
+  .search-btn,
+  .clear-btn {
+    flex:1;
   }
 }
 </style>
@@ -189,7 +210,6 @@ body {
 <div class="header">
   <h1>DealerFlow</h1>
   <p>Find your next vehicle</p>
-
   <a href="dealer-admin.html" class="dealer-login-btn">Dealer Login</a>
 </div>
 
@@ -285,13 +305,14 @@ async function loadCars() {
       let thumbs = "";
 
       images.slice(0,4).forEach(function(i) {
-        thumbs += `<img src="${i}">`;
+        thumbs += <img src="${i}">;
       });
 
       html += `
         <div class="card">
           <div class="card-img">
             <img src="${images[0]}" onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'">
+            <div class="photo-badge">📷 ${images.length}</div>
             <div class="thumb-row">${thumbs}</div>
           </div>
 
