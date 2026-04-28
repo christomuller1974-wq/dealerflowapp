@@ -3,15 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <title>DealerFlow</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 body {
   margin:0;
-  font-family:Arial;
+  font-family:Arial, sans-serif;
   background:#f4f6f9;
 }
 
-/* HEADER */
 .header {
   background:linear-gradient(135deg,#1e3a8a,#2563eb);
   color:white;
@@ -39,7 +39,6 @@ body {
   font-weight:bold;
 }
 
-/* SEARCH */
 .search-bar {
   background:white;
   margin:-30px auto 20px;
@@ -54,6 +53,7 @@ body {
 
 .search-bar input {
   flex:1;
+  min-width:150px;
   padding:10px;
   border-radius:8px;
   border:1px solid #ddd;
@@ -66,9 +66,19 @@ body {
   padding:10px 20px;
   border-radius:8px;
   cursor:pointer;
+  font-weight:bold;
 }
 
-/* GRID */
+.clear-btn {
+  background:#111827;
+  color:white;
+  border:none;
+  padding:10px 20px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
 .grid {
   max-width:1200px;
   margin:auto;
@@ -78,77 +88,97 @@ body {
   gap:20px;
 }
 
-/* CARD */
 .card {
   background:white;
   border-radius:16px;
   overflow:hidden;
-  box-shadow:0 8px 25px rgba(0,0,0,0.06);
-  transition:0.2s;
+  box-shadow:0 8px 25px rgba(0,0,0,0.08);
+  transition:0.25s;
 }
 
 .card:hover {
   transform:translateY(-5px);
+  box-shadow:0 12px 28px rgba(0,0,0,0.14);
 }
 
 .card-img img {
   width:100%;
   height:180px;
   object-fit:cover;
+  display:block;
 }
 
 .thumb-row {
   display:flex;
-  gap:4px;
-  padding:6px;
+  gap:5px;
+  padding:7px;
+  overflow-x:auto;
 }
 
 .thumb-row img {
-  width:50px;
+  width:52px;
   height:40px;
   object-fit:cover;
   border-radius:6px;
 }
 
-/* BODY */
 .card-body {
-  padding:12px;
+  padding:13px;
 }
 
 .title {
-  font-weight:bold;
+  font-weight:900;
+  font-size:17px;
+  color:#111827;
 }
 
 .price {
   color:#ef4444;
-  font-size:18px;
-  font-weight:bold;
-  margin-top:6px;
+  font-size:20px;
+  font-weight:900;
+  margin-top:8px;
 }
 
 .meta {
-  font-size:12px;
-  color:#777;
+  font-size:13px;
+  color:#64748b;
+  margin-top:6px;
 }
 
-/* BUTTON */
 .btn {
   display:block;
   width:90%;
-  margin:10px auto 15px;
-  padding:10px;
+  margin:12px auto 16px;
+  padding:12px;
   background:linear-gradient(135deg,#3b82f6,#2563eb);
   color:white;
   border:none;
-  border-radius:10px;
+  border-radius:11px;
   cursor:pointer;
+  font-weight:900;
+  text-align:center;
+}
+
+.empty {
+  grid-column:1 / -1;
+  background:white;
+  padding:30px;
+  border-radius:14px;
+  text-align:center;
   font-weight:bold;
 }
 
-/* MOBILE */
 @media(max-width:600px){
+  .header h1 {
+    font-size:32px;
+  }
+
   .card-img img {
-    height:140px;
+    height:160px;
+  }
+
+  .search-bar {
+    margin:-20px 10px 15px;
   }
 }
 </style>
@@ -160,91 +190,141 @@ body {
   <h1>DealerFlow</h1>
   <p>Find your next vehicle</p>
 
-  <a href="dealer-admin.html" class="dealer-login-btn">
-    Dealer Login
-  </a>
+  <a href="dealer-admin.html" class="dealer-login-btn">Dealer Login</a>
 </div>
 
 <div class="search-bar">
   <input id="search" placeholder="Search make or model">
-  <input id="min" placeholder="Min Price">
-  <input id="max" placeholder="Max Price">
+  <input id="min" placeholder="Min Price" type="number">
+  <input id="max" placeholder="Max Price" type="number">
   <button class="search-btn" onclick="loadCars()">Search</button>
+  <button class="clear-btn" onclick="clearSearch()">Clear</button>
 </div>
 
 <div id="grid" class="grid"></div>
 
 <script>
 const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w"; // 🔴 PUT YOUR REAL KEY HERE
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
 
-function getImages(v){
-  let arr=[];
-  if(v.image) arr.push(v.image);
-  if(v.images){
-    v.images.split(",").forEach(i=>arr.push(i.trim()));
+function getImages(v) {
+  let arr = [];
+
+  if (v.image && String(v.image).trim()) {
+    arr.push(String(v.image).trim());
   }
-  if(!arr.length){
+
+  if (v.images && String(v.images).trim()) {
+    String(v.images).split(",").forEach(function(i) {
+      const img = i.trim();
+      if (img && !arr.includes(img)) {
+        arr.push(img);
+      }
+    });
+  }
+
+  if (!arr.length) {
     arr.push("https://via.placeholder.com/400x300?text=No+Image");
   }
+
   return arr;
 }
 
-async function loadCars(){
-  let res = await fetch(
-    supabaseUrl + "/rest/v1/active_vehicles",
-    {
-      headers:{
-        apikey:supabaseKey,
-        Authorization:"Bearer "+supabaseKey
-      }
-    }
-  );
-
-  let data = await res.json();
-  let grid = document.getElementById("grid");
-
-  if(!data.length){
-    grid.innerHTML = "No vehicles found";
-    return;
-  }
-
-  let html="";
-
-  data.forEach(v=>{
-    let images = getImages(v);
-    let thumbs = "";
-
-    // ✅ FIXED LINE HERE
-    images.slice(0,4).forEach(i=>{
-      thumbs += `<img src="${i}">;
-    });
-
-    html += `
-      <div class="card">
-        <div class="card-img">
-          `<img src="${images[0]}">
-          <div class="thumb-row">${thumbs}</div>
-        </div>
-
-        <div class="card-body">
-          <div class="title">${v.year || ""} ${v.make || ""} ${v.model || ""}</div>
-          <div class="price">R${v.price || 0}</div>
-          <div class="meta">${v.location || ""}</div>
-        </div>
-
-        <button class="btn" onclick="view(${v.id})">
-          View Details
-        </button>
-      </div>
-    `;
-  });
-
-  grid.innerHTML = html;
+function formatPrice(price) {
+  const num = Number(String(price || "").replace(/\D/g, ""));
+  if (!num) return "R0";
+  return "R" + num.toLocaleString("en-ZA");
 }
 
-function view(id){
-  location.href = "details.html?id="+id;
+async function loadCars() {
+  const grid = document.getElementById("grid");
+  grid.innerHTML = '<div class="empty">Loading vehicles...</div>';
+
+  try {
+    const res = await fetch(
+      supabaseUrl + "/rest/v1/active_vehicles?select=*&order=id.desc",
+      {
+        headers: {
+          apikey: supabaseKey,
+          Authorization: "Bearer " + supabaseKey
+        }
+      }
+    );
+
+    let data = await res.json();
+
+    if (!Array.isArray(data)) {
+      grid.innerHTML = '<div class="empty">Could not load vehicles.</div>';
+      return;
+    }
+
+    const search = document.getElementById("search").value.toLowerCase().trim();
+    const min = Number(document.getElementById("min").value) || 0;
+    const max = Number(document.getElementById("max").value) || 999999999;
+
+    data = data.filter(function(v) {
+      const text = ((v.make || "") + " " + (v.model || "") + " " + (v.title || "")).toLowerCase();
+      const price = Number(String(v.price || "").replace(/\D/g, "")) || 0;
+
+      if (search && !text.includes(search)) return false;
+      if (price < min) return false;
+      if (price > max) return false;
+
+      return true;
+    });
+
+    if (!data.length) {
+      grid.innerHTML = '<div class="empty">No vehicles found</div>';
+      return;
+    }
+
+    let html = "";
+
+    data.forEach(function(v) {
+      const images = getImages(v);
+      let thumbs = "";
+
+      images.slice(0, 4).forEach(function(i) {
+        thumbs += <img src="${i}">;
+      });
+
+      html += `
+        <div class="card">
+          <div class="card-img">
+            <img src="${images[0]}" onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'">
+            <div class="thumb-row">${thumbs}</div>
+          </div>
+
+          <div class="card-body">
+            <div class="title">${v.year || ""} ${v.make || ""} ${v.model || ""}</div>
+            <div class="price">${formatPrice(v.price)}</div>
+            <div class="meta">📍 ${v.location || "-"}</div>
+            <div class="meta">🚗 ${v.mileage || "-"}</div>
+            <div class="meta">🏢 ${v.dealer || v.dealer_name || "Dealer"}</div>
+          </div>
+
+          <button class="btn" onclick="viewVehicle(${v.id})">View Details</button>
+        </div>
+      `;
+    });
+
+    grid.innerHTML = html;
+
+  } catch (err) {
+    console.error(err);
+    grid.innerHTML = '<div class="empty">Error loading vehicles.</div>';
+  }
+}
+
+function clearSearch() {
+  document.getElementById("search").value = "";
+  document.getElementById("min").value = "";
+  document.getElementById("max").value = "";
+  loadCars();
+}
+
+function viewVehicle(id) {
+  window.location.href = "details.html?id=" + id;
 }
 
 loadCars();
