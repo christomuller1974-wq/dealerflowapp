@@ -176,13 +176,16 @@ body {
 
 <script>
 const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
-const supabaseKey = "sb_publishable_D7saHOTE_JhSlMnSgBnIhQ_mOAOUD9s";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w"; // 🔴 PUT YOUR REAL KEY HERE
 
 function getImages(v){
   let arr=[];
   if(v.image) arr.push(v.image);
   if(v.images){
     v.images.split(",").forEach(i=>arr.push(i.trim()));
+  }
+  if(!arr.length){
+    arr.push("https://via.placeholder.com/400x300?text=No+Image");
   }
   return arr;
 }
@@ -212,6 +215,7 @@ async function loadCars(){
     let images = getImages(v);
     let thumbs = "";
 
+    // ✅ FIXED LINE HERE
     images.slice(0,4).forEach(i=>{
       thumbs += <img src="${i}">;
     });
@@ -224,8 +228,8 @@ async function loadCars(){
         </div>
 
         <div class="card-body">
-          <div class="title">${v.year} ${v.make} ${v.model}</div>
-          <div class="price">R${v.price}</div>
+          <div class="title">${v.year || ""} ${v.make || ""} ${v.model || ""}</div>
+          <div class="price">R${v.price || 0}</div>
           <div class="meta">${v.location || ""}</div>
         </div>
 
