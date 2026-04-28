@@ -305,12 +305,54 @@ body {
 }
 
 @media(max-width: 900px) {
-  .layout { grid-template-columns: 1fr; }
-  .side-box { position: static; }
-  .main-image { height: 270px; }
-  .vehicle-title { font-size: 24px; }
-  .spec-grid { grid-template-columns: 1fr; }
-  .thumb { width: 78px; height: 58px; }
+  .container {
+    padding: 10px;
+  }
+
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .gallery-box,
+  .info-box,
+  .side-box {
+    padding: 10px;
+    border-radius: 14px;
+  }
+
+  .side-box {
+    position: static;
+  }
+
+  .main-image-wrap {
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .main-image {
+    height: 230px;
+    width: 100%;
+    max-width: 100%;
+    object-fit: contain;
+  }
+
+  .thumb-row {
+    gap: 8px;
+    overflow-x: auto;
+  }
+
+  .thumb {
+    width: 76px;
+    height: 56px;
+  }
+
+  .vehicle-title {
+    font-size: 24px;
+  }
+
+  .spec-grid {
+    grid-template-columns: 1fr;
+  }
 }
 </style>
 </head>
