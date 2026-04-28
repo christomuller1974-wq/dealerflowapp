@@ -14,7 +14,6 @@ body {
   background:#f4f6f9;
 }
 
-/* HEADER */
 .header {
   background:linear-gradient(135deg,#1e3a8a,#2563eb);
   color:white;
@@ -28,7 +27,6 @@ body {
   font-weight:900;
 }
 
-/* NEW SLOGAN STYLES */
 .hero-tagline {
   margin-top:14px;
   font-size:20px;
@@ -52,7 +50,6 @@ body {
   font-weight:900;
 }
 
-/* SEARCH */
 .search-bar {
   background:white;
   margin:-34px auto 22px;
@@ -65,13 +62,15 @@ body {
   box-shadow:0 12px 30px rgba(0,0,0,0.10);
 }
 
-.search-bar input {
+.search-bar input,
+.search-bar select {
   flex:1;
   min-width:150px;
   padding:12px;
   border-radius:10px;
   border:1px solid #dbe1ea;
   font-size:14px;
+  background:white;
 }
 
 .search-btn,
@@ -87,7 +86,6 @@ body {
 .search-btn { background:#2563eb; }
 .clear-btn { background:#111827; }
 
-/* GRID */
 .grid {
   max-width:1250px;
   margin:auto;
@@ -97,7 +95,6 @@ body {
   gap:22px;
 }
 
-/* CARD */
 .card {
   background:white;
   border-radius:18px;
@@ -198,7 +195,6 @@ body {
   font-weight:bold;
 }
 
-/* MOBILE */
 @media(max-width:600px){
   .header h1 { font-size:34px; }
   .header { padding-bottom:48px; }
@@ -224,7 +220,6 @@ body {
 
 <body>
 
-<!-- UPDATED HEADER -->
 <div class="header">
   <h1>DealerFlow</h1>
 
@@ -243,6 +238,20 @@ body {
   <input id="search" placeholder="Search make or model">
   <input id="min" placeholder="Min Price" type="number">
   <input id="max" placeholder="Max Price" type="number">
+
+  <select id="province">
+    <option value="">All Provinces</option>
+    <option value="Gauteng">Gauteng</option>
+    <option value="Western Cape">Western Cape</option>
+    <option value="KwaZulu-Natal">KwaZulu-Natal</option>
+    <option value="Eastern Cape">Eastern Cape</option>
+    <option value="Free State">Free State</option>
+    <option value="Limpopo">Limpopo</option>
+    <option value="Mpumalanga">Mpumalanga</option>
+    <option value="North West">North West</option>
+    <option value="Northern Cape">Northern Cape</option>
+  </select>
+
   <button class="search-btn" onclick="loadCars()">Search</button>
   <button class="clear-btn" onclick="clearSearch()">Clear</button>
 </div>
@@ -307,14 +316,17 @@ async function loadCars() {
     const search = document.getElementById("search").value.toLowerCase().trim();
     const min = Number(document.getElementById("min").value) || 0;
     const max = Number(document.getElementById("max").value) || 999999999;
+    const province = document.getElementById("province").value.toLowerCase().trim();
 
     data = data.filter(function(v) {
       const text = ((v.make || "") + " " + (v.model || "") + " " + (v.title || "")).toLowerCase();
       const price = Number(String(v.price || "").replace(/\D/g, "")) || 0;
+      const location = String(v.location || "").toLowerCase();
 
       if (search && !text.includes(search)) return false;
       if (price < min) return false;
       if (price > max) return false;
+      if (province && !location.includes(province)) return false;
 
       return true;
     });
@@ -331,7 +343,7 @@ async function loadCars() {
       let thumbs = "";
 
       images.slice(0,4).forEach(function(i) {
-        thumbs += `<img src="${i}">`;
+        thumbs += <img src="${i}">;
       });
 
       html += `
@@ -367,6 +379,7 @@ function clearSearch() {
   document.getElementById("search").value = "";
   document.getElementById("min").value = "";
   document.getElementById("max").value = "";
+  document.getElementById("province").value = "";
   loadCars();
 }
 
