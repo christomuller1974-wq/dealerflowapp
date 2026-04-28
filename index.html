@@ -1,34 +1,156 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
 <title>DealerFlow</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-body{margin:0;font-family:Arial,sans-serif;background:#f5f7fb;color:#111827}
-.header{background:linear-gradient(90deg,#1e3c72,#2563eb);color:white;text-align:center;padding:38px 15px}
-.header h1{margin:0;font-size:42px;font-weight:900}
-.header p{margin:8px 0 0;font-size:17px}
+body {
+  margin:0;
+  font-family:Arial;
+  background:#f4f6f9;
+}
 
-.filters{background:white;margin:20px auto;padding:16px;max-width:1200px;border-radius:14px;box-shadow:0 3px 12px rgba(0,0,0,.08);display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
-.filters input,.filters button{padding:12px;border-radius:10px;border:1px solid #d1d5db;font-size:14px}
-.filters button{border:none;color:white;font-weight:900;cursor:pointer}
-.btn-search{background:#2563eb}
-.btn-clear{background:#111827}
+/* HEADER */
+.header {
+  background:linear-gradient(135deg,#1e3a8a,#2563eb);
+  color:white;
+  padding:40px 20px;
+  text-align:center;
+}
 
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:20px;padding:22px;max-width:1250px;margin:auto}
-.card{background:white;border-radius:16px;overflow:hidden;box-shadow:0 5px 16px rgba(0,0,0,.12);transition:.25s}
-.card:hover{transform:translateY(-5px);box-shadow:0 10px 25px rgba(0,0,0,.18)}
-.main-img{width:100%;height:220px;object-fit:cover;display:block}
-.thumbs{display:flex;gap:6px;padding:8px;overflow-x:auto}
-.thumbs img{width:54px;height:42px;object-fit:cover;border-radius:6px}
-.body{padding:14px}
-.title{font-size:18px;font-weight:900;margin-bottom:6px}
-.price{color:#dc2626;font-size:22px;font-weight:900;margin:8px 0}
-.meta{font-size:14px;color:#475569;margin:5px 0}
-.btn{display:block;width:100%;text-align:center;background:#3156c7;color:white;text-decoration:none;padding:12px;border-radius:10px;margin-top:12px;font-weight:900}
-.empty{padding:40px;text-align:center;font-weight:800;color:#475569}
+.header h1 {
+  margin:0;
+  font-size:36px;
+}
+
+.header p {
+  margin-top:8px;
+}
+
+.dealer-login-btn {
+  display:inline-block;
+  margin-top:20px;
+  background:#111827;
+  padding:12px 22px;
+  border-radius:30px;
+  color:white;
+  text-decoration:none;
+  font-weight:bold;
+}
+
+/* SEARCH */
+.search-bar {
+  background:white;
+  margin:-30px auto 20px;
+  max-width:1000px;
+  padding:15px;
+  border-radius:12px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.08);
+}
+
+.search-bar input {
+  flex:1;
+  padding:10px;
+  border-radius:8px;
+  border:1px solid #ddd;
+}
+
+.search-btn {
+  background:#2563eb;
+  color:white;
+  border:none;
+  padding:10px 20px;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+/* GRID */
+.grid {
+  max-width:1200px;
+  margin:auto;
+  padding:20px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:20px;
+}
+
+/* CARD */
+.card {
+  background:white;
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:0 8px 25px rgba(0,0,0,0.06);
+  transition:0.2s;
+}
+
+.card:hover {
+  transform:translateY(-5px);
+}
+
+.card-img img {
+  width:100%;
+  height:180px;
+  object-fit:cover;
+}
+
+.thumb-row {
+  display:flex;
+  gap:4px;
+  padding:6px;
+}
+
+.thumb-row img {
+  width:50px;
+  height:40px;
+  object-fit:cover;
+  border-radius:6px;
+}
+
+/* BODY */
+.card-body {
+  padding:12px;
+}
+
+.title {
+  font-weight:bold;
+}
+
+.price {
+  color:#ef4444;
+  font-size:18px;
+  font-weight:bold;
+  margin-top:6px;
+}
+
+.meta {
+  font-size:12px;
+  color:#777;
+}
+
+/* BUTTON */
+.btn {
+  display:block;
+  width:90%;
+  margin:10px auto 15px;
+  padding:10px;
+  background:linear-gradient(135deg,#3b82f6,#2563eb);
+  color:white;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+/* MOBILE */
+@media(max-width:600px){
+  .card-img img {
+    height:140px;
+  }
+}
 </style>
 </head>
 
@@ -37,16 +159,17 @@ body{margin:0;font-family:Arial,sans-serif;background:#f5f7fb;color:#111827}
 <div class="header">
   <h1>DealerFlow</h1>
   <p>Find your next vehicle</p>
+
+  <a href="dealer-admin.html" class="dealer-login-btn">
+    Dealer Login
+  </a>
 </div>
 
-<div class="filters">
-  <input id="searchBox" placeholder="Search make or model">
-  <input id="minPrice" placeholder="Min Price" type="number">
-  <input id="maxPrice" placeholder="Max Price" type="number">
-  <input id="yearBox" placeholder="Year" type="number">
-  <input id="locationBox" placeholder="Location">
-  <button class="btn-search" onclick="applyFilters()">Search</button>
-  <button class="btn-clear" onclick="clearFilters()">Clear</button>
+<div class="search-bar">
+  <input id="search" placeholder="Search make or model">
+  <input id="min" placeholder="Min Price">
+  <input id="max" placeholder="Max Price">
+  <button class="search-btn" onclick="loadCars()">Search</button>
 </div>
 
 <div id="grid" class="grid"></div>
@@ -55,176 +178,72 @@ body{margin:0;font-family:Arial,sans-serif;background:#f5f7fb;color:#111827}
 const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
 
-let allVehicles = [];
-
-function formatPrice(price){
-  var num = Number(String(price || "").replace(/\D/g,""));
-  if(!num) return "R0";
-  return "R" + num.toLocaleString("en-ZA");
-}
-
 function getImages(v){
-  var arr = [];
-
-  if(v.image && String(v.image).trim()){
-    arr.push(String(v.image).trim());
+  let arr=[];
+  if(v.image) arr.push(v.image);
+  if(v.images){
+    v.images.split(",").forEach(i=>arr.push(i.trim()));
   }
-
-  if(v.images && String(v.images).trim()){
-    String(v.images).split(",").forEach(function(x){
-      var img = x.trim();
-      if(img && arr.indexOf(img) === -1){
-        arr.push(img);
-      }
-    });
-  }
-
-  if(arr.length === 0){
-    arr.push("https://via.placeholder.com/400x300?text=No+Image");
-  }
-
   return arr;
 }
 
-function createCard(v){
-  var images = getImages(v);
+async function loadCars(){
+  let res = await fetch(
+    supabaseUrl + "/rest/v1/active_vehicles",
+    {
+      headers:{
+        apikey:supabaseKey,
+        Authorization:"Bearer "+supabaseKey
+      }
+    }
+  );
 
-  var card = document.createElement("div");
-  card.className = "card";
+  let data = await res.json();
+  let grid = document.getElementById("grid");
 
-  var mainImg = document.createElement("img");
-  mainImg.className = "main-img";
-  mainImg.src = images[0];
-  card.appendChild(mainImg);
-
-  var thumbs = document.createElement("div");
-  thumbs.className = "thumbs";
-
-  images.slice(0,4).forEach(function(img){
-    var t = document.createElement("img");
-    t.src = img;
-    thumbs.appendChild(t);
-  });
-
-  card.appendChild(thumbs);
-
-  var body = document.createElement("div");
-  body.className = "body";
-
-  var title = document.createElement("div");
-  title.className = "title";
-  title.textContent = (v.year || "") + " " + (v.make || "") + " " + (v.model || "");
-  body.appendChild(title);
-
-  var price = document.createElement("div");
-  price.className = "price";
-  price.textContent = formatPrice(v.price);
-  body.appendChild(price);
-
-  var loc = document.createElement("div");
-  loc.className = "meta";
-  loc.textContent = "📍 " + (v.location || "-");
-  body.appendChild(loc);
-
-  var mileage = document.createElement("div");
-  mileage.className = "meta";
-  mileage.textContent = "🚗 " + (v.mileage || "-");
-  body.appendChild(mileage);
-
-  var dealer = document.createElement("div");
-  dealer.className = "meta";
-  dealer.textContent = "🏢 " + (v.dealer || "Dealer");
-  body.appendChild(dealer);
-
-  var btn = document.createElement("a");
-  btn.className = "btn";
-  btn.href = "details.html?id=" + v.id;
-  btn.textContent = "View Details";
-  body.appendChild(btn);
-
-  card.appendChild(body);
-  return card;
-}
-
-function renderVehicles(list){
-  var grid = document.getElementById("grid");
-  grid.innerHTML = "";
-
-  if(!list || list.length === 0){
-    var empty = document.createElement("div");
-    empty.className = "empty";
-    empty.textContent = "No vehicles found";
-    grid.appendChild(empty);
+  if(!data.length){
+    grid.innerHTML = "No vehicles found";
     return;
   }
 
-  list.forEach(function(v){
-    grid.appendChild(createCard(v));
+  let html="";
+
+  data.forEach(v=>{
+    let images = getImages(v);
+    let thumbs = "";
+
+    images.slice(0,4).forEach(i=>{
+      thumbs += <img src="${i}">;
+    });
+
+    html += `
+      <div class="card">
+        <div class="card-img">
+          <img src="${images[0]}">
+          <div class="thumb-row">${thumbs}</div>
+        </div>
+
+        <div class="card-body">
+          <div class="title">${v.year} ${v.make} ${v.model}</div>
+          <div class="price">R${v.price}</div>
+          <div class="meta">${v.location || ""}</div>
+        </div>
+
+        <button class="btn" onclick="view(${v.id})">
+          View Details
+        </button>
+      </div>
+    `;
   });
+
+  grid.innerHTML = html;
 }
 
-function applyFilters(){
-  var search = document.getElementById("searchBox").value.toLowerCase();
-  var minPrice = Number(document.getElementById("minPrice").value) || 0;
-  var maxPrice = Number(document.getElementById("maxPrice").value) || 999999999;
-  var year = document.getElementById("yearBox").value;
-  var location = document.getElementById("locationBox").value.toLowerCase();
-
-  var filtered = allVehicles.filter(function(v){
-    var text = ((v.make || "") + " " + (v.model || "")).toLowerCase();
-    var price = Number(String(v.price || "").replace(/\D/g,"")) || 0;
-    var loc = String(v.location || "").toLowerCase();
-
-    if(search && text.indexOf(search) === -1) return false;
-    if(price < minPrice) return false;
-    if(price > maxPrice) return false;
-    if(year && String(v.year) !== String(year)) return false;
-    if(location && loc.indexOf(location) === -1) return false;
-
-    return true;
-  });
-
-  renderVehicles(filtered);
+function view(id){
+  location.href = "details.html?id="+id;
 }
 
-function clearFilters(){
-  document.getElementById("searchBox").value = "";
-  document.getElementById("minPrice").value = "";
-  document.getElementById("maxPrice").value = "";
-  document.getElementById("yearBox").value = "";
-  document.getElementById("locationBox").value = "";
-  renderVehicles(allVehicles);
-}
-
-async function loadVehicles(){
-  try{
-    var res = await fetch(
-      supabaseUrl + "/rest/v1/active_vehicles?select=*&order=id.desc",
-      {
-        headers:{
-          apikey:supabaseKey,
-          Authorization:"Bearer " + supabaseKey
-        }
-      }
-    );
-
-    var data = await res.json();
-
-    if(!Array.isArray(data)){
-      renderVehicles([]);
-      return;
-    }
-
-    allVehicles = data;
-    renderVehicles(allVehicles);
-
-  }catch(err){
-    console.log(err);
-    renderVehicles([]);
-  }
-}
-
-loadVehicles();
+loadCars();
 </script>
 
 </body>
