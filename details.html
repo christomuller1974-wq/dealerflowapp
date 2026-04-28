@@ -8,8 +8,11 @@
 <style>
 * { box-sizing: border-box; }
 
-body {
+html, body {
   margin: 0;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
   font-family: Arial, sans-serif;
   background: #eef1f5;
   color: #111827;
@@ -25,7 +28,7 @@ body {
 .hero h1 {
   margin: 0;
   font-size: 34px;
-  font-weight: 800;
+  font-weight: 900;
 }
 
 .container {
@@ -48,17 +51,19 @@ body {
   padding: 10px 14px;
   border-radius: 10px;
   font-size: 13px;
-  font-weight: 800;
+  font-weight: 900;
 }
 
-.top-btn.blue { background: #3156c7; }
+.top-btn.blue {
+  background: #3156c7;
+}
 
 .status {
   background: white;
   padding: 12px 14px;
   border-radius: 12px;
   margin-bottom: 16px;
-  font-weight: 800;
+  font-weight: 900;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
@@ -83,10 +88,12 @@ body {
   border-radius: 14px;
   overflow: hidden;
   position: relative;
+  width: 100%;
 }
 
 .main-image {
   width: 100%;
+  max-width: 100%;
   height: 390px;
   object-fit: contain;
   background: #f1f5f9;
@@ -103,7 +110,7 @@ body {
   padding: 7px 10px;
   border-radius: 999px;
   font-size: 12px;
-  font-weight: 800;
+  font-weight: 900;
 }
 
 .image-badge { left: 12px; }
@@ -114,6 +121,7 @@ body {
   gap: 10px;
   overflow-x: auto;
   padding: 12px 2px 4px;
+  width: 100%;
 }
 
 .thumb {
@@ -127,7 +135,9 @@ body {
   flex: 0 0 auto;
 }
 
-.thumb.active { border-color: #3156c7; }
+.thumb.active {
+  border-color: #3156c7;
+}
 
 .side-box {
   position: sticky;
@@ -167,7 +177,9 @@ body {
 .btn-dealer { background: #3156c7; }
 .btn-enquire { background: #0ea5e9; }
 
-.info-box { margin-top: 18px; }
+.info-box {
+  margin-top: 18px;
+}
 
 .vehicle-title {
   font-size: 30px;
@@ -212,7 +224,9 @@ body {
   padding: 20px;
 }
 
-.modal.show { display: flex; }
+.modal.show {
+  display: flex;
+}
 
 .modal-img {
   max-width: 94vw;
@@ -265,7 +279,7 @@ body {
   padding: 9px 14px;
   border-radius: 999px;
   font-size: 13px;
-  font-weight: 800;
+  font-weight: 900;
 }
 
 .enquire-box {
@@ -301,44 +315,81 @@ body {
   padding: 24px;
   text-align: center;
   color: #475569;
-  font-weight: 800;
+  font-weight: 900;
 }
 
+/* MOBILE FIX */
 @media(max-width: 900px) {
+  html, body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .hero {
+    padding: 22px 10px;
+  }
+
+  .hero h1 {
+    font-size: 38px;
+  }
+
   .container {
+    width: 100%;
+    max-width: 100%;
     padding: 10px;
+    overflow-x: hidden;
+  }
+
+  .top-actions {
+    gap: 8px;
+  }
+
+  .top-btn {
+    flex: 1;
+    text-align: center;
+    padding: 12px 10px;
+    font-size: 14px;
   }
 
   .layout {
-    grid-template-columns: 1fr;
+    display: block;
+    width: 100%;
   }
 
   .gallery-box,
   .info-box,
   .side-box {
+    width: 100%;
+    max-width: 100%;
     padding: 10px;
     border-radius: 14px;
+    overflow: hidden;
   }
 
   .side-box {
     position: static;
+    margin-top: 18px;
   }
 
   .main-image-wrap {
+    width: 100%;
     max-width: 100%;
     overflow: hidden;
   }
 
   .main-image {
-    height: 230px;
     width: 100%;
     max-width: 100%;
+    height: 230px;
     object-fit: contain;
   }
 
   .thumb-row {
-    gap: 8px;
+    width: 100%;
+    max-width: 100%;
     overflow-x: auto;
+    gap: 8px;
   }
 
   .thumb {
@@ -352,6 +403,10 @@ body {
 
   .spec-grid {
     grid-template-columns: 1fr;
+  }
+
+  .fullscreen-badge {
+    display: none;
   }
 }
 </style>
@@ -396,7 +451,7 @@ body {
 
 <script>
 const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
-const supabaseKey = "sb_publishable_D7saHOTE_JhSlMnSgBnIhQ_mOAOUD9s";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
 
 let images = [];
 let current = 0;
@@ -430,6 +485,7 @@ function callLink(phone) {
 function whatsappLink(phone, title) {
   const phoneClean = cleanPhone(phone);
   if (!phoneClean) return "#";
+
   return "https://wa.me/27" + phoneClean.replace(/^0/, "") +
     "?text=" + encodeURIComponent("Hi, I'm interested in the " + (title || "vehicle") + ".");
 }
@@ -606,7 +662,6 @@ async function loadVehicle() {
     }
 
     currentVehicle = v;
-
     images = getImages(v);
     current = 0;
 
@@ -689,15 +744,6 @@ async function loadVehicle() {
       '<div class="empty-box">Could not load vehicle details.</div>';
   }
 }
-
-window.setMain = setMain;
-window.openModal = openModal;
-window.closeModal = closeModal;
-window.nextImage = nextImage;
-window.prevImage = prevImage;
-window.openEnquire = openEnquire;
-window.closeEnquire = closeEnquire;
-window.sendEnquiry = sendEnquiry;
 
 loadVehicle();
 </script>
