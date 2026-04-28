@@ -14,6 +14,7 @@ body {
   background:#f4f6f9;
 }
 
+/* HEADER */
 .header {
   background:linear-gradient(135deg,#1e3a8a,#2563eb);
   color:white;
@@ -27,8 +28,17 @@ body {
   font-weight:900;
 }
 
-.header p {
-  margin-top:8px;
+/* NEW SLOGAN STYLES */
+.hero-tagline {
+  margin-top:14px;
+  font-size:20px;
+  font-weight:800;
+}
+
+.hero-sub {
+  margin-top:6px;
+  font-size:15px;
+  opacity:0.9;
 }
 
 .dealer-login-btn {
@@ -42,6 +52,7 @@ body {
   font-weight:900;
 }
 
+/* SEARCH */
 .search-bar {
   background:white;
   margin:-34px auto 22px;
@@ -76,6 +87,7 @@ body {
 .search-btn { background:#2563eb; }
 .clear-btn { background:#111827; }
 
+/* GRID */
 .grid {
   max-width:1250px;
   margin:auto;
@@ -85,6 +97,7 @@ body {
   gap:22px;
 }
 
+/* CARD */
 .card {
   background:white;
   border-radius:18px;
@@ -185,9 +198,13 @@ body {
   font-weight:bold;
 }
 
+/* MOBILE */
 @media(max-width:600px){
   .header h1 { font-size:34px; }
   .header { padding-bottom:48px; }
+
+  .hero-tagline { font-size:17px; }
+  .hero-sub { font-size:13px; }
 
   .card-img > img {
     height:170px;
@@ -207,9 +224,18 @@ body {
 
 <body>
 
+<!-- UPDATED HEADER -->
 <div class="header">
   <h1>DealerFlow</h1>
-  <p>Find your next vehicle</p>
+
+  <p class="hero-tagline">
+    Drive your dream. Find the right vehicle fast.
+  </p>
+
+  <p class="hero-sub">
+    Trusted listings. Quick contact. Serious deals.
+  </p>
+
   <a href="dealer-admin.html" class="dealer-login-btn">Dealer Login</a>
 </div>
 
@@ -305,7 +331,7 @@ async function loadCars() {
       let thumbs = "";
 
       images.slice(0,4).forEach(function(i) {
-        thumbs += `<img src="${i}">`;
+        thumbs += <img src="${i}">;
       });
 
       html += `
