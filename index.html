@@ -101,6 +101,8 @@ body {
   overflow:hidden;
   box-shadow:0 8px 25px rgba(0,0,0,0.08);
   transition:0.25s;
+  display:flex;
+  flex-direction:column;
 }
 
 .card:hover {
@@ -111,11 +113,15 @@ body {
 .card-img {
   position:relative;
   background:#e5e7eb;
+  height:190px;
+  overflow:hidden;
+  border-top-left-radius:18px;
+  border-top-right-radius:18px;
 }
 
 .card-img > img {
   width:100%;
-  height:190px;
+  height:100%;
   object-fit:cover;
   display:block;
 }
@@ -123,7 +129,7 @@ body {
 .photo-badge {
   position:absolute;
   right:10px;
-  bottom:58px;
+  bottom:10px;
   background:rgba(17,24,39,0.88);
   color:white;
   padding:6px 10px;
@@ -137,6 +143,7 @@ body {
   gap:5px;
   padding:8px;
   overflow-x:auto;
+  background:white;
 }
 
 .thumb-row img {
@@ -145,10 +152,12 @@ body {
   object-fit:cover;
   border-radius:7px;
   border:1px solid #e5e7eb;
+  flex:0 0 auto;
 }
 
 .card-body {
   padding:15px;
+  flex:1;
 }
 
 .title {
@@ -202,7 +211,7 @@ body {
   .hero-tagline { font-size:17px; }
   .hero-sub { font-size:13px; }
 
-  .card-img > img {
+  .card-img {
     height:170px;
   }
 
@@ -343,16 +352,17 @@ async function loadCars() {
       let thumbs = "";
 
       images.slice(0,4).forEach(function(i) {
-        thumbs += `<img src="${i}">`;
+        thumbs += <img src="${i}" loading="lazy">;
       });
 
       html += `
         <div class="card">
           <div class="card-img">
-            <img src="${images[0]}" onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'">
+            <img src="${images[0]}" loading="lazy" onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'">
             <div class="photo-badge">📷 ${images.length}</div>
-            <div class="thumb-row">${thumbs}</div>
           </div>
+
+          <div class="thumb-row">${thumbs}</div>
 
           <div class="card-body">
             <div class="title">${v.year || ""} ${v.make || ""} ${v.model || ""}</div>
