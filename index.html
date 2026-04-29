@@ -14,7 +14,6 @@ body {
   background:#f4f6f9;
 }
 
-/* HEADER */
 .header {
   background:linear-gradient(135deg,#1e3a8a,#2563eb);
   color:white;
@@ -31,7 +30,7 @@ body {
 .slogan {
   margin-top:12px;
   font-size:20px;
-  font-weight:600;
+  font-weight:800;
 }
 
 .sub {
@@ -50,7 +49,6 @@ body {
   font-weight:900;
 }
 
-/* SEARCH */
 .search-bar {
   background:white;
   margin:-40px auto 25px;
@@ -70,6 +68,8 @@ body {
   padding:12px;
   border-radius:10px;
   border:1px solid #dbe1ea;
+  font-size:14px;
+  background:white;
 }
 
 .search-btn,
@@ -85,18 +85,15 @@ body {
 .search-btn { background:#2563eb; }
 .clear-btn { background:#111827; }
 
-/* GRID FIXED (NO STRETCH) */
 .grid {
   max-width:1250px;
   margin:auto;
   padding:20px;
   display:grid;
-  grid-template-columns:repeat(auto-fill, minmax(260px, 300px));
+  grid-template-columns:repeat(auto-fit, minmax(250px, 1fr));
   gap:22px;
-  justify-content:center;
 }
 
-/* CARD */
 .card {
   background:white;
   border-radius:18px;
@@ -104,34 +101,56 @@ body {
   box-shadow:0 8px 25px rgba(0,0,0,0.08);
   transition:0.25s;
   width:100%;
-  max-width:300px;
+  max-width:100%;
   display:flex;
   flex-direction:column;
 }
 
-.card:hover {
-  transform:translateY(-5px);
+.grid:has(.card:only-child) {
+  justify-items:center;
 }
 
-/* IMAGE FIX */
+.grid:has(.card:only-child) .card {
+  max-width:320px;
+}
+
+.card:hover {
+  transform:translateY(-5px);
+  box-shadow:0 14px 32px rgba(0,0,0,0.16);
+}
+
 .card-img {
   position:relative;
   height:190px;
   overflow:hidden;
+  background:#e5e7eb;
 }
 
 .card-img img {
   width:100%;
   height:100%;
   object-fit:cover;
+  display:block;
 }
 
-/* THUMBS */
+.photo-badge {
+  position:absolute;
+  right:10px;
+  bottom:10px;
+  background:rgba(17,24,39,0.88);
+  color:white;
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:900;
+}
+
 .thumb-row {
   display:flex;
   gap:5px;
   padding:6px;
   overflow-x:auto;
+  background:white;
 }
 
 .thumb-row img {
@@ -139,16 +158,19 @@ body {
   height:40px;
   object-fit:cover;
   border-radius:6px;
+  flex:0 0 auto;
 }
 
-/* BODY */
 .card-body {
   padding:14px;
+  flex:1;
 }
 
 .title {
   font-weight:900;
   font-size:17px;
+  color:#111827;
+  min-height:42px;
 }
 
 .price {
@@ -164,8 +186,10 @@ body {
   margin-top:6px;
 }
 
-/* BUTTONS */
 .btn {
+  display:block;
+  text-align:center;
+  text-decoration:none;
   margin:12px;
   padding:12px;
   border:none;
@@ -182,21 +206,23 @@ body {
 .whatsapp-btn {
   background:#25D366;
   color:white;
+  margin-top:0;
 }
 
-/* EMPTY */
 .empty {
   grid-column:1/-1;
   background:white;
   padding:30px;
   border-radius:14px;
   text-align:center;
+  font-weight:bold;
 }
 
-/* MOBILE */
 @media(max-width:600px){
-
   .header h1 { font-size:32px; }
+
+  .slogan { font-size:17px; }
+  .sub { font-size:13px; }
 
   .grid {
     grid-template-columns:1fr;
@@ -204,6 +230,10 @@ body {
 
   .card {
     max-width:100%;
+  }
+
+  .card-img {
+    height:170px;
   }
 
   .search-bar {
@@ -220,16 +250,13 @@ body {
 
 <body>
 
-<!-- HEADER -->
 <div class="header">
   <h1>DealerFlow</h1>
   <div class="slogan">Drive your dream. Find the right vehicle fast.</div>
   <div class="sub">Trusted listings. Quick contact. Serious deals.</div>
-
   <a href="dealer-admin.html" class="dealer-login-btn">Dealer Login</a>
 </div>
 
-<!-- SEARCH -->
 <div class="search-bar">
   <input id="search" placeholder="Search make or model">
   <input id="min" placeholder="Min Price" type="number">
@@ -237,15 +264,15 @@ body {
 
   <select id="province">
     <option value="">All Provinces</option>
-    <option>Gauteng</option>
-    <option>Western Cape</option>
-    <option>Eastern Cape</option>
-    <option>KwaZulu-Natal</option>
-    <option>Free State</option>
-    <option>Limpopo</option>
-    <option>Mpumalanga</option>
-    <option>North West</option>
-    <option>Northern Cape</option>
+    <option value="Gauteng">Gauteng</option>
+    <option value="Western Cape">Western Cape</option>
+    <option value="Eastern Cape">Eastern Cape</option>
+    <option value="KwaZulu-Natal">KwaZulu-Natal</option>
+    <option value="Free State">Free State</option>
+    <option value="Limpopo">Limpopo</option>
+    <option value="Mpumalanga">Mpumalanga</option>
+    <option value="North West">North West</option>
+    <option value="Northern Cape">Northern Cape</option>
   </select>
 
   <button class="search-btn" onclick="loadCars()">Search</button>
@@ -258,15 +285,19 @@ body {
 const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
 
-/* IMAGE HANDLER */
 function getImages(v) {
   let arr = [];
 
-  if (v.image) arr.push(v.image);
+  if (v.image && String(v.image).trim()) {
+    arr.push(String(v.image).trim());
+  }
 
-  if (v.images) {
-    v.images.split(",").forEach(i => {
-      if (i && !arr.includes(i)) arr.push(i.trim());
+  if (v.images && String(v.images).trim()) {
+    String(v.images).split(",").forEach(function(i) {
+      const img = i.trim();
+      if (img && !arr.includes(img)) {
+        arr.push(img);
+      }
     });
   }
 
@@ -277,95 +308,125 @@ function getImages(v) {
   return arr;
 }
 
-/* PRICE */
 function formatPrice(price) {
   const num = Number(String(price || "").replace(/\D/g, ""));
+  if (!num) return "R0";
   return "R" + num.toLocaleString("en-ZA");
 }
 
-/* LOAD */
-async function loadCars() {
-  const grid = document.getElementById("grid");
-  grid.innerHTML = '<div class="empty">Loading...</div>';
-
-  const res = await fetch(
-    supabaseUrl + "/rest/v1/active_vehicles?select=*&order=id.desc",
-    {
-      headers: {
-        apikey: supabaseKey,
-        Authorization: "Bearer " + supabaseKey
-      }
-    }
-  );
-
-  let data = await res.json();
-
-  const search = document.getElementById("search").value.toLowerCase();
-  const min = Number(document.getElementById("min").value) || 0;
-  const max = Number(document.getElementById("max").value) || 999999999;
-  const province = document.getElementById("province").value;
-
-  data = data.filter(v => {
-    const text = (v.make + " " + v.model).toLowerCase();
-    const price = Number(String(v.price).replace(/\D/g,"")) || 0;
-
-    if (search && !text.includes(search)) return false;
-    if (price < min || price > max) return false;
-    if (province && v.province !== province) return false;
-
-    return true;
-  });
-
-  if (!data.length) {
-    grid.innerHTML = '<div class="empty">No vehicles found</div>';
-    return;
-  }
-
-  let html = "";
-
-  data.forEach(v => {
-    const images = getImages(v);
-
-    let thumbs = "";
-    images.slice(0,4).forEach(i=>{
-      thumbs += `<img src="${i}">`;
-    });
-
-    const whatsapp = `https://wa.me/27XXXXXXXXX?text=I'm interested in ${v.make} ${v.model}`;
-
-    html += `
-      <div class="card">
-        <div class="card-img">
-          <img src="${images[0]}">
-          <div class="thumb-row">${thumbs}</div>
-        </div>
-
-        <div class="card-body">
-          <div class="title">${v.year} ${v.make} ${v.model}</div>
-          <div class="price">${formatPrice(v.price)}</div>
-          <div class="meta">📍 ${v.location || "-"}</div>
-          <div class="meta">🚗 ${v.mileage || "-"}</div>
-        </div>
-
-        <button class="btn view-btn" onclick="viewVehicle(${v.id})">View</button>
-        <a href="${whatsapp}" target="_blank" class="btn whatsapp-btn">WhatsApp</a>
-      </div>
-    `;
-  });
-
-  grid.innerHTML = html;
+function cleanPhone(phone) {
+  return String(phone || "").replace(/\s+/g, "");
 }
 
-/* CLEAR */
+function whatsappLink(v, title) {
+  const phone = cleanPhone(v.phone || "");
+  const number = phone ? "27" + phone.replace(/^0/, "") : "27XXXXXXXXX";
+
+  return "https://wa.me/" + number +
+    "?text=" + encodeURIComponent("Hi, I'm interested in the " + title);
+}
+
+async function loadCars() {
+  const grid = document.getElementById("grid");
+  grid.innerHTML = '<div class="empty">Loading vehicles...</div>';
+
+  try {
+    const res = await fetch(
+      supabaseUrl + "/rest/v1/active_vehicles?select=*&order=id.desc",
+      {
+        headers: {
+          apikey: supabaseKey,
+          Authorization: "Bearer " + supabaseKey
+        }
+      }
+    );
+
+    let data = await res.json();
+
+    if (!Array.isArray(data)) {
+      grid.innerHTML = '<div class="empty">Could not load vehicles.</div>';
+      return;
+    }
+
+    const search = document.getElementById("search").value.toLowerCase().trim();
+    const min = Number(document.getElementById("min").value) || 0;
+    const max = Number(document.getElementById("max").value) || 999999999;
+    const province = document.getElementById("province").value.toLowerCase().trim();
+
+    data = data.filter(function(v) {
+      const text = ((v.make || "") + " " + (v.model || "") + " " + (v.title || "")).toLowerCase();
+      const price = Number(String(v.price || "").replace(/\D/g, "")) || 0;
+      const location = String(v.location || "").toLowerCase();
+      const vehicleProvince = String(v.province || "").toLowerCase();
+
+      if (search && !text.includes(search)) return false;
+      if (price < min) return false;
+      if (price > max) return false;
+
+      if (province) {
+        if (!location.includes(province) && !vehicleProvince.includes(province)) {
+          return false;
+        }
+      }
+
+      return true;
+    });
+
+    if (!data.length) {
+      grid.innerHTML = '<div class="empty">No vehicles found</div>';
+      return;
+    }
+
+    let html = "";
+
+    data.forEach(function(v) {
+      const images = getImages(v);
+      const title = [v.year, v.make, v.model].filter(Boolean).join(" ") || "Vehicle";
+      let thumbs = "";
+
+      images.slice(0,4).forEach(function(i) {
+        thumbs += <img src="${i}" loading="lazy">;
+      });
+
+      html += `
+        <div class="card">
+          <div class="card-img">
+            <img src="${images[0]}" loading="lazy" onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'">
+            <div class="photo-badge">📷 ${images.length}</div>
+          </div>
+
+          <div class="thumb-row">${thumbs}</div>
+
+          <div class="card-body">
+            <div class="title">${title}</div>
+            <div class="price">${formatPrice(v.price)}</div>
+            <div class="meta">📍 ${v.location || "-"}</div>
+            <div class="meta">🚗 ${v.mileage || "-"}</div>
+            <div class="meta">🏢 ${v.dealer || v.dealer_name || "Dealer"}</div>
+          </div>
+
+          <button class="btn view-btn" onclick="viewVehicle(${v.id})">View Details</button>
+          <a href="${whatsappLink(v, title)}" target="_blank" class="btn whatsapp-btn">WhatsApp</a>
+        </div>
+      `;
+    });
+
+    grid.innerHTML = html;
+
+  } catch (err) {
+    console.error(err);
+    grid.innerHTML = '<div class="empty">Error loading vehicles.</div>';
+  }
+}
+
 function clearSearch() {
-  document.getElementById("search").value="";
-  document.getElementById("min").value="";
-  document.getElementById("max").value="";
-  document.getElementById("province").value="";
+  document.getElementById("search").value = "";
+  document.getElementById("min").value = "";
+  document.getElementById("max").value = "";
+  document.getElementById("province").value = "";
   loadCars();
 }
 
-/* VIEW */
 function viewVehicle(id) {
   window.location.href = "details.html?id=" + id;
 }
