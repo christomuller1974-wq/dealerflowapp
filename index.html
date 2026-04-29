@@ -352,7 +352,7 @@ async function loadCars() {
       let thumbs = "";
 
       images.slice(0,4).forEach(function(i) {
-        thumbs += <img src="${i}" loading="lazy">;
+        thumbs += `<img src="${i}" loading="lazy">`;
       });
 
       html += `
