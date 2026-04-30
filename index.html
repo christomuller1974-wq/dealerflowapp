@@ -85,7 +85,25 @@ body {
 .search-btn { background:#2563eb; }
 .clear-btn { background:#111827; }
 
+.section-title {
+  max-width:1250px;
+  margin:20px auto 0;
+  padding:0 20px;
+  font-size:24px;
+  font-weight:900;
+  color:#111827;
+}
+
 .grid {
+  max-width:1250px;
+  margin:auto;
+  padding:20px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(250px, 1fr));
+  gap:22px;
+}
+
+.featured-grid {
   max-width:1250px;
   margin:auto;
   padding:20px;
@@ -104,6 +122,7 @@ body {
   max-width:100%;
   display:flex;
   flex-direction:column;
+  position:relative;
 }
 
 .grid:has(.card:only-child) {
@@ -140,6 +159,38 @@ body {
   background:rgba(17,24,39,0.88);
   color:white;
   padding:6px 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:900;
+}
+
+.fav-btn {
+  position:absolute;
+  top:10px;
+  right:10px;
+  z-index:5;
+  border:none;
+  background:white;
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  cursor:pointer;
+  font-size:20px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.18);
+}
+
+.fav-btn.saved {
+  color:#dc2626;
+}
+
+.featured-badge {
+  position:absolute;
+  top:10px;
+  left:10px;
+  z-index:5;
+  background:#f59e0b;
+  color:white;
+  padding:7px 10px;
   border-radius:999px;
   font-size:12px;
   font-weight:900;
@@ -190,7 +241,7 @@ body {
   display:block;
   text-align:center;
   text-decoration:none;
-  margin:12px;
+  margin:10px 12px;
   padding:12px;
   border:none;
   border-radius:10px;
@@ -206,7 +257,22 @@ body {
 .whatsapp-btn {
   background:#25D366;
   color:white;
-  margin-top:0;
+}
+
+.call-btn {
+  background:#111827;
+  color:white;
+}
+
+.action-row {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin:0 12px 12px;
+}
+
+.action-row .btn {
+  margin:0;
 }
 
 .empty {
@@ -224,7 +290,8 @@ body {
   .slogan { font-size:17px; }
   .sub { font-size:13px; }
 
-  .grid {
+  .grid,
+  .featured-grid {
     grid-template-columns:1fr;
   }
 
@@ -279,6 +346,10 @@ body {
   <button class="clear-btn" onclick="clearSearch()">Clear</button>
 </div>
 
+<div class="section-title">Featured Vehicles</div>
+<div id="featuredGrid" class="featured-grid"></div>
+
+<div class="section-title">Browse Vehicles</div>
 <div id="grid" class="grid"></div>
 
 <script>
@@ -315,20 +386,121 @@ function formatPrice(price) {
 }
 
 function cleanPhone(phone) {
-  return String(phone || "").replace(/\s+/g, "");
+  return String(phone || "").replace(/\D/g, "");
+}
+
+function getDealerPhone(v) {
+  return cleanPhone(v.phone || v.dealer_phone || v.mobile || "");
+}
+
+function callLink(v) {
+  const phone = getDealerPhone(v);
+  return phone ? "tel:" + phone : "#";
 }
 
 function whatsappLink(v, title) {
-  const phone = cleanPhone(v.phone || "");
+  const phone = getDealerPhone(v);
   const number = phone ? "27" + phone.replace(/^0/, "") : "27XXXXXXXXX";
 
-  return "https://wa.me/" + number +
-    "?text=" + encodeURIComponent("Hi, I'm interested in the " + title);
+  const message = encodeURIComponent(
+    "Hi, I'm interested in the " + title + " for " + formatPrice(v.price) + ". Is it still available?"
+  );
+
+  return "https://wa.me/" + number + "?text=" + message;
 }
+
+function getSavedVehicles() {
+  return JSON.parse(localStorage.getItem("savedVehicles") || "[]");
+}
+
+function saveSavedVehicles(saved) {
+  localStorage.setItem("savedVehicles", JSON.stringify(saved));
+}
+
+function isSaved(id) {
+  return getSavedVehicles().includes(String(id));
+}
+
+function toggleFavourite(id) {
+  let saved = getSavedVehicles();
+  const sid = String(id);
+
+  if (saved.includes(sid)) {
+    saved = saved.filter(x => x !== sid);
+  } else {
+    saved.push(sid);
+  }
+
+  saveSavedVehicles(saved);
+  loadCars();
+}
+
+function trackLead(type, v) {
+  const leads = JSON.parse(localStorage.getItem("leadTracking") || "[]");
+
+  leads.push({
+    type: type,
+    vehicle_id: v.id,
+    vehicle: [v.year, v.make, v.model].filter(Boolean).join(" "),
+    price: v.price || "",
+    dealer: v.dealer || v.dealer_name || "",
+    phone: v.phone || v.dealer_phone || "",
+    time: new Date().toISOString()
+  });
+
+  localStorage.setItem("leadTracking", JSON.stringify(leads));
+}
+
+function createCard(v, featured) {
+  const images = getImages(v);
+  const title = [v.year, v.make, v.model].filter(Boolean).join(" ") || "Vehicle";
+  let thumbs = "";
+
+  images.slice(0,4).forEach(function(i) {
+    thumbs += <img src="${i}" loading="lazy">;
+  });
+
+  const savedClass = isSaved(v.id) ? "saved" : "";
+  const heart = isSaved(v.id) ? "♥️" : "♡";
+
+  return `
+    <div class="card">
+      ${featured ? '<div class="featured-badge">Featured</div>' : ''}
+      <button class="fav-btn ${savedClass}" onclick="toggleFavourite(${v.id})">${heart}</button>
+
+      <div class="card-img">
+        <img src="${images[0]}" loading="lazy" onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'">
+        <div class="photo-badge">📷 ${images.length}</div>
+      </div>
+
+      <div class="thumb-row">${thumbs}</div>
+
+      <div class="card-body">
+        <div class="title">${title}</div>
+        <div class="price">${formatPrice(v.price)}</div>
+        <div class="meta">📍 ${v.location || "-"}</div>
+        <div class="meta">🚗 ${v.mileage || "-"}</div>
+        <div class="meta">🏢 ${v.dealer || v.dealer_name || "Dealer"}</div>
+      </div>
+
+      <button class="btn view-btn" onclick="trackLead('view', vehiclesById[${v.id}]); viewVehicle(${v.id})">View Details</button>
+
+      <div class="action-row">
+        <a href="${callLink(v)}" class="btn call-btn" onclick="trackLead('call', vehiclesById[${v.id}])">Call</a>
+        <a href="${whatsappLink(v, title)}" target="_blank" class="btn whatsapp-btn" onclick="trackLead('whatsapp', vehiclesById[${v.id}])">WhatsApp</a>
+      </div>
+    </div>
+  `;
+}
+
+let vehiclesById = {};
 
 async function loadCars() {
   const grid = document.getElementById("grid");
+  const featuredGrid = document.getElementById("featuredGrid");
+
   grid.innerHTML = '<div class="empty">Loading vehicles...</div>';
+  featuredGrid.innerHTML = "";
 
   try {
     const res = await fetch(
@@ -347,6 +519,16 @@ async function loadCars() {
       grid.innerHTML = '<div class="empty">Could not load vehicles.</div>';
       return;
     }
+
+    vehiclesById = {};
+    data.forEach(function(v) {
+      vehiclesById[v.id] = v;
+    });
+
+    const featuredCars = data.slice(0, 4);
+    featuredGrid.innerHTML = featuredCars.map(function(v) {
+      return createCard(v, true);
+    }).join("");
 
     const search = document.getElementById("search").value.toLowerCase().trim();
     const min = Number(document.getElementById("min").value) || 0;
@@ -377,41 +559,9 @@ async function loadCars() {
       return;
     }
 
-    let html = "";
-
-    data.forEach(function(v) {
-      const images = getImages(v);
-      const title = [v.year, v.make, v.model].filter(Boolean).join(" ") || "Vehicle";
-      let thumbs = "";
-
-      images.slice(0,4).forEach(function(i) {
-        thumbs += `<img src="${i}" loading="lazy">`;
-      });
-
-      html += `
-        <div class="card">
-          <div class="card-img">
-            <img src="${images[0]}" loading="lazy" onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'">
-            <div class="photo-badge">📷 ${images.length}</div>
-          </div>
-
-          <div class="thumb-row">${thumbs}</div>
-
-          <div class="card-body">
-            <div class="title">${title}</div>
-            <div class="price">${formatPrice(v.price)}</div>
-            <div class="meta">📍 ${v.location || "-"}</div>
-            <div class="meta">🚗 ${v.mileage || "-"}</div>
-            <div class="meta">🏢 ${v.dealer || v.dealer_name || "Dealer"}</div>
-          </div>
-
-          <button class="btn view-btn" onclick="viewVehicle(${v.id})">View Details</button>
-          <a href="${whatsappLink(v, title)}" target="_blank" class="btn whatsapp-btn">WhatsApp</a>
-        </div>
-      `;
-    });
-
-    grid.innerHTML = html;
+    grid.innerHTML = data.map(function(v) {
+      return createCard(v, false);
+    }).join("");
 
   } catch (err) {
     console.error(err);
