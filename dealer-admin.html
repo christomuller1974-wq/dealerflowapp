@@ -161,6 +161,21 @@ body {
   margin-bottom:5px;
 }
 
+.click-box {
+  background:#f8fafc;
+  border:1px solid #e2e8f0;
+  border-radius:12px;
+  padding:10px;
+  margin:10px 0;
+}
+
+.click-box div {
+  font-size:14px;
+  font-weight:800;
+  color:#334155;
+  margin:4px 0;
+}
+
 .price {
   color:#dc2626;
   font-size:20px;
@@ -204,111 +219,10 @@ body {
   font-weight:900;
 }
 
-.modal {
-  display:none;
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.72);
-  z-index:9999;
-  align-items:center;
-  justify-content:center;
-  padding:18px;
-}
-
-.modal.show { display:flex; }
-
-.modal-card {
-  background:white;
-  width:100%;
-  max-width:520px;
-  border-radius:18px;
-  padding:20px;
-  max-height:90vh;
-  overflow:auto;
-}
-
-.modal-card h2 {
-  margin:0 0 14px;
-  font-size:26px;
-}
-
-.form-grid {
-  display:grid;
-  gap:10px;
-}
-
-.form-grid input,
-.form-grid select,
-.form-grid textarea {
-  width:100%;
-  padding:12px;
-  border-radius:10px;
-  border:1px solid #cbd5e1;
-  font-size:15px;
-}
-
-.form-grid textarea {
-  min-height:90px;
-}
-
-.check-row {
-  display:flex;
-  gap:8px;
-  align-items:center;
-  font-weight:900;
-}
-
-.modal-actions {
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-  margin-top:12px;
-}
-
-.approval-wrap {
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:24px;
-  background:#f1f5f9;
-}
-
-.approval-card {
-  max-width:520px;
-  width:100%;
-  background:white;
-  border-radius:18px;
-  padding:28px 24px;
-  text-align:center;
-  box-shadow:0 8px 22px rgba(0,0,0,0.10);
-}
-
-.approval-card h2 {
-  margin:0 0 12px;
-  font-size:32px;
-}
-
-.approval-card p {
-  margin:8px 0;
-  font-size:17px;
-  color:#475569;
-  line-height:1.5;
-}
-
-.approval-actions {
-  margin-top:18px;
-  display:flex;
-  justify-content:center;
-  gap:10px;
-  flex-wrap:wrap;
-}
-
 @media(max-width:700px) {
   .hero h1 { font-size:34px; }
   .section-title { font-size:26px; }
   .vehicle-grid { grid-template-columns:1fr; }
-  .modal-actions { grid-template-columns:1fr; }
 }
 </style>
 </head>
@@ -340,55 +254,13 @@ body {
       <span>Featured Vehicles</span>
     </div>
     <div class="stat-card">
-      <strong id="leadCount">0</strong>
-      <span>Local Leads</span>
+      <strong id="clickCount">0</strong>
+      <span>Total Vehicle Clicks</span>
     </div>
   </div>
 
   <div class="section-title">Your Vehicles</div>
   <div id="vehicleList" class="vehicle-grid"></div>
-</div>
-
-<div id="editModal" class="modal">
-  <div class="modal-card">
-    <h2>Edit Vehicle</h2>
-
-    <div class="form-grid">
-      <input id="editTitle" placeholder="Title">
-      <input id="editYear" placeholder="Year">
-      <input id="editMake" placeholder="Make">
-      <input id="editModel" placeholder="Model">
-      <input id="editPrice" placeholder="Price">
-      <input id="editMileage" placeholder="Mileage">
-      <input id="editPhone" placeholder="Dealer phone / WhatsApp number">
-      <input id="editLocation" placeholder="Location">
-
-      <select id="editProvince">
-        <option value="">Select Province</option>
-        <option value="Gauteng">Gauteng</option>
-        <option value="Western Cape">Western Cape</option>
-        <option value="Eastern Cape">Eastern Cape</option>
-        <option value="KwaZulu-Natal">KwaZulu-Natal</option>
-        <option value="Free State">Free State</option>
-        <option value="Limpopo">Limpopo</option>
-        <option value="Mpumalanga">Mpumalanga</option>
-        <option value="North West">North West</option>
-        <option value="Northern Cape">Northern Cape</option>
-      </select>
-
-      <textarea id="editDescription" placeholder="Description"></textarea>
-
-      <label class="check-row">
-        <input type="checkbox" id="editFeatured">
-        Mark as Featured
-      </label>
-    </div>
-
-    <div class="modal-actions">
-      <button class="btn btn-green" onclick="saveEdit()">Save Changes</button>
-      <button class="btn btn-dark" onclick="closeEditModal()">Cancel</button>
-    </div>
-  </div>
 </div>
 
 <script>
@@ -401,7 +273,7 @@ const MAIN_ADMIN_EMAIL = "autoexcellence@telkomsa.net";
 let currentUser = null;
 let currentProfile = null;
 let vehicles = [];
-let editingVehicleId = null;
+let clickCounts = {};
 
 function setStatus(message) {
   document.getElementById("status").textContent = message;
@@ -426,11 +298,49 @@ function getMainImage(vehicle) {
 
 function updateStats() {
   document.getElementById("totalCars").textContent = vehicles.length;
+
   document.getElementById("featuredCars").textContent =
     vehicles.filter(v => v.featured === true || v.featured === "true").length;
 
-  const leads = JSON.parse(localStorage.getItem("leadTracking") || "[]");
-  document.getElementById("leadCount").textContent = leads.length;
+  let totalClicks = 0;
+  Object.keys(clickCounts).forEach(function(id) {
+    totalClicks += clickCounts[id].total || 0;
+  });
+
+  document.getElementById("clickCount").textContent = totalClicks;
+}
+
+async function loadClickCounts() {
+  clickCounts = {};
+
+  const { data, error } = await client
+    .from("vehicle_clicks")
+    .select("*")
+    .eq("dealer_user_id", currentUser.id);
+
+  if (error) {
+    console.log(error);
+    return;
+  }
+
+  (data || []).forEach(function(click) {
+    const id = String(click.vehicle_id);
+
+    if (!clickCounts[id]) {
+      clickCounts[id] = {
+        total:0,
+        view:0,
+        call:0,
+        whatsapp:0
+      };
+    }
+
+    clickCounts[id].total++;
+
+    if (click.click_type === "view") clickCounts[id].view++;
+    if (click.click_type === "call") clickCounts[id].call++;
+    if (click.click_type === "whatsapp") clickCounts[id].whatsapp++;
+  });
 }
 
 function showPendingApprovalScreen() {
@@ -501,6 +411,8 @@ async function loadVehicles() {
 
   setStatus("Loading your vehicles...");
 
+  await loadClickCounts();
+
   const { data, error } = await client
     .from("vehicles")
     .select("*")
@@ -530,6 +442,7 @@ async function loadVehicles() {
     const mainImage = getMainImage(vehicle);
     const title = vehicle.title || [vehicle.year, vehicle.make, vehicle.model].filter(Boolean).join(" ") || "Vehicle";
     const isFeatured = vehicle.featured === true || vehicle.featured === "true";
+    const counts = clickCounts[String(vehicle.id)] || { total:0, view:0, call:0, whatsapp:0 };
 
     const card = document.createElement("div");
     card.className = "vehicle-card";
@@ -552,14 +465,19 @@ async function loadVehicles() {
         <div class="vehicle-meta">Province: ${vehicle.province || "-"}</div>
         <div class="vehicle-meta">Location: ${vehicle.location || "-"}</div>
         <div class="vehicle-meta">Mileage: ${vehicle.mileage || "-"}</div>
-        <div class="vehicle-meta">Phone: ${vehicle.phone || vehicle.dealer_phone || "-"}</div>
 
         <div class="price">${formatPrice(vehicle.price)}</div>
 
+        <div class="click-box">
+          <div>🔥 Total Clicks: ${counts.total}</div>
+          <div>👁️ Views: ${counts.view}</div>
+          <div>📞 Calls: ${counts.call}</div>
+          <div>💬 WhatsApp: ${counts.whatsapp}</div>
+        </div>
+
         <div class="button-stack">
           <a href="details.html?id=${vehicle.id}" class="btn btn-blue">View</a>
-          <button class="btn btn-green" onclick="openEditModal(${vehicle.id})">Quick Edit</button>
-          <a href="edit.html?id=${vehicle.id}" class="btn btn-dark">Full Edit Page</a>
+          <a href="edit.html?id=${vehicle.id}" class="btn btn-green">Edit</a>
           <button class="btn btn-gold" onclick="toggleFeatured(${vehicle.id}, ${isFeatured})">
             ${isFeatured ? "Remove Featured" : "Mark Featured"}
           </button>
@@ -574,69 +492,6 @@ async function loadVehicles() {
   setStatus("Dashboard loaded successfully.");
 }
 
-function openEditModal(vehicleId) {
-  const vehicle = vehicles.find(v => Number(v.id) === Number(vehicleId));
-  if (!vehicle) return;
-
-  editingVehicleId = vehicleId;
-
-  document.getElementById("editTitle").value = vehicle.title || "";
-  document.getElementById("editYear").value = vehicle.year || "";
-  document.getElementById("editMake").value = vehicle.make || "";
-  document.getElementById("editModel").value = vehicle.model || "";
-  document.getElementById("editPrice").value = vehicle.price || "";
-  document.getElementById("editMileage").value = vehicle.mileage || "";
-  document.getElementById("editPhone").value = vehicle.phone || vehicle.dealer_phone || "";
-  document.getElementById("editLocation").value = vehicle.location || "";
-  document.getElementById("editProvince").value = vehicle.province || "";
-  document.getElementById("editDescription").value = vehicle.description || "";
-  document.getElementById("editFeatured").checked = vehicle.featured === true || vehicle.featured === "true";
-
-  document.getElementById("editModal").classList.add("show");
-}
-
-function closeEditModal() {
-  editingVehicleId = null;
-  document.getElementById("editModal").classList.remove("show");
-}
-
-async function saveEdit() {
-  if (!editingVehicleId) return;
-
-  setStatus("Saving vehicle...");
-
-  const updates = {
-    title: document.getElementById("editTitle").value.trim(),
-    year: document.getElementById("editYear").value.trim(),
-    make: document.getElementById("editMake").value.trim(),
-    model: document.getElementById("editModel").value.trim(),
-    price: document.getElementById("editPrice").value.trim(),
-    mileage: document.getElementById("editMileage").value.trim(),
-    phone: document.getElementById("editPhone").value.trim(),
-    location: document.getElementById("editLocation").value.trim(),
-    province: document.getElementById("editProvince").value,
-    description: document.getElementById("editDescription").value.trim(),
-    featured: document.getElementById("editFeatured").checked
-  };
-
-  const { error } = await client
-    .from("vehicles")
-    .update(updates)
-    .eq("id", editingVehicleId)
-    .eq("user_id", currentUser.id);
-
-  if (error) {
-    console.log(error);
-    setStatus("Could not save. Check that your vehicles table has phone, province and featured columns.");
-    alert("Could not save. Your database may be missing phone, province or featured columns.");
-    return;
-  }
-
-  closeEditModal();
-  setStatus("Vehicle saved successfully.");
-  loadVehicles();
-}
-
 async function toggleFeatured(vehicleId, currentlyFeatured) {
   setStatus("Updating featured status...");
 
@@ -648,8 +503,7 @@ async function toggleFeatured(vehicleId, currentlyFeatured) {
 
   if (error) {
     console.log(error);
-    setStatus("Could not update featured status. Make sure vehicles.featured column exists.");
-    alert("Could not update featured status. Add a featured column in Supabase.");
+    setStatus("Could not update featured status.");
     return;
   }
 
