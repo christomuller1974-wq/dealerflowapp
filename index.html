@@ -94,7 +94,8 @@ body {
   color:#111827;
 }
 
-.grid {
+.grid,
+.featured-grid {
   max-width:1250px;
   margin:auto;
   padding:20px;
@@ -103,13 +104,12 @@ body {
   gap:22px;
 }
 
-.featured-grid {
-  max-width:1250px;
-  margin:auto;
-  padding:20px;
-  display:grid;
-  grid-template-columns:repeat(auto-fit, minmax(250px, 1fr));
-  gap:22px;
+.grid:has(.card:only-child) {
+  justify-items:center;
+}
+
+.grid:has(.card:only-child) .card {
+  max-width:320px;
 }
 
 .card {
@@ -123,14 +123,6 @@ body {
   display:flex;
   flex-direction:column;
   position:relative;
-}
-
-.grid:has(.card:only-child) {
-  justify-items:center;
-}
-
-.grid:has(.card:only-child) .card {
-  max-width:320px;
 }
 
 .card:hover {
@@ -164,6 +156,19 @@ body {
   font-weight:900;
 }
 
+.featured-badge {
+  position:absolute;
+  top:10px;
+  left:10px;
+  z-index:5;
+  background:#f59e0b;
+  color:white;
+  padding:7px 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:900;
+}
+
 .fav-btn {
   position:absolute;
   top:10px;
@@ -181,19 +186,6 @@ body {
 
 .fav-btn.saved {
   color:#dc2626;
-}
-
-.featured-badge {
-  position:absolute;
-  top:10px;
-  left:10px;
-  z-index:5;
-  background:#f59e0b;
-  color:white;
-  padding:7px 10px;
-  border-radius:999px;
-  font-size:12px;
-  font-weight:900;
 }
 
 .thumb-row {
@@ -286,7 +278,6 @@ body {
 
 @media(max-width:600px){
   .header h1 { font-size:32px; }
-
   .slogan { font-size:17px; }
   .sub { font-size:13px; }
 
@@ -356,6 +347,8 @@ body {
 const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
 
+let vehiclesById = {};
+
 function getImages(v) {
   let arr = [];
 
@@ -409,6 +402,29 @@ function whatsappLink(v, title) {
   return "https://wa.me/" + number + "?text=" + message;
 }
 
+async function trackVehicleClick(type, v) {
+  if (!v || !v.id) return;
+
+  try {
+    await fetch(supabaseUrl + "/rest/v1/vehicle_clicks", {
+      method: "POST",
+      headers: {
+        apikey: supabaseKey,
+        Authorization: "Bearer " + supabaseKey,
+        "Content-Type": "application/json",
+        Prefer: "return=minimal"
+      },
+      body: JSON.stringify({
+        vehicle_id: v.id,
+        dealer_user_id: v.user_id || null,
+        click_type: type
+      })
+    });
+  } catch (err) {
+    console.log("Click tracking failed", err);
+  }
+}
+
 function getSavedVehicles() {
   return JSON.parse(localStorage.getItem("savedVehicles") || "[]");
 }
@@ -435,29 +451,13 @@ function toggleFavourite(id) {
   loadCars();
 }
 
-function trackLead(type, v) {
-  const leads = JSON.parse(localStorage.getItem("leadTracking") || "[]");
-
-  leads.push({
-    type: type,
-    vehicle_id: v.id,
-    vehicle: [v.year, v.make, v.model].filter(Boolean).join(" "),
-    price: v.price || "",
-    dealer: v.dealer || v.dealer_name || "",
-    phone: v.phone || v.dealer_phone || "",
-    time: new Date().toISOString()
-  });
-
-  localStorage.setItem("leadTracking", JSON.stringify(leads));
-}
-
 function createCard(v, featured) {
   const images = getImages(v);
-  const title = [v.year, v.make, v.model].filter(Boolean).join(" ") || "Vehicle";
-  let thumbs = "";
+  const title = [v.year, v.make, v.model].filter(Boolean).join(" ") || v.title || "Vehicle";
 
+  let thumbs = "";
   images.slice(0,4).forEach(function(i) {
-    thumbs += `<img src="${i}" loading="lazy">`;
+    thumbs += <img src="${i}" loading="lazy">;
   });
 
   const savedClass = isSaved(v.id) ? "saved" : "";
@@ -483,17 +483,22 @@ function createCard(v, featured) {
         <div class="meta">🏢 ${v.dealer || v.dealer_name || "Dealer"}</div>
       </div>
 
-      <button class="btn view-btn" onclick="trackLead('view', vehiclesById[${v.id}]); viewVehicle(${v.id})">View Details</button>
+      <button class="btn view-btn" onclick="trackVehicleClick('view', vehiclesById[${v.id}]); viewVehicle(${v.id})">
+        View Details
+      </button>
 
       <div class="action-row">
-        <a href="${callLink(v)}" class="btn call-btn" onclick="trackLead('call', vehiclesById[${v.id}])">Call</a>
-        <a href="${whatsappLink(v, title)}" target="_blank" class="btn whatsapp-btn" onclick="trackLead('whatsapp', vehiclesById[${v.id}])">WhatsApp</a>
+        <a href="${callLink(v)}" class="btn call-btn" onclick="trackVehicleClick('call', vehiclesById[${v.id}])">
+          Call
+        </a>
+
+        <a href="${whatsappLink(v, title)}" target="_blank" class="btn whatsapp-btn" onclick="trackVehicleClick('whatsapp', vehiclesById[${v.id}])">
+          WhatsApp
+        </a>
       </div>
     </div>
   `;
 }
-
-let vehiclesById = {};
 
 async function loadCars() {
   const grid = document.getElementById("grid");
@@ -525,8 +530,15 @@ async function loadCars() {
       vehiclesById[v.id] = v;
     });
 
-    const featuredCars = data.slice(0, 4);
-    featuredGrid.innerHTML = featuredCars.map(function(v) {
+    const featuredCars = data
+      .filter(function(v) {
+        return v.featured === true || v.featured === "true";
+      })
+      .slice(0,4);
+
+    const backupFeatured = featuredCars.length ? featuredCars : data.slice(0,4);
+
+    featuredGrid.innerHTML = backupFeatured.map(function(v) {
       return createCard(v, true);
     }).join("");
 
