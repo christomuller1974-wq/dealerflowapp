@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Dealer Registration</title>
+<title>Create Account</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -12,132 +12,274 @@
 body {
   margin:0;
   font-family:Arial, sans-serif;
-  background:linear-gradient(135deg,#1e3a8a,#2563eb);
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  background:linear-gradient(135deg,#111827,#1e3a8a);
   min-height:100vh;
-}
-
-.card {
-  width:100%;
-  max-width:420px;
-  background:rgba(17,24,39,0.95);
-  padding:28px;
-  border-radius:20px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.4);
   color:white;
 }
 
-h1 {
-  margin:0 0 18px;
-  font-size:32px;
+.hero {
+  background:linear-gradient(135deg,#1e3a8a,#2563eb);
+  text-align:center;
+  padding:36px 18px;
+}
+
+.hero h1 {
+  margin:0;
+  font-size:44px;
   font-weight:900;
 }
 
-label {
-  display:block;
-  margin-top:12px;
-  font-weight:700;
-  font-size:14px;
+.hero p {
+  margin:10px 0 0;
+  font-size:19px;
+  font-weight:800;
 }
 
-input, select {
-  width:100%;
-  padding:14px;
-  border-radius:12px;
-  border:none;
-  margin-top:6px;
-  font-size:15px;
-  background:#1f2937;
+.container {
+  max-width:820px;
+  margin:0 auto;
+  padding:22px;
+}
+
+.top-actions {
+  display:flex;
+  justify-content:center;
+  gap:14px;
+  margin-bottom:18px;
+}
+
+.top-btn {
   color:white;
+  text-decoration:none;
+  font-weight:900;
+  padding:12px 20px;
+  border-radius:14px;
+  background:#111827;
+}
+
+.top-btn.blue {
+  background:#2563eb;
+}
+
+.card {
+  background:rgba(17,24,39,0.88);
+  border-radius:20px;
+  padding:24px;
+  box-shadow:0 12px 35px rgba(0,0,0,0.35);
+}
+
+.notice {
+  background:rgba(0,0,0,0.25);
+  padding:14px;
+  border-radius:14px;
+  font-weight:900;
+  margin-bottom:18px;
+}
+
+.form-grid {
+  display:grid;
+  gap:14px;
+}
+
+label {
+  font-weight:900;
+  font-size:14px;
+  display:block;
+  margin-bottom:6px;
+}
+
+input {
+  width:100%;
+  padding:15px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,0.25);
+  background:rgba(255,255,255,0.08);
+  color:white;
+  font-size:16px;
 }
 
 input::placeholder {
-  color:#9ca3af;
+  color:#cbd5e1;
 }
 
-select {
-  background:#1f2937;
+input:focus {
+  outline:2px solid #3b82f6;
 }
 
-button {
+/* PREMIUM DROPDOWN */
+.custom-select {
+  position:relative;
   width:100%;
-  margin-top:18px;
-  padding:14px;
-  border:none;
-  border-radius:12px;
-  background:#2563eb;
+}
+
+.select-button {
+  width:100%;
+  padding:15px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,0.25);
+  background:rgba(255,255,255,0.08);
   color:white;
   font-size:16px;
+  text-align:left;
+  cursor:pointer;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.select-button:focus {
+  outline:2px solid #3b82f6;
+}
+
+.arrow {
+  font-size:16px;
+  transition:0.2s;
+}
+
+.custom-select.open .arrow {
+  transform:rotate(180deg);
+}
+
+.options {
+  display:none;
+  position:absolute;
+  top:calc(100% + 8px);
+  left:0;
+  right:0;
+  background:white;
+  color:#111827;
+  border-radius:14px;
+  overflow:hidden;
+  box-shadow:0 14px 30px rgba(0,0,0,0.35);
+  z-index:100;
+  max-height:260px;
+  overflow-y:auto;
+}
+
+.custom-select.open .options {
+  display:block;
+}
+
+.option {
+  padding:14px 16px;
+  cursor:pointer;
+  font-weight:800;
+  border-bottom:1px solid #eef2f7;
+}
+
+.option:hover {
+  background:#2563eb;
+  color:white;
+}
+
+.option.selected {
+  background:#e0ecff;
+  color:#1e3a8a;
+}
+
+button.submit-btn {
+  width:100%;
+  margin-top:18px;
+  padding:15px;
+  border:none;
+  border-radius:14px;
+  background:#2563eb;
+  color:white;
+  font-size:17px;
   font-weight:900;
   cursor:pointer;
 }
 
-button:hover {
+button.submit-btn:hover {
   background:#1d4ed8;
 }
 
 .status {
-  margin-top:12px;
-  font-size:14px;
-  font-weight:bold;
-}
-
-.login-link {
   margin-top:14px;
-  display:block;
-  text-align:center;
-  color:#9ca3af;
-  font-size:14px;
+  font-weight:900;
+  color:#dbeafe;
 }
 
-.login-link a {
-  color:#3b82f6;
-  text-decoration:none;
-  font-weight:bold;
+@media(max-width:600px) {
+  .hero h1 { font-size:34px; }
+  .hero p { font-size:16px; }
+  .container { padding:14px; }
 }
-
 </style>
 </head>
 
 <body>
 
-<div class="card">
-  <h1>Dealer Registration</h1>
+<div class="hero">
+  <h1>Create Account</h1>
+  <p>Register your dealership to start listing vehicles</p>
+</div>
 
-  <label>Dealer Name</label>
-  <input id="dealer" placeholder="Dealer name">
+<div class="container">
 
-  <label>Phone</label>
-  <input id="phone" placeholder="Phone number">
+  <div class="top-actions">
+    <a href="index.html" class="top-btn">Back to Website</a>
+    <a href="login.html" class="top-btn blue">Login</a>
+  </div>
 
-  <label>Province</label>
-  <select id="province">
-    <option value="">Select province</option>
-    <option value="Gauteng">Gauteng</option>
-    <option value="Western Cape">Western Cape</option>
-    <option value="Eastern Cape">Eastern Cape</option>
-    <option value="KwaZulu-Natal">KwaZulu-Natal</option>
-    <option value="Free State">Free State</option>
-    <option value="Limpopo">Limpopo</option>
-    <option value="Mpumalanga">Mpumalanga</option>
-    <option value="North West">North West</option>
-    <option value="Northern Cape">Northern Cape</option>
-  </select>
+  <div class="card">
+    <div class="notice">Fill in your details to create an account.</div>
 
-  <label>Email</label>
-  <input id="email" placeholder="Email address">
+    <div class="form-grid">
+      <div>
+        <label>Dealer Name</label>
+        <input id="dealerName" placeholder="Dealer name">
+      </div>
 
-  <label>Password</label>
-  <input id="password" type="password" placeholder="Password">
+      <div>
+        <label>Phone</label>
+        <input id="phone" placeholder="Phone number">
+      </div>
 
-  <button onclick="signup()">Create Account</button>
+      <div>
+        <label>Province</label>
 
-  <div id="status" class="status"></div>
+        <input type="hidden" id="province">
 
-  <div class="login-link">
-    Already have an account? <a href="login.html">Login</a>
+        <div class="custom-select" id="provinceSelect">
+          <button type="button" class="select-button" onclick="toggleProvinceDropdown()">
+            <span id="provinceText">Select province</span>
+            <span class="arrow">⌄</span>
+          </button>
+
+          <div class="options">
+            <div class="option" onclick="selectProvince('Gauteng')">Gauteng</div>
+            <div class="option" onclick="selectProvince('Western Cape')">Western Cape</div>
+            <div class="option" onclick="selectProvince('Eastern Cape')">Eastern Cape</div>
+            <div class="option" onclick="selectProvince('KwaZulu-Natal')">KwaZulu-Natal</div>
+            <div class="option" onclick="selectProvince('Free State')">Free State</div>
+            <div class="option" onclick="selectProvince('Limpopo')">Limpopo</div>
+            <div class="option" onclick="selectProvince('Mpumalanga')">Mpumalanga</div>
+            <div class="option" onclick="selectProvince('North West')">North West</div>
+            <div class="option" onclick="selectProvince('Northern Cape')">Northern Cape</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <label>Town / City</label>
+        <input id="location" placeholder="e.g. Kimberley">
+      </div>
+
+      <div>
+        <label>Email</label>
+        <input id="email" type="email" placeholder="Email address">
+      </div>
+
+      <div>
+        <label>Password</label>
+        <input id="password" type="password" placeholder="Password">
+      </div>
+    </div>
+
+    <button class="submit-btn" onclick="signup()">Create Account</button>
+
+    <div id="status" class="status"></div>
   </div>
 </div>
 
@@ -147,24 +289,46 @@ const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const client = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 function setStatus(msg) {
-  document.getElementById("status").innerText = msg;
+  document.getElementById("status").textContent = msg;
 }
 
+function toggleProvinceDropdown() {
+  document.getElementById("provinceSelect").classList.toggle("open");
+}
+
+function selectProvince(value) {
+  document.getElementById("province").value = value;
+  document.getElementById("provinceText").textContent = value;
+
+  document.querySelectorAll(".option").forEach(function(opt) {
+    opt.classList.toggle("selected", opt.textContent === value);
+  });
+
+  document.getElementById("provinceSelect").classList.remove("open");
+}
+
+document.addEventListener("click", function(e) {
+  const dropdown = document.getElementById("provinceSelect");
+  if (!dropdown.contains(e.target)) {
+    dropdown.classList.remove("open");
+  }
+});
+
 async function signup() {
-  const dealer = document.getElementById("dealer").value.trim();
+  const dealerName = document.getElementById("dealerName").value.trim();
   const phone = document.getElementById("phone").value.trim();
-  const province = document.getElementById("province").value;
+  const province = document.getElementById("province").value.trim();
+  const location = document.getElementById("location").value.trim();
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value.trim();
 
-  if (!dealer || !phone || !province || !email || !password) {
-    setStatus("Please fill all fields");
+  if (!dealerName || !phone || !province || !location || !email || !password) {
+    setStatus("Please complete all fields.");
     return;
   }
 
   setStatus("Creating account...");
 
-  // create auth user
   const { data, error } = await client.auth.signUp({
     email: email,
     password: password
@@ -176,33 +340,33 @@ async function signup() {
     return;
   }
 
-  const user = data.user;
-
-  if (!user) {
-    setStatus("Signup failed");
+  if (!data.user) {
+    setStatus("Account created. Please check your email to confirm.");
     return;
   }
 
-  // insert profile
-  const { error: profileError } = await client.from("profiles").insert({
-    id: user.id,
-    dealer_name: dealer,
-    phone: phone,
-    province: province,
-    is_active: false
-  });
+  const { error: profileError } = await client
+    .from("profiles")
+    .insert({
+      id: data.user.id,
+      dealer_name: dealerName,
+      phone: phone,
+      province: province,
+      location: location,
+      is_active: false
+    });
 
   if (profileError) {
     console.log(profileError);
-    setStatus("Account created but profile failed.");
+    setStatus("Account created, but profile could not be saved.");
     return;
   }
 
-  setStatus("Account created! Waiting for approval...");
+  setStatus("Account created successfully. Waiting for admin approval...");
 
-  setTimeout(() => {
+  setTimeout(function() {
     window.location.href = "login.html";
-  }, 2000);
+  }, 2200);
 }
 </script>
 
