@@ -1,454 +1,706 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Dealer Dashboard</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<meta charset="UTF-8">
+<title>Dealer Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<style>
+* { box-sizing:border-box; }
 
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #dfe3ea;
-      color: #111827;
-    }
+body {
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:#eef1f5;
+  color:#111827;
+}
 
-    .hero {
-      background: linear-gradient(135deg, #3156c7, #1f3f9e);
-      color: white;
-      text-align: center;
-      padding: 38px 18px 28px;
-    }
+.hero {
+  background:linear-gradient(135deg,#3156c7,#1f3f9e);
+  color:white;
+  text-align:center;
+  padding:38px 18px 30px;
+}
 
-    .hero h1 {
-      margin: 0;
-      font-size: 48px;
-      font-weight: 800;
-    }
+.hero h1 {
+  margin:0;
+  font-size:46px;
+  font-weight:900;
+}
 
-    .hero p {
-      margin: 10px 0 0;
-      font-size: 18px;
-    }
+.hero p {
+  margin:10px 0 0;
+  font-size:17px;
+}
 
-    .container {
-      max-width: 1300px;
-      margin: 0 auto;
-      padding: 18px;
-    }
+.container {
+  max-width:1300px;
+  margin:0 auto;
+  padding:18px;
+}
 
-    .top-actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 14px;
-    }
+.top-actions {
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:14px;
+}
 
-    .top-btn {
-      background: #1f2937;
-      color: white;
-      text-decoration: none;
-      border: none;
-      border-radius: 10px;
-      padding: 10px 14px;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      display: inline-block;
-    }
+.top-btn {
+  background:#111827;
+  color:white;
+  text-decoration:none;
+  border:none;
+  border-radius:12px;
+  padding:11px 15px;
+  font-size:14px;
+  font-weight:900;
+  cursor:pointer;
+  display:inline-block;
+}
 
-    .top-btn.blue {
-      background: #3156c7;
-    }
+.top-btn.blue { background:#3156c7; }
+.top-btn.green { background:#16a34a; }
 
-    .top-btn.green {
-      background: #16a34a;
-    }
+.status {
+  background:white;
+  border-radius:14px;
+  padding:13px 15px;
+  margin-bottom:16px;
+  font-weight:900;
+  box-shadow:0 3px 10px rgba(0,0,0,0.08);
+}
 
-    .status {
-      background: white;
-      border-radius: 12px;
-      padding: 12px 14px;
-      margin-bottom: 16px;
-      font-weight: bold;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
+.stats {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:14px;
+  margin-bottom:18px;
+}
 
-    .section-title {
-      font-size: 34px;
-      font-weight: 800;
-      margin: 18px 0 14px;
-      color: #111827;
-    }
+.stat-card {
+  background:white;
+  border-radius:16px;
+  padding:16px;
+  box-shadow:0 4px 14px rgba(0,0,0,0.09);
+}
 
-    .vehicle-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
-      gap: 18px;
-      align-items: start;
-    }
+.stat-card strong {
+  font-size:28px;
+  display:block;
+}
 
-    .vehicle-card {
-      background: white;
-      border-radius: 16px;
-      padding: 14px;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.10);
-    }
+.stat-card span {
+  color:#64748b;
+  font-weight:800;
+}
 
-    .vehicle-thumb {
-      width: 100%;
-      height: 210px;
-      object-fit: cover;
-      border-radius: 12px;
-      background: #e5e7eb;
-      display: block;
-    }
+.section-title {
+  font-size:32px;
+  font-weight:900;
+  margin:18px 0 14px;
+}
 
-    .vehicle-title {
-      margin: 12px 0 8px;
-      font-size: 18px;
-      font-weight: 800;
-      line-height: 1.25;
-      min-height: 46px;
-    }
+.vehicle-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(290px,1fr));
+  gap:18px;
+  align-items:start;
+}
 
-    .vehicle-meta {
-      font-size: 14px;
-      color: #475569;
-      margin-bottom: 4px;
-    }
+.vehicle-card {
+  background:white;
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:0 5px 16px rgba(0,0,0,0.11);
+  position:relative;
+}
 
-    .price {
-      color: #dc2626;
-      font-size: 18px;
-      font-weight: 800;
-      margin: 8px 0 10px;
-    }
+.vehicle-thumb-wrap {
+  position:relative;
+  height:210px;
+  background:#e5e7eb;
+  overflow:hidden;
+}
 
-    .button-stack {
-      display: grid;
-      gap: 8px;
-      margin-top: 10px;
-    }
+.vehicle-thumb {
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
 
-    .btn {
-      display: block;
-      width: 100%;
-      text-align: center;
-      text-decoration: none;
-      color: white;
-      padding: 11px 12px;
-      border-radius: 10px;
-      font-weight: 700;
-      font-size: 14px;
-      border: none;
-      cursor: pointer;
-    }
+.featured-badge {
+  position:absolute;
+  top:10px;
+  left:10px;
+  background:#f59e0b;
+  color:white;
+  padding:7px 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:900;
+}
 
-    .btn-blue {
-      background: #3156c7;
-    }
+.vehicle-body {
+  padding:14px;
+}
 
-    .btn-green {
-      background: #16a34a;
-    }
+.vehicle-title {
+  margin:0 0 8px;
+  font-size:18px;
+  font-weight:900;
+  line-height:1.25;
+  min-height:46px;
+}
 
-    .btn-red {
-      background: #dc2626;
-    }
+.vehicle-meta {
+  font-size:14px;
+  color:#475569;
+  margin-bottom:5px;
+}
 
-    .empty-box {
-      background: white;
-      border-radius: 14px;
-      padding: 24px;
-      text-align: center;
-      color: #475569;
-      font-weight: 700;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
+.price {
+  color:#dc2626;
+  font-size:20px;
+  font-weight:900;
+  margin:10px 0;
+}
 
-    .approval-wrap {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-      background: #f1f5f9;
-    }
+.button-stack {
+  display:grid;
+  gap:8px;
+  margin-top:10px;
+}
 
-    .approval-card {
-      max-width: 520px;
-      width: 100%;
-      background: white;
-      border-radius: 18px;
-      padding: 28px 24px;
-      text-align: center;
-      box-shadow: 0 8px 22px rgba(0,0,0,0.10);
-    }
+.btn {
+  display:block;
+  width:100%;
+  text-align:center;
+  text-decoration:none;
+  color:white;
+  padding:11px 12px;
+  border-radius:10px;
+  font-weight:900;
+  font-size:14px;
+  border:none;
+  cursor:pointer;
+}
 
-    .approval-card h2 {
-      margin: 0 0 12px;
-      font-size: 32px;
-      color: #111827;
-    }
+.btn-blue { background:#3156c7; }
+.btn-green { background:#16a34a; }
+.btn-red { background:#dc2626; }
+.btn-dark { background:#111827; }
+.btn-gold { background:#f59e0b; }
 
-    .approval-card p {
-      margin: 8px 0;
-      font-size: 17px;
-      color: #475569;
-      line-height: 1.5;
-    }
+.empty-box {
+  grid-column:1 / -1;
+  background:white;
+  border-radius:14px;
+  padding:24px;
+  text-align:center;
+  color:#475569;
+  font-weight:900;
+}
 
-    .approval-actions {
-      margin-top: 18px;
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
+.modal {
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.72);
+  z-index:9999;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+}
 
-    @media (max-width: 700px) {
-      .hero h1 {
-        font-size: 38px;
-      }
+.modal.show { display:flex; }
 
-      .section-title {
-        font-size: 28px;
-      }
+.modal-card {
+  background:white;
+  width:100%;
+  max-width:520px;
+  border-radius:18px;
+  padding:20px;
+  max-height:90vh;
+  overflow:auto;
+}
 
-      .vehicle-grid {
-        grid-template-columns: 1fr;
-      }
+.modal-card h2 {
+  margin:0 0 14px;
+  font-size:26px;
+}
 
-      .approval-card h2 {
-        font-size: 28px;
-      }
-    }
-  </style>
+.form-grid {
+  display:grid;
+  gap:10px;
+}
+
+.form-grid input,
+.form-grid select,
+.form-grid textarea {
+  width:100%;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid #cbd5e1;
+  font-size:15px;
+}
+
+.form-grid textarea {
+  min-height:90px;
+}
+
+.check-row {
+  display:flex;
+  gap:8px;
+  align-items:center;
+  font-weight:900;
+}
+
+.modal-actions {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:12px;
+}
+
+.approval-wrap {
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  background:#f1f5f9;
+}
+
+.approval-card {
+  max-width:520px;
+  width:100%;
+  background:white;
+  border-radius:18px;
+  padding:28px 24px;
+  text-align:center;
+  box-shadow:0 8px 22px rgba(0,0,0,0.10);
+}
+
+.approval-card h2 {
+  margin:0 0 12px;
+  font-size:32px;
+}
+
+.approval-card p {
+  margin:8px 0;
+  font-size:17px;
+  color:#475569;
+  line-height:1.5;
+}
+
+.approval-actions {
+  margin-top:18px;
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+@media(max-width:700px) {
+  .hero h1 { font-size:34px; }
+  .section-title { font-size:26px; }
+  .vehicle-grid { grid-template-columns:1fr; }
+  .modal-actions { grid-template-columns:1fr; }
+}
+</style>
 </head>
+
 <body>
 
-  <div class="hero">
-    <h1>Dealer Dashboard</h1>
-    <p>Manage your stock quickly and easily</p>
+<div class="hero">
+  <h1>Dealer Dashboard</h1>
+  <p>Manage your stock quickly and easily</p>
+</div>
+
+<div class="container">
+  <div class="top-actions">
+    <a href="index.html" class="top-btn">Back to Website</a>
+    <a href="upload6.html" class="top-btn blue">Add Vehicle</a>
+    <span id="adminBtn"></span>
+    <button class="top-btn" onclick="logout()">Logout</button>
   </div>
 
-  <div class="container">
-    <div class="top-actions">
-      <a href="index.html" class="top-btn">Back to Website</a>
-      <a href="upload6.html" class="top-btn blue">Add Vehicle</a>
-      <span id="adminBtn"></span>
-      <button class="top-btn" onclick="logout()">Logout</button>
+  <div id="status" class="status">Starting dashboard...</div>
+
+  <div class="stats">
+    <div class="stat-card">
+      <strong id="totalCars">0</strong>
+      <span>Total Vehicles</span>
+    </div>
+    <div class="stat-card">
+      <strong id="featuredCars">0</strong>
+      <span>Featured Vehicles</span>
+    </div>
+    <div class="stat-card">
+      <strong id="leadCount">0</strong>
+      <span>Local Leads</span>
+    </div>
+  </div>
+
+  <div class="section-title">Your Vehicles</div>
+  <div id="vehicleList" class="vehicle-grid"></div>
+</div>
+
+<div id="editModal" class="modal">
+  <div class="modal-card">
+    <h2>Edit Vehicle</h2>
+
+    <div class="form-grid">
+      <input id="editTitle" placeholder="Title">
+      <input id="editYear" placeholder="Year">
+      <input id="editMake" placeholder="Make">
+      <input id="editModel" placeholder="Model">
+      <input id="editPrice" placeholder="Price">
+      <input id="editMileage" placeholder="Mileage">
+      <input id="editPhone" placeholder="Dealer phone / WhatsApp number">
+      <input id="editLocation" placeholder="Location">
+
+      <select id="editProvince">
+        <option value="">Select Province</option>
+        <option value="Gauteng">Gauteng</option>
+        <option value="Western Cape">Western Cape</option>
+        <option value="Eastern Cape">Eastern Cape</option>
+        <option value="KwaZulu-Natal">KwaZulu-Natal</option>
+        <option value="Free State">Free State</option>
+        <option value="Limpopo">Limpopo</option>
+        <option value="Mpumalanga">Mpumalanga</option>
+        <option value="North West">North West</option>
+        <option value="Northern Cape">Northern Cape</option>
+      </select>
+
+      <textarea id="editDescription" placeholder="Description"></textarea>
+
+      <label class="check-row">
+        <input type="checkbox" id="editFeatured">
+        Mark as Featured
+      </label>
     </div>
 
-    <div id="status" class="status">Starting dashboard...</div>
-
-    <div class="section-title">Your Vehicles</div>
-    <div id="vehicleList" class="vehicle-grid"></div>
+    <div class="modal-actions">
+      <button class="btn btn-green" onclick="saveEdit()">Save Changes</button>
+      <button class="btn btn-dark" onclick="closeEditModal()">Cancel</button>
+    </div>
   </div>
+</div>
 
-  <script>
-    const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
-    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
-    const client = window.supabase.createClient(supabaseUrl, supabaseKey);
+<script>
+const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
+const client = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-    const MAIN_ADMIN_EMAIL = "autoexcellence@telkomsa.net";
+const MAIN_ADMIN_EMAIL = "autoexcellence@telkomsa.net";
 
-    let currentUser = null;
-    let currentProfile = null;
+let currentUser = null;
+let currentProfile = null;
+let vehicles = [];
+let editingVehicleId = null;
 
-    function setStatus(message) {
-      document.getElementById("status").textContent = message;
-      console.log(message);
-    }
+function setStatus(message) {
+  document.getElementById("status").textContent = message;
+  console.log(message);
+}
 
-    function getMainImage(vehicle) {
-      if (vehicle.image && typeof vehicle.image === "string" && vehicle.image.trim() !== "") {
-        return vehicle.image.trim();
-      }
+function formatPrice(price) {
+  const num = Number(String(price || "").replace(/\D/g, ""));
+  if (!num) return "R0";
+  return "R" + num.toLocaleString("en-ZA");
+}
 
-      if (vehicle.images && typeof vehicle.images === "string" && vehicle.images.trim() !== "") {
-        return vehicle.images.split(",")[0].trim();
-      }
+function getMainImage(vehicle) {
+  if (vehicle.image && String(vehicle.image).trim()) return String(vehicle.image).trim();
 
-      return "https://via.placeholder.com/400x250?text=No+Image";
-    }
+  if (vehicle.images && String(vehicle.images).trim()) {
+    return String(vehicle.images).split(",")[0].trim();
+  }
 
-    function showPendingApprovalScreen() {
-      document.body.innerHTML = `
-        <div class="approval-wrap">
-          <div class="approval-card">
-            <h2>Account Pending Approval</h2>
-            <p>Your dealer account has not been approved yet.</p>
-            <p>Please wait for admin approval before loading vehicles.</p>
-            <div class="approval-actions">
-              <a href="index.html" class="top-btn">Back to Website</a>
-              <button class="top-btn" onclick="logout()">Logout</button>
-            </div>
-          </div>
+  return "https://via.placeholder.com/400x250?text=No+Image";
+}
+
+function updateStats() {
+  document.getElementById("totalCars").textContent = vehicles.length;
+  document.getElementById("featuredCars").textContent =
+    vehicles.filter(v => v.featured === true || v.featured === "true").length;
+
+  const leads = JSON.parse(localStorage.getItem("leadTracking") || "[]");
+  document.getElementById("leadCount").textContent = leads.length;
+}
+
+function showPendingApprovalScreen() {
+  document.body.innerHTML = `
+    <div class="approval-wrap">
+      <div class="approval-card">
+        <h2>Account Pending Approval</h2>
+        <p>Your dealer account has not been approved yet.</p>
+        <p>Please wait for admin approval before loading vehicles.</p>
+        <div class="approval-actions">
+          <a href="index.html" class="top-btn">Back to Website</a>
+          <button class="top-btn" onclick="logout()">Logout</button>
         </div>
-      `;
-    }
+      </div>
+    </div>
+  `;
+}
 
-    async function requireUser() {
-      const { data, error } = await client.auth.getUser();
+async function requireUser() {
+  const { data, error } = await client.auth.getUser();
 
-      if (error || !data.user) {
-        window.location.href = "login.html";
-        return false;
-      }
+  if (error || !data.user) {
+    window.location.href = "login.html";
+    return false;
+  }
 
-      currentUser = data.user;
-      return true;
-    }
+  currentUser = data.user;
+  return true;
+}
 
-    async function loadProfile() {
-      setStatus("Loading your profile...");
+async function loadProfile() {
+  setStatus("Loading your profile...");
 
-      const { data, error } = await client
-        .from("profiles")
-        .select("*")
-        .eq("id", currentUser.id)
-        .single();
+  const { data, error } = await client
+    .from("profiles")
+    .select("*")
+    .eq("id", currentUser.id)
+    .single();
 
-      if (error || !data) {
-        console.log(error);
-        setStatus("Could not load your dealer profile.");
-        return false;
-      }
+  if (error || !data) {
+    console.log(error);
+    setStatus("Could not load your dealer profile.");
+    return false;
+  }
 
-      currentProfile = data;
-      return true;
-    }
+  currentProfile = data;
+  return true;
+}
 
-    function showAdminButton() {
-      const adminHost = document.getElementById("adminBtn");
-      if (!adminHost || !currentUser) return;
+function showAdminButton() {
+  const adminHost = document.getElementById("adminBtn");
+  if (!adminHost || !currentUser) return;
 
-      const email = (currentUser.email || "").toLowerCase().trim();
+  const email = (currentUser.email || "").toLowerCase().trim();
 
-      if (email === MAIN_ADMIN_EMAIL.toLowerCase()) {
-        adminHost.innerHTML = '<a href="super-admin.html" class="top-btn green">Super Admin</a>';
-      } else {
-        adminHost.innerHTML = '';
-      }
-    }
+  if (email === MAIN_ADMIN_EMAIL.toLowerCase()) {
+    adminHost.innerHTML = '<a href="super-admin.html" class="top-btn green">Super Admin</a>';
+  } else {
+    adminHost.innerHTML = '';
+  }
+}
 
-    async function loadVehicles() {
-      if (!currentUser) {
-        setStatus("User not ready.");
-        return;
-      }
+async function loadVehicles() {
+  if (!currentUser) {
+    setStatus("User not ready.");
+    return;
+  }
 
-      setStatus("Loading your vehicles...");
+  setStatus("Loading your vehicles...");
 
-      const { data, error } = await client
-        .from("vehicles")
-        .select("*")
-        .eq("user_id", currentUser.id)
-        .order("id", { ascending: false });
+  const { data, error } = await client
+    .from("vehicles")
+    .select("*")
+    .eq("user_id", currentUser.id)
+    .order("id", { ascending:false });
 
-      const container = document.getElementById("vehicleList");
-      container.innerHTML = "";
+  const container = document.getElementById("vehicleList");
+  container.innerHTML = "";
 
-      if (error) {
-        console.log(error);
-        setStatus("Could not load vehicles.");
-        container.innerHTML = '<div class="empty-box">Could not load your vehicles.</div>';
-        return;
-      }
+  if (error) {
+    console.log(error);
+    setStatus("Could not load vehicles.");
+    container.innerHTML = '<div class="empty-box">Could not load your vehicles.</div>';
+    return;
+  }
 
-      if (!data || data.length === 0) {
-        setStatus("No vehicles found.");
-        container.innerHTML = '<div class="empty-box">You have not added any vehicles yet.</div>';
-        return;
-      }
+  vehicles = data || [];
+  updateStats();
 
-      data.forEach(vehicle => {
-        const mainImage = getMainImage(vehicle);
+  if (!vehicles.length) {
+    setStatus("No vehicles found.");
+    container.innerHTML = '<div class="empty-box">You have not added any vehicles yet.</div>';
+    return;
+  }
 
-        const card = document.createElement("div");
-        card.className = "vehicle-card";
+  vehicles.forEach(vehicle => {
+    const mainImage = getMainImage(vehicle);
+    const title = vehicle.title || [vehicle.year, vehicle.make, vehicle.model].filter(Boolean).join(" ") || "Vehicle";
+    const isFeatured = vehicle.featured === true || vehicle.featured === "true";
 
-        card.innerHTML = `
-          <img
-            src="${mainImage}"
-            class="vehicle-thumb"
-            alt="${vehicle.title || "Vehicle"}"
-            onerror="this.src='https://via.placeholder.com/400x250?text=No+Image'"
-          >
+    const card = document.createElement("div");
+    card.className = "vehicle-card";
 
-          <div class="vehicle-title">${vehicle.title || "No Title"}</div>
+    card.innerHTML = `
+      <div class="vehicle-thumb-wrap">
+        ${isFeatured ? '<div class="featured-badge">Featured</div>' : ''}
+        <img
+          src="${mainImage}"
+          class="vehicle-thumb"
+          alt="${title}"
+          onerror="this.src='https://via.placeholder.com/400x250?text=No+Image'"
+        >
+      </div>
 
-          <div class="vehicle-meta">Year: ${vehicle.year || "-"}</div>
-          <div class="vehicle-meta">Location: ${vehicle.location || "-"}</div>
-          <div class="vehicle-meta">Mileage: ${vehicle.mileage || "-"}</div>
+      <div class="vehicle-body">
+        <div class="vehicle-title">${title}</div>
 
-          <div class="price">R${vehicle.price || 0}</div>
+        <div class="vehicle-meta">Year: ${vehicle.year || "-"}</div>
+        <div class="vehicle-meta">Province: ${vehicle.province || "-"}</div>
+        <div class="vehicle-meta">Location: ${vehicle.location || "-"}</div>
+        <div class="vehicle-meta">Mileage: ${vehicle.mileage || "-"}</div>
+        <div class="vehicle-meta">Phone: ${vehicle.phone || vehicle.dealer_phone || "-"}</div>
 
-          <div class="button-stack">
-            <a href="details.html?id=${vehicle.id}" class="btn btn-blue">View</a>
-            <a href="edit.html?id=${vehicle.id}" class="btn btn-green">Edit</a>
-            <button class="btn btn-red" onclick="deleteVehicle(${vehicle.id})">Delete</button>
-          </div>
-        `;
+        <div class="price">${formatPrice(vehicle.price)}</div>
 
-        container.appendChild(card);
-      });
+        <div class="button-stack">
+          <a href="details.html?id=${vehicle.id}" class="btn btn-blue">View</a>
+          <button class="btn btn-green" onclick="openEditModal(${vehicle.id})">Quick Edit</button>
+          <a href="edit.html?id=${vehicle.id}" class="btn btn-dark">Full Edit Page</a>
+          <button class="btn btn-gold" onclick="toggleFeatured(${vehicle.id}, ${isFeatured})">
+            ${isFeatured ? "Remove Featured" : "Mark Featured"}
+          </button>
+          <button class="btn btn-red" onclick="deleteVehicle(${vehicle.id})">Delete</button>
+        </div>
+      </div>
+    `;
 
-      setStatus("Dashboard loaded successfully.");
-    }
+    container.appendChild(card);
+  });
 
-    async function deleteVehicle(vehicleId) {
-      const confirmed = confirm("Delete this vehicle?");
-      if (!confirmed) return;
+  setStatus("Dashboard loaded successfully.");
+}
 
-      setStatus("Deleting vehicle...");
+function openEditModal(vehicleId) {
+  const vehicle = vehicles.find(v => Number(v.id) === Number(vehicleId));
+  if (!vehicle) return;
 
-      const { error } = await client
-        .from("vehicles")
-        .delete()
-        .eq("id", vehicleId)
-        .eq("user_id", currentUser.id);
+  editingVehicleId = vehicleId;
 
-      if (error) {
-        console.log(error);
-        setStatus("Could not delete vehicle.");
-        return;
-      }
+  document.getElementById("editTitle").value = vehicle.title || "";
+  document.getElementById("editYear").value = vehicle.year || "";
+  document.getElementById("editMake").value = vehicle.make || "";
+  document.getElementById("editModel").value = vehicle.model || "";
+  document.getElementById("editPrice").value = vehicle.price || "";
+  document.getElementById("editMileage").value = vehicle.mileage || "";
+  document.getElementById("editPhone").value = vehicle.phone || vehicle.dealer_phone || "";
+  document.getElementById("editLocation").value = vehicle.location || "";
+  document.getElementById("editProvince").value = vehicle.province || "";
+  document.getElementById("editDescription").value = vehicle.description || "";
+  document.getElementById("editFeatured").checked = vehicle.featured === true || vehicle.featured === "true";
 
-      setStatus("Vehicle deleted successfully.");
-      loadVehicles();
-    }
+  document.getElementById("editModal").classList.add("show");
+}
 
-    async function logout() {
-      await client.auth.signOut();
-      window.location.href = "login.html";
-    }
+function closeEditModal() {
+  editingVehicleId = null;
+  document.getElementById("editModal").classList.remove("show");
+}
 
-    async function startDashboard() {
-      const okUser = await requireUser();
-      if (!okUser) return;
+async function saveEdit() {
+  if (!editingVehicleId) return;
 
-      const okProfile = await loadProfile();
-      if (!okProfile) return;
+  setStatus("Saving vehicle...");
 
-      showAdminButton();
+  const updates = {
+    title: document.getElementById("editTitle").value.trim(),
+    year: document.getElementById("editYear").value.trim(),
+    make: document.getElementById("editMake").value.trim(),
+    model: document.getElementById("editModel").value.trim(),
+    price: document.getElementById("editPrice").value.trim(),
+    mileage: document.getElementById("editMileage").value.trim(),
+    phone: document.getElementById("editPhone").value.trim(),
+    location: document.getElementById("editLocation").value.trim(),
+    province: document.getElementById("editProvince").value,
+    description: document.getElementById("editDescription").value.trim(),
+    featured: document.getElementById("editFeatured").checked
+  };
 
-      if (!currentProfile.is_active) {
-        showPendingApprovalScreen();
-        return;
-      }
+  const { error } = await client
+    .from("vehicles")
+    .update(updates)
+    .eq("id", editingVehicleId)
+    .eq("user_id", currentUser.id);
 
-      await loadVehicles();
-    }
+  if (error) {
+    console.log(error);
+    setStatus("Could not save. Check that your vehicles table has phone, province and featured columns.");
+    alert("Could not save. Your database may be missing phone, province or featured columns.");
+    return;
+  }
 
-    startDashboard();
-  </script>
+  closeEditModal();
+  setStatus("Vehicle saved successfully.");
+  loadVehicles();
+}
+
+async function toggleFeatured(vehicleId, currentlyFeatured) {
+  setStatus("Updating featured status...");
+
+  const { error } = await client
+    .from("vehicles")
+    .update({ featured: !currentlyFeatured })
+    .eq("id", vehicleId)
+    .eq("user_id", currentUser.id);
+
+  if (error) {
+    console.log(error);
+    setStatus("Could not update featured status. Make sure vehicles.featured column exists.");
+    alert("Could not update featured status. Add a featured column in Supabase.");
+    return;
+  }
+
+  loadVehicles();
+}
+
+async function deleteVehicle(vehicleId) {
+  const confirmed = confirm("Delete this vehicle?");
+  if (!confirmed) return;
+
+  setStatus("Deleting vehicle...");
+
+  const { error } = await client
+    .from("vehicles")
+    .delete()
+    .eq("id", vehicleId)
+    .eq("user_id", currentUser.id);
+
+  if (error) {
+    console.log(error);
+    setStatus("Could not delete vehicle.");
+    return;
+  }
+
+  setStatus("Vehicle deleted successfully.");
+  loadVehicles();
+}
+
+async function logout() {
+  await client.auth.signOut();
+  window.location.href = "login.html";
+}
+
+async function startDashboard() {
+  const okUser = await requireUser();
+  if (!okUser) return;
+
+  const okProfile = await loadProfile();
+  if (!okProfile) return;
+
+  showAdminButton();
+
+  if (!currentProfile.is_active) {
+    showPendingApprovalScreen();
+    return;
+  }
+
+  await loadVehicles();
+}
+
+startDashboard();
+</script>
 </body>
 </html>
