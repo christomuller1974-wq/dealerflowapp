@@ -1,8 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
+
+<!-- ✅ GOOGLE VERIFICATION -->
+<meta name="google-site-verification" content="oOba0W7_EqwqEoXSWQad1Hymmbeiy8oUrvwCztLuX-M" />
+
 <meta charset="UTF-8">
-<title>DealerFlow</title>
+
+<!-- ✅ SEO TITLE -->
+<title>Cars for Sale in South Africa | DealerFlow</title>
+
+<!-- ✅ SEO DESCRIPTION -->
+<meta name="description" content="Find quality used cars, bakkies and SUVs for sale in South Africa. Trusted dealers. Quick contact via WhatsApp. Browse listings now.">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -68,8 +78,6 @@ body {
   padding:12px;
   border-radius:10px;
   border:1px solid #dbe1ea;
-  font-size:14px;
-  background:white;
 }
 
 .search-btn,
@@ -85,17 +93,7 @@ body {
 .search-btn { background:#2563eb; }
 .clear-btn { background:#111827; }
 
-.section-title {
-  max-width:1250px;
-  margin:20px auto 0;
-  padding:0 20px;
-  font-size:24px;
-  font-weight:900;
-  color:#111827;
-}
-
-.grid,
-.featured-grid {
+.grid {
   max-width:1250px;
   margin:auto;
   padding:20px;
@@ -104,204 +102,63 @@ body {
   gap:22px;
 }
 
-.grid:has(.card:only-child) {
-  justify-items:center;
-}
-
-.grid:has(.card:only-child) .card {
-  max-width:320px;
-}
-
 .card {
   background:white;
   border-radius:18px;
   overflow:hidden;
   box-shadow:0 8px 25px rgba(0,0,0,0.08);
-  transition:0.25s;
-  width:100%;
-  max-width:100%;
-  display:flex;
-  flex-direction:column;
-  position:relative;
-}
-
-.card:hover {
-  transform:translateY(-5px);
-  box-shadow:0 14px 32px rgba(0,0,0,0.16);
 }
 
 .card-img {
-  position:relative;
   height:190px;
   overflow:hidden;
-  background:#e5e7eb;
 }
 
 .card-img img {
   width:100%;
   height:100%;
   object-fit:cover;
-  display:block;
-}
-
-.photo-badge {
-  position:absolute;
-  right:10px;
-  bottom:10px;
-  background:rgba(17,24,39,0.88);
-  color:white;
-  padding:6px 10px;
-  border-radius:999px;
-  font-size:12px;
-  font-weight:900;
-}
-
-.featured-badge {
-  position:absolute;
-  top:10px;
-  left:10px;
-  z-index:5;
-  background:#f59e0b;
-  color:white;
-  padding:7px 10px;
-  border-radius:999px;
-  font-size:12px;
-  font-weight:900;
-}
-
-.fav-btn {
-  position:absolute;
-  top:10px;
-  right:10px;
-  z-index:5;
-  border:none;
-  background:white;
-  width:38px;
-  height:38px;
-  border-radius:50%;
-  cursor:pointer;
-  font-size:20px;
-  box-shadow:0 4px 12px rgba(0,0,0,0.18);
-}
-
-.fav-btn.saved {
-  color:#dc2626;
-}
-
-.thumb-row {
-  display:flex;
-  gap:5px;
-  padding:6px;
-  overflow-x:auto;
-  background:white;
-}
-
-.thumb-row img {
-  width:50px;
-  height:40px;
-  object-fit:cover;
-  border-radius:6px;
-  flex:0 0 auto;
 }
 
 .card-body {
   padding:14px;
-  flex:1;
 }
 
 .title {
   font-weight:900;
-  font-size:17px;
-  color:#111827;
-  min-height:42px;
+  font-size:16px;
 }
 
 .price {
   color:#dc2626;
   font-size:20px;
   font-weight:900;
-  margin-top:8px;
+  margin-top:6px;
 }
 
 .meta {
   font-size:13px;
   color:#475569;
-  margin-top:6px;
 }
 
 .btn {
   display:block;
   text-align:center;
   text-decoration:none;
-  margin:10px 12px;
+  margin:10px;
   padding:12px;
-  border:none;
   border-radius:10px;
   font-weight:900;
-  cursor:pointer;
 }
 
-.view-btn {
-  background:#2563eb;
-  color:white;
-}
-
-.whatsapp-btn {
-  background:#25D366;
-  color:white;
-}
-
-.call-btn {
-  background:#111827;
-  color:white;
-}
-
-.action-row {
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:8px;
-  margin:0 12px 12px;
-}
-
-.action-row .btn {
-  margin:0;
-}
+.view-btn { background:#2563eb; color:white; }
+.whatsapp-btn { background:#25D366; color:white; }
 
 .empty {
   grid-column:1/-1;
   background:white;
   padding:30px;
-  border-radius:14px;
   text-align:center;
-  font-weight:bold;
-}
-
-@media(max-width:600px){
-  .header h1 { font-size:32px; }
-  .slogan { font-size:17px; }
-  .sub { font-size:13px; }
-
-  .grid,
-  .featured-grid {
-    grid-template-columns:1fr;
-  }
-
-  .card {
-    max-width:100%;
-  }
-
-  .card-img {
-    height:170px;
-  }
-
-  .search-bar {
-    margin:-25px 10px 15px;
-  }
-
-  .search-btn,
-  .clear-btn {
-    flex:1;
-  }
 }
 </style>
 </head>
@@ -322,275 +179,119 @@ body {
 
   <select id="province">
     <option value="">All Provinces</option>
-    <option value="Gauteng">Gauteng</option>
-    <option value="Western Cape">Western Cape</option>
-    <option value="Eastern Cape">Eastern Cape</option>
-    <option value="KwaZulu-Natal">KwaZulu-Natal</option>
-    <option value="Free State">Free State</option>
-    <option value="Limpopo">Limpopo</option>
-    <option value="Mpumalanga">Mpumalanga</option>
-    <option value="North West">North West</option>
-    <option value="Northern Cape">Northern Cape</option>
+    <option>Gauteng</option>
+    <option>Western Cape</option>
+    <option>Eastern Cape</option>
+    <option>KwaZulu-Natal</option>
+    <option>Free State</option>
+    <option>Limpopo</option>
+    <option>Mpumalanga</option>
+    <option>North West</option>
+    <option>Northern Cape</option>
   </select>
 
   <button class="search-btn" onclick="loadCars()">Search</button>
   <button class="clear-btn" onclick="clearSearch()">Clear</button>
 </div>
 
-<div class="section-title">Featured Vehicles</div>
-<div id="featuredGrid" class="featured-grid"></div>
-
-<div class="section-title">Browse Vehicles</div>
 <div id="grid" class="grid"></div>
 
 <script>
 const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
 
-let vehiclesById = {};
+function formatPrice(p){
+  return "R" + Number(p||0).toLocaleString();
+}
 
-function getImages(v) {
-  let arr = [];
+function cleanPhone(p){
+  return String(p||"").replace(/\D/g,'');
+}
 
-  if (v.image && String(v.image).trim()) {
-    arr.push(String(v.image).trim());
-  }
+function trackClick(vehicleId, type){
+  fetch(supabaseUrl + "/rest/v1/vehicle_clicks", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      apikey: supabaseKey,
+      Authorization: "Bearer " + supabaseKey
+    },
+    body: JSON.stringify({
+      vehicle_id: vehicleId,
+      click_type: type
+    })
+  });
+}
 
-  if (v.images && String(v.images).trim()) {
-    String(v.images).split(",").forEach(function(i) {
-      const img = i.trim();
-      if (img && !arr.includes(img)) {
-        arr.push(img);
+function whatsappLink(v,title){
+  let num = cleanPhone(v.phone);
+  if(num.startsWith("0")) num = "27"+num.slice(1);
+
+  trackClick(v.id,"whatsapp");
+
+  return "https://wa.me/"+num+"?text="+encodeURIComponent("Hi, I'm interested in the "+title);
+}
+
+async function loadCars(){
+  const grid = document.getElementById("grid");
+  grid.innerHTML="Loading...";
+
+  const res = await fetch(
+    supabaseUrl + "/rest/v1/active_vehicles?select=*",
+    {
+      headers:{
+        apikey:supabaseKey,
+        Authorization:"Bearer "+supabaseKey
       }
-    });
-  }
-
-  if (!arr.length) {
-    arr.push("https://via.placeholder.com/400x300?text=No+Image");
-  }
-
-  return arr;
-}
-
-function formatPrice(price) {
-  const num = Number(String(price || "").replace(/\D/g, ""));
-  if (!num) return "R0";
-  return "R" + num.toLocaleString("en-ZA");
-}
-
-function cleanPhone(phone) {
-  return String(phone || "").replace(/\D/g, "");
-}
-
-function getDealerPhone(v) {
-  return cleanPhone(v.phone || v.dealer_phone || v.mobile || "");
-}
-
-function callLink(v) {
-  const phone = getDealerPhone(v);
-  return phone ? "tel:" + phone : "#";
-}
-
-function whatsappLink(v, title) {
-  const phone = getDealerPhone(v);
-  const number = phone ? "27" + phone.replace(/^0/, "") : "27XXXXXXXXX";
-
-  const message = encodeURIComponent(
-    "Hi, I'm interested in the " + title + " for " + formatPrice(v.price) + ". Is it still available?"
+    }
   );
 
-  return "https://wa.me/" + number + "?text=" + message;
-}
+  let data = await res.json();
 
-async function trackVehicleClick(type, v) {
-  if (!v || !v.id) return;
-
-  try {
-    await fetch(supabaseUrl + "/rest/v1/vehicle_clicks", {
-      method: "POST",
-      headers: {
-        apikey: supabaseKey,
-        Authorization: "Bearer " + supabaseKey,
-        "Content-Type": "application/json",
-        Prefer: "return=minimal"
-      },
-      body: JSON.stringify({
-        vehicle_id: v.id,
-        dealer_user_id: v.user_id || null,
-        click_type: type
-      })
-    });
-  } catch (err) {
-    console.log("Click tracking failed", err);
-  }
-}
-
-function getSavedVehicles() {
-  return JSON.parse(localStorage.getItem("savedVehicles") || "[]");
-}
-
-function saveSavedVehicles(saved) {
-  localStorage.setItem("savedVehicles", JSON.stringify(saved));
-}
-
-function isSaved(id) {
-  return getSavedVehicles().includes(String(id));
-}
-
-function toggleFavourite(id) {
-  let saved = getSavedVehicles();
-  const sid = String(id);
-
-  if (saved.includes(sid)) {
-    saved = saved.filter(x => x !== sid);
-  } else {
-    saved.push(sid);
+  if(!data.length){
+    grid.innerHTML='<div class="empty">No vehicles found</div>';
+    return;
   }
 
-  saveSavedVehicles(saved);
-  loadCars();
-}
+  let html="";
 
-function createCard(v, featured) {
-  const images = getImages(v);
-  const title = [v.year, v.make, v.model].filter(Boolean).join(" ") || v.title || "Vehicle";
+  data.forEach(v=>{
+    const title = ${v.year||""} ${v.make||""} ${v.model||""};
 
-  let thumbs = "";
-  images.slice(0,4).forEach(function(i) {
-    thumbs += `<img src="${i}" loading="lazy">`;
-  });
-
-  const savedClass = isSaved(v.id) ? "saved" : "";
-  const heart = isSaved(v.id) ? "♥️" : "♡";
-
-  return `
+    html+=`
     <div class="card">
-      ${featured ? '<div class="featured-badge">Featured</div>' : ''}
-      <button class="fav-btn ${savedClass}" onclick="toggleFavourite(${v.id})">${heart}</button>
-
       <div class="card-img">
-        <img src="${images[0]}" loading="lazy" onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'">
-        <div class="photo-badge">📷 ${images.length}</div>
+        <img src="${v.image||'https://via.placeholder.com/400'}">
       </div>
-
-      <div class="thumb-row">${thumbs}</div>
 
       <div class="card-body">
         <div class="title">${title}</div>
         <div class="price">${formatPrice(v.price)}</div>
-        <div class="meta">📍 ${v.location || "-"}</div>
-        <div class="meta">🚗 ${v.mileage || "-"}</div>
-        <div class="meta">🏢 ${v.dealer || v.dealer_name || "Dealer"}</div>
+        <div class="meta">${v.location||""}</div>
       </div>
 
-      <button class="btn view-btn" onclick="trackVehicleClick('view', vehiclesById[${v.id}]); viewVehicle(${v.id})">
+      <a href="details.html?id=${v.id}" class="btn view-btn"
+        onclick="trackClick(${v.id},'view')">
         View Details
-      </button>
+      </a>
 
-      <div class="action-row">
-        <a href="${callLink(v)}" class="btn call-btn" onclick="trackVehicleClick('call', vehiclesById[${v.id}])">
-          Call
-        </a>
-
-        <a href="${whatsappLink(v, title)}" target="_blank" class="btn whatsapp-btn" onclick="trackVehicleClick('whatsapp', vehiclesById[${v.id}])">
-          WhatsApp
-        </a>
-      </div>
+      <a href="${whatsappLink(v,title)}" target="_blank"
+        class="btn whatsapp-btn">
+        WhatsApp
+      </a>
     </div>
-  `;
+    `;
+  });
+
+  grid.innerHTML=html;
 }
 
-async function loadCars() {
-  const grid = document.getElementById("grid");
-  const featuredGrid = document.getElementById("featuredGrid");
-
-  grid.innerHTML = '<div class="empty">Loading vehicles...</div>';
-  featuredGrid.innerHTML = "";
-
-  try {
-    const res = await fetch(
-      supabaseUrl + "/rest/v1/active_vehicles?select=*&order=id.desc",
-      {
-        headers: {
-          apikey: supabaseKey,
-          Authorization: "Bearer " + supabaseKey
-        }
-      }
-    );
-
-    let data = await res.json();
-
-    if (!Array.isArray(data)) {
-      grid.innerHTML = '<div class="empty">Could not load vehicles.</div>';
-      return;
-    }
-
-    vehiclesById = {};
-    data.forEach(function(v) {
-      vehiclesById[v.id] = v;
-    });
-
-    const featuredCars = data
-      .filter(function(v) {
-        return v.featured === true || v.featured === "true";
-      })
-      .slice(0,4);
-
-    const backupFeatured = featuredCars.length ? featuredCars : data.slice(0,4);
-
-    featuredGrid.innerHTML = backupFeatured.map(function(v) {
-      return createCard(v, true);
-    }).join("");
-
-    const search = document.getElementById("search").value.toLowerCase().trim();
-    const min = Number(document.getElementById("min").value) || 0;
-    const max = Number(document.getElementById("max").value) || 999999999;
-    const province = document.getElementById("province").value.toLowerCase().trim();
-
-    data = data.filter(function(v) {
-      const text = ((v.make || "") + " " + (v.model || "") + " " + (v.title || "")).toLowerCase();
-      const price = Number(String(v.price || "").replace(/\D/g, "")) || 0;
-      const location = String(v.location || "").toLowerCase();
-      const vehicleProvince = String(v.province || "").toLowerCase();
-
-      if (search && !text.includes(search)) return false;
-      if (price < min) return false;
-      if (price > max) return false;
-
-      if (province) {
-        if (!location.includes(province) && !vehicleProvince.includes(province)) {
-          return false;
-        }
-      }
-
-      return true;
-    });
-
-    if (!data.length) {
-      grid.innerHTML = '<div class="empty">No vehicles found</div>';
-      return;
-    }
-
-    grid.innerHTML = data.map(function(v) {
-      return createCard(v, false);
-    }).join("");
-
-  } catch (err) {
-    console.error(err);
-    grid.innerHTML = '<div class="empty">Error loading vehicles.</div>';
-  }
-}
-
-function clearSearch() {
-  document.getElementById("search").value = "";
-  document.getElementById("min").value = "";
-  document.getElementById("max").value = "";
-  document.getElementById("province").value = "";
+function clearSearch(){
+  document.getElementById("search").value="";
+  document.getElementById("min").value="";
+  document.getElementById("max").value="";
+  document.getElementById("province").value="";
   loadCars();
-}
-
-function viewVehicle(id) {
-  window.location.href = "details.html?id=" + id;
 }
 
 loadCars();
