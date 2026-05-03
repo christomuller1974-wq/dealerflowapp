@@ -172,7 +172,7 @@ async function loadCars(){
   let html = "";
 
   data.forEach(v=>{
-    const title = ${v.year||""} ${v.make||""} ${v.model||""};
+    const title = `${v.year||""} ${v.make||""} ${v.model||""}`;
     const img = v.image || "https://via.placeholder.com/400x300";
 
     html += `
