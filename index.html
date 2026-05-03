@@ -256,7 +256,7 @@ async function loadCars(){
   let html="";
 
   data.forEach(v=>{
-    const title = ${v.year||""} ${v.make||""} ${v.model||""};
+    const title = `${v.year||""} ${v.make||""} ${v.model||""}`;
 
     html+=`
     <div class="card">
