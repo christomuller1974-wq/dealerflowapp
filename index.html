@@ -1,63 +1,27 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-
-<!-- ✅ GOOGLE VERIFICATION -->
-<meta name="google-site-verification" content="oOba0W7_EqwqEoXSWQad1Hymmbeiy8oUrvwCztLuX-M" />
-
 <meta charset="UTF-8">
-
-<!-- ✅ SEO TITLE -->
-<title>Cars for Sale in South Africa | DealerFlow</title>
-
-<!-- ✅ SEO DESCRIPTION -->
-<meta name="description" content="Find quality used cars, bakkies and SUVs for sale in South Africa. Trusted dealers. Quick contact via WhatsApp. Browse listings now.">
-
+<title>DealerFlow | Used Cars for Sale South Africa</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-* { box-sizing: border-box; }
+<!-- GOOGLE VERIFICATION -->
+<meta name="google-site-verification" content="oOba0W7_EqwqEoXSWQad1Hymmbeiy8oUrvwCztLuX-M" />
 
-body {
-  margin:0;
-  font-family:Arial, sans-serif;
-  background:#f4f6f9;
-}
+<!-- SEO -->
+<meta name="description" content="Buy and sell used cars in South Africa. DealerFlow connects dealers and buyers with trusted listings and fast contact.">
+
+<style>
+body { margin:0; font-family:Arial; background:#f4f6f9; }
 
 .header {
   background:linear-gradient(135deg,#1e3a8a,#2563eb);
   color:white;
-  padding:50px 20px 70px;
   text-align:center;
+  padding:50px 20px 70px;
 }
 
-.header h1 {
-  margin:0;
-  font-size:40px;
-  font-weight:900;
-}
-
-.slogan {
-  margin-top:12px;
-  font-size:20px;
-  font-weight:800;
-}
-
-.sub {
-  margin-top:6px;
-  opacity:0.9;
-}
-
-.dealer-login-btn {
-  display:inline-block;
-  margin-top:22px;
-  background:#111827;
-  padding:12px 24px;
-  border-radius:30px;
-  color:white;
-  text-decoration:none;
-  font-weight:900;
-}
+.header h1 { font-size:40px; margin:0; }
 
 .search-bar {
   background:white;
@@ -66,99 +30,61 @@ body {
   padding:16px;
   border-radius:16px;
   display:flex;
-  flex-wrap:wrap;
   gap:10px;
-  box-shadow:0 12px 30px rgba(0,0,0,0.10);
+  flex-wrap:wrap;
 }
 
-.search-bar input,
-.search-bar select {
+.search-bar input, .search-bar select {
   flex:1;
-  min-width:140px;
   padding:12px;
   border-radius:10px;
-  border:1px solid #dbe1ea;
+  border:1px solid #ddd;
 }
-
-.search-btn,
-.clear-btn {
-  color:white;
-  border:none;
-  padding:12px 20px;
-  border-radius:10px;
-  cursor:pointer;
-  font-weight:900;
-}
-
-.search-btn { background:#2563eb; }
-.clear-btn { background:#111827; }
 
 .grid {
-  max-width:1250px;
+  max-width:1200px;
   margin:auto;
   padding:20px;
   display:grid;
-  grid-template-columns:repeat(auto-fit, minmax(250px, 1fr));
-  gap:22px;
+  grid-template-columns:repeat(auto-fit, minmax(250px,1fr));
+  gap:20px;
 }
 
 .card {
   background:white;
-  border-radius:18px;
+  border-radius:15px;
   overflow:hidden;
-  box-shadow:0 8px 25px rgba(0,0,0,0.08);
+  box-shadow:0 5px 20px rgba(0,0,0,0.1);
 }
 
-.card-img {
-  height:190px;
-  overflow:hidden;
-}
-
-.card-img img {
+.card img {
   width:100%;
-  height:100%;
+  height:180px;
   object-fit:cover;
 }
 
-.card-body {
-  padding:14px;
-}
+.card-body { padding:12px; }
 
-.title {
-  font-weight:900;
-  font-size:16px;
-}
-
-.price {
-  color:#dc2626;
-  font-size:20px;
-  font-weight:900;
-  margin-top:6px;
-}
-
-.meta {
-  font-size:13px;
-  color:#475569;
-}
+.price { color:red; font-weight:bold; }
 
 .btn {
   display:block;
   text-align:center;
-  text-decoration:none;
+  padding:10px;
   margin:10px;
-  padding:12px;
-  border-radius:10px;
-  font-weight:900;
+  border-radius:8px;
+  text-decoration:none;
+  font-weight:bold;
 }
 
 .view-btn { background:#2563eb; color:white; }
 .whatsapp-btn { background:#25D366; color:white; }
 
 .empty {
-  grid-column:1/-1;
-  background:white;
-  padding:30px;
   text-align:center;
+  padding:30px;
+  background:white;
+  border-radius:10px;
 }
 </style>
 </head>
@@ -167,16 +93,14 @@ body {
 
 <div class="header">
   <h1>DealerFlow</h1>
-  <div class="slogan">Drive your dream. Find the right vehicle fast.</div>
-  <div class="sub">Trusted listings. Quick contact. Serious deals.</div>
-  <a href="dealer-admin.html" class="dealer-login-btn">Dealer Login</a>
+  <p>Used Cars for Sale in South Africa</p>
 </div>
 
 <div class="search-bar">
   <input id="search" placeholder="Search make or model">
   <input id="min" placeholder="Min Price" type="number">
   <input id="max" placeholder="Max Price" type="number">
-
+  
   <select id="province">
     <option value="">All Provinces</option>
     <option>Gauteng</option>
@@ -190,8 +114,7 @@ body {
     <option>Northern Cape</option>
   </select>
 
-  <button class="search-btn" onclick="loadCars()">Search</button>
-  <button class="clear-btn" onclick="clearSearch()">Clear</button>
+  <button onclick="loadCars()">Search</button>
 </div>
 
 <div id="grid" class="grid"></div>
@@ -201,97 +124,78 @@ const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
 
 function formatPrice(p){
-  return "R" + Number(p||0).toLocaleString();
-}
-
-function cleanPhone(p){
-  return String(p||"").replace(/\D/g,'');
-}
-
-function trackClick(vehicleId, type){
-  fetch(supabaseUrl + "/rest/v1/vehicle_clicks", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      apikey: supabaseKey,
-      Authorization: "Bearer " + supabaseKey
-    },
-    body: JSON.stringify({
-      vehicle_id: vehicleId,
-      click_type: type
-    })
-  });
+  return "R" + Number(p||0).toLocaleString("en-ZA");
 }
 
 function whatsappLink(v,title){
-  let num = cleanPhone(v.phone);
-  if(num.startsWith("0")) num = "27"+num.slice(1);
+  let phone = (v.phone||"").replace(/\D/g,'');
+  if(phone.startsWith("0")) phone = "27" + phone.substring(1);
+  return "https://wa.me/" + phone + "?text=" + encodeURIComponent("Hi, I'm interested in " + title);
+}
 
-  trackClick(v.id,"whatsapp");
-
-  return "https://wa.me/"+num+"?text="+encodeURIComponent("Hi, I'm interested in the "+title);
+async function trackClick(vehicleId, dealerId){
+  try{
+    await fetch(supabaseUrl + "/rest/v1/vehicle_clicks", {
+      method:"POST",
+      headers:{
+        "apikey":supabaseKey,
+        "Authorization":"Bearer "+supabaseKey,
+        "Content-Type":"application/json"
+      },
+      body: JSON.stringify({
+        vehicle_id: vehicleId,
+        dealer_user_id: dealerId,
+        click_type: "view"
+      })
+    });
+  }catch(e){ console.log(e); }
 }
 
 async function loadCars(){
   const grid = document.getElementById("grid");
-  grid.innerHTML="Loading...";
+  grid.innerHTML = '<div class="empty">Loading...</div>';
 
-  const res = await fetch(
-    supabaseUrl + "/rest/v1/active_vehicles?select=*",
-    {
-      headers:{
-        apikey:supabaseKey,
-        Authorization:"Bearer "+supabaseKey
-      }
+  const res = await fetch(supabaseUrl + "/rest/v1/active_vehicles?select=*&order=id.desc", {
+    headers:{
+      apikey:supabaseKey,
+      Authorization:"Bearer "+supabaseKey
     }
-  );
+  });
 
   let data = await res.json();
 
   if(!data.length){
-    grid.innerHTML='<div class="empty">No vehicles found</div>';
+    grid.innerHTML = '<div class="empty">No vehicles found</div>';
     return;
   }
 
-  let html="";
+  let html = "";
 
   data.forEach(v=>{
-    const title = `${v.year||""} ${v.make||""} ${v.model||""}`;
+    const title = ${v.year||""} ${v.make||""} ${v.model||""};
+    const img = v.image || "https://via.placeholder.com/400x300";
 
-    html+=`
+    html += `
     <div class="card">
-      <div class="card-img">
-        <img src="${v.image||'https://via.placeholder.com/400'}">
-      </div>
-
+      <img src="${img}">
       <div class="card-body">
-        <div class="title">${title}</div>
+        <h3>${title}</h3>
         <div class="price">${formatPrice(v.price)}</div>
-        <div class="meta">${v.location||""}</div>
+        <div>${v.location||""}</div>
       </div>
 
-      <a href="details.html?id=${v.id}" class="btn view-btn"
-        onclick="trackClick(${v.id},'view')">
-        View Details
-      </a>
-
-      <a href="${whatsappLink(v,title)}" target="_blank"
-        class="btn whatsapp-btn">
-        WhatsApp
-      </a>
+      <button class="btn view-btn" onclick="openVehicle(${v.id}, '${v.user_id}')">View</button>
+      <a href="${whatsappLink(v,title)}" target="_blank" class="btn whatsapp-btn">WhatsApp</a>
     </div>
     `;
   });
 
-  grid.innerHTML=html;
+  grid.innerHTML = html;
 }
 
-function clearSearch(){
-  document.getElementById("search").value="";
-  document.getElementById("min").value="";
-  document.getElementById("max").value="";
-  document.getElementById("province").value="";
-  loadCars();
+function openVehicle(id, dealerId){
+  trackClick(id, dealerId);
+  window.location.href = "details.html?id=" + id;
 }
 
 loadCars();
