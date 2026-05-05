@@ -5,10 +5,8 @@
 <title>CarScoutZA | Used Cars for Sale South Africa</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- GOOGLE VERIFICATION -->
 <meta name="google-site-verification" content="oOba0W7_EqwqEoXSWQad1Hymmbeiy8oUrvwCztLuX-M" />
 
-<!-- SEO -->
 <meta name="description" content="Find used cars for sale in South Africa. CarScoutZA connects buyers and dealers with trusted listings and fast contact.">
 <meta property="og:title" content="CarScoutZA - Used Cars South Africa">
 <meta property="og:description" content="Find used cars from trusted dealers across South Africa.">
@@ -25,17 +23,18 @@ body {
 }
 
 .header {
-  background:linear-gradient(135deg,#1e3a8a,#2563eb);
+  background:linear-gradient(135deg,#111827,#1e3a8a,#2563eb);
   color:white;
   text-align:center;
-  padding:55px 20px 105px;
+  padding:60px 20px 105px;
   position:relative;
 }
 
 .header h1 {
-  font-size:42px;
+  font-size:44px;
   margin:0;
   font-weight:900;
+  letter-spacing:-1px;
 }
 
 .header p {
@@ -54,40 +53,43 @@ body {
   text-decoration:none;
   font-weight:bold;
   font-size:13px;
+  box-shadow:0 6px 16px rgba(0,0,0,0.25);
 }
 
 .search-bar {
-  background:white;
-  margin:-55px auto 30px;
-  max-width:1100px;
-  padding:16px;
-  border-radius:16px;
+  background:rgba(255,255,255,0.96);
+  backdrop-filter:blur(10px);
+  margin:-50px auto 28px;
+  max-width:1120px;
+  padding:12px;
+  border-radius:18px;
   display:flex;
-  gap:10px;
+  gap:8px;
   flex-wrap:wrap;
   position:sticky;
   top:0;
   z-index:1000;
-  box-shadow:0 8px 25px rgba(0,0,0,0.12);
+  box-shadow:0 10px 30px rgba(0,0,0,0.14);
+  border:1px solid rgba(255,255,255,0.6);
 }
 
 .search-bar input,
 .search-bar select {
   flex:1;
-  min-width:150px;
-  padding:14px;
+  min-width:130px;
+  padding:11px;
   border-radius:12px;
   border:1px solid #e5e7eb;
-  font-size:14px;
+  font-size:13px;
   outline:none;
-  transition:0.2s;
   background:white;
+  transition:0.2s;
 }
 
 .search-bar input:focus,
 .search-bar select:focus {
   border-color:#2563eb;
-  box-shadow:0 0 0 2px rgba(37,99,235,0.2);
+  box-shadow:0 0 0 2px rgba(37,99,235,0.18);
 }
 
 .search-btn,
@@ -95,8 +97,9 @@ body {
   color:white;
   border:none;
   border-radius:12px;
-  padding:14px 20px;
-  font-weight:bold;
+  padding:11px 16px;
+  font-size:13px;
+  font-weight:900;
   cursor:pointer;
   transition:0.2s;
 }
@@ -107,38 +110,56 @@ body {
 
 .count-box {
   width:100%;
+  font-size:13px;
   font-weight:900;
-  color:#334155;
   padding:4px 2px 0;
+  color:#475569;
 }
 
 .grid {
-  max-width:1200px;
+  max-width:1250px;
   margin:auto;
-  padding:20px;
+  padding:22px;
   display:grid;
-  grid-template-columns:repeat(auto-fit, minmax(250px,1fr));
-  gap:22px;
+  grid-template-columns:repeat(auto-fit, minmax(250px, 300px));
+  justify-content:center;
+  gap:24px;
 }
 
 .card {
   background:white;
-  border-radius:16px;
+  border-radius:20px;
   overflow:hidden;
-  box-shadow:0 5px 20px rgba(0,0,0,0.1);
-  position:relative;
+  box-shadow:0 8px 24px rgba(0,0,0,0.10);
+  max-width:300px;
+  width:100%;
+  margin:auto;
+  transition:0.25s;
+  border:1px solid #eef2f7;
+}
+
+.card:hover {
+  transform:translateY(-5px);
+  box-shadow:0 16px 34px rgba(0,0,0,0.16);
 }
 
 .img-wrap {
   position:relative;
+  background:#e5e7eb;
+  overflow:hidden;
 }
 
 .card img {
   width:100%;
-  height:185px;
+  height:190px;
   object-fit:cover;
   display:block;
   background:#e5e7eb;
+  transition:0.3s;
+}
+
+.card:hover img {
+  transform:scale(1.04);
 }
 
 .featured-badge {
@@ -151,41 +172,57 @@ body {
   border-radius:999px;
   font-size:12px;
   font-weight:900;
+  box-shadow:0 4px 12px rgba(0,0,0,0.20);
+}
+
+.photo-badge {
+  position:absolute;
+  right:10px;
+  bottom:10px;
+  background:rgba(17,24,39,0.86);
+  color:white;
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:900;
 }
 
 .card-body {
-  padding:14px;
+  padding:15px;
 }
 
 .card h3 {
   margin:0 0 10px;
   font-size:18px;
   min-height:44px;
+  line-height:1.25;
+  font-weight:900;
 }
 
 .price {
   color:#dc2626;
   font-weight:900;
-  font-size:20px;
-  margin-bottom:6px;
+  font-size:21px;
+  margin-bottom:8px;
 }
 
 .meta {
   color:#475569;
   font-size:14px;
-  margin-top:5px;
+  margin-top:6px;
 }
 
 .btn {
   display:block;
   text-align:center;
-  padding:11px;
-  margin:10px;
-  border-radius:10px;
+  padding:12px;
+  margin:10px 12px;
+  border-radius:12px;
   text-decoration:none;
-  font-weight:bold;
+  font-weight:900;
   border:none;
   cursor:pointer;
+  transition:0.2s;
 }
 
 .view-btn {
@@ -193,23 +230,33 @@ body {
   color:white;
 }
 
+.view-btn:hover {
+  background:#1e40af;
+}
+
 .whatsapp-btn {
   background:#25D366;
   color:white;
+  margin-top:0;
+}
+
+.whatsapp-btn:hover {
+  filter:brightness(0.95);
 }
 
 .empty {
   grid-column:1/-1;
   text-align:center;
-  padding:30px;
+  padding:34px;
   background:white;
-  border-radius:12px;
+  border-radius:16px;
   font-weight:900;
+  box-shadow:0 8px 24px rgba(0,0,0,0.08);
 }
 
 @media(max-width:700px){
   .header {
-    padding:60px 15px 55px;
+    padding:64px 15px 55px;
   }
 
   .header h1 {
@@ -228,7 +275,7 @@ body {
   .search-bar {
     position:static;
     margin:10px;
-    border-radius:14px;
+    border-radius:16px;
   }
 
   .search-bar input,
@@ -242,6 +289,14 @@ body {
   .grid {
     grid-template-columns:1fr;
     padding:14px;
+  }
+
+  .card {
+    max-width:100%;
+  }
+
+  .card img {
+    height:220px;
   }
 }
 </style>
@@ -310,14 +365,25 @@ function whatsappLink(v, title){
     encodeURIComponent("Hi, I'm interested in the " + title);
 }
 
-function getImage(v){
-  if (v.image && String(v.image).trim()) return String(v.image).trim();
+function getImages(v){
+  let arr = [];
 
-  if (v.images && String(v.images).trim()) {
-    return String(v.images).split(",")[0].trim();
+  if (v.image && String(v.image).trim()) {
+    arr.push(String(v.image).trim());
   }
 
-  return "https://via.placeholder.com/400x300?text=No+Image";
+  if (v.images && String(v.images).trim()) {
+    String(v.images).split(",").forEach(function(i){
+      const img = i.trim();
+      if (img && !arr.includes(img)) arr.push(img);
+    });
+  }
+
+  if (!arr.length) {
+    arr.push("https://via.placeholder.com/400x300?text=No+Image");
+  }
+
+  return arr;
 }
 
 async function trackClick(vehicleId, dealerId){
@@ -420,7 +486,8 @@ async function loadCars(){
 
     data.forEach(function(v){
       const title = [v.year, v.make, v.model].filter(Boolean).join(" ") || v.title || "Vehicle";
-      const img = getImage(v);
+      const vehicleImages = getImages(v);
+      const img = vehicleImages[0];
       const featured = v.featured ? '<div class="featured-badge">Featured</div>' : "";
 
       html += `
@@ -428,6 +495,7 @@ async function loadCars(){
           <div class="img-wrap">
             ${featured}
             <img src="${img}" loading="lazy" onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'">
+            <div class="photo-badge">📷 ${vehicleImages.length}</div>
           </div>
 
           <div class="card-body">
@@ -438,7 +506,7 @@ async function loadCars(){
             <div class="meta">🏢 ${v.dealer || v.dealer_name || "Dealer"}</div>
           </div>
 
-          <button class="btn view-btn" onclick="openVehicle(${v.id}, '${v.user_id || ""}')">View</button>
+          <button class="btn view-btn" onclick="openVehicle(${v.id}, '${v.user_id || ""}')">View Details</button>
           <a href="${whatsappLink(v, title)}" target="_blank" class="btn whatsapp-btn">WhatsApp</a>
         </div>
       `;
