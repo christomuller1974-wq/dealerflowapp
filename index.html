@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>DealerFlow | Used Cars for Sale South Africa</title>
+<title>CarScoutZA | Used Cars for Sale South Africa</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <!-- GOOGLE VERIFICATION -->
 <meta name="google-site-verification" content="oOba0W7_EqwqEoXSWQad1Hymmbeiy8oUrvwCztLuX-M" />
 
 <!-- SEO -->
-<meta name="description" content="Buy and sell used cars in South Africa. DealerFlow connects dealers and buyers with trusted listings and fast contact.">
+<meta name="description" content="Find used cars for sale in South Africa. CarScoutZA connects buyers and dealers with trusted listings and fast contact.">
 
 <style>
 body { margin:0; font-family:Arial; background:#f4f6f9; }
@@ -19,9 +19,23 @@ body { margin:0; font-family:Arial; background:#f4f6f9; }
   color:white;
   text-align:center;
   padding:50px 20px 70px;
+  position:relative;
 }
 
 .header h1 { font-size:40px; margin:0; }
+
+.dealer-btn {
+  position:absolute;
+  top:15px;
+  right:15px;
+  background:#111827;
+  color:white;
+  padding:10px 14px;
+  border-radius:10px;
+  text-decoration:none;
+  font-weight:bold;
+  font-size:13px;
+}
 
 .search-bar {
   background:white;
@@ -75,6 +89,8 @@ body { margin:0; font-family:Arial; background:#f4f6f9; }
   border-radius:8px;
   text-decoration:none;
   font-weight:bold;
+  border:none;
+  cursor:pointer;
 }
 
 .view-btn { background:#2563eb; color:white; }
@@ -92,7 +108,11 @@ body { margin:0; font-family:Arial; background:#f4f6f9; }
 <body>
 
 <div class="header">
-  <h1>DealerFlow</h1>
+
+  <!-- Dealer Login Button -->
+  <a href="dealer-admin.html" class="dealer-btn">Dealer Login</a>
+
+  <h1>CarScoutZA</h1>
   <p>Used Cars for Sale in South Africa</p>
 </div>
 
@@ -172,7 +192,7 @@ async function loadCars(){
   let html = "";
 
   data.forEach(v=>{
-    const title = `${v.year||""} ${v.make||""} ${v.model||""}`;
+    const title = ${v.year||""} ${v.make||""} ${v.model||""};
     const img = v.image || "https://via.placeholder.com/400x300";
 
     html += `
