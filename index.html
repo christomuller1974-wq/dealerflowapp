@@ -12,7 +12,14 @@
 <meta name="description" content="Find used cars for sale in South Africa. CarScoutZA connects buyers and dealers with trusted listings and fast contact.">
 
 <style>
-body { margin:0; font-family:Arial; background:#f4f6f9; }
+* { box-sizing:border-box; }
+
+body {
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:#f4f6f9;
+  color:#111827;
+}
 
 .header {
   background:linear-gradient(135deg,#1e3a8a,#2563eb);
@@ -22,7 +29,16 @@ body { margin:0; font-family:Arial; background:#f4f6f9; }
   position:relative;
 }
 
-.header h1 { font-size:40px; margin:0; }
+.header h1 {
+  font-size:42px;
+  margin:0;
+  font-weight:900;
+}
+
+.header p {
+  margin:10px 0 0;
+  font-size:18px;
+}
 
 .dealer-btn {
   position:absolute;
@@ -46,13 +62,52 @@ body { margin:0; font-family:Arial; background:#f4f6f9; }
   display:flex;
   gap:10px;
   flex-wrap:wrap;
+  position:sticky;
+  top:0;
+  z-index:1000;
+  box-shadow:0 8px 25px rgba(0,0,0,0.12);
 }
 
-.search-bar input, .search-bar select {
+.search-bar input,
+.search-bar select {
   flex:1;
-  padding:12px;
-  border-radius:10px;
-  border:1px solid #ddd;
+  min-width:160px;
+  padding:14px;
+  border-radius:12px;
+  border:1px solid #e5e7eb;
+  font-size:14px;
+  outline:none;
+  transition:0.2s;
+  background:white;
+}
+
+.search-bar input:focus,
+.search-bar select:focus {
+  border-color:#2563eb;
+  box-shadow:0 0 0 2px rgba(37,99,235,0.2);
+}
+
+.search-btn,
+.clear-btn {
+  color:white;
+  border:none;
+  border-radius:12px;
+  padding:14px 20px;
+  font-weight:bold;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.search-btn {
+  background:#2563eb;
+}
+
+.search-btn:hover {
+  background:#1e40af;
+}
+
+.clear-btn {
+  background:#111827;
 }
 
 .grid {
@@ -66,41 +121,109 @@ body { margin:0; font-family:Arial; background:#f4f6f9; }
 
 .card {
   background:white;
-  border-radius:15px;
+  border-radius:16px;
   overflow:hidden;
   box-shadow:0 5px 20px rgba(0,0,0,0.1);
 }
 
 .card img {
   width:100%;
-  height:180px;
+  height:185px;
   object-fit:cover;
+  display:block;
+  background:#e5e7eb;
 }
 
-.card-body { padding:12px; }
+.card-body {
+  padding:14px;
+}
 
-.price { color:red; font-weight:bold; }
+.card h3 {
+  margin:0 0 10px;
+  font-size:18px;
+  min-height:44px;
+}
+
+.price {
+  color:#dc2626;
+  font-weight:900;
+  font-size:20px;
+  margin-bottom:6px;
+}
+
+.meta {
+  color:#475569;
+  font-size:14px;
+  margin-top:5px;
+}
 
 .btn {
   display:block;
   text-align:center;
-  padding:10px;
+  padding:11px;
   margin:10px;
-  border-radius:8px;
+  border-radius:10px;
   text-decoration:none;
   font-weight:bold;
   border:none;
   cursor:pointer;
 }
 
-.view-btn { background:#2563eb; color:white; }
-.whatsapp-btn { background:#25D366; color:white; }
+.view-btn {
+  background:#2563eb;
+  color:white;
+}
+
+.whatsapp-btn {
+  background:#25D366;
+  color:white;
+}
 
 .empty {
+  grid-column:1/-1;
   text-align:center;
   padding:30px;
   background:white;
-  border-radius:10px;
+  border-radius:12px;
+  font-weight:900;
+}
+
+@media(max-width:700px){
+  .header {
+    padding:60px 15px 45px;
+  }
+
+  .header h1 {
+    font-size:36px;
+  }
+
+  .header p {
+    font-size:15px;
+  }
+
+  .dealer-btn {
+    top:12px;
+    right:12px;
+  }
+
+  .search-bar {
+    position:static;
+    margin:10px;
+    border-radius:14px;
+  }
+
+  .search-bar input,
+  .search-bar select,
+  .search-btn,
+  .clear-btn {
+    width:100%;
+    flex:1 1 100%;
+  }
+
+  .grid {
+    grid-template-columns:1fr;
+    padding:14px;
+  }
 }
 </style>
 </head>
@@ -108,10 +231,7 @@ body { margin:0; font-family:Arial; background:#f4f6f9; }
 <body>
 
 <div class="header">
-
-  <!-- Dealer Login Button -->
   <a href="dealer-admin.html" class="dealer-btn">Dealer Login</a>
-
   <h1>CarScoutZA</h1>
   <p>Used Cars for Sale in South Africa</p>
 </div>
@@ -120,7 +240,7 @@ body { margin:0; font-family:Arial; background:#f4f6f9; }
   <input id="search" placeholder="Search make or model">
   <input id="min" placeholder="Min Price" type="number">
   <input id="max" placeholder="Max Price" type="number">
-  
+
   <select id="province">
     <option value="">All Provinces</option>
     <option>Gauteng</option>
@@ -134,7 +254,8 @@ body { margin:0; font-family:Arial; background:#f4f6f9; }
     <option>Northern Cape</option>
   </select>
 
-  <button onclick="loadCars()">Search</button>
+  <button class="search-btn" onclick="loadCars()">Search</button>
+  <button class="clear-btn" onclick="clearSearch()">Clear</button>
 </div>
 
 <div id="grid" class="grid"></div>
@@ -144,13 +265,32 @@ const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
 
 function formatPrice(p){
-  return "R" + Number(p||0).toLocaleString("en-ZA");
+  const num = Number(String(p || "").replace(/\D/g, ""));
+  if (!num) return "R0";
+  return "R" + num.toLocaleString("en-ZA");
 }
 
-function whatsappLink(v,title){
-  let phone = (v.phone||"").replace(/\D/g,'');
-  if(phone.startsWith("0")) phone = "27" + phone.substring(1);
-  return "https://wa.me/" + phone + "?text=" + encodeURIComponent("Hi, I'm interested in " + title);
+function cleanPhone(phone){
+  return String(phone || "").replace(/\D/g, "");
+}
+
+function whatsappLink(v, title){
+  let phone = cleanPhone(v.phone || v.dealer_phone || "");
+  if (!phone) return "#";
+  if (phone.startsWith("0")) phone = "27" + phone.substring(1);
+
+  return "https://wa.me/" + phone + "?text=" +
+    encodeURIComponent("Hi, I'm interested in the " + title);
+}
+
+function getImage(v){
+  if (v.image && String(v.image).trim()) return String(v.image).trim();
+
+  if (v.images && String(v.images).trim()) {
+    return String(v.images).split(",")[0].trim();
+  }
+
+  return "https://via.placeholder.com/400x300?text=No+Image";
 }
 
 async function trackClick(vehicleId, dealerId){
@@ -158,64 +298,120 @@ async function trackClick(vehicleId, dealerId){
     await fetch(supabaseUrl + "/rest/v1/vehicle_clicks", {
       method:"POST",
       headers:{
-        "apikey":supabaseKey,
-        "Authorization":"Bearer "+supabaseKey,
-        "Content-Type":"application/json"
+        apikey:supabaseKey,
+        Authorization:"Bearer " + supabaseKey,
+        "Content-Type":"application/json",
+        Prefer:"return=minimal"
       },
       body: JSON.stringify({
         vehicle_id: vehicleId,
-        dealer_user_id: dealerId,
+        dealer_user_id: dealerId || null,
         click_type: "view"
       })
     });
-  }catch(e){ console.log(e); }
+  } catch(e) {
+    console.log(e);
+  }
 }
 
 async function loadCars(){
   const grid = document.getElementById("grid");
-  grid.innerHTML = '<div class="empty">Loading...</div>';
+  grid.innerHTML = '<div class="empty">Loading vehicles...</div>';
 
-  const res = await fetch(supabaseUrl + "/rest/v1/active_vehicles?select=*&order=id.desc", {
-    headers:{
-      apikey:supabaseKey,
-      Authorization:"Bearer "+supabaseKey
+  try {
+    const res = await fetch(
+      supabaseUrl + "/rest/v1/active_vehicles?select=*&order=id.desc",
+      {
+        headers:{
+          apikey:supabaseKey,
+          Authorization:"Bearer " + supabaseKey
+        }
+      }
+    );
+
+    let data = await res.json();
+
+    if (!Array.isArray(data)) {
+      grid.innerHTML = '<div class="empty">Could not load vehicles.</div>';
+      return;
     }
-  });
 
-  let data = await res.json();
+    const search = document.getElementById("search").value.toLowerCase().trim();
+    const min = Number(document.getElementById("min").value) || 0;
+    const max = Number(document.getElementById("max").value) || 999999999;
+    const province = document.getElementById("province").value.toLowerCase().trim();
 
-  if(!data.length){
-    grid.innerHTML = '<div class="empty">No vehicles found</div>';
-    return;
+    data = data.filter(function(v){
+      const text = (
+        (v.year || "") + " " +
+        (v.make || "") + " " +
+        (v.model || "") + " " +
+        (v.title || "")
+      ).toLowerCase();
+
+      const price = Number(String(v.price || "").replace(/\D/g, "")) || 0;
+      const location = String(v.location || "").toLowerCase();
+      const vehicleProvince = String(v.province || "").toLowerCase();
+
+      if (search && !text.includes(search)) return false;
+      if (price < min) return false;
+      if (price > max) return false;
+
+      if (province) {
+        if (!location.includes(province) && !vehicleProvince.includes(province)) return false;
+      }
+
+      return true;
+    });
+
+    if (!data.length) {
+      grid.innerHTML = '<div class="empty">No vehicles found</div>';
+      return;
+    }
+
+    let html = "";
+
+    data.forEach(function(v){
+      const title = [v.year, v.make, v.model].filter(Boolean).join(" ") || v.title || "Vehicle";
+      const img = getImage(v);
+
+      html += `
+        <div class="card">
+          <img src="${img}" loading="lazy" onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'">
+
+          <div class="card-body">
+            <h3>${title}</h3>
+            <div class="price">${formatPrice(v.price)}</div>
+            <div class="meta">📍 ${v.location || "-"}</div>
+            <div class="meta">🚗 ${v.mileage || "-"}</div>
+            <div class="meta">🏢 ${v.dealer || v.dealer_name || "Dealer"}</div>
+          </div>
+
+          <button class="btn view-btn" onclick="openVehicle(${v.id}, '${v.user_id || ""}')">View</button>
+          <a href="${whatsappLink(v, title)}" target="_blank" class="btn whatsapp-btn">WhatsApp</a>
+        </div>
+      `;
+    });
+
+    grid.innerHTML = html;
+
+  } catch(err) {
+    console.error(err);
+    grid.innerHTML = '<div class="empty">Error loading vehicles.</div>';
   }
-
-  let html = "";
-
-  data.forEach(v=>{
-    const title = `${v.year||""} ${v.make||""} ${v.model||""}`;
-    const img = v.image || "https://via.placeholder.com/400x300";
-
-    html += `
-    <div class="card">
-      <img src="${img}">
-      <div class="card-body">
-        <h3>${title}</h3>
-        <div class="price">${formatPrice(v.price)}</div>
-        <div>${v.location||""}</div>
-      </div>
-
-      <button class="btn view-btn" onclick="openVehicle(${v.id}, '${v.user_id}')">View</button>
-      <a href="${whatsappLink(v,title)}" target="_blank" class="btn whatsapp-btn">WhatsApp</a>
-    </div>
-    `;
-  });
-
-  grid.innerHTML = html;
 }
 
 function openVehicle(id, dealerId){
   trackClick(id, dealerId);
   window.location.href = "details.html?id=" + id;
+}
+
+function clearSearch(){
+  document.getElementById("search").value = "";
+  document.getElementById("min").value = "";
+  document.getElementById("max").value = "";
+  document.getElementById("province").value = "";
+  loadCars();
 }
 
 loadCars();
