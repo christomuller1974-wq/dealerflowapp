@@ -2,8 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Vehicle Details</title>
+
+<title id="pageTitle">Vehicle Details | CarScoutZA</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta id="metaDesc" name="description" content="View used vehicle details on CarScoutZA. Used cars for sale in South Africa.">
+<meta property="og:title" id="ogTitle" content="Vehicle Details | CarScoutZA">
+<meta property="og:description" id="ogDesc" content="View used vehicle details on CarScoutZA.">
+<meta property="og:image" id="ogImage" content="">
 
 <style>
 * { box-sizing: border-box; }
@@ -318,7 +324,6 @@ html, body {
   font-weight: 900;
 }
 
-/* MOBILE FIX */
 @media(max-width: 900px) {
   html, body {
     width: 100%;
@@ -415,7 +420,7 @@ html, body {
 <body>
 
 <div class="hero">
-  <h1>Vehicle Details</h1>
+  <h1>CarScoutZA Vehicle Details</h1>
 </div>
 
 <div class="container">
@@ -519,6 +524,47 @@ function getImages(vehicle) {
   return arr;
 }
 
+function updateSEO(vehicle, title, imageUrl) {
+  const seoLocation = vehicle.location || vehicle.province || "South Africa";
+
+  const seoTitle = title + " for sale in " + seoLocation + " | CarScoutZA";
+
+  const seoDesc =
+    title + " for sale in " + seoLocation + ". " +
+    (vehicle.mileage ? vehicle.mileage + " km. " : "") +
+    "View price, photos and dealer contact details on CarScoutZA.";
+
+  document.title = seoTitle;
+  document.getElementById("pageTitle").textContent = seoTitle;
+  document.getElementById("metaDesc").setAttribute("content", seoDesc);
+  document.getElementById("ogTitle").setAttribute("content", seoTitle);
+  document.getElementById("ogDesc").setAttribute("content", seoDesc);
+  document.getElementById("ogImage").setAttribute("content", imageUrl || "");
+}
+
+async function trackVehicleClick(type, vehicle) {
+  if (!vehicle || !vehicle.id) return;
+
+  try {
+    await fetch(supabaseUrl + "/rest/v1/vehicle_clicks", {
+      method: "POST",
+      headers: {
+        apikey: supabaseKey,
+        Authorization: "Bearer " + supabaseKey,
+        "Content-Type": "application/json",
+        Prefer: "return=minimal"
+      },
+      body: JSON.stringify({
+        vehicle_id: vehicle.id,
+        dealer_user_id: vehicle.user_id || null,
+        click_type: type
+      })
+    });
+  } catch (err) {
+    console.log("Click tracking failed", err);
+  }
+}
+
 function setMain(index) {
   current = index;
 
@@ -585,12 +631,14 @@ function sendEnquiry() {
     return;
   }
 
-  const dealerPhone = cleanPhone(currentVehicle.phone);
+  const dealerPhone = cleanPhone(currentVehicle.phone || currentVehicle.dealer_phone);
 
   if (!dealerPhone) {
     alert("Dealer phone number missing.");
     return;
   }
+
+  trackVehicleClick("whatsapp", currentVehicle);
 
   const fullMsg =
 `Vehicle enquiry: ${currentTitle}
@@ -669,7 +717,11 @@ async function loadVehicle() {
     const title = v.title || fallbackTitle || "Vehicle";
     currentTitle = title;
 
+    updateSEO(v, title, images[0]);
+    trackVehicleClick("view", v);
+
     const dealerName = v.dealer || v.dealer_name || "Dealer";
+    const dealerPhone = v.phone || v.dealer_phone || "";
 
     let thumbs = "";
     images.forEach((img, i) => {
@@ -714,9 +766,10 @@ async function loadVehicle() {
               <div class="spec"><strong>Make:</strong> ${v.make || "-"}</div>
               <div class="spec"><strong>Model:</strong> ${v.model || "-"}</div>
               <div class="spec"><strong>Mileage:</strong> ${v.mileage || "-"}</div>
+              <div class="spec"><strong>Province:</strong> ${v.province || "-"}</div>
               <div class="spec"><strong>Location:</strong> ${v.location || "-"}</div>
               <div class="spec"><strong>Dealer:</strong> ${dealerName}</div>
-              <div class="spec"><strong>Phone:</strong> ${v.phone || "-"}</div>
+              <div class="spec"><strong>Phone:</strong> ${dealerPhone || "-"}</div>
             </div>
 
             <div class="description">${v.description || "No description available."}</div>
@@ -727,8 +780,8 @@ async function loadVehicle() {
           <div class="dealer-name">${dealerName}</div>
           <div class="price">${formatPrice(v.price)}</div>
 
-          <a href="${callLink(v.phone)}" class="btn btn-call">Call Dealer</a>
-          <a href="${whatsappLink(v.phone, title)}" target="_blank" class="btn btn-whatsapp">WhatsApp</a>
+          <a href="${callLink(dealerPhone)}" onclick="trackVehicleClick('call', currentVehicle)" class="btn btn-call">Call Dealer</a>
+          <a href="${whatsappLink(dealerPhone, title)}" onclick="trackVehicleClick('whatsapp', currentVehicle)" target="_blank" class="btn btn-whatsapp">WhatsApp</a>
           <button class="btn btn-enquire" onclick="openEnquire()">Enquire</button>
           <a href="${dealerStockLink(v)}" class="btn btn-dealer">View Dealer Stock</a>
         </div>
