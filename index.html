@@ -10,6 +10,9 @@
 
 <!-- SEO -->
 <meta name="description" content="Find used cars for sale in South Africa. CarScoutZA connects buyers and dealers with trusted listings and fast contact.">
+<meta property="og:title" content="CarScoutZA - Used Cars South Africa">
+<meta property="og:description" content="Find used cars from trusted dealers across South Africa.">
+<meta property="og:type" content="website">
 
 <style>
 * { box-sizing:border-box; }
@@ -25,7 +28,7 @@ body {
   background:linear-gradient(135deg,#1e3a8a,#2563eb);
   color:white;
   text-align:center;
-  padding:50px 20px 70px;
+  padding:55px 20px 105px;
   position:relative;
 }
 
@@ -55,7 +58,7 @@ body {
 
 .search-bar {
   background:white;
-  margin:20px auto 25px;
+  margin:-55px auto 30px;
   max-width:1100px;
   padding:16px;
   border-radius:16px;
@@ -71,7 +74,7 @@ body {
 .search-bar input,
 .search-bar select {
   flex:1;
-  min-width:160px;
+  min-width:150px;
   padding:14px;
   border-radius:12px;
   border:1px solid #e5e7eb;
@@ -98,16 +101,15 @@ body {
   transition:0.2s;
 }
 
-.search-btn {
-  background:#2563eb;
-}
+.search-btn { background:#2563eb; }
+.search-btn:hover { background:#1e40af; }
+.clear-btn { background:#111827; }
 
-.search-btn:hover {
-  background:#1e40af;
-}
-
-.clear-btn {
-  background:#111827;
+.count-box {
+  width:100%;
+  font-weight:900;
+  color:#334155;
+  padding:4px 2px 0;
 }
 
 .grid {
@@ -116,7 +118,7 @@ body {
   padding:20px;
   display:grid;
   grid-template-columns:repeat(auto-fit, minmax(250px,1fr));
-  gap:20px;
+  gap:22px;
 }
 
 .card {
@@ -124,6 +126,11 @@ body {
   border-radius:16px;
   overflow:hidden;
   box-shadow:0 5px 20px rgba(0,0,0,0.1);
+  position:relative;
+}
+
+.img-wrap {
+  position:relative;
 }
 
 .card img {
@@ -132,6 +139,18 @@ body {
   object-fit:cover;
   display:block;
   background:#e5e7eb;
+}
+
+.featured-badge {
+  position:absolute;
+  top:10px;
+  left:10px;
+  background:#facc15;
+  color:#111827;
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:900;
 }
 
 .card-body {
@@ -190,7 +209,7 @@ body {
 
 @media(max-width:700px){
   .header {
-    padding:60px 15px 45px;
+    padding:60px 15px 55px;
   }
 
   .header h1 {
@@ -254,8 +273,16 @@ body {
     <option>Northern Cape</option>
   </select>
 
+  <select id="sort">
+    <option value="">Sort</option>
+    <option value="low">Price Low → High</option>
+    <option value="high">Price High → Low</option>
+  </select>
+
   <button class="search-btn" onclick="loadCars()">Search</button>
   <button class="clear-btn" onclick="clearSearch()">Clear</button>
+
+  <div id="count" class="count-box"></div>
 </div>
 
 <div id="grid" class="grid"></div>
@@ -316,7 +343,10 @@ async function trackClick(vehicleId, dealerId){
 
 async function loadCars(){
   const grid = document.getElementById("grid");
+  const count = document.getElementById("count");
+
   grid.innerHTML = '<div class="empty">Loading vehicles...</div>';
+  count.innerText = "";
 
   try {
     const res = await fetch(
@@ -340,6 +370,7 @@ async function loadCars(){
     const min = Number(document.getElementById("min").value) || 0;
     const max = Number(document.getElementById("max").value) || 999999999;
     const province = document.getElementById("province").value.toLowerCase().trim();
+    const sort = document.getElementById("sort").value;
 
     data = data.filter(function(v){
       const text = (
@@ -364,6 +395,22 @@ async function loadCars(){
       return true;
     });
 
+    if (sort === "low") {
+      data.sort(function(a,b){
+        return (Number(String(a.price || "").replace(/\D/g, "")) || 0) -
+               (Number(String(b.price || "").replace(/\D/g, "")) || 0);
+      });
+    }
+
+    if (sort === "high") {
+      data.sort(function(a,b){
+        return (Number(String(b.price || "").replace(/\D/g, "")) || 0) -
+               (Number(String(a.price || "").replace(/\D/g, "")) || 0);
+      });
+    }
+
+    count.innerText = data.length + " vehicles found";
+
     if (!data.length) {
       grid.innerHTML = '<div class="empty">No vehicles found</div>';
       return;
@@ -374,10 +421,14 @@ async function loadCars(){
     data.forEach(function(v){
       const title = [v.year, v.make, v.model].filter(Boolean).join(" ") || v.title || "Vehicle";
       const img = getImage(v);
+      const featured = v.featured ? '<div class="featured-badge">Featured</div>' : "";
 
       html += `
         <div class="card">
-          <img src="${img}" loading="lazy" onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'">
+          <div class="img-wrap">
+            ${featured}
+            <img src="${img}" loading="lazy" onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'">
+          </div>
 
           <div class="card-body">
             <h3>${title}</h3>
@@ -411,6 +462,7 @@ function clearSearch(){
   document.getElementById("min").value = "";
   document.getElementById("max").value = "";
   document.getElementById("province").value = "";
+  document.getElementById("sort").value = "";
   loadCars();
 }
 
