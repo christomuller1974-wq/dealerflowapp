@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Dealer Dashboard</title>
+<title>Dealer Dashboard | CarScoutZA</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -17,7 +17,7 @@ body {
 }
 
 .hero {
-  background:linear-gradient(135deg,#3156c7,#1f3f9e);
+  background:linear-gradient(135deg,#111827,#1e3a8a,#2563eb);
   color:white;
   text-align:center;
   padding:38px 18px 30px;
@@ -62,6 +62,7 @@ body {
 
 .top-btn.blue { background:#3156c7; }
 .top-btn.green { background:#16a34a; }
+.top-btn.gold { background:#f59e0b; color:#111827; }
 
 .status {
   background:white;
@@ -72,9 +73,33 @@ body {
   box-shadow:0 3px 10px rgba(0,0,0,0.08);
 }
 
+.share-box {
+  background:white;
+  border-radius:16px;
+  padding:16px;
+  margin-bottom:18px;
+  box-shadow:0 4px 14px rgba(0,0,0,0.09);
+}
+
+.share-box h2 {
+  margin:0 0 8px;
+  font-size:24px;
+}
+
+.share-link {
+  background:#f8fafc;
+  border:1px solid #e2e8f0;
+  color:#334155;
+  padding:12px;
+  border-radius:12px;
+  font-size:14px;
+  word-break:break-all;
+  margin:10px 0;
+}
+
 .stats {
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
   gap:14px;
   margin-bottom:18px;
 }
@@ -207,7 +232,7 @@ body {
 .btn-green { background:#16a34a; }
 .btn-red { background:#dc2626; }
 .btn-dark { background:#111827; }
-.btn-gold { background:#f59e0b; }
+.btn-gold { background:#f59e0b; color:#111827; }
 
 .empty-box {
   grid-column:1 / -1;
@@ -217,6 +242,45 @@ body {
   text-align:center;
   color:#475569;
   font-weight:900;
+}
+
+.approval-wrap {
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  background:#f1f5f9;
+}
+
+.approval-card {
+  max-width:520px;
+  width:100%;
+  background:white;
+  border-radius:18px;
+  padding:28px 24px;
+  text-align:center;
+  box-shadow:0 8px 22px rgba(0,0,0,0.10);
+}
+
+.approval-card h2 {
+  margin:0 0 12px;
+  font-size:32px;
+}
+
+.approval-card p {
+  margin:8px 0;
+  font-size:17px;
+  color:#475569;
+  line-height:1.5;
+}
+
+.approval-actions {
+  margin-top:18px;
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  flex-wrap:wrap;
 }
 
 @media(max-width:700px) {
@@ -231,7 +295,7 @@ body {
 
 <div class="hero">
   <h1>Dealer Dashboard</h1>
-  <p>Manage your stock quickly and easily</p>
+  <p>Manage your stock and share your CarScoutZA dealer page</p>
 </div>
 
 <div class="container">
@@ -244,18 +308,42 @@ body {
 
   <div id="status" class="status">Starting dashboard...</div>
 
+  <div class="share-box">
+    <h2>Your Dealer Share Link</h2>
+    <div id="dealerShareLink" class="share-link">Loading your link...</div>
+    <button class="top-btn green" onclick="copyDealerLink()">Copy Dealer Link</button>
+    <a id="openDealerLink" href="#" target="_blank" class="top-btn blue">Open Dealer Page</a>
+  </div>
+
   <div class="stats">
     <div class="stat-card">
       <strong id="totalCars">0</strong>
       <span>Total Vehicles</span>
     </div>
+
     <div class="stat-card">
       <strong id="featuredCars">0</strong>
       <span>Featured Vehicles</span>
     </div>
+
     <div class="stat-card">
-      <strong id="clickCount">0</strong>
-      <span>Total Vehicle Clicks</span>
+      <strong id="dealerTotalClicks">0</strong>
+      <span>Total Dealer Clicks</span>
+    </div>
+
+    <div class="stat-card">
+      <strong id="dealerViews">0</strong>
+      <span>Total Views</span>
+    </div>
+
+    <div class="stat-card">
+      <strong id="dealerCalls">0</strong>
+      <span>Total Calls</span>
+    </div>
+
+    <div class="stat-card">
+      <strong id="dealerWhatsapps">0</strong>
+      <span>Total WhatsApps</span>
     </div>
   </div>
 
@@ -274,6 +362,7 @@ let currentUser = null;
 let currentProfile = null;
 let vehicles = [];
 let clickCounts = {};
+let dealerLink = "";
 
 function setStatus(message) {
   document.getElementById("status").textContent = message;
@@ -296,6 +385,29 @@ function getMainImage(vehicle) {
   return "https://via.placeholder.com/400x250?text=No+Image";
 }
 
+function buildDealerLink() {
+  if (!currentUser) return "https://carscoutza.com/dealer.html";
+
+  return "https://carscoutza.com/dealer.html?id=" + encodeURIComponent(currentUser.id);
+}
+
+function updateDealerLinkBox() {
+  dealerLink = buildDealerLink();
+
+  document.getElementById("dealerShareLink").textContent = dealerLink;
+  document.getElementById("openDealerLink").href = dealerLink;
+}
+
+function copyDealerLink() {
+  if (!dealerLink) dealerLink = buildDealerLink();
+
+  navigator.clipboard.writeText(dealerLink).then(function() {
+    alert("Dealer link copied!");
+  }).catch(function() {
+    alert("Could not copy automatically. Please copy it manually.");
+  });
+}
+
 function updateStats() {
   document.getElementById("totalCars").textContent = vehicles.length;
 
@@ -303,11 +415,21 @@ function updateStats() {
     vehicles.filter(v => v.featured === true || v.featured === "true").length;
 
   let totalClicks = 0;
+  let totalViews = 0;
+  let totalCalls = 0;
+  let totalWhatsapps = 0;
+
   Object.keys(clickCounts).forEach(function(id) {
     totalClicks += clickCounts[id].total || 0;
+    totalViews += clickCounts[id].view || 0;
+    totalCalls += clickCounts[id].call || 0;
+    totalWhatsapps += clickCounts[id].whatsapp || 0;
   });
 
-  document.getElementById("clickCount").textContent = totalClicks;
+  document.getElementById("dealerTotalClicks").textContent = totalClicks;
+  document.getElementById("dealerViews").textContent = totalViews;
+  document.getElementById("dealerCalls").textContent = totalCalls;
+  document.getElementById("dealerWhatsapps").textContent = totalWhatsapps;
 }
 
 async function loadClickCounts() {
@@ -411,6 +533,7 @@ async function loadVehicles() {
 
   setStatus("Loading your vehicles...");
 
+  updateDealerLinkBox();
   await loadClickCounts();
 
   const { data, error } = await client
@@ -469,7 +592,6 @@ async function loadVehicles() {
         <div class="price">${formatPrice(vehicle.price)}</div>
 
         <div class="click-box">
-          <div>🔥 Total Clicks: ${counts.total}</div>
           <div>👁️ Views: ${counts.view}</div>
           <div>📞 Calls: ${counts.call}</div>
           <div>💬 WhatsApp: ${counts.whatsapp}</div>
