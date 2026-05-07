@@ -1,294 +1,486 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Super Admin - DealerFlow</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>Super Admin | CarScoutZA</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #e5e7eb;
-      color: #111827;
-    }
+<style>
+* { box-sizing:border-box; }
 
-    .hero {
-      background: #2f55c7;
-      color: white;
-      padding: 24px 20px;
-      text-align: center;
-    }
+body {
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:#e5e7eb;
+  color:#111827;
+}
 
-    .hero h1 {
-      margin: 0 0 8px 0;
-      font-size: 36px;
-    }
+.hero {
+  background:linear-gradient(135deg,#111827,#1e3a8a,#2563eb);
+  color:white;
+  padding:28px 20px;
+  text-align:center;
+}
 
-    .hero p {
-      margin: 0;
-      font-size: 15px;
-    }
+.hero h1 {
+  margin:0 0 8px;
+  font-size:38px;
+  font-weight:900;
+}
 
-    .container {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 18px;
-    }
+.hero p {
+  margin:0;
+  font-size:15px;
+}
 
-    .top-actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 16px;
-    }
+.container {
+  max-width:1200px;
+  margin:0 auto;
+  padding:18px;
+}
 
-    .top-btn {
-      display: inline-block;
-      text-decoration: none;
-      text-align: center;
-      font-weight: 700;
-      font-size: 13px;
-      padding: 10px 14px;
-      border-radius: 10px;
-      border: none;
-      cursor: pointer;
-      color: white;
-      background: #1f2937;
-    }
+.top-actions {
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:16px;
+}
 
-    .top-btn.blue {
-      background: #3156c7;
-    }
+.top-btn {
+  display:inline-block;
+  text-decoration:none;
+  text-align:center;
+  font-weight:900;
+  font-size:13px;
+  padding:10px 14px;
+  border-radius:10px;
+  border:none;
+  cursor:pointer;
+  color:white;
+  background:#111827;
+}
 
-    .status {
-      background: white;
-      padding: 12px 14px;
-      margin-bottom: 16px;
-      border-radius: 10px;
-      font-weight: bold;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
+.top-btn.blue { background:#3156c7; }
 
-    .dealer-list {
-      display: grid;
-      gap: 12px;
-    }
+.status {
+  background:white;
+  padding:12px 14px;
+  margin-bottom:16px;
+  border-radius:10px;
+  font-weight:900;
+  box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
 
-    .dealer-row {
-      background: white;
-      border-radius: 12px;
-      padding: 16px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
+.stats {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+  gap:14px;
+  margin-bottom:18px;
+}
 
-    .dealer-info {
-      flex: 1 1 320px;
-      min-width: 260px;
-    }
+.stat-card {
+  background:white;
+  border-radius:16px;
+  padding:16px;
+  box-shadow:0 4px 14px rgba(0,0,0,0.09);
+}
 
-    .dealer-name {
-      font-size: 22px;
-      font-weight: 800;
-      margin-bottom: 6px;
-    }
+.stat-card strong {
+  font-size:30px;
+  display:block;
+  font-weight:900;
+}
 
-    .dealer-meta {
-      font-size: 14px;
-      color: #334155;
-      margin-bottom: 4px;
-    }
+.stat-card span {
+  color:#64748b;
+  font-weight:800;
+  font-size:14px;
+}
 
-    .dealer-status {
-      margin-top: 8px;
-      font-size: 15px;
-      font-weight: 800;
-    }
+.section-title {
+  font-size:28px;
+  font-weight:900;
+  margin:22px 0 12px;
+}
 
-    .dealer-actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
+.dealer-list {
+  display:grid;
+  gap:12px;
+}
 
-    .btn {
-      padding: 10px 14px;
-      border-radius: 10px;
-      border: none;
-      cursor: pointer;
-      color: white;
-      font-size: 13px;
-      font-weight: 700;
-      min-width: 110px;
-    }
+.dealer-row {
+  background:white;
+  border-radius:14px;
+  padding:16px;
+  box-shadow:0 2px 10px rgba(0,0,0,0.08);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:16px;
+  flex-wrap:wrap;
+}
 
-    .btn-green {
-      background: #16a34a;
-    }
+.dealer-info {
+  flex:1 1 320px;
+  min-width:260px;
+}
 
-    .btn-red {
-      background: #dc2626;
-    }
+.dealer-name {
+  font-size:22px;
+  font-weight:900;
+  margin-bottom:6px;
+}
 
-    .empty-box {
-      background: white;
-      padding: 18px;
-      border-radius: 12px;
-      font-weight: 700;
-      text-align: center;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
+.dealer-meta {
+  font-size:14px;
+  color:#334155;
+  margin-bottom:4px;
+}
 
-    @media (max-width: 700px) {
-      .hero h1 {
-        font-size: 30px;
-      }
+.dealer-status {
+  margin-top:8px;
+  font-size:15px;
+  font-weight:900;
+}
 
-      .dealer-row {
-        align-items: flex-start;
-      }
+.dealer-actions {
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
 
-      .dealer-actions {
-        width: 100%;
-      }
+.btn {
+  padding:10px 14px;
+  border-radius:10px;
+  border:none;
+  cursor:pointer;
+  color:white;
+  font-size:13px;
+  font-weight:900;
+  min-width:110px;
+}
 
-      .btn {
-        flex: 1 1 140px;
-      }
-    }
-  </style>
+.btn-green { background:#16a34a; }
+.btn-red { background:#dc2626; }
+.btn-blue { background:#3156c7; }
+.btn-dark { background:#111827; }
+
+.empty-box {
+  background:white;
+  padding:18px;
+  border-radius:12px;
+  font-weight:900;
+  text-align:center;
+  box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+
+.traffic-table {
+  background:white;
+  border-radius:14px;
+  overflow:hidden;
+  box-shadow:0 2px 10px rgba(0,0,0,0.08);
+}
+
+.traffic-row {
+  display:grid;
+  grid-template-columns:2fr 1fr;
+  gap:10px;
+  padding:13px 16px;
+  border-bottom:1px solid #e5e7eb;
+  font-weight:800;
+}
+
+.traffic-row:last-child {
+  border-bottom:none;
+}
+
+.traffic-row span:last-child {
+  text-align:right;
+}
+
+@media(max-width:700px) {
+  .hero h1 { font-size:30px; }
+
+  .dealer-row {
+    align-items:flex-start;
+  }
+
+  .dealer-actions {
+    width:100%;
+  }
+
+  .btn {
+    flex:1 1 140px;
+  }
+
+  .traffic-row {
+    grid-template-columns:1fr;
+  }
+
+  .traffic-row span:last-child {
+    text-align:left;
+  }
+}
+</style>
 </head>
+
 <body>
 
-  <div class="hero">
-    <h1>Super Admin</h1>
-    <p>Approve and manage dealer accounts</p>
+<div class="hero">
+  <h1>Super Admin</h1>
+  <p>Approve dealers and track CarScoutZA marketing traffic</p>
+</div>
+
+<div class="container">
+  <div class="top-actions">
+    <a href="dealer-admin.html" class="top-btn">Back to Dashboard</a>
+    <a href="index.html" class="top-btn blue">Website</a>
   </div>
 
-  <div class="container">
-    <div class="top-actions">
-      <a href="dealer-admin.html" class="top-btn">Back to Dashboard</a>
-      <a href="index.html" class="top-btn blue">Website</a>
+  <div id="status" class="status">Loading...</div>
+
+  <div class="stats">
+    <div class="stat-card">
+      <strong id="totalVisits">0</strong>
+      <span>Total Site Visits</span>
     </div>
 
-    <div id="status" class="status">Loading...</div>
-    <div id="dealerList" class="dealer-list"></div>
+    <div class="stat-card">
+      <strong id="todayVisits">0</strong>
+      <span>Visits Today</span>
+    </div>
+
+    <div class="stat-card">
+      <strong id="dealerPageVisits">0</strong>
+      <span>Dealer Page Visits</span>
+    </div>
+
+    <div class="stat-card">
+      <strong id="detailPageVisits">0</strong>
+      <span>Vehicle Detail Visits</span>
+    </div>
+
+    <div class="stat-card">
+      <strong id="homePageVisits">0</strong>
+      <span>Homepage Visits</span>
+    </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-    const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
-    const supabaseKey = "sb_publishable_D7saHOTE_JhSlMnSgBnIhQ_mOAOUD9s";
-    const client = window.supabase.createClient(supabaseUrl, supabaseKey);
+  <div class="section-title">Top Dealer Traffic</div>
+  <div id="dealerTraffic" class="traffic-table">
+    <div class="traffic-row">
+      <span>Loading dealer traffic...</span>
+      <span></span>
+    </div>
+  </div>
 
-    const ADMIN_EMAIL = "autoexcellence@telkomsa.net";
+  <div class="section-title">Dealers</div>
+  <div id="dealerList" class="dealer-list"></div>
+</div>
 
-    function setStatus(msg) {
-      document.getElementById("status").textContent = msg;
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
+const supabaseKey = "sb_publishable_D7saHOTE_JhSlMnSgBnIhQ_mOAOUD9s";
+const client = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+const ADMIN_EMAIL = "autoexcellence@telkomsa.net";
+
+function setStatus(msg) {
+  document.getElementById("status").textContent = msg;
+}
+
+function getDealerLocation(d) {
+  const combined = [d.town, d.province].filter(Boolean).join(", ");
+  return combined || d.location || "-";
+}
+
+function isToday(dateString) {
+  if (!dateString) return false;
+
+  const d = new Date(dateString);
+  const now = new Date();
+
+  return d.getFullYear() === now.getFullYear() &&
+         d.getMonth() === now.getMonth() &&
+         d.getDate() === now.getDate();
+}
+
+async function startAdmin() {
+  setStatus("Checking admin access...");
+
+  const { data, error } = await client.auth.getUser();
+
+  if (error || !data || !data.user) {
+    window.location.href = "login.html";
+    return;
+  }
+
+  const email = (data.user.email || "").toLowerCase().trim();
+
+  if (email !== ADMIN_EMAIL.toLowerCase()) {
+    setStatus("Access denied.");
+    setTimeout(() => {
+      window.location.href = "dealer-admin.html";
+    }, 1000);
+    return;
+  }
+
+  setStatus("Admin access granted.");
+
+  await loadTrafficStats();
+  await loadDealers();
+}
+
+async function loadTrafficStats() {
+  const { data, error } = await client
+    .from("site_visits")
+    .select("*")
+    .order("created_at", { ascending:false });
+
+  if (error) {
+    console.log(error);
+    document.getElementById("dealerTraffic").innerHTML = `
+      <div class="traffic-row">
+        <span>Could not load traffic stats</span>
+        <span>-</span>
+      </div>
+    `;
+    return;
+  }
+
+  const visits = data || [];
+
+  const total = visits.length;
+  const today = visits.filter(v => isToday(v.created_at)).length;
+  const dealerVisits = visits.filter(v => v.page === "dealer").length;
+  const detailVisits = visits.filter(v => v.page === "details").length;
+  const homeVisits = visits.filter(v => v.page === "home").length;
+
+  document.getElementById("totalVisits").textContent = total;
+  document.getElementById("todayVisits").textContent = today;
+  document.getElementById("dealerPageVisits").textContent = dealerVisits;
+  document.getElementById("detailPageVisits").textContent = detailVisits;
+  document.getElementById("homePageVisits").textContent = homeVisits;
+
+  const dealerCounts = {};
+
+  visits.forEach(function(v) {
+    const dealerName = v.dealer || "Unknown Dealer";
+
+    if (v.page === "dealer") {
+      dealerCounts[dealerName] = (dealerCounts[dealerName] || 0) + 1;
     }
+  });
 
-    function getDealerLocation(d) {
-      const combined = [d.town, d.province].filter(Boolean).join(", ");
-      return combined || d.location || "-";
-    }
+  const sortedDealers = Object.keys(dealerCounts)
+    .map(name => ({ name:name, visits:dealerCounts[name] }))
+    .sort((a,b) => b.visits - a.visits)
+    .slice(0,10);
 
-    async function startAdmin() {
-      setStatus("Checking admin access...");
+  const trafficBox = document.getElementById("dealerTraffic");
 
-      const { data, error } = await client.auth.getUser();
+  if (!sortedDealers.length) {
+    trafficBox.innerHTML = `
+      <div class="traffic-row">
+        <span>No dealer page visits yet</span>
+        <span>0</span>
+      </div>
+    `;
+    return;
+  }
 
-      if (error || !data || !data.user) {
-        window.location.href = "login.html";
-        return;
-      }
+  trafficBox.innerHTML = sortedDealers.map(function(item) {
+    return `
+      <div class="traffic-row">
+        <span>${item.name}</span>
+        <span>${item.visits} visits</span>
+      </div>
+    `;
+  }).join("");
+}
 
-      const email = (data.user.email || "").toLowerCase().trim();
+async function loadDealers() {
+  setStatus("Loading dealers...");
 
-      if (email !== ADMIN_EMAIL.toLowerCase()) {
-        setStatus("Access denied.");
-        setTimeout(() => {
-          window.location.href = "dealer-admin.html";
-        }, 1000);
-        return;
-      }
+  const { data, error } = await client
+    .from("profiles")
+    .select("*")
+    .order("dealer_name", { ascending:true });
 
-      setStatus("Admin access granted.");
-      await loadDealers();
-    }
+  const list = document.getElementById("dealerList");
+  list.innerHTML = "";
 
-    async function loadDealers() {
-      setStatus("Loading dealers...");
+  if (error) {
+    console.log(error);
+    setStatus("Error loading dealers.");
+    list.innerHTML = '<div class="empty-box">Could not load dealers.</div>';
+    return;
+  }
 
-      const { data, error } = await client
-        .from("profiles")
-        .select("*")
-        .order("dealer_name", { ascending: true });
+  if (!data || data.length === 0) {
+    setStatus("No dealers found.");
+    list.innerHTML = '<div class="empty-box">No dealer profiles found.</div>';
+    return;
+  }
 
-      const list = document.getElementById("dealerList");
-      list.innerHTML = "";
+  data.forEach(d => {
+    const row = document.createElement("div");
+    row.className = "dealer-row";
 
-      if (error) {
-        console.log(error);
-        setStatus("Error loading dealers.");
-        list.innerHTML = '<div class="empty-box">Could not load dealers.</div>';
-        return;
-      }
+    const dealerLink = "https://carscoutza.com/dealer.html?id=" + encodeURIComponent(d.id);
 
-      if (!data || data.length === 0) {
-        setStatus("No dealers found.");
-        list.innerHTML = '<div class="empty-box">No dealer profiles found.</div>';
-        return;
-      }
+    row.innerHTML = `
+      <div class="dealer-info">
+        <div class="dealer-name">${d.dealer_name || "No Dealer Name"}</div>
+        <div class="dealer-meta"><strong>Phone:</strong> ${d.phone || "-"}</div>
+        <div class="dealer-meta"><strong>Location:</strong> ${getDealerLocation(d)}</div>
+        <div class="dealer-meta"><strong>Dealer Link:</strong> ${dealerLink}</div>
+        <div class="dealer-status">Status: ${d.is_active ? "Active" : "Inactive"}</div>
+      </div>
 
-      data.forEach(d => {
-        const row = document.createElement("div");
-        row.className = "dealer-row";
+      <div class="dealer-actions">
+        <button class="btn btn-green" onclick="setDealerStatus('${d.id}', true)">Activate</button>
+        <button class="btn btn-red" onclick="setDealerStatus('${d.id}', false)">Deactivate</button>
+        <button class="btn btn-blue" onclick="copyText('${dealerLink}')">Copy Link</button>
+        <a href="${dealerLink}" target="_blank" class="btn btn-dark">Open</a>
+      </div>
+    `;
 
-        row.innerHTML = `
-          <div class="dealer-info">
-            <div class="dealer-name">${d.dealer_name || "No Dealer Name"}</div>
-            <div class="dealer-meta"><strong>Phone:</strong> ${d.phone || "-"}</div>
-            <div class="dealer-meta"><strong>Location:</strong> ${getDealerLocation(d)}</div>
-            <div class="dealer-status">Status: ${d.is_active ? "Active" : "Inactive"}</div>
-          </div>
+    list.appendChild(row);
+  });
 
-          <div class="dealer-actions">
-            <button class="btn btn-green" onclick="setDealerStatus('${d.id}', true)">Activate</button>
-            <button class="btn btn-red" onclick="setDealerStatus('${d.id}', false)">Deactivate</button>
-          </div>
-        `;
+  setStatus("All dealers and traffic stats loaded.");
+}
 
-        list.appendChild(row);
-      });
+function copyText(text) {
+  navigator.clipboard.writeText(text).then(function() {
+    alert("Dealer link copied!");
+  }).catch(function() {
+    alert("Could not copy link.");
+  });
+}
 
-      setStatus("All dealers loaded.");
-    }
+async function setDealerStatus(id, active) {
+  setStatus(active ? "Activating dealer..." : "Deactivating dealer...");
 
-    async function setDealerStatus(id, active) {
-      setStatus(active ? "Activating dealer..." : "Deactivating dealer...");
+  const { error } = await client
+    .from("profiles")
+    .update({ is_active: active })
+    .eq("id", id);
 
-      const { error } = await client
-        .from("profiles")
-        .update({ is_active: active })
-        .eq("id", id);
+  if (error) {
+    console.log(error);
+    setStatus("Error updating dealer.");
+    return;
+  }
 
-      if (error) {
-        console.log(error);
-        setStatus("Error updating dealer.");
-        return;
-      }
+  setStatus(active ? "Dealer activated." : "Dealer deactivated.");
+  await loadDealers();
+}
 
-      setStatus(active ? "Dealer activated." : "Dealer deactivated.");
-      await loadDealers();
-    }
-
-    startAdmin();
-  </script>
+startAdmin();
+</script>
 
 </body>
 </html>
