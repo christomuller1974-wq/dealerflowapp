@@ -377,8 +377,8 @@ async function loadDealerVehicles() {
   const params = getParams();
   const container = document.getElementById("vehicleList");
 
-  currentDealerName = params.dealer;
-  currentDealerId = params.id;
+  currentDealerName = params.dealer ? params.dealer.replace(/-/g, " ") : "";
+currentDealerId = params.id;
 
   if (!currentDealerName && !currentDealerId) {
     setStatus("Missing dealer.");
