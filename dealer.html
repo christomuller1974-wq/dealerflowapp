@@ -1,514 +1,438 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Dealer Stock | CarScoutZA</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <title id="pageTitle">Dealer Stock | CarScoutZA</title>
 
-<style>
-* { box-sizing: border-box; }
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #eef1f5;
-  color: #111827;
-}
+  <meta
+    name="description"
+    content="Browse dealer vehicles on CarScoutZA"
+  />
 
-.hero {
-  background: linear-gradient(135deg,#111827,#1e3a8a,#2563eb);
-  color: white;
-  text-align: center;
-  padding: 42px 18px 34px;
-}
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #dfe3ea;
+      color: #111827;
+    }
 
-.hero h1 {
-  margin: 0;
-  font-size: 42px;
-  font-weight: 900;
-}
+    .hero {
+      background: linear-gradient(135deg, #3156c7, #1f3f9e);
+      color: white;
+      text-align: center;
+      padding: 34px 18px 24px;
+    }
 
-.hero p {
-  margin: 10px 0 0;
-  font-size: 17px;
-}
+    .hero h1 {
+      margin: 0;
+      font-size: 42px;
+      font-weight: 800;
+    }
 
-.container {
-  max-width: 1250px;
-  margin: 0 auto;
-  padding: 18px;
-}
+    .hero p {
+      margin: 10px 0 0;
+      font-size: 18px;
+    }
 
-.top-actions {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-bottom: 16px;
-}
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 18px;
+    }
 
-.top-btn {
-  display: inline-block;
-  text-decoration: none;
-  background: #111827;
-  color: white;
-  padding: 11px 14px;
-  border-radius: 10px;
-  font-size: 13px;
-  font-weight: 900;
-  border: none;
-  cursor: pointer;
-}
+    .top-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
 
-.top-btn.blue { background: #2563eb; }
-.top-btn.green { background: #16a34a; }
+    .top-btn {
+      display: inline-block;
+      text-decoration: none;
+      background: #1f2937;
+      color: white;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+    }
 
-.status {
-  background: white;
-  border-radius: 12px;
-  padding: 12px 14px;
-  margin-bottom: 16px;
-  font-weight: 900;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-}
+    .top-btn.blue {
+      background: #3156c7;
+    }
 
-.dealer-box {
-  background:white;
-  border-radius:16px;
-  padding:16px;
-  margin-bottom:18px;
-  box-shadow:0 4px 14px rgba(0,0,0,0.10);
-}
+    .status {
+      background: white;
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 16px;
+      font-weight: bold;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
 
-.dealer-box h2 {
-  margin:0 0 8px;
-  font-size:26px;
-}
+    .vehicle-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 18px;
+    }
 
-.dealer-link {
-  background:#f8fafc;
-  border:1px solid #e2e8f0;
-  padding:12px;
-  border-radius:12px;
-  font-size:14px;
-  word-break:break-all;
-  color:#334155;
-}
+    .vehicle-card {
+      background: white;
+      border-radius: 16px;
+      padding: 14px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.10);
+    }
 
-.vehicle-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 22px;
-}
+    .vehicle-thumb {
+      width: 100%;
+      height: 210px;
+      object-fit: cover;
+      border-radius: 12px;
+      background: #e5e7eb;
+      display: block;
+    }
 
-.vehicle-card {
-  background: white;
-  border-radius: 18px;
-  overflow: hidden;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.10);
-  transition:0.25s;
-}
+    .vehicle-title {
+      margin: 12px 0 8px;
+      font-size: 18px;
+      font-weight: 800;
+      line-height: 1.25;
+    }
 
-.vehicle-card:hover {
-  transform:translateY(-5px);
-  box-shadow:0 16px 34px rgba(0,0,0,0.16);
-}
+    .vehicle-meta {
+      font-size: 14px;
+      color: #475569;
+      margin-bottom: 4px;
+    }
 
-.vehicle-thumb-wrap {
-  position:relative;
-  background:#e5e7eb;
-  overflow:hidden;
-}
+    .price {
+      color: #dc2626;
+      font-size: 18px;
+      font-weight: 800;
+      margin: 8px 0 10px;
+    }
 
-.vehicle-thumb {
-  width: 100%;
-  height: 190px;
-  object-fit: cover;
-  display: block;
-}
+    .button-stack {
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+    }
 
-.photo-badge {
-  position:absolute;
-  right:10px;
-  bottom:10px;
-  background:rgba(17,24,39,0.86);
-  color:white;
-  padding:6px 10px;
-  border-radius:999px;
-  font-size:12px;
-  font-weight:900;
-}
+    .btn {
+      display: block;
+      width: 100%;
+      text-align: center;
+      text-decoration: none;
+      color: white;
+      padding: 11px 12px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 14px;
+    }
 
-.vehicle-body {
-  padding:14px;
-}
+    .btn-blue { background: #3156c7; }
+    .btn-dark { background: #1f2937; }
+    .btn-whatsapp { background: #25d366; }
 
-.vehicle-title {
-  margin: 0 0 10px;
-  font-size: 18px;
-  font-weight: 900;
-  line-height: 1.25;
-  min-height:44px;
-}
+    .empty-box {
+      background: white;
+      border-radius: 14px;
+      padding: 24px;
+      text-align: center;
+      color: #475569;
+      font-weight: 700;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
 
-.vehicle-meta {
-  font-size: 14px;
-  color: #475569;
-  margin-top: 6px;
-}
+    @media (max-width: 700px) {
+      .hero h1 {
+        font-size: 34px;
+      }
 
-.price {
-  color: #dc2626;
-  font-size: 21px;
-  font-weight: 900;
-  margin: 10px 0;
-}
-
-.button-stack {
-  display: grid;
-  gap: 8px;
-  margin-top: 10px;
-}
-
-.btn {
-  display: block;
-  width: 100%;
-  text-align: center;
-  text-decoration: none;
-  color: white;
-  padding: 12px;
-  border-radius: 12px;
-  font-weight: 900;
-  font-size: 14px;
-  border:none;
-  cursor:pointer;
-}
-
-.btn-blue { background: #2563eb; }
-.btn-dark { background: #111827; }
-.btn-whatsapp { background: #25d366; }
-
-.empty-box {
-  grid-column:1/-1;
-  background: white;
-  border-radius: 14px;
-  padding: 28px;
-  text-align: center;
-  color: #475569;
-  font-weight: 900;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-}
-
-@media (max-width: 700px) {
-  .hero h1 { font-size: 34px; }
-  .vehicle-grid { grid-template-columns: 1fr; }
-
-  .top-btn {
-    flex:1;
-    text-align:center;
-  }
-
-  .vehicle-thumb {
-    height:220px;
-  }
-}
-</style>
+      .vehicle-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<div class="hero">
-  <h1 id="dealerTitle">Dealer Stock</h1>
-  <p>Browse vehicles from this dealer on CarScoutZA</p>
-</div>
-
-<div class="container">
-
-  <div class="top-actions">
-    <a href="index.html" class="top-btn">View All Cars</a>
-    <a href="dealer-admin.html" class="top-btn blue">Dealer Login</a>
-    <button class="top-btn green" onclick="copyDealerLink()">Copy Dealer Link</button>
+  <div class="hero">
+    <h1 id="dealerTitle">Dealer Stock</h1>
+    <p>Browse available vehicles from this dealer</p>
   </div>
 
-  <div id="status" class="status">Loading dealer stock...</div>
+  <div class="container">
 
-  <div class="dealer-box">
-    <h2 id="dealerNameBox">Dealer</h2>
-    <div class="dealer-link" id="dealerShareLink">Dealer link loading...</div>
+    <div class="top-actions">
+      <a href="index.html" class="top-btn">Back to Website</a>
+      <a href="dealer-admin.html" class="top-btn blue">Dealer Login</a>
+    </div>
+
+    <div id="status" class="status">
+      Loading dealer stock...
+    </div>
+
+    <div id="vehicleList" class="vehicle-grid"></div>
+
   </div>
 
-  <div id="vehicleList" class="vehicle-grid"></div>
+  <script>
+    const supabaseUrl =
+      "https://ddmvzypiccryjndcwlre.supabase.co";
 
-</div>
+    const supabaseKey =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
 
-<script>
-const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
-
-let currentDealerName = "";
-let currentDealerId = "";
-
-function setStatus(message) {
-  document.getElementById("status").textContent = message;
-}
-
-function getParams() {
-  const params = new URLSearchParams(window.location.search);
-
-  return {
-    dealer: params.get("dealer") || "",
-    id: params.get("id") || ""
-  };
-}
-
-function buildDealerLink() {
-  const base = "https://carscoutza.com/dealer.html";
-
-  if (currentDealerId) {
-    return base + "?id=" + encodeURIComponent(currentDealerId);
-  }
-
-  return base + "?dealer=" + encodeURIComponent(currentDealerName);
-}
-
-function copyDealerLink() {
-  const link = buildDealerLink();
-
-  navigator.clipboard.writeText(link).then(function() {
-    alert("Dealer link copied!");
-  }).catch(function() {
-    alert("Could not copy link. Please copy it manually.");
-  });
-}
-
-function getImages(vehicle) {
-  let arr = [];
-
-  if (vehicle.image && String(vehicle.image).trim()) {
-    arr.push(String(vehicle.image).trim());
-  }
-
-  if (vehicle.images && String(vehicle.images).trim()) {
-    String(vehicle.images).split(",").forEach(function(img) {
-      const clean = img.trim();
-      if (clean && !arr.includes(clean)) arr.push(clean);
-    });
-  }
-
-  if (!arr.length) {
-    arr.push("https://via.placeholder.com/400x300?text=No+Image");
-  }
-
-  return arr;
-}
-
-function formatPrice(price) {
-  const num = Number(String(price || "").replace(/\D/g, ""));
-  if (!num) return "R0";
-  return "R" + num.toLocaleString("en-ZA");
-}
-
-function cleanPhone(phone) {
-  return String(phone || "").replace(/\D/g, "");
-}
-
-function whatsappLink(phone, title) {
-  let phoneClean = cleanPhone(phone);
-  if (!phoneClean) return "#";
-
-  if (phoneClean.startsWith("0")) {
-    phoneClean = "27" + phoneClean.substring(1);
-  }
-
-  return "https://wa.me/" + phoneClean +
-    "?text=" + encodeURIComponent("Hi, I saw the " + (title || "vehicle") + " on CarScoutZA and I'm interested.");
-}
-
-function callLink(phone) {
-  const phoneClean = cleanPhone(phone);
-  if (!phoneClean) return "#";
-  return "tel:" + phoneClean;
-}
-
-async function trackSiteVisit(page, dealerName, vehicleId) {
-  try {
-    await fetch(supabaseUrl + "/rest/v1/site_visits", {
-      method: "POST",
-      headers: {
-        apikey: supabaseKey,
-        Authorization: "Bearer " + supabaseKey,
-        "Content-Type": "application/json",
-        Prefer: "return=minimal"
-      },
-      body: JSON.stringify({
-        page: page,
-        dealer: dealerName || null,
-        vehicle_id: vehicleId || null
-      })
-    });
-  } catch (err) {
-    console.log("Visit tracking skipped", err);
-  }
-}
-
-async function trackVehicleClick(type, vehicle) {
-  if (!vehicle || !vehicle.id) return;
-
-  try {
-    await fetch(supabaseUrl + "/rest/v1/vehicle_clicks", {
-      method: "POST",
-      headers: {
-        apikey: supabaseKey,
-        Authorization: "Bearer " + supabaseKey,
-        "Content-Type": "application/json",
-        Prefer: "return=minimal"
-      },
-      body: JSON.stringify({
-        vehicle_id: vehicle.id,
-        dealer_user_id: vehicle.user_id || null,
-        click_type: type
-      })
-    });
-  } catch (err) {
-    console.log("Click tracking skipped", err);
-  }
-}
-
-async function loadDealerVehicles() {
-  const params = getParams();
-  const container = document.getElementById("vehicleList");
-
-  currentDealerName = params.dealer ? params.dealer.replace(/-/g, " ") : "";
-currentDealerId = params.id;
-
-  if (!currentDealerName && !currentDealerId) {
-    setStatus("Missing dealer.");
-    container.innerHTML = '<div class="empty-box">Dealer not found.</div>';
-    document.getElementById("dealerShareLink").textContent = "No dealer link available.";
-    return;
-  }
-
-  setStatus("Loading dealer stock...");
-
-  try {
-    let url = supabaseUrl + "/rest/v1/active_vehicles?select=*&order=id.desc";
-
-    if (currentDealerId) {
-      url += "&user_id=eq." + encodeURIComponent(currentDealerId);
-    } else {
-      url += "&dealer=eq." + encodeURIComponent(currentDealerName);
+    function setStatus(message) {
+      document.getElementById("status").textContent = message;
     }
 
-    const res = await fetch(url, {
-      headers: {
-        apikey: supabaseKey,
-        Authorization: "Bearer " + supabaseKey
+    function getDealerFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+
+      const dealer =
+        params.get("dealer") || "";
+
+      return dealer.replace(/-/g, " ");
+    }
+
+    function getMainImage(vehicle) {
+
+      if (
+        vehicle.image &&
+        typeof vehicle.image === "string" &&
+        vehicle.image.trim() !== ""
+      ) {
+        return vehicle.image.trim();
       }
-    });
 
-    const data = await res.json();
-    container.innerHTML = "";
+      if (
+        vehicle.images &&
+        typeof vehicle.images === "string" &&
+        vehicle.images.trim() !== ""
+      ) {
+        return vehicle.images
+          .split(",")[0]
+          .trim();
+      }
 
-    if (!Array.isArray(data) || data.length === 0) {
-      setStatus("No vehicles found.");
-      container.innerHTML = '<div class="empty-box">No vehicles found for this dealer.</div>';
-      return;
+      return "https://via.placeholder.com/400x250?text=No+Image";
     }
 
-    const firstVehicle = data[0];
+    function cleanPhone(phone) {
+      return String(phone || "")
+        .replace(/\s+/g, "");
+    }
 
-    currentDealerName =
-      firstVehicle.dealer ||
-      firstVehicle.dealer_name ||
-      currentDealerName ||
-      "Dealer";
+    function whatsappLink(phone, title) {
 
-    currentDealerId =
-      firstVehicle.user_id ||
-      currentDealerId ||
-      "";
+      const phoneClean = cleanPhone(phone);
 
-    document.getElementById("dealerTitle").textContent = currentDealerName;
-    document.getElementById("dealerNameBox").textContent = currentDealerName;
-    document.getElementById("dealerShareLink").textContent = buildDealerLink();
+      if (!phoneClean) return "#";
 
-    trackSiteVisit("dealer", currentDealerName, null);
+      return (
+        "https://wa.me/27" +
+        phoneClean.replace(/^0/, "") +
+        "?text=" +
+        encodeURIComponent(
+          "Hi, I'm interested in the " +
+          (title || "vehicle") +
+          "."
+        )
+      );
+    }
 
-    data.forEach(function(vehicle) {
-      const vehicleImages = getImages(vehicle);
-      const mainImage = vehicleImages[0];
-      const fallbackTitle = [vehicle.year, vehicle.make, vehicle.model].filter(Boolean).join(" ");
-      const title = vehicle.title || fallbackTitle || "Vehicle";
-      const phone = vehicle.phone || vehicle.dealer_phone || "";
+    function callLink(phone) {
 
-      const card = document.createElement("div");
-      card.className = "vehicle-card";
+      const phoneClean = cleanPhone(phone);
 
-      card.innerHTML = `
-        <div class="vehicle-thumb-wrap">
-          <img
-            src="${mainImage}"
-            class="vehicle-thumb"
-            alt="${title}"
-            onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'"
-          >
-          <div class="photo-badge">📷 ${vehicleImages.length}</div>
-        </div>
+      if (!phoneClean) return "#";
 
-        <div class="vehicle-body">
-          <div class="vehicle-title">${title}</div>
-          <div class="price">${formatPrice(vehicle.price)}</div>
-          <div class="vehicle-meta">📍 ${vehicle.location || "-"}</div>
-          <div class="vehicle-meta">🚗 ${vehicle.mileage || "-"}</div>
+      return "tel:" + phoneClean;
+    }
 
-          <div class="button-stack">
-            <a href="details.html?id=${vehicle.id}" onclick="trackVehicleClick('view', vehicleMap[${vehicle.id}])" class="btn btn-blue">View Details</a>
-            <a href="${callLink(phone)}" onclick="trackVehicleClick('call', vehicleMap[${vehicle.id}])" class="btn btn-dark">Call</a>
-            <a href="${whatsappLink(phone, title)}" onclick="trackVehicleClick('whatsapp', vehicleMap[${vehicle.id}])" target="_blank" class="btn btn-whatsapp">WhatsApp</a>
+    async function loadDealerVehicles() {
+
+      const dealerName = getDealerFromUrl();
+
+      const container =
+        document.getElementById("vehicleList");
+
+      if (!dealerName) {
+
+        setStatus("Missing dealer name.");
+
+        container.innerHTML = `
+          <div class="empty-box">
+            Dealer not found.
           </div>
-        </div>
-      `;
+        `;
 
-      container.appendChild(card);
-    });
-
-    setStatus(data.length + " vehicles loaded from " + currentDealerName + ".");
-  } catch (err) {
-    console.error(err);
-    setStatus("Could not load dealer stock.");
-    container.innerHTML = '<div class="empty-box">Could not load dealer stock.</div>';
-  }
-}
-
-let vehicleMap = {};
-
-async function start() {
-  await loadDealerVehicles();
-
-  try {
-    const res = await fetch(
-      supabaseUrl + "/rest/v1/active_vehicles?select=id,user_id",
-      {
-        headers: {
-          apikey: supabaseKey,
-          Authorization: "Bearer " + supabaseKey
-        }
+        return;
       }
-    );
 
-    const all = await res.json();
+      document.getElementById("dealerTitle").textContent =
+        dealerName;
 
-    if (Array.isArray(all)) {
-      all.forEach(function(v) {
-        vehicleMap[v.id] = v;
-      });
+      document.title =
+        dealerName + " | CarScoutZA";
+
+      const metaDesc =
+        document.querySelector(
+          'meta[name="description"]'
+        );
+
+      if (metaDesc) {
+        metaDesc.setAttribute(
+          "content",
+          "Browse vehicles from " +
+          dealerName +
+          " on CarScoutZA."
+        );
+      }
+
+      setStatus("Loading dealer stock...");
+
+      try {
+
+        const url =
+          supabaseUrl +
+          "/rest/v1/active_vehicles?select=*&dealer=eq." +
+          encodeURIComponent(dealerName) +
+          "&order=id.desc";
+
+        const res = await fetch(url, {
+          headers: {
+            apikey: supabaseKey,
+            Authorization:
+              "Bearer " + supabaseKey
+          }
+        });
+
+        const data = await res.json();
+
+        container.innerHTML = "";
+
+        if (
+          !Array.isArray(data) ||
+          data.length === 0
+        ) {
+
+          setStatus("No vehicles found.");
+
+          container.innerHTML = `
+            <div class="empty-box">
+              No vehicles found for this dealer.
+            </div>
+          `;
+
+          return;
+        }
+
+        data.forEach(vehicle => {
+
+          const mainImage =
+            getMainImage(vehicle);
+
+          const fallbackTitle =
+            [
+              vehicle.year,
+              vehicle.make,
+              vehicle.model
+            ]
+            .filter(Boolean)
+            .join(" ");
+
+          const title =
+            vehicle.title ||
+            fallbackTitle ||
+            "No Title";
+
+          const card =
+            document.createElement("div");
+
+          card.className = "vehicle-card";
+
+          card.innerHTML = `
+            <img
+              src="${mainImage}"
+              class="vehicle-thumb"
+              alt="${title}"
+              onerror="this.src='https://via.placeholder.com/400x250?text=No+Image'"
+            >
+
+            <div class="vehicle-title">
+              ${title}
+            </div>
+
+            <div class="vehicle-meta">
+              Year: ${vehicle.year || "-"}
+            </div>
+
+            <div class="vehicle-meta">
+              Location: ${vehicle.location || "-"}
+            </div>
+
+            <div class="price">
+              R${vehicle.price || 0}
+            </div>
+
+            <div class="button-stack">
+
+              <a
+                href="details.html?id=${vehicle.id}"
+                class="btn btn-blue"
+              >
+                View
+              </a>
+
+              <a
+                href="${callLink(vehicle.phone)}"
+                class="btn btn-dark"
+              >
+                Call
+              </a>
+
+              <a
+                href="${whatsappLink(vehicle.phone, title)}"
+                target="_blank"
+                class="btn btn-whatsapp"
+              >
+                WhatsApp
+              </a>
+
+            </div>
+          `;
+
+          container.appendChild(card);
+        });
+
+        setStatus("Dealer stock loaded.");
+
+      } catch (err) {
+
+        console.error(err);
+
+        setStatus(
+          "Could not load dealer stock."
+        );
+
+        container.innerHTML = `
+          <div class="empty-box">
+            Could not load dealer stock.
+          </div>
+        `;
+      }
     }
-  } catch (err) {
-    console.log("Vehicle map skipped", err);
-  }
-}
 
-start();
-</script>
+    loadDealerVehicles();
+  </script>
 
 </body>
 </html>
