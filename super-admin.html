@@ -428,7 +428,11 @@ async function loadDealers() {
     const row = document.createElement("div");
     row.className = "dealer-row";
 
-    const dealerLink = "https://carscoutza.com/dealer.html?id=" + encodeURIComponent(d.id);
+    const dealerSlug = (d.dealer_name || "dealer")
+  .trim()
+  .replace(/\s+/g, "-");
+
+const dealerLink = "https://carscoutza.com/dealer.html?dealer=" + encodeURIComponent(dealerSlug);
 
     row.innerHTML = `
       <div class="dealer-info">
