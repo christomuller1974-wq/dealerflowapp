@@ -388,7 +388,16 @@ function getMainImage(vehicle) {
 function buildDealerLink() {
   if (!currentUser) return "https://carscoutza.com/dealer.html";
 
-  return "https://carscoutza.com/dealer.html?id=" + encodeURIComponent(currentUser.id);
+  const dealerName =
+  currentProfile.dealer_name ||
+  currentProfile.dealer ||
+  "dealer";
+
+const dealerSlug = dealerName
+  .trim()
+  .replace(/\s+/g, "-");
+
+return "https://carscoutza.com/dealer.html?dealer=" + encodeURIComponent(dealerSlug);
 }
 
 function updateDealerLinkBox() {
