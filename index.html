@@ -663,8 +663,14 @@ async function loadCars(){
             </div>
 
             <div class="meta">
-              🏢 ${v.dealer || v.dealer_name || "Dealer"}
-            </div>
+🏢 
+<a 
+  href="dealer.html?dealer=${encodeURIComponent(v.dealer || v.dealer_name || 'Dealer')}" 
+  style="color:#2563eb;text-decoration:none;font-weight:800;"
+>
+  ${v.dealer || v.dealer_name || "Dealer"}
+</a>
+</div>
 
           </div>
 
