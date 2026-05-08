@@ -663,17 +663,33 @@ let featuredHtml = "";
       const img =
         vehicleImages[0];
 
-      const featured =
-        v.featured
-        ? '<div class="featured-badge">Featured</div>'
-        : "";
+      grid.innerHTML = html || '<div class="empty">No normal vehicles found</div>';
 
-      const cardHtml = `if (v.featured) {
-  featuredHtml += cardHtml;
+const featuredWrap = document.getElementById("featuredWrap");
+const featuredGrid = document.getElementById("featuredGrid");
+
+if (featuredHtml) {
+  featuredWrap.style.display = "block";
+  featuredGrid.innerHTML = featuredHtml;
 } else {
-  html += cardHtml;
+  featuredWrap.style.display = "none";
+  featuredGrid.innerHTML = "";
 }
-        <div class="card">
+
+      const isFeatured =
+  v.featured === true ||
+  v.featured === "true" ||
+  v.featured === 1 ||
+  v.featured === "1";
+
+const featured =
+  isFeatured
+  ? '<div class="featured-badge">Featured</div>'
+  : "";
+
+const cardHtml = `
+  <div class="card">
+  
 
           <div class="img-wrap">
 
@@ -736,7 +752,19 @@ let featuredHtml = "";
           </a>
 
         </div>
-      `;
+      `;const isFeatured =
+  v.featured === true ||
+  v.featured === "true" ||
+  v.featured === 1 ||
+  v.featured === "1";
+
+const featured =
+  isFeatured
+  ? '<div class="featured-badge">Featured</div>'
+  : "";
+
+const cardHtml = `
+  <div class="card">
     });
 
     grid.innerHTML = html || '<div class="empty">No normal vehicles found</div>';
