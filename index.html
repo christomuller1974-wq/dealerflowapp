@@ -646,6 +646,7 @@ data.sort(function(a, b){
     }
 
     let html = "";
+let featuredHtml = "";
 
     data.forEach(function(v){
 
@@ -667,7 +668,11 @@ data.sort(function(a, b){
         ? '<div class="featured-badge">Featured</div>'
         : "";
 
-      html += `
+      const cardHtml = `if (v.featured) {
+  featuredHtml += cardHtml;
+} else {
+  html += cardHtml;
+}
         <div class="card">
 
           <div class="img-wrap">
@@ -734,7 +739,18 @@ data.sort(function(a, b){
       `;
     });
 
-    grid.innerHTML = html;
+    grid.innerHTML = html || '<div class="empty">No normal vehicles found</div>';
+
+const featuredWrap = document.getElementById("featuredWrap");
+const featuredGrid = document.getElementById("featuredGrid");
+
+if (featuredHtml) {
+  featuredWrap.style.display = "block";
+  featuredGrid.innerHTML = featuredHtml;
+} else {
+  featuredWrap.style.display = "none";
+  featuredGrid.innerHTML = "";
+}
 
   } catch(err) {
 
