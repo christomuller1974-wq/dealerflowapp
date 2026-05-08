@@ -456,345 +456,666 @@ html, body {
 
 <script>
 const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
+
+const supabaseKey =
+"PASTE_YOUR_SUPABASE_KEY";
 
 let images = [];
 let current = 0;
 let currentVehicle = null;
 let currentTitle = "";
 
-function setStatus(message) {
+function setStatus(message){
   document.getElementById("status").textContent = message;
 }
 
-function getId() {
+function getId(){
   return new URLSearchParams(window.location.search).get("id");
 }
 
-function formatPrice(price) {
-  const num = Number(String(price || "").replace(/\D/g, ""));
+function formatPrice(price){
+
+  const num =
+    Number(
+      String(price || "")
+      .replace(/\D/g, "")
+    );
+
   if (!num) return "R0";
-  return "R" + num.toLocaleString("en-ZA");
+
+  return "R" +
+    num.toLocaleString("en-ZA");
 }
 
-function cleanPhone(phone) {
-  return String(phone || "").replace(/\s+/g, "");
+function cleanPhone(phone){
+
+  return String(phone || "")
+    .replace(/\D/g, "");
 }
 
-function callLink(phone) {
-  const phoneClean = cleanPhone(phone);
+function callLink(phone){
+
+  const phoneClean =
+    cleanPhone(phone);
+
   if (!phoneClean) return "#";
+
   return "tel:" + phoneClean;
 }
 
-function whatsappLink(phone, title) {
-  const phoneClean = cleanPhone(phone);
+function whatsappLink(phone, title){
+
+  let phoneClean =
+    cleanPhone(phone);
+
   if (!phoneClean) return "#";
 
-  return "https://wa.me/27" + phoneClean.replace(/^0/, "") +
-    "?text=" + encodeURIComponent("Hi, I'm interested in the " + (title || "vehicle") + ".");
-}
+  if (phoneClean.startsWith("0")) {
 
-function dealerStockLink(vehicle) {
-  const dealerName = vehicle.dealer || vehicle.dealer_name || "Dealer";
-  return "dealer.html?dealer=" + encodeURIComponent(dealerName);
-}
-
-function getImages(vehicle) {
-  const arr = [];
-
-  if (vehicle.image && String(vehicle.image).trim()) {
-    arr.push(String(vehicle.image).trim());
+    phoneClean =
+      "27" + phoneClean.substring(1);
   }
 
-  if (vehicle.images && String(vehicle.images).trim()) {
+  return "https://wa.me/" +
+    phoneClean +
+    "?text=" +
+    encodeURIComponent(
+      "Hi, I saw the " +
+      (title || "vehicle") +
+      " on CarScoutZA and I'm interested."
+    );
+}
+
+function dealerStockLink(vehicle){
+
+  const dealerName =
+    vehicle.dealer ||
+    vehicle.dealer_name ||
+    "Dealer";
+
+  const dealerSlug =
+    dealerName
+      .trim()
+      .replace(/\s+/g, "-");
+
+  return "dealer.html?dealer=" +
+    encodeURIComponent(dealerSlug);
+}
+
+function getImages(vehicle){
+
+  const arr = [];
+
+  if (
+    vehicle.image &&
+    String(vehicle.image).trim()
+  ){
+    arr.push(
+      String(vehicle.image).trim()
+    );
+  }
+
+  if (
+    vehicle.images &&
+    String(vehicle.images).trim()
+  ){
+
     String(vehicle.images)
       .split(",")
       .map(x => x.trim())
       .filter(Boolean)
       .forEach(url => {
-        if (!arr.includes(url)) arr.push(url);
+
+        if (!arr.includes(url)) {
+          arr.push(url);
+        }
       });
   }
 
   if (!arr.length) {
-    arr.push("https://via.placeholder.com/900x600?text=No+Image");
+
+    arr.push(
+      "https://via.placeholder.com/900x600?text=No+Image"
+    );
   }
 
   return arr;
 }
 
-function updateSEO(vehicle, title, imageUrl) {
-  const seoLocation = vehicle.location || vehicle.province || "South Africa";
+function updateSEO(vehicle, title, imageUrl){
 
-  const seoTitle = title + " for sale in " + seoLocation + " | CarScoutZA";
+  const seoLocation =
+    vehicle.location ||
+    vehicle.province ||
+    "South Africa";
+
+  const seoTitle =
+    title +
+    " for sale in " +
+    seoLocation +
+    " | CarScoutZA";
 
   const seoDesc =
-    title + " for sale in " + seoLocation + ". " +
-    (vehicle.mileage ? vehicle.mileage + " km. " : "") +
+    title +
+    " for sale in " +
+    seoLocation +
+    ". " +
+    (
+      vehicle.mileage
+      ? vehicle.mileage + " km. "
+      : ""
+    ) +
     "View price, photos and dealer contact details on CarScoutZA.";
 
   document.title = seoTitle;
-  document.getElementById("pageTitle").textContent = seoTitle;
-  document.getElementById("metaDesc").setAttribute("content", seoDesc);
-  document.getElementById("ogTitle").setAttribute("content", seoTitle);
-  document.getElementById("ogDesc").setAttribute("content", seoDesc);
-  document.getElementById("ogImage").setAttribute("content", imageUrl || "");
+
+  document
+    .getElementById("pageTitle")
+    .textContent = seoTitle;
+
+  document
+    .getElementById("metaDesc")
+    .setAttribute("content", seoDesc);
+
+  document
+    .getElementById("ogTitle")
+    .setAttribute("content", seoTitle);
+
+  document
+    .getElementById("ogDesc")
+    .setAttribute("content", seoDesc);
+
+  document
+    .getElementById("ogImage")
+    .setAttribute("content", imageUrl || "");
 }
 
-async function trackVehicleClick(type, vehicle) {
-  if (!vehicle || !vehicle.id) return;
+async function trackSiteVisit(vehicle){
 
   try {
-    await fetch(supabaseUrl + "/rest/v1/vehicle_clicks", {
-      method: "POST",
-      headers: {
-        apikey: supabaseKey,
-        Authorization: "Bearer " + supabaseKey,
-        "Content-Type": "application/json",
-        Prefer: "return=minimal"
-      },
-      body: JSON.stringify({
-        vehicle_id: vehicle.id,
-        dealer_user_id: vehicle.user_id || null,
-        click_type: type
-      })
-    });
-  } catch (err) {
-    console.log("Click tracking failed", err);
+
+    await fetch(
+      supabaseUrl + "/rest/v1/site_visits",
+      {
+        method:"POST",
+
+        headers:{
+          apikey:supabaseKey,
+          Authorization:"Bearer " + supabaseKey,
+          "Content-Type":"application/json",
+          Prefer:"return=minimal"
+        },
+
+        body: JSON.stringify({
+          page:"details",
+          dealer:
+            vehicle.dealer ||
+            vehicle.dealer_name ||
+            null,
+          vehicle_id:
+            vehicle.id || null
+        })
+      }
+    );
+
+  } catch(err){
+    console.log(err);
   }
 }
 
-function setMain(index) {
-  current = index;
+async function trackVehicleClick(type, vehicle){
 
-  const main = document.getElementById("mainImage");
-  if (main) main.src = images[current];
+  if (!vehicle || !vehicle.id) return;
 
-  document.querySelectorAll(".thumb").forEach((thumb, i) => {
-    thumb.classList.toggle("active", i === current);
-  });
+  try {
 
-  const badge = document.getElementById("imageBadge");
-  if (badge) badge.textContent = "📷 " + (current + 1) + " / " + images.length;
+    await fetch(
+      supabaseUrl + "/rest/v1/vehicle_clicks",
+      {
+        method:"POST",
+
+        headers:{
+          apikey:supabaseKey,
+          Authorization:"Bearer " + supabaseKey,
+          "Content-Type":"application/json",
+          Prefer:"return=minimal"
+        },
+
+        body: JSON.stringify({
+          vehicle_id: vehicle.id,
+          dealer_user_id:
+            vehicle.user_id || null,
+          click_type: type
+        })
+      }
+    );
+
+  } catch(err){
+    console.log(err);
+  }
 }
 
-function openModal(index) {
+function setMain(index){
+
   current = index;
+
+  const main =
+    document.getElementById("mainImage");
+
+  if (main) {
+    main.src = images[current];
+  }
+
+  document
+    .querySelectorAll(".thumb")
+    .forEach((thumb, i) => {
+
+      thumb.classList.toggle(
+        "active",
+        i === current
+      );
+    });
+
+  const badge =
+    document.getElementById("imageBadge");
+
+  if (badge) {
+
+    badge.textContent =
+      "📷 " +
+      (current + 1) +
+      " / " +
+      images.length;
+  }
+}
+
+function openModal(index){
+
+  current = index;
+
   updateModal();
-  document.getElementById("imageModal").classList.add("show");
+
+  document
+    .getElementById("imageModal")
+    .classList.add("show");
 }
 
-function closeModal() {
-  document.getElementById("imageModal").classList.remove("show");
+function closeModal(){
+
+  document
+    .getElementById("imageModal")
+    .classList.remove("show");
 }
 
-function updateModal() {
-  document.getElementById("modalImage").src = images[current];
-  document.getElementById("modalCount").textContent = (current + 1) + " / " + images.length;
+function updateModal(){
+
+  document
+    .getElementById("modalImage")
+    .src = images[current];
+
+  document
+    .getElementById("modalCount")
+    .textContent =
+      (current + 1) +
+      " / " +
+      images.length;
 }
 
-function nextImage() {
+function nextImage(){
+
   if (!images.length) return;
-  current = (current + 1) % images.length;
+
+  current =
+    (current + 1) %
+    images.length;
+
   updateModal();
   setMain(current);
 }
 
-function prevImage() {
+function prevImage(){
+
   if (!images.length) return;
-  current = (current - 1 + images.length) % images.length;
+
+  current =
+    (current - 1 + images.length) %
+    images.length;
+
   updateModal();
   setMain(current);
 }
 
-function openEnquire() {
-  document.getElementById("enquireModal").classList.add("show");
+function openEnquire(){
+
+  document
+    .getElementById("enquireModal")
+    .classList.add("show");
 }
 
-function closeEnquire() {
-  document.getElementById("enquireModal").classList.remove("show");
+function closeEnquire(){
+
+  document
+    .getElementById("enquireModal")
+    .classList.remove("show");
 }
 
-function sendEnquiry() {
-  if (!currentVehicle) {
+function sendEnquiry(){
+
+  if (!currentVehicle){
+
     alert("Vehicle not ready yet.");
     return;
   }
 
-  const name = document.getElementById("enqName").value.trim();
-  const phone = document.getElementById("enqPhone").value.trim();
-  const msg = document.getElementById("enqMsg").value.trim();
+  const name =
+    document.getElementById("enqName")
+    .value.trim();
 
-  if (!name || !phone || !msg) {
-    alert("Please fill in your name, phone and message.");
+  const phone =
+    document.getElementById("enqPhone")
+    .value.trim();
+
+  const msg =
+    document.getElementById("enqMsg")
+    .value.trim();
+
+  if (!name || !phone || !msg){
+
+    alert(
+      "Please complete all fields."
+    );
+
     return;
   }
 
-  const dealerPhone = cleanPhone(currentVehicle.phone || currentVehicle.dealer_phone);
+  const dealerPhone =
+    cleanPhone(
+      currentVehicle.phone ||
+      currentVehicle.dealer_phone
+    );
 
-  if (!dealerPhone) {
-    alert("Dealer phone number missing.");
-    return;
-  }
-
-  trackVehicleClick("whatsapp", currentVehicle);
+  trackVehicleClick(
+    "whatsapp",
+    currentVehicle
+  );
 
   const fullMsg =
-`Vehicle enquiry: ${currentTitle}
+`Vehicle enquiry from CarScoutZA:
+
+Vehicle: ${currentTitle}
 Price: ${formatPrice(currentVehicle.price)}
-From: ${name}
+
+Name: ${name}
 Phone: ${phone}
 
 ${msg}`;
 
-  const url = "https://wa.me/27" + dealerPhone.replace(/^0/, "") +
-    "?text=" + encodeURIComponent(fullMsg);
+  const url =
+    "https://wa.me/27" +
+    dealerPhone.replace(/^0/, "") +
+    "?text=" +
+    encodeURIComponent(fullMsg);
 
   window.open(url, "_blank");
+
   closeEnquire();
 }
 
-document.addEventListener("keydown", function(event) {
-  const imageModal = document.getElementById("imageModal");
-  const enquireModal = document.getElementById("enquireModal");
+async function loadVehicle(){
 
-  if (event.key === "Escape") {
-    imageModal.classList.remove("show");
-    enquireModal.classList.remove("show");
-  }
-
-  if (!imageModal.classList.contains("show")) return;
-
-  if (event.key === "ArrowRight") nextImage();
-  if (event.key === "ArrowLeft") prevImage();
-});
-
-document.getElementById("imageModal").addEventListener("click", function(event) {
-  if (event.target.id === "imageModal") closeModal();
-});
-
-document.getElementById("enquireModal").addEventListener("click", function(event) {
-  if (event.target.id === "enquireModal") closeEnquire();
-});
-
-async function loadVehicle() {
   const id = getId();
 
-  if (!id) {
+  if (!id){
+
     setStatus("Missing vehicle ID.");
-    document.getElementById("content").innerHTML =
-      '<div class="empty-box">Vehicle not found.</div>';
+
     return;
   }
 
   try {
+
     const res = await fetch(
-      supabaseUrl + "/rest/v1/active_vehicles?select=*&id=eq." + encodeURIComponent(id),
+      supabaseUrl +
+      "/rest/v1/active_vehicles?select=*&id=eq." +
+      encodeURIComponent(id),
+
       {
-        headers: {
-          apikey: supabaseKey,
-          Authorization: "Bearer " + supabaseKey
+        headers:{
+          apikey:supabaseKey,
+          Authorization:"Bearer " + supabaseKey
         }
       }
     );
 
-    const data = await res.json();
-    const v = Array.isArray(data) ? data[0] : null;
+    const data =
+      await res.json();
 
-    if (!v) {
+    const v =
+      Array.isArray(data)
+      ? data[0]
+      : null;
+
+    if (!v){
+
       setStatus("Vehicle not found.");
-      document.getElementById("content").innerHTML =
-        '<div class="empty-box">Vehicle not found.</div>';
+
       return;
     }
 
     currentVehicle = v;
-    images = getImages(v);
+
+    images =
+      getImages(v);
+
     current = 0;
 
-    const fallbackTitle = [v.year, v.make, v.model].filter(Boolean).join(" ");
-    const title = v.title || fallbackTitle || "Vehicle";
+    const fallbackTitle =
+      [
+        v.year,
+        v.make,
+        v.model
+      ]
+      .filter(Boolean)
+      .join(" ");
+
+    const title =
+      v.title ||
+      fallbackTitle ||
+      "Vehicle";
+
     currentTitle = title;
 
-    updateSEO(v, title, images[0]);
-    trackVehicleClick("view", v);
+    updateSEO(
+      v,
+      title,
+      images[0]
+    );
 
-    const dealerName = v.dealer || v.dealer_name || "Dealer";
-    const dealerPhone = v.phone || v.dealer_phone || "";
+    trackSiteVisit(v);
+
+    trackVehicleClick(
+      "view",
+      v
+    );
+
+    const dealerName =
+      v.dealer ||
+      v.dealer_name ||
+      "Dealer";
+
+    const dealerPhone =
+      v.phone ||
+      v.dealer_phone ||
+      "";
+
+    const featuredBadge =
+      v.featured
+      ? '<div class="featured-badge">Featured</div>'
+      : "";
 
     let thumbs = "";
+
     images.forEach((img, i) => {
+
       thumbs += `
         <img
           src="${img}"
           class="thumb ${i === 0 ? "active" : ""}"
           onclick="setMain(${i})"
-          onerror="this.src='https://via.placeholder.com/120x90?text=No+Image'"
         >
       `;
     });
 
-    document.getElementById("content").innerHTML = `
+    document
+      .getElementById("content")
+      .innerHTML = `
+
       <div class="layout">
 
         <div>
+
           <div class="gallery-box">
+
             <div class="main-image-wrap">
+
+              ${featuredBadge}
+
               <img
                 id="mainImage"
                 src="${images[0]}"
                 class="main-image"
-                alt="${title}"
                 onclick="openModal(current)"
-                onerror="this.src='https://via.placeholder.com/900x600?text=No+Image'"
               >
-              <div id="imageBadge" class="image-badge">📷 1 / ${images.length}</div>
-              <div class="fullscreen-badge">🔍 Fullscreen</div>
+
+              <div
+                id="imageBadge"
+                class="image-badge"
+              >
+                📷 1 / ${images.length}
+              </div>
+
+              <div class="fullscreen-badge">
+                🔍 Fullscreen
+              </div>
+
             </div>
 
             <div class="thumb-row">
               ${thumbs}
             </div>
+
           </div>
 
           <div class="info-box">
-            <h2 class="vehicle-title">${title}</h2>
+
+            <h2 class="vehicle-title">
+              ${title}
+            </h2>
 
             <div class="spec-grid">
-              <div class="spec"><strong>Year:</strong> ${v.year || "-"}</div>
-              <div class="spec"><strong>Make:</strong> ${v.make || "-"}</div>
-              <div class="spec"><strong>Model:</strong> ${v.model || "-"}</div>
-              <div class="spec"><strong>Mileage:</strong> ${v.mileage || "-"}</div>
-              <div class="spec"><strong>Province:</strong> ${v.province || "-"}</div>
-              <div class="spec"><strong>Location:</strong> ${v.location || "-"}</div>
-              <div class="spec"><strong>Dealer:</strong> ${dealerName}</div>
-              <div class="spec"><strong>Phone:</strong> ${dealerPhone || "-"}</div>
+
+              <div class="spec">
+                <strong>Year:</strong>
+                ${v.year || "-"}
+              </div>
+
+              <div class="spec">
+                <strong>Make:</strong>
+                ${v.make || "-"}
+              </div>
+
+              <div class="spec">
+                <strong>Model:</strong>
+                ${v.model || "-"}
+              </div>
+
+              <div class="spec">
+                <strong>Mileage:</strong>
+                ${v.mileage || "-"}
+              </div>
+
+              <div class="spec">
+                <strong>Province:</strong>
+                ${v.province || "-"}
+              </div>
+
+              <div class="spec">
+                <strong>Location:</strong>
+                ${v.location || "-"}
+              </div>
+
+              <div class="spec">
+                <strong>Dealer:</strong>
+                ${dealerName}
+              </div>
+
             </div>
 
-            <div class="description">${v.description || "No description available."}</div>
+            <div class="description">
+              ${v.description || "No description available."}
+            </div>
+
           </div>
+
         </div>
 
         <div class="side-box">
-          <div class="dealer-name">${dealerName}</div>
-          <div class="price">${formatPrice(v.price)}</div>
 
-          <a href="${callLink(dealerPhone)}" onclick="trackVehicleClick('call', currentVehicle)" class="btn btn-call">Call Dealer</a>
-          <a href="${whatsappLink(dealerPhone, title)}" onclick="trackVehicleClick('whatsapp', currentVehicle)" target="_blank" class="btn btn-whatsapp">WhatsApp</a>
-          <button class="btn btn-enquire" onclick="openEnquire()">Enquire</button>
-          <a href="${dealerStockLink(v)}" class="btn btn-dealer">View Dealer Stock</a>
+          <div class="dealer-name">
+            ${dealerName}
+          </div>
+
+          <div class="price">
+            ${formatPrice(v.price)}
+          </div>
+
+          <a
+            href="${callLink(dealerPhone)}"
+            onclick="trackVehicleClick('call', currentVehicle)"
+            class="btn btn-call"
+          >
+            Call Dealer
+          </a>
+
+          <a
+            href="${whatsappLink(dealerPhone, title)}"
+            onclick="trackVehicleClick('whatsapp', currentVehicle)"
+            target="_blank"
+            class="btn btn-whatsapp"
+          >
+            WhatsApp
+          </a>
+
+          <button
+            class="btn btn-enquire"
+            onclick="openEnquire()"
+          >
+            Enquire
+          </button>
+
+          <a
+            href="${dealerStockLink(v)}"
+            class="btn btn-dealer"
+          >
+            View Dealer Stock
+          </a>
+
         </div>
 
       </div>
     `;
 
-    setStatus("Vehicle details loaded.");
-  } catch (err) {
-    console.error(err);
-    setStatus("Could not load vehicle details.");
-    document.getElementById("content").innerHTML =
-      '<div class="empty-box">Could not load vehicle details.</div>';
+    setStatus(
+      "Vehicle loaded successfully."
+    );
+
+  } catch(err){
+
+    console.log(err);
+
+    setStatus(
+      "Could not load vehicle."
+    );
   }
 }
 
