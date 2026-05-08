@@ -334,6 +334,27 @@ body {
 const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
 
+async function trackSiteVisit() {
+  try {
+    await fetch(supabaseUrl + "/rest/v1/site_visits", {
+      method:"POST",
+      headers:{
+        apikey:supabaseKey,
+        Authorization:"Bearer " + supabaseKey,
+        "Content-Type":"application/json",
+        Prefer:"return=minimal"
+      },
+      body: JSON.stringify({
+        page:"home",
+        dealer:null,
+        vehicle_id:null
+      })
+    });
+  } catch(e) {
+    console.log(e);
+  }
+}
+
 function formatPrice(p){
   const num = Number(String(p || "").replace(/\D/g, ""));
   if (!num) return "R0";
@@ -346,14 +367,22 @@ function cleanPhone(phone){
 
 function whatsappLink(v, title){
   let phone = cleanPhone(v.phone || v.dealer_phone || "");
-  if (!phone) return "#";
-  if (phone.startsWith("0")) phone = "27" + phone.substring(1);
 
-  return "https://wa.me/" + phone + "?text=" +
-    encodeURIComponent("Hi, I'm interested in the " + title);
+  if (!phone) return "#";
+
+  if (phone.startsWith("0")) {
+    phone = "27" + phone.substring(1);
+  }
+
+  return "https://wa.me/" + phone +
+    "?text=" +
+    encodeURIComponent(
+      "Hi, I'm interested in the " + title
+    );
 }
 
 function getImages(v){
+
   let arr = [];
 
   if (v.image && String(v.image).trim()) {
@@ -361,50 +390,81 @@ function getImages(v){
   }
 
   if (v.images && String(v.images).trim()) {
-    String(v.images).split(",").forEach(function(i){
-      const img = i.trim();
-      if (img && !arr.includes(img)) arr.push(img);
-    });
+
+    String(v.images)
+      .split(",")
+      .forEach(function(i){
+
+        const img = i.trim();
+
+        if (img && !arr.includes(img)) {
+          arr.push(img);
+        }
+      });
   }
 
   if (!arr.length) {
-    arr.push("https://via.placeholder.com/400x300?text=No+Image");
+
+    arr.push(
+      "https://via.placeholder.com/400x300?text=No+Image"
+    );
   }
 
   return arr;
 }
 
-async function trackClick(vehicleId, dealerId){
-  try{
-    await fetch(supabaseUrl + "/rest/v1/vehicle_clicks", {
-      method:"POST",
-      headers:{
-        apikey:supabaseKey,
-        Authorization:"Bearer " + supabaseKey,
-        "Content-Type":"application/json",
-        Prefer:"return=minimal"
-      },
-      body: JSON.stringify({
-        vehicle_id: vehicleId,
-        dealer_user_id: dealerId || null,
-        click_type: "view"
-      })
-    });
+async function trackClick(
+  vehicleId,
+  dealerId,
+  type = "view"
+){
+
+  try {
+
+    await fetch(
+      supabaseUrl + "/rest/v1/vehicle_clicks",
+      {
+        method:"POST",
+
+        headers:{
+          apikey:supabaseKey,
+          Authorization:"Bearer " + supabaseKey,
+          "Content-Type":"application/json",
+          Prefer:"return=minimal"
+        },
+
+        body: JSON.stringify({
+          vehicle_id: vehicleId,
+          dealer_user_id: dealerId || null,
+          click_type: type
+        })
+      }
+    );
+
   } catch(e) {
     console.log(e);
   }
 }
 
 async function loadCars(){
-  const grid = document.getElementById("grid");
-  const count = document.getElementById("count");
 
-  grid.innerHTML = '<div class="empty">Loading vehicles...</div>';
+  const grid =
+    document.getElementById("grid");
+
+  const count =
+    document.getElementById("count");
+
+  grid.innerHTML =
+    '<div class="empty">Loading vehicles...</div>';
+
   count.innerText = "";
 
   try {
+
     const res = await fetch(
-      supabaseUrl + "/rest/v1/active_vehicles?select=*&order=id.desc",
+      supabaseUrl +
+      "/rest/v1/active_vehicles?select=*&order=featured.desc,id.desc",
+
       {
         headers:{
           apikey:supabaseKey,
@@ -416,86 +476,214 @@ async function loadCars(){
     let data = await res.json();
 
     if (!Array.isArray(data)) {
-      grid.innerHTML = '<div class="empty">Could not load vehicles.</div>';
+
+      grid.innerHTML =
+        '<div class="empty">Could not load vehicles.</div>';
+
       return;
     }
 
-    const search = document.getElementById("search").value.toLowerCase().trim();
-    const min = Number(document.getElementById("min").value) || 0;
-    const max = Number(document.getElementById("max").value) || 999999999;
-    const province = document.getElementById("province").value.toLowerCase().trim();
-    const sort = document.getElementById("sort").value;
+    const search =
+      document.getElementById("search")
+      .value
+      .toLowerCase()
+      .trim();
+
+    const min =
+      Number(
+        document.getElementById("min").value
+      ) || 0;
+
+    const max =
+      Number(
+        document.getElementById("max").value
+      ) || 999999999;
+
+    const province =
+      document.getElementById("province")
+      .value
+      .toLowerCase()
+      .trim();
+
+    const sort =
+      document.getElementById("sort").value;
 
     data = data.filter(function(v){
-      const text = (
-        (v.year || "") + " " +
-        (v.make || "") + " " +
-        (v.model || "") + " " +
-        (v.title || "")
-      ).toLowerCase();
 
-      const price = Number(String(v.price || "").replace(/\D/g, "")) || 0;
-      const location = String(v.location || "").toLowerCase();
-      const vehicleProvince = String(v.province || "").toLowerCase();
+      const text =
+        (
+          (v.year || "") + " " +
+          (v.make || "") + " " +
+          (v.model || "") + " " +
+          (v.title || "")
+        )
+        .toLowerCase();
 
-      if (search && !text.includes(search)) return false;
-      if (price < min) return false;
-      if (price > max) return false;
+      const price =
+        Number(
+          String(v.price || "")
+          .replace(/\D/g, "")
+        ) || 0;
+
+      const location =
+        String(v.location || "")
+        .toLowerCase();
+
+      const vehicleProvince =
+        String(v.province || "")
+        .toLowerCase();
+
+      if (search && !text.includes(search)) {
+        return false;
+      }
+
+      if (price < min) {
+        return false;
+      }
+
+      if (price > max) {
+        return false;
+      }
 
       if (province) {
-        if (!location.includes(province) && !vehicleProvince.includes(province)) return false;
+
+        if (
+          !location.includes(province) &&
+          !vehicleProvince.includes(province)
+        ) {
+          return false;
+        }
       }
 
       return true;
     });
 
     if (sort === "low") {
+
       data.sort(function(a,b){
-        return (Number(String(a.price || "").replace(/\D/g, "")) || 0) -
-               (Number(String(b.price || "").replace(/\D/g, "")) || 0);
+
+        return (
+          Number(
+            String(a.price || "")
+            .replace(/\D/g, "")
+          ) || 0
+        ) - (
+          Number(
+            String(b.price || "")
+            .replace(/\D/g, "")
+          ) || 0
+        );
       });
     }
 
     if (sort === "high") {
+
       data.sort(function(a,b){
-        return (Number(String(b.price || "").replace(/\D/g, "")) || 0) -
-               (Number(String(a.price || "").replace(/\D/g, "")) || 0);
+
+        return (
+          Number(
+            String(b.price || "")
+            .replace(/\D/g, "")
+          ) || 0
+        ) - (
+          Number(
+            String(a.price || "")
+            .replace(/\D/g, "")
+          ) || 0
+        );
       });
     }
 
-    count.innerText = data.length + " vehicles found";
+    count.innerText =
+      data.length + " vehicles found";
 
     if (!data.length) {
-      grid.innerHTML = '<div class="empty">No vehicles found</div>';
+
+      grid.innerHTML =
+        '<div class="empty">No vehicles found</div>';
+
       return;
     }
 
     let html = "";
 
     data.forEach(function(v){
-      const title = [v.year, v.make, v.model].filter(Boolean).join(" ") || v.title || "Vehicle";
-      const vehicleImages = getImages(v);
-      const img = vehicleImages[0];
-      const featured = v.featured ? '<div class="featured-badge">Featured</div>' : "";
+
+      const title =
+        [v.year, v.make, v.model]
+        .filter(Boolean)
+        .join(" ")
+        || v.title
+        || "Vehicle";
+
+      const vehicleImages =
+        getImages(v);
+
+      const img =
+        vehicleImages[0];
+
+      const featured =
+        v.featured
+        ? '<div class="featured-badge">Featured</div>'
+        : "";
 
       html += `
         <div class="card">
+
           <div class="img-wrap">
+
             ${featured}
-            <img src="${img}" loading="lazy" onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'">
-            <div class="photo-badge">📷 ${vehicleImages.length}</div>
+
+            <img
+              src="${img}"
+              loading="lazy"
+              onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'"
+            >
+
+            <div class="photo-badge">
+              📷 ${vehicleImages.length}
+            </div>
+
           </div>
 
           <div class="card-body">
+
             <h3>${title}</h3>
-            <div class="price">${formatPrice(v.price)}</div>
-            <div class="meta">📍 ${v.location || "-"}</div>
-            <div class="meta">🚗 ${v.mileage || "-"}</div>
-            <div class="meta">🏢 ${v.dealer || v.dealer_name || "Dealer"}</div>
+
+            <div class="price">
+              ${formatPrice(v.price)}
+            </div>
+
+            <div class="meta">
+              📍 ${v.location || "-"}
+            </div>
+
+            <div class="meta">
+              🚗 ${v.mileage || "-"}
+            </div>
+
+            <div class="meta">
+              🏢 ${v.dealer || v.dealer_name || "Dealer"}
+            </div>
+
           </div>
 
-          <button class="btn view-btn" onclick="openVehicle(${v.id}, '${v.user_id || ""}')">View Details</button>
-          <a href="${whatsappLink(v, title)}" target="_blank" class="btn whatsapp-btn">WhatsApp</a>
+          <button
+            class="btn view-btn"
+            onclick="openVehicle(${v.id}, '${v.user_id || ""}')"
+          >
+            View Details
+          </button>
+
+          <a
+            href="${whatsappLink(v, title)}"
+            target="_blank"
+            onclick="trackClick(${v.id}, '${v.user_id || ""}', 'whatsapp')"
+            class="btn whatsapp-btn"
+          >
+            WhatsApp
+          </a>
+
         </div>
       `;
     });
@@ -503,25 +691,34 @@ async function loadCars(){
     grid.innerHTML = html;
 
   } catch(err) {
+
     console.error(err);
-    grid.innerHTML = '<div class="empty">Error loading vehicles.</div>';
+
+    grid.innerHTML =
+      '<div class="empty">Error loading vehicles.</div>';
   }
 }
 
 function openVehicle(id, dealerId){
-  trackClick(id, dealerId);
-  window.location.href = "details.html?id=" + id;
+
+  trackClick(id, dealerId, "view");
+
+  window.location.href =
+    "details.html?id=" + id;
 }
 
 function clearSearch(){
+
   document.getElementById("search").value = "";
   document.getElementById("min").value = "";
   document.getElementById("max").value = "";
   document.getElementById("province").value = "";
   document.getElementById("sort").value = "";
+
   loadCars();
 }
 
+trackSiteVisit();
 loadCars();
 </script>
 
