@@ -444,7 +444,54 @@ async function loadCars(){
         '<div class="empty">Could not load vehicles.</div>';
       return;
     }
+const search =
+  document.getElementById("search").value.toLowerCase().trim();
 
+const min =
+  Number(document.getElementById("min").value) || 0;
+
+const max =
+  Number(document.getElementById("max").value) || 999999999;
+
+const province =
+  document.getElementById("province").value.toLowerCase().trim();
+
+data = data.filter(function(v){
+
+  const text =
+    (
+      (v.year || "") + " " +
+      (v.make || "") + " " +
+      (v.model || "") + " " +
+      (v.title || "") + " " +
+      (v.dealer || "") + " " +
+      (v.dealer_name || "")
+    ).toLowerCase();
+
+  const price =
+    Number(String(v.price || "").replace(/\D/g, "")) || 0;
+
+  const location =
+    String(v.location || "").toLowerCase();
+
+  const vehicleProvince =
+    String(v.province || "").toLowerCase();
+
+  if (search && !text.includes(search)) return false;
+  if (price < min) return false;
+  if (price > max) return false;
+
+  if (province) {
+    if (
+      !location.includes(province) &&
+      !vehicleProvince.includes(province)
+    ) {
+      return false;
+    }
+  }
+
+  return true;
+});
     data.sort(function(a, b){
 
       const aFeatured =
