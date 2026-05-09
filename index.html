@@ -363,7 +363,8 @@ body {
 <script>
 
 const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
+const supabaseKey = "YOUR_SUPABASE_KEY";
+
 function getImages(v){
 
   let arr = [];
@@ -396,30 +397,68 @@ function getImages(v){
   }
 
   return arr;
-}function formatPrice(p){
-  const num = Number(String(p || "").replace(/\D/g, ""));
+}
+
+function formatPrice(p){
+
+  const num =
+    Number(
+      String(p || "").replace(/\D/g, "")
+    );
+
   if (!num) return "R0";
-  return "R" + num.toLocaleString("en-ZA");
-}function cleanPhone(phone){
-  return String(phone || "").replace(/\D/g, "");
+
+  return "R" +
+    num.toLocaleString("en-ZA");
 }
 
-function whatsappLink(v, title){
-  let phone = cleanPhone(v.phone || v.dealer_phone || "");
+function cleanPhone(phone){
 
-  if (!phone) return "#";
+  return String(phone || "")
+    .replace(/\D/g, "");
+}
 
-  if (phone.startsWith("0")) {
-    phone = "27" + phone.substring(1);
+async function trackClick(
+  vehicleId,
+  dealerId,
+  type = "view"
+){
+
+  try {
+
+    await fetch(
+      supabaseUrl + "/rest/v1/vehicle_clicks",
+      {
+        method:"POST",
+
+        headers:{
+          apikey:supabaseKey,
+          Authorization:"Bearer " + supabaseKey,
+          "Content-Type":"application/json",
+          Prefer:"return=minimal"
+        },
+
+        body: JSON.stringify({
+          vehicle_id: vehicleId,
+          dealer_user_id: dealerId || null,
+          click_type: type
+        })
+      }
+    );
+
+  } catch(e) {
+
+    console.log(e);
   }
-
-  return "https://wa.me/" + phone + "?text=" +
-    encodeURIComponent("Hi, I'm interested in the " + title);
 }
+
 async function loadCars(){
 
-  const grid = document.getElementById("grid");
-  const count = document.getElementById("count");
+  const grid =
+    document.getElementById("grid");
+
+  const count =
+    document.getElementById("count");
 
   grid.innerHTML =
     '<div class="empty">Loading vehicles...</div>';
@@ -440,58 +479,86 @@ async function loadCars(){
     let data = await res.json();
 
     if (!Array.isArray(data)) {
+
       grid.innerHTML =
         '<div class="empty">Could not load vehicles.</div>';
+
       return;
     }
-const search =
-  document.getElementById("search").value.toLowerCase().trim();
 
-const min =
-  Number(document.getElementById("min").value) || 0;
+    const search =
+      document.getElementById("search")
+      .value
+      .toLowerCase()
+      .trim();
 
-const max =
-  Number(document.getElementById("max").value) || 999999999;
+    const min =
+      Number(
+        document.getElementById("min").value
+      ) || 0;
 
-const province =
-  document.getElementById("province").value.toLowerCase().trim();
+    const max =
+      Number(
+        document.getElementById("max").value
+      ) || 999999999;
 
-data = data.filter(function(v){
+    const province =
+      document.getElementById("province")
+      .value
+      .toLowerCase()
+      .trim();
 
-  const text =
-    (
-      (v.year || "") + " " +
-      (v.make || "") + " " +
-      (v.model || "") + " " +
-      (v.title || "") + " " +
-      (v.dealer || "") + " " +
-      (v.dealer_name || "")
-    ).toLowerCase();
+    data = data.filter(function(v){
 
-  const price =
-    Number(String(v.price || "").replace(/\D/g, "")) || 0;
+      const text =
+        (
+          (v.year || "") + " " +
+          (v.make || "") + " " +
+          (v.model || "") + " " +
+          (v.title || "") + " " +
+          (v.dealer || "") + " " +
+          (v.dealer_name || "")
+        ).toLowerCase();
 
-  const location =
-    String(v.location || "").toLowerCase();
+      const price =
+        Number(
+          String(v.price || "")
+          .replace(/\D/g, "")
+        ) || 0;
 
-  const vehicleProvince =
-    String(v.province || "").toLowerCase();
+      const location =
+        String(v.location || "")
+        .toLowerCase();
 
-  if (search && !text.includes(search)) return false;
-  if (price < min) return false;
-  if (price > max) return false;
+      const vehicleProvince =
+        String(v.province || "")
+        .toLowerCase();
 
-  if (province) {
-    if (
-      !location.includes(province) &&
-      !vehicleProvince.includes(province)
-    ) {
-      return false;
-    }
-  }
+      if (search && !text.includes(search)) {
+        return false;
+      }
 
-  return true;
-});
+      if (price < min) {
+        return false;
+      }
+
+      if (price > max) {
+        return false;
+      }
+
+      if (province) {
+
+        if (
+          !location.includes(province) &&
+          !vehicleProvince.includes(province)
+        ) {
+          return false;
+        }
+      }
+
+      return true;
+    });
+
     data.sort(function(a, b){
 
       const aFeatured =
@@ -512,7 +579,8 @@ data = data.filter(function(v){
         return bFeatured - aFeatured;
       }
 
-      return Number(b.id || 0) - Number(a.id || 0);
+      return Number(b.id || 0) -
+             Number(a.id || 0);
 
     });
 
@@ -540,10 +608,11 @@ data = data.filter(function(v){
         .filter(Boolean)
         .join(" ");
 
-      const vehicleImages = getImages(v);
+      const vehicleImages =
+        getImages(v);
 
-const img =
-  vehicleImages[0];
+      const img =
+        vehicleImages[0];
 
       const cardHtml = `
 
@@ -554,12 +623,12 @@ const img =
     ${featured}
 
     <img
-  src="${img}"
-  loading="lazy"
-  onclick="window.location.href='details.html?id=${v.id}'"
-  style="cursor:pointer;"
-  onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'"
->
+      src="${img}"
+      loading="lazy"
+      onclick="window.location.href='details.html?id=${v.id}'"
+      style="cursor:pointer;"
+      onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'"
+    >
 
     <div class="photo-badge">
       📷 ${vehicleImages.length}
@@ -589,11 +658,10 @@ const img =
 
   </div>
 
- 
-
 </div>
 
 `;
+
       if (isFeatured) {
         featuredHtml += cardHtml;
       } else {
@@ -614,15 +682,16 @@ const img =
 
     if (featuredHtml) {
 
-      featuredWrap.style.display = "block";
+      featuredWrap.style.display =
+        "block";
 
       featuredGrid.innerHTML =
         featuredHtml;
 
     } else {
 
-      featuredWrap.style.display = "none";
-
+      featuredWrap.style.display =
+        "none";
     }
 
   } catch(err) {
@@ -634,9 +703,19 @@ const img =
   }
 }
 
+function clearSearch(){
+
+  document.getElementById("search").value = "";
+  document.getElementById("min").value = "";
+  document.getElementById("max").value = "";
+  document.getElementById("province").value = "";
+  document.getElementById("sort").value = "";
+
+  loadCars();
+}
+
 loadCars();
 
 </script>
-
 </body>
 </html>
