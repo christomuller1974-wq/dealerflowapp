@@ -448,50 +448,64 @@ async function loadCars(){
 
       const cardHtml = `
 
-        <div class="card">
+<div class="card">
 
-          <div class="img-wrap">
+  <div class="img-wrap">
 
-            ${featured}
+    ${featured}
 
-            <img
-              src="${img}"
-              loading="lazy"
-            >
+    <img
+      src="${img}"
+      loading="lazy"
+      onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'"
+    >
 
-          </div>
+    <div class="photo-badge">
+      📷 ${vehicleImages.length}
+    </div>
 
-          <div class="card-body">
+  </div>
 
-            <h3>${title}</h3>
+  <div class="card-body">
 
-            <div class="price">
-              ${v.price || ""}
-            </div>
+    <h3>${title}</h3>
 
-            <div class="meta">
-              📍 ${v.location || "-"}
-            </div>
+    <div class="price">
+      ${formatPrice(v.price)}
+    </div>
 
-          </div>
+    <div class="meta">
+      📍 ${v.location || "-"}
+    </div>
 
-          <button
-            class="btn view-btn"
-            onclick="window.location.href='details.html?id=${v.id}'"
-          >
-            View Details
-          </button>
-<a
-  href="${whatsappLink(v, title)}"
-  target="_blank"
-  class="btn whatsapp-btn"
->
-  WhatsApp
-</a>
-        </div>
+    <div class="meta">
+      🚗 ${v.mileage || "-"}
+    </div>
 
-      `;
+    <div class="meta">
+      🏢 ${v.dealer || v.dealer_name || "Dealer"}
+    </div>
 
+  </div>
+
+  <button
+    class="btn view-btn"
+    onclick="window.location.href='details.html?id=${v.id}'"
+  >
+    View Details
+  </button>
+
+  <a
+    href="${whatsappLink(v, title)}"
+    target="_blank"
+    class="btn whatsapp-btn"
+  >
+    WhatsApp
+  </a>
+
+</div>
+
+`;
       if (isFeatured) {
         featuredHtml += cardHtml;
       } else {
