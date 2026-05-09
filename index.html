@@ -400,6 +400,21 @@ function getImages(v){
   const num = Number(String(p || "").replace(/\D/g, ""));
   if (!num) return "R0";
   return "R" + num.toLocaleString("en-ZA");
+}function cleanPhone(phone){
+  return String(phone || "").replace(/\D/g, "");
+}
+
+function whatsappLink(v, title){
+  let phone = cleanPhone(v.phone || v.dealer_phone || "");
+
+  if (!phone) return "#";
+
+  if (phone.startsWith("0")) {
+    phone = "27" + phone.substring(1);
+  }
+
+  return "https://wa.me/" + phone + "?text=" +
+    encodeURIComponent("Hi, I'm interested in the " + title);
 }
 async function loadCars(){
 
