@@ -364,7 +364,39 @@ body {
 
 const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
+function getImages(v){
 
+  let arr = [];
+
+  if (v.image && String(v.image).trim()) {
+    arr.push(String(v.image).trim());
+  }
+
+  if (v.images && String(v.images).trim()) {
+
+    String(v.images)
+      .split(",")
+      .forEach(function(i){
+
+        const img = i.trim();
+
+        if (img && !arr.includes(img)) {
+          arr.push(img);
+        }
+
+      });
+  }
+
+  if (!arr.length) {
+
+    arr.push(
+      "https://via.placeholder.com/400x300?text=No+Image"
+    );
+
+  }
+
+  return arr;
+}
 async function loadCars(){
 
   const grid = document.getElementById("grid");
