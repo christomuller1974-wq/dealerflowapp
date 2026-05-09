@@ -442,9 +442,10 @@ async function loadCars(){
         .filter(Boolean)
         .join(" ");
 
-      const img =
-        v.image ||
-        "https://via.placeholder.com/400x300?text=No+Image";
+      const vehicleImages = getImages(v);
+
+const img =
+  vehicleImages[0];
 
       const cardHtml = `
 
