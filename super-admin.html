@@ -230,3 +230,192 @@ body {
   <h1>Super Admin</h1>
   <p>Approve dealers and track CarScoutZA marketing traffic</p>
 </div>
+<div class="container">
+
+  <div class="top-actions">
+    <a href="dealer-admin.html" class="top-btn">Back to Dashboard</a>
+    <a href="index.html" class="top-btn blue">Website</a>
+  </div>
+
+  <div id="status" class="status">Loading...</div>
+
+  <div class="stats">
+
+    <div class="stat-card">
+      <strong id="totalVisits">0</strong>
+      <span>Total Site Visits</span>
+    </div>
+
+    <div class="stat-card">
+      <strong id="todayVisits">0</strong>
+      <span>Visits Today</span>
+    </div>
+
+    <div class="stat-card">
+      <strong id="dealerPageVisits">0</strong>
+      <span>Dealer Page Visits</span>
+    </div>
+
+    <div class="stat-card">
+      <strong id="detailPageVisits">0</strong>
+      <span>Vehicle Detail Visits</span>
+    </div>
+
+    <div class="stat-card">
+      <strong id="homePageVisits">0</strong>
+      <span>Homepage Visits</span>
+    </div>
+
+  </div>
+
+  <div class="section-title">Top Dealer Traffic</div>
+
+  <div id="dealerTraffic" class="traffic-table">
+    <div class="traffic-row">
+      <span>Loading dealer traffic...</span>
+      <span></span>
+    </div>
+  </div>
+
+  <div class="section-title">Dealers</div>
+
+  <div id="dealerList" class="dealer-list"></div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
+
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
+
+const client = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+const ADMIN_EMAIL = "autoexcellence@telkomsa.net";
+
+function setStatus(msg) {
+  document.getElementById("status").textContent = msg;
+}
+
+async function startAdmin() {
+
+  setStatus("Checking admin access...");
+
+  const { data, error } = await client.auth.getUser();
+
+  if (error || !data || !data.user) {
+    window.location.href = "login.html";
+    return;
+  }
+
+  const email = (data.user.email || "").toLowerCase().trim();
+
+  if (email !== ADMIN_EMAIL.toLowerCase()) {
+    setStatus("Access denied.");
+    return;
+  }
+
+  setStatus("Admin access granted.");
+
+  loadDealers();
+}
+
+async function loadDealers() {
+
+  const { data, error } = await client
+    .from("profiles")
+    .select("*")
+    .order("dealer_name", { ascending:true });
+
+  const list = document.getElementById("dealerList");
+
+  list.innerHTML = "";
+
+  if (error) {
+    list.innerHTML = "<div class='empty-box'>Could not load dealers.</div>";
+    return;
+  }
+
+  data.forEach(d => {
+
+    const row = document.createElement("div");
+
+    row.className = "dealer-row";
+
+    row.innerHTML = `
+
+      <div class="dealer-info">
+
+        <div class="dealer-name">
+          ${d.dealer_name || "Dealer"}
+        </div>
+
+        <div class="dealer-meta">
+          Phone: ${d.phone || "-"}
+        </div>
+
+        <div class="dealer-meta">
+          Trial Expires:
+          ${d.trial_expires || "-"}
+        </div>
+
+        <div class="dealer-meta">
+          Paid Until:
+          ${d.paid_until || "-"}
+        </div>
+
+        <div class="dealer-status">
+          ${d.active ? "ACTIVE" : "INACTIVE"}
+        </div>
+
+      </div>
+
+      <div class="dealer-actions">
+
+        <button class="btn btn-green"
+          onclick="activateDealer('${d.id}')">
+          Activate
+        </button>
+
+        <button class="btn btn-red"
+          onclick="deactivateDealer('${d.id}')">
+          Deactivate
+        </button>
+
+      </div>
+    `;
+
+    list.appendChild(row);
+
+  });
+
+}
+
+async function activateDealer(id) {
+
+  await client
+    .from("profiles")
+    .update({ active:true })
+    .eq("id", id);
+
+  loadDealers();
+}
+
+async function deactivateDealer(id) {
+
+  await client
+    .from("profiles")
+    .update({ active:false })
+    .eq("id", id);
+
+  loadDealers();
+}
+
+startAdmin();
+
+</script>
+
+</body>
+</html>
