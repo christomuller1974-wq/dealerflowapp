@@ -5,162 +5,134 @@
 <title>CarScoutZA | Used Cars for Sale South Africa</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta name="google-site-verification" content="oOba0W7_EqwqEoXSWQad1Hymmbeiy8oUrvwCztLuX-M" />
-
-<meta name="description" content="Find used cars for sale in South Africa. CarScoutZA connects buyers and dealers with trusted listings and fast contact.">
-<meta property="og:title" content="CarScoutZA - Used Cars South Africa">
-<meta property="og:description" content="Find used cars from trusted dealers across South Africa.">
-<meta property="og:type" content="website">
-
 <style>
-* { box-sizing:border-box; }
+*{
+  box-sizing:border-box;
+}
 
-body {
+body{
   margin:0;
-  font-family:Arial, sans-serif;
+  font-family:Arial,sans-serif;
   background:#f4f6f9;
   color:#111827;
 }
 
-.header {
-  background:linear-gradient(135deg,#111827,#1e3a8a,#2563eb);
-  color:white;
-  text-align:center;
-  padding:60px 20px 105px;
+.hero{
+  width:100%;
+  height:420px;
+  background-image:url('hero-banner.jpeg');
+  background-size:cover;
+  background-position:center;
   position:relative;
 }
 
-.header h1 {
-  font-size:44px;
-  margin:0;
-  font-weight:900;
-  letter-spacing:-1px;
-}
-
-.header p {
-  margin:10px 0 0;
-  font-size:18px;
-}
-
-.dealer-btn {
+.hero-buttons{
   position:absolute;
-  top:15px;
-  right:15px;
-  background:#111827;
-  color:white;
-  padding:10px 14px;
-  border-radius:10px;
-  text-decoration:none;
-  font-weight:bold;
-  font-size:13px;
-  box-shadow:0 6px 16px rgba(0,0,0,0.25);
+  top:20px;
+  right:20px;
+  display:flex;
+  gap:10px;
+  z-index:10;
 }
 
-.search-bar {
-  background:rgba(255,255,255,0.96);
-  backdrop-filter:blur(10px);
-  margin:-50px auto 28px;
+.hero-buttons a{
+  color:white;
+  text-decoration:none;
+  padding:12px 18px;
+  border-radius:12px;
+  font-weight:900;
+}
+
+.contact-btn{
+  background:#2563eb;
+}
+
+.login-btn{
+  background:#111827;
+}
+
+.search-bar{
+  background:white;
   max-width:1180px;
-  padding:12px;
+  margin:-40px auto 30px;
+  padding:14px;
   border-radius:18px;
   display:flex;
-  gap:8px;
   flex-wrap:wrap;
-  position:sticky;
-  top:0;
-  z-index:1000;
-  box-shadow:0 10px 30px rgba(0,0,0,0.14);
+  gap:10px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.12);
+  position:relative;
+  z-index:20;
 }
 
 .search-bar input,
-.search-bar select {
+.search-bar select{
   flex:1;
-  min-width:130px;
-  padding:11px;
+  min-width:140px;
+  padding:12px;
+  border:1px solid #dbe1e8;
   border-radius:12px;
-  border:1px solid #e5e7eb;
-  font-size:13px;
-  outline:none;
-  background:white;
-}
-
-.search-bar input:focus,
-.search-bar select:focus {
-  border-color:#2563eb;
-  box-shadow:0 0 0 2px rgba(37,99,235,0.18);
+  font-size:14px;
 }
 
 .search-btn,
-.clear-btn {
-  color:white;
+.clear-btn{
   border:none;
+  color:white;
+  padding:12px 18px;
   border-radius:12px;
-  padding:11px 16px;
-  font-size:13px;
-  font-weight:900;
   cursor:pointer;
+  font-weight:900;
 }
 
-.search-btn { background:#2563eb; }
-.clear-btn { background:#111827; }
+.search-btn{
+  background:#2563eb;
+}
 
-.count-box {
+.clear-btn{
+  background:#111827;
+}
+
+.count-box{
   width:100%;
-  font-size:13px;
-  font-weight:900;
-  padding:4px 2px 0;
+  font-size:14px;
+  font-weight:bold;
   color:#475569;
 }
 
-.grid {
+.grid{
   max-width:1320px;
   margin:auto;
-  padding:22px;
+  padding:20px;
   display:grid;
-  grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
   gap:24px;
 }
 
-.grid:has(.card:only-child) {
-  max-width:340px;
-}
-
-.card {
+.card{
   background:white;
-  border-radius:20px;
+  border-radius:18px;
   overflow:hidden;
   box-shadow:0 8px 24px rgba(0,0,0,0.10);
-  width:100%;
-  max-width:100%;
   transition:0.25s;
-  border:1px solid #eef2f7;
 }
 
-.card:hover {
-  transform:translateY(-5px);
-  box-shadow:0 16px 34px rgba(0,0,0,0.16);
+.card:hover{
+  transform:translateY(-4px);
 }
 
-.img-wrap {
+.img-wrap{
   position:relative;
-  background:#e5e7eb;
-  overflow:hidden;
 }
 
-.card img {
+.card img{
   width:100%;
-  height:190px;
+  height:200px;
   object-fit:cover;
   display:block;
-  background:#e5e7eb;
-  transition:0.3s;
 }
 
-.card:hover img {
-  transform:scale(1.04);
-}
-
-.featured-badge {
+.featured-badge{
   position:absolute;
   top:10px;
   left:10px;
@@ -172,11 +144,11 @@ body {
   font-weight:900;
 }
 
-.photo-badge {
+.photo-badge{
   position:absolute;
   right:10px;
   bottom:10px;
-  background:rgba(17,24,39,0.86);
+  background:rgba(0,0,0,0.7);
   color:white;
   padding:6px 10px;
   border-radius:999px;
@@ -184,106 +156,66 @@ body {
   font-weight:900;
 }
 
-.card-body {
+.card-body{
   padding:15px;
 }
 
-.card h3 {
+.card h3{
   margin:0 0 10px;
   font-size:18px;
-  min-height:44px;
-  line-height:1.25;
-  font-weight:900;
 }
 
-.price {
+.price{
   color:#dc2626;
+  font-size:22px;
   font-weight:900;
-  font-size:21px;
-  margin-bottom:8px;
 }
 
-.meta {
+.meta{
+  margin-top:6px;
   color:#475569;
   font-size:14px;
-  margin-top:6px;
 }
 
-.btn {
-  display:block;
+.empty{
   text-align:center;
-  padding:12px;
-  margin:10px 12px;
-  border-radius:12px;
-  text-decoration:none;
-  font-weight:900;
-  border:none;
-  cursor:pointer;
-}
-
-.view-btn {
-  background:#2563eb;
-  color:white;
-}
-
-.whatsapp-btn {
-  background:#25D366;
-  color:white;
-  margin-top:0;
-}
-
-.empty {
-  grid-column:1/-1;
-  text-align:center;
-  padding:34px;
+  padding:40px;
   background:white;
   border-radius:16px;
   font-weight:900;
-  box-shadow:0 8px 24px rgba(0,0,0,0.08);
 }
 
 @media(max-width:700px){
-  .header {
-    padding:64px 15px 55px;
+
+  .hero{
+    height:290px;
+    background-position:center top;
   }
 
-  .header h1 {
-    font-size:36px;
+  .hero-buttons{
+    left:15px;
+    right:15px;
+    justify-content:center;
   }
 
-  .header p {
-    font-size:15px;
-  }
-
-  .dealer-btn {
-    top:12px;
-    right:12px;
-  }
-
-  .search-bar {
-    position:static;
-    margin:10px;
-    border-radius:16px;
+  .search-bar{
+    margin:20px 12px;
   }
 
   .search-bar input,
   .search-bar select,
   .search-btn,
-  .clear-btn {
+  .clear-btn{
     width:100%;
     flex:1 1 100%;
   }
 
-  .grid {
+  .grid{
     grid-template-columns:1fr;
     padding:14px;
   }
 
-  .grid:has(.card:only-child) {
-    max-width:100%;
-  }
-
-  .card img {
+  .card img{
     height:220px;
   }
 }
@@ -292,56 +224,28 @@ body {
 
 <body>
 
-<div class="header">
-<div style="
-  position:absolute;
-  top:20px;
-  right:20px;
-  display:flex;
-  gap:10px;
-  z-index:1000;
-">
+<div class="hero">
 
-  <a
-    href="contact.html"
-    style="background:#2563eb;color:white;text-decoration:none;padding:10px 14px;border-radius:10px;font-weight:900;"
-  >
-    Contact
-  </a>
+  <div class="hero-buttons">
 
-  <a
-    href="dealer-admin.html"
-    style="background:#111827;color:white;text-decoration:none;padding:10px 14px;border-radius:10px;font-weight:900;"
-  >
-    Dealer Login
-  </a>
+    <a href="contact.html" class="contact-btn">
+      Contact
+    </a>
 
-</div>
-<div
-  style="
-    width:100%;
-    height:420px;
-    background-image:url('hero-banner.jpeg');
-    background-size:cover;
-    background-position:center;
-    position:relative;
-    display:flex;
-    justify-content:flex-end;
-    align-items:flex-start;
-    padding:30px;
-  "
->
+    <a href="dealer-admin.html" class="login-btn">
+      Dealer Login
+    </a>
 
-  <div style="display:flex;gap:14px;flex-wrap:wrap;">
-
-   
-
+  </div>
 
 </div>
 
 <div class="search-bar">
+
   <input id="search" placeholder="Search make or model">
+
   <input id="min" placeholder="Min Price" type="number">
+
   <input id="max" placeholder="Max Price" type="number">
 
   <select id="province">
@@ -363,38 +267,20 @@ body {
     <option value="high">Price High → Low</option>
   </select>
 
-  <button class="search-btn" onclick="loadCars()">Search</button>
-  <button class="clear-btn" onclick="clearSearch()">Clear</button>
+  <button class="search-btn" onclick="loadCars()">
+    Search
+  </button>
+
+  <button class="clear-btn" onclick="clearSearch()">
+    Clear
+  </button>
 
   <div id="count" class="count-box"></div>
-</div>
-
-<div id="featuredWrap" style="display:none;max-width:1320px;margin:auto;padding:0 22px;">
-  
-  <h2 style="
-    font-size:34px;
-    font-weight:900;
-    margin:10px 0 18px;
-    color:#111827;
-  ">
-    ⭐ Featured Vehicles
-  </h2>
-
-  <div id="featuredGrid" class="grid"></div>
 
 </div>
 
-<div style="
-  max-width:1320px;
-  margin:auto;
-  padding:0 22px;
-">
-  <h2 style="
-    font-size:34px;
-    font-weight:900;
-    margin:10px 0 18px;
-    color:#111827;
-  ">
+<div style="max-width:1320px;margin:auto;padding:0 22px;">
+  <h2 style="font-size:34px;font-weight:900;">
     Latest Vehicles
   </h2>
 </div>
@@ -403,33 +289,35 @@ body {
 
 <script>
 
-const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
+const supabaseUrl =
+"https://ddmvzypiccryjndcwlre.supabase.co";
+
+const supabaseKey =
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
 
 function getImages(v){
 
   let arr = [];
 
-  if (v.image && String(v.image).trim()) {
-    arr.push(String(v.image).trim());
+  if(v.image){
+    arr.push(v.image);
   }
 
-  if (v.images && String(v.images).trim()) {
+  if(v.images){
 
-    String(v.images)
-      .split(",")
-      .forEach(function(i){
+    v.images.split(",").forEach(function(i){
 
-        const img = i.trim();
+      const img = i.trim();
 
-        if (img && !arr.includes(img)) {
-          arr.push(img);
-        }
+      if(img && !arr.includes(img)){
+        arr.push(img);
+      }
 
-      });
+    });
+
   }
 
-  if (!arr.length) {
+  if(!arr.length){
 
     arr.push(
       "https://via.placeholder.com/400x300?text=No+Image"
@@ -443,68 +331,28 @@ function getImages(v){
 function formatPrice(p){
 
   const num =
-    Number(
-      String(p || "").replace(/\D/g, "")
-    );
+  Number(
+    String(p || "").replace(/\D/g,"")
+  );
 
-  if (!num) return "R0";
+  if(!num) return "R0";
 
   return "R" +
-    num.toLocaleString("en-ZA");
-}
-
-function cleanPhone(phone){
-
-  return String(phone || "")
-    .replace(/\D/g, "");
-}
-
-async function trackClick(
-  vehicleId,
-  dealerId,
-  type = "view"
-){
-
-  try {
-
-    await fetch(
-      supabaseUrl + "/rest/v1/vehicle_clicks",
-      {
-        method:"POST",
-
-        headers:{
-          apikey:supabaseKey,
-          Authorization:"Bearer " + supabaseKey,
-          "Content-Type":"application/json",
-          Prefer:"return=minimal"
-        },
-
-        body: JSON.stringify({
-          vehicle_id: vehicleId,
-          dealer_user_id: dealerId || null,
-          click_type: type
-        })
-      }
-    );
-
-  } catch(e) {
-
-    console.log(e);
-  }
+  num.toLocaleString("en-ZA");
 }
 
 async function loadCars(){
 
   const grid =
-    document.getElementById("grid");
+  document.getElementById("grid");
 
   const count =
-    document.getElementById("count");
+  document.getElementById("count");
 
   grid.innerHTML =
-    '<div class="empty">Loading vehicles...</div>';
+  '<div class="empty">Loading vehicles...</div>';
 
-  try {
+  try{
 
     const res = await fetch(
       supabaseUrl +
@@ -519,229 +367,141 @@ async function loadCars(){
 
     let data = await res.json();
 
-    if (!Array.isArray(data)) {
-
-      grid.innerHTML =
-        '<div class="empty">Could not load vehicles.</div>';
-
-      return;
-    }
-
     const search =
-      document.getElementById("search")
-      .value
-      .toLowerCase()
-      .trim();
+    document.getElementById("search")
+    .value
+    .toLowerCase();
 
     const min =
-      Number(
-        document.getElementById("min").value
-      ) || 0;
+    Number(
+      document.getElementById("min").value
+    ) || 0;
 
     const max =
-      Number(
-        document.getElementById("max").value
-      ) || 999999999;
+    Number(
+      document.getElementById("max").value
+    ) || 999999999;
 
     const province =
-      document.getElementById("province")
-      .value
-      .toLowerCase()
-      .trim();
+    document.getElementById("province")
+    .value
+    .toLowerCase();
 
     data = data.filter(function(v){
 
       const text =
-        (
-          (v.year || "") + " " +
-          (v.make || "") + " " +
-          (v.model || "") + " " +
-          (v.title || "") + " " +
-          (v.dealer || "") + " " +
-          (v.dealer_name || "")
-        ).toLowerCase();
+      (
+        (v.year || "") + " " +
+        (v.make || "") + " " +
+        (v.model || "")
+      ).toLowerCase();
 
       const price =
-        Number(
-          String(v.price || "")
-          .replace(/\D/g, "")
-        ) || 0;
+      Number(
+        String(v.price || "")
+        .replace(/\D/g,"")
+      ) || 0;
 
       const location =
-        String(v.location || "")
-        .toLowerCase();
+      String(v.location || "")
+      .toLowerCase();
 
-      const vehicleProvince =
-        String(v.province || "")
-        .toLowerCase();
-
-      if (search && !text.includes(search)) {
+      if(search && !text.includes(search)){
         return false;
       }
 
-      if (price < min) {
+      if(price < min){
         return false;
       }
 
-      if (price > max) {
+      if(price > max){
         return false;
       }
 
-      if (province) {
-
-        if (
-          !location.includes(province) &&
-          !vehicleProvince.includes(province)
-        ) {
-          return false;
-        }
+      if(province && !location.includes(province)){
+        return false;
       }
 
       return true;
-    });
-
-    data.sort(function(a, b){
-
-      const aFeatured =
-        a.featured === true ||
-        a.featured === "true" ||
-        a.featured === 1 ||
-        a.featured === "1"
-        ? 1 : 0;
-
-      const bFeatured =
-        b.featured === true ||
-        b.featured === "true" ||
-        b.featured === 1 ||
-        b.featured === "1"
-        ? 1 : 0;
-
-      if (aFeatured !== bFeatured) {
-        return bFeatured - aFeatured;
-      }
-
-      return Number(b.id || 0) -
-             Number(a.id || 0);
 
     });
 
     count.innerText =
-      data.length + " vehicles found";
+    data.length + " vehicles found";
 
     let html = "";
-    let featuredHtml = "";
 
     data.forEach(function(v){
 
-      const isFeatured =
-        v.featured === true ||
-        v.featured === "true" ||
-        v.featured === 1 ||
-        v.featured === "1";
-
-      const featured =
-        isFeatured
-        ? '<div class="featured-badge">Featured</div>'
-        : "";
-
-      const title =
-        [v.year, v.make, v.model]
-        .filter(Boolean)
-        .join(" ");
-
-      const vehicleImages =
-        getImages(v);
+      const images =
+      getImages(v);
 
       const img =
-        vehicleImages[0];
+      images[0];
 
-      const cardHtml = `
+      const title =
+      [v.year,v.make,v.model]
+      .filter(Boolean)
+      .join(" ");
 
-<div class="card">
+      html += `
 
-  <div class="img-wrap">
+      <div class="card">
 
-    ${featured}
+        <div class="img-wrap">
 
-    <img
-      src="${img}"
-      loading="lazy"
-      onclick="window.location.href='details.html?id=${v.id}'"
-      style="cursor:pointer;"
-      onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'"
-    >
+          <img
+            src="${img}"
+            onclick="window.location.href='details.html?id=${v.id}'"
+          >
 
-    <div class="photo-badge">
-      📷 ${vehicleImages.length}
-    </div>
+          <div class="photo-badge">
+            📷 ${images.length}
+          </div>
 
-  </div>
+        </div>
 
-  <div class="card-body">
+        <div class="card-body">
 
-    <h3>${title}</h3>
+          <h3>${title}</h3>
 
-    <div class="price">
-      ${formatPrice(v.price)}
-    </div>
+          <div class="price">
+            ${formatPrice(v.price)}
+          </div>
 
-    <div class="meta">
-      📍 ${v.location || "-"}
-    </div>
+          <div class="meta">
+            📍 ${v.location || "-"}
+          </div>
 
-    <div class="meta">
-      🚗 ${v.mileage || "-"}
-    </div>
+          <div class="meta">
+            🚗 ${v.mileage || "-"}
+          </div>
 
-    <div class="meta">
-      🏢 ${v.dealer || v.dealer_name || "Dealer"}
-    </div>
+          <div class="meta">
+            🏢 ${v.dealer || "Dealer"}
+          </div>
 
-  </div>
+        </div>
 
-</div>
+      </div>
 
-`;
-
-      if (isFeatured) {
-        featuredHtml += cardHtml;
-      } else {
-        html += cardHtml;
-      }
+      `;
 
     });
 
     grid.innerHTML =
-      html ||
-      '<div class="empty">No vehicles found</div>';
+    html ||
+    '<div class="empty">No vehicles found</div>';
 
-    const featuredWrap =
-      document.getElementById("featuredWrap");
-
-    const featuredGrid =
-      document.getElementById("featuredGrid");
-
-    if (featuredHtml) {
-
-      featuredWrap.style.display =
-        "block";
-
-      featuredGrid.innerHTML =
-        featuredHtml;
-
-    } else {
-
-      featuredWrap.style.display =
-        "none";
-    }
-
-  } catch(err) {
+  }catch(err){
 
     console.log(err);
 
     grid.innerHTML =
-      '<div class="empty">Error loading vehicles.</div>';
+    '<div class="empty">Error loading vehicles.</div>';
+
   }
+
 }
 
 function clearSearch(){
@@ -758,5 +518,6 @@ function clearSearch(){
 loadCars();
 
 </script>
+
 </body>
 </html>
