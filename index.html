@@ -289,6 +289,41 @@ footer{
 }
 
 </style>
+  .mobile-search-toggle{
+  display:none;
+}
+
+@media(max-width:700px){
+
+  .hero{
+    height:190px;
+    background-size:cover;
+    background-position:65% center;
+  }
+
+  .mobile-search-toggle{
+    display:block;
+    width:90%;
+    margin:18px auto;
+    padding:16px;
+    border:none;
+    border-radius:18px;
+    background:#2563eb;
+    color:white;
+    font-size:18px;
+    font-weight:900;
+  }
+
+  .search-bar{
+    display:none;
+    margin:10px 14px 28px;
+    position:static;
+  }
+
+  .search-bar.mobile-open{
+    display:flex;
+  }
+}
 </head>
 
 <body>
@@ -308,7 +343,9 @@ footer{
   </div>
 
 </div>
-
+<button class="mobile-search-toggle" onclick="document.querySelector('.search-bar').classList.toggle('mobile-open')">
+🔍 Search Cars
+</button>
 <div class="search-bar">
 
   <input id="search" placeholder="Search make or model">
