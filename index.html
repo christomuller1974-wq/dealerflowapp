@@ -5,7 +5,12 @@
 <title>CarScoutZA | Used Cars for Sale South Africa</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<meta name="google-site-verification" content="oOba0W7_EqwqEoXSWQad1Hymmbeiy8oUrvwCztLuX-M" />
+
+<meta name="description" content="Find used cars for sale in South Africa. CarScoutZA connects buyers and dealers with trusted listings and fast contact.">
+
 <style>
+
 *{
   box-sizing:border-box;
 }
@@ -41,6 +46,7 @@ body{
   padding:12px 18px;
   border-radius:12px;
   font-weight:900;
+  box-shadow:0 6px 16px rgba(0,0,0,0.28);
 }
 
 .contact-btn{
@@ -52,15 +58,16 @@ body{
 }
 
 .search-bar{
-  background:white;
+  background:rgba(255,255,255,0.97);
+  backdrop-filter:blur(10px);
   max-width:1180px;
-  margin:-40px auto 30px;
+  margin:-55px auto 35px;
   padding:14px;
-  border-radius:18px;
+  border-radius:20px;
   display:flex;
   flex-wrap:wrap;
   gap:10px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.12);
+  box-shadow:0 12px 35px rgba(0,0,0,0.15);
   position:relative;
   z-index:20;
 }
@@ -73,6 +80,8 @@ body{
   border:1px solid #dbe1e8;
   border-radius:12px;
   font-size:14px;
+  outline:none;
+  background:white;
 }
 
 .search-btn,
@@ -100,13 +109,30 @@ body{
   color:#475569;
 }
 
+.section-wrap{
+  max-width:1320px;
+  margin:auto;
+  padding:0 22px;
+}
+
+.section-title{
+  font-size:34px;
+  font-weight:900;
+  margin:10px 0 18px;
+  color:#111827;
+}
 .grid{
   max-width:1320px;
   margin:auto;
+  margin-top:10px;
   padding:20px;
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
   gap:24px;
+}
+
+.grid:has(.card:only-child){
+  max-width:340px;
 }
 
 .card{
@@ -115,14 +141,18 @@ body{
   overflow:hidden;
   box-shadow:0 8px 24px rgba(0,0,0,0.10);
   transition:0.25s;
+  border:1px solid #eef2f7;
 }
 
 .card:hover{
   transform:translateY(-4px);
+  box-shadow:0 16px 34px rgba(0,0,0,0.16);
 }
 
 .img-wrap{
   position:relative;
+  background:#e5e7eb;
+  overflow:hidden;
 }
 
 .card img{
@@ -130,6 +160,12 @@ body{
   height:200px;
   object-fit:cover;
   display:block;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.card:hover img{
+  transform:scale(1.04);
 }
 
 .featured-badge{
@@ -142,13 +178,14 @@ body{
   border-radius:999px;
   font-size:12px;
   font-weight:900;
+  z-index:2;
 }
 
 .photo-badge{
   position:absolute;
   right:10px;
   bottom:10px;
-  background:rgba(0,0,0,0.7);
+  background:rgba(0,0,0,0.72);
   color:white;
   padding:6px 10px;
   border-radius:999px;
@@ -163,6 +200,9 @@ body{
 .card h3{
   margin:0 0 10px;
   font-size:18px;
+  min-height:44px;
+  line-height:1.25;
+  font-weight:900;
 }
 
 .price{
@@ -178,28 +218,44 @@ body{
 }
 
 .empty{
+  grid-column:1/-1;
   text-align:center;
   padding:40px;
   background:white;
   border-radius:16px;
   font-weight:900;
+  box-shadow:0 8px 24px rgba(0,0,0,0.08);
+}
+
+footer{
+  text-align:center;
+  padding:28px 15px;
+  color:#64748b;
+  font-size:14px;
 }
 
 @media(max-width:700px){
 
   .hero{
     height:290px;
+    background-size:cover;
     background-position:center top;
   }
 
   .hero-buttons{
-    left:15px;
-    right:15px;
+    top:14px;
+    left:14px;
+    right:14px;
     justify-content:center;
   }
 
+  .hero-buttons a{
+    padding:11px 16px;
+    font-size:14px;
+  }
+
   .search-bar{
-    margin:20px 12px;
+    margin:-25px 12px 28px;
   }
 
   .search-bar input,
@@ -210,15 +266,24 @@ body{
     flex:1 1 100%;
   }
 
+  .section-title{
+    font-size:28px;
+  }
+
   .grid{
     grid-template-columns:1fr;
     padding:14px;
+  }
+
+  .grid:has(.card:only-child){
+    max-width:100%;
   }
 
   .card img{
     height:220px;
   }
 }
+
 </style>
 </head>
 
@@ -279,38 +344,61 @@ body{
 
 </div>
 
-<div style="max-width:1320px;margin:auto;padding:0 22px;">
-  <h2 style="font-size:34px;font-weight:900;">
+<div id="featuredWrap" style="display:none;">
+
+  <div class="section-wrap">
+    <h2 class="section-title">
+      ⭐ Featured Vehicles
+    </h2>
+  </div>
+
+  <div id="featuredGrid" class="grid"></div>
+
+</div>
+
+<div class="section-wrap">
+  <h2 class="section-title">
     Latest Vehicles
   </h2>
 </div>
 
 <div id="grid" class="grid"></div>
 
-<script>
+<footer>
+  © 2026 CarScoutZA • Dealer Vehicle Marketplace South Africa
+</footer>
 
-const supabaseUrl =
+<script>const supabaseUrl =
 "https://ddmvzypiccryjndcwlre.supabase.co";
 
 const supabaseKey =
-"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
+"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 
 function getImages(v){
 
   let arr = [];
 
-  if(v.image){
-    arr.push(v.image);
+  if(v.image && String(v.image).trim()){
+
+    arr.push(
+      String(v.image).trim()
+    );
+
   }
 
   if(v.images){
 
-    v.images.split(",").forEach(function(i){
+    String(v.images)
+    .split(",")
+
+    .forEach(function(i){
 
       const img = i.trim();
 
       if(img && !arr.includes(img)){
+
         arr.push(img);
+
       }
 
     });
@@ -332,7 +420,8 @@ function formatPrice(p){
 
   const num =
   Number(
-    String(p || "").replace(/\D/g,"")
+    String(p || "")
+    .replace(/\D/g,"")
   );
 
   if(!num) return "R0";
@@ -346,6 +435,12 @@ async function loadCars(){
   const grid =
   document.getElementById("grid");
 
+  const featuredGrid =
+  document.getElementById("featuredGrid");
+
+  const featuredWrap =
+  document.getElementById("featuredWrap");
+
   const count =
   document.getElementById("count");
 
@@ -355,22 +450,34 @@ async function loadCars(){
   try{
 
     const res = await fetch(
+
       supabaseUrl +
       "/rest/v1/active_vehicles?select=*&order=id.desc",
+
       {
         headers:{
           apikey:supabaseKey,
           Authorization:"Bearer " + supabaseKey
         }
       }
+
     );
 
     let data = await res.json();
 
+    if(!Array.isArray(data)){
+
+      grid.innerHTML =
+      '<div class="empty">Could not load vehicles.</div>';
+
+      return;
+    }
+
     const search =
     document.getElementById("search")
     .value
-    .toLowerCase();
+    .toLowerCase()
+    .trim();
 
     const min =
     Number(
@@ -385,7 +492,11 @@ async function loadCars(){
     const province =
     document.getElementById("province")
     .value
-    .toLowerCase();
+    .toLowerCase()
+    .trim();
+
+    const sort =
+    document.getElementById("sort").value;
 
     data = data.filter(function(v){
 
@@ -393,7 +504,10 @@ async function loadCars(){
       (
         (v.year || "") + " " +
         (v.make || "") + " " +
-        (v.model || "")
+        (v.model || "") + " " +
+        (v.title || "") + " " +
+        (v.dealer || "") + " " +
+        (v.dealer_name || "")
       ).toLowerCase();
 
       const price =
@@ -404,6 +518,10 @@ async function loadCars(){
 
       const location =
       String(v.location || "")
+      .toLowerCase();
+
+      const vehicleProvince =
+      String(v.province || "")
       .toLowerCase();
 
       if(search && !text.includes(search)){
@@ -418,45 +536,112 @@ async function loadCars(){
         return false;
       }
 
-      if(province && !location.includes(province)){
-        return false;
+      if(province){
+
+        if(
+          !location.includes(province) &&
+          !vehicleProvince.includes(province)
+        ){
+          return false;
+        }
+
       }
 
       return true;
 
     });
 
+    if(sort === "low"){
+
+      data.sort(function(a,b){
+
+        const aPrice =
+        Number(
+          String(a.price || "")
+          .replace(/\D/g,"")
+        ) || 0;
+
+        const bPrice =
+        Number(
+          String(b.price || "")
+          .replace(/\D/g,"")
+        ) || 0;
+
+        return aPrice - bPrice;
+
+      });
+
+    }
+
+    if(sort === "high"){
+
+      data.sort(function(a,b){
+
+        const aPrice =
+        Number(
+          String(a.price || "")
+          .replace(/\D/g,"")
+        ) || 0;
+
+        const bPrice =
+        Number(
+          String(b.price || "")
+          .replace(/\D/g,"")
+        ) || 0;
+
+        return bPrice - aPrice;
+
+      });
+
+    }
+
     count.innerText =
     data.length + " vehicles found";
 
     let html = "";
+    let featuredHtml = "";data.forEach(function(v){
 
-    data.forEach(function(v){
+      const isFeatured =
+      v.featured === true ||
+      v.featured === "true" ||
+      v.featured === 1 ||
+      v.featured === "1";
 
-      const images =
+      const featured =
+      isFeatured
+      ? '<div class="featured-badge">Featured</div>'
+      : "";
+
+      const title =
+      [v.year, v.make, v.model]
+      .filter(Boolean)
+      .join(" ") ||
+      v.title ||
+      "Vehicle";
+
+      const vehicleImages =
       getImages(v);
 
       const img =
-      images[0];
+      vehicleImages[0];
 
-      const title =
-      [v.year,v.make,v.model]
-      .filter(Boolean)
-      .join(" ");
-
-      html += `
+      const cardHtml = `
 
       <div class="card">
 
         <div class="img-wrap">
 
+          ${featured}
+
           <img
             src="${img}"
+            loading="lazy"
             onclick="window.location.href='details.html?id=${v.id}'"
+            onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'"
           >
 
           <div class="photo-badge">
-            📷 ${images.length}
+            📷 ${vehicleImages.length}
           </div>
 
         </div>
@@ -478,7 +663,7 @@ async function loadCars(){
           </div>
 
           <div class="meta">
-            🏢 ${v.dealer || "Dealer"}
+            🏢 ${v.dealer || v.dealer_name || "Dealer"}
           </div>
 
         </div>
@@ -487,13 +672,35 @@ async function loadCars(){
 
       `;
 
+      if(isFeatured && !sort){
+        featuredHtml += cardHtml;
+      } else {
+        html += cardHtml;
+      }
+
     });
 
     grid.innerHTML =
     html ||
     '<div class="empty">No vehicles found</div>';
 
-  }catch(err){
+    if(featuredHtml){
+
+      featuredWrap.style.display =
+      "block";
+
+      featuredGrid.innerHTML =
+      featuredHtml;
+
+    } else {
+
+      featuredWrap.style.display =
+      "none";
+
+      featuredGrid.innerHTML =
+      "";}
+
+  } catch(err){
 
     console.log(err);
 
@@ -513,6 +720,7 @@ function clearSearch(){
   document.getElementById("sort").value = "";
 
   loadCars();
+
 }
 
 loadCars();
