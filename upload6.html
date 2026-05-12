@@ -694,10 +694,28 @@ async function init() {
     const ok = await loadProfile();
     if (!ok) return;
 
-    if (!profile.is_active) {
-      showPendingApprovalScreen();
-      return;
-    }
+    const now = new Date();
+
+const paidUntil = profile.paid_until
+  ? new Date(profile.paid_until)
+  : null;
+
+const freeUntil = profile.admin_free_until
+  ? new Date(profile.admin_free_until)
+  : null;
+
+const paidActive = paidUntil && paidUntil > now;
+const freeActive = freeUntil && freeUntil > now;
+
+if (!profile.active || profile.admin_blocked) {
+  showPendingApprovalScreen();
+  return;
+}
+
+if (!paidActive && !freeActive) {
+  showPendingApprovalScreen();
+  return;
+}
 
     let c = await countVehicles();
     setStatus("Upload page ready. Vehicles: " + c + " / " + MAX_VEHICLES);
