@@ -478,11 +478,12 @@ function showPendingApprovalScreen() {
   document.body.innerHTML = `
     <div class="approval-wrap">
       <div class="approval-card">
-        <h2>Account Pending Approval</h2>
-        <p>Your dealer account has not been approved yet.</p>
-        <p>Please wait for admin approval before loading vehicles.</p>
+        <h2>Account Not Active</h2>
+        <p>Your dealer account is not currently active.</p>
+        <p>Please renew your monthly payment or contact CarScoutZA support.</p>
         <div class="approval-actions">
           <a href="index.html" class="top-btn">Back to Website</a>
+          <a href="payment.html" class="top-btn blue">Make Payment</a>
           <button class="top-btn" onclick="logout()">Logout</button>
         </div>
       </div>
