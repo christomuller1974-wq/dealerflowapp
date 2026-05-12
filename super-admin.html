@@ -378,7 +378,10 @@ async function loadDealers() {
           onclick="activateDealer('${d.id}')">
           Activate
         </button>
-
+<button class="btn btn-blue"
+onclick="grantFree30Days('${d.id}')">
+30-Day Free Access
+</button>
         <button class="btn btn-red"
           onclick="deactivateDealer('${d.id}')">
           Deactivate
@@ -403,19 +406,71 @@ async function activateDealer(id) {
   loadDealers();
 }
 
+async function activateDealer(id) {
+
+  const { error } = await client
+    .from("profiles")
+    .update({
+      active:true,
+      admin_blocked:false
+    })
+    .eq("id", id);
+
+  if (error) {
+    alert("Failed to activate dealer");
+    console.error(error);
+    return;
+  }
+
+  loadDealers();
+}
+
+async function grantFree30Days(id) {
+
+  const freeUntil = new Date();
+
+  freeUntil.setDate(
+    freeUntil.getDate() + 30
+  );
+
+  const { error } = await client
+    .from("profiles")
+    .update({
+      active:true,
+      admin_blocked:false,
+      admin_free_until:
+        freeUntil.toISOString(),
+      payment_status:"FREE_30_DAY"
+    })
+    .eq("id", id);
+
+  if (error) {
+    alert("Failed to grant free access");
+    console.error(error);
+    return;
+  }
+
+  alert("30-day free access granted");
+
+loadDealers();
+}
+
 async function deactivateDealer(id) {
 
-  await client
+  const { error } = await client
     .from("profiles")
-    .update({ active:false })
+    .update({
+      active:false
+    })
     .eq("id", id);
+
+  if (error) {
+    alert("Failed to deactivate dealer");
+    console.error(error);
+    return;
+  }
 
   loadDealers();
 }
 
 startAdmin();
-
-</script>
-
-</body>
-</html>
