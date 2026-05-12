@@ -398,16 +398,6 @@ onclick="grantFree30Days('${d.id}')">
 
 async function activateDealer(id) {
 
-  await client
-    .from("profiles")
-    .update({ active:true })
-    .eq("id", id);
-
-  loadDealers();
-}
-
-async function activateDealer(id) {
-
   const { error } = await client
     .from("profiles")
     .update({
@@ -474,3 +464,7 @@ async function deactivateDealer(id) {
 }
 
 startAdmin();
+</script>
+
+</body>
+</html>
