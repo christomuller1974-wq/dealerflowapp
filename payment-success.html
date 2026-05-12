@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Payment Success | CarScoutZA</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  font-family:Arial,sans-serif;
+  background:#eef2f7;
+  margin:0;
+  padding:20px;
+  color:#111827;
+}
+
+.receipt{
+  max-width:700px;
+  margin:40px auto;
+  background:white;
+  padding:30px;
+  border-radius:20px;
+  box-shadow:0 8px 24px rgba(0,0,0,0.12);
+}
+
+h1{
+  color:#16a34a;
+}
+
+.line{
+  display:flex;
+  justify-content:space-between;
+  border-bottom:1px solid #e5e7eb;
+  padding:12px 0;
+  font-weight:700;
+}
+
+.btn{
+  display:inline-block;
+  margin-top:20px;
+  padding:14px 18px;
+  border:none;
+  border-radius:12px;
+  background:#2563eb;
+  color:white;
+  font-weight:900;
+  cursor:pointer;
+  text-decoration:none;
+}
+
+.dark{
+  background:#111827;
+}
+
+@media print{
+  .btn{
+    display:none;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="receipt">
+
+  <h1>Payment Successful</h1>
+
+  <p>Thank you for your CarScoutZA dealer subscription payment.</p>
+
+  <div class="line">
+    <span>Receipt Date</span>
+    <span id="receiptDate"></span>
+  </div>
+
+  <div class="line">
+    <span>Package</span>
+    <span>Monthly Dealer Subscription</span>
+  </div>
+
+  <div class="line">
+    <span>Amount Paid</span>
+    <span>R2000.00</span>
+  </div>
+
+  <div class="line">
+    <span>Status</span>
+    <span>Paid</span>
+  </div>
+
+  <div class="line">
+    <span>Valid For</span>
+    <span>30 Days</span>
+  </div>
+
+  <button class="btn" onclick="window.print()">
+    Download / Print Receipt
+  </button>
+
+  <a href="dealer-admin.html" class="btn dark">
+    Go to Dashboard
+  </a>
+
+</div>
+
+<script>
+document.getElementById("receiptDate").textContent =
+new Date().toLocaleDateString("en-ZA");
+</script>
+
+</body>
+</html>
