@@ -677,10 +677,30 @@ async function startDashboard() {
 
   showAdminButton();
 
- if (!currentProfile.active) {
-    showPendingApprovalScreen();
-    return;
-  }
+ const now = new Date();
+
+const paidUntil = currentProfile.paid_until
+  ? new Date(currentProfile.paid_until)
+  : null;
+
+const freeUntil = currentProfile.admin_free_until
+  ? new Date(currentProfile.admin_free_until)
+  : null;
+
+const paidActive = paidUntil && paidUntil > now;
+const freeActive = freeUntil && freeUntil > now;
+
+if (!currentProfile.active || currentProfile.admin_blocked) {
+  showPendingApprovalScreen();
+  return;
+}
+
+if (!paidActive && !freeActive) {
+  showPendingApprovalScreen();
+  return;
+}
+
+await loadVehicles();
 
   await loadVehicles();
 }
