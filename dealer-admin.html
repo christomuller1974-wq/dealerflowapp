@@ -677,7 +677,7 @@ async function startDashboard() {
 
   showAdminButton();
 
-  if (!currentProfile.is_active) {
+ if (!currentProfile.active) {
     showPendingApprovalScreen();
     return;
   }
