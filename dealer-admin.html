@@ -677,7 +677,14 @@ async function startDashboard() {
 
   showAdminButton();
 
- const now = new Date();
+const email = (currentUser.email || "").toLowerCase().trim();
+
+if (email === MAIN_ADMIN_EMAIL.toLowerCase()) {
+  await loadVehicles();
+  return;
+}
+
+const now = new Date();
 
 const paidUntil = currentProfile.paid_until
   ? new Date(currentProfile.paid_until)
@@ -701,9 +708,6 @@ if (!paidActive && !freeActive) {
 }
 
 await loadVehicles();
-
-  await loadVehicles();
-}
 
 startDashboard();
 </script>
