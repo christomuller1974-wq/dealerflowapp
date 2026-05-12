@@ -105,22 +105,50 @@ h1{
 <script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
+
 const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
 
-const supabaseKey = "
-  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
 
 const client = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 document.getElementById("receiptDate").textContent =
-  new Date().toLocaleDateString("en-ZA");
+new Date().toLocaleDateString("en-ZA");
 
 async function activateAfterPayment() {
+
   const { data, error } = await client.auth.getUser();
 
-  if (error ||
-</script>
+  if (error || !data.user) {
+    alert("Please log in first so we can activate your dealer account.");
+    window.location.href = "login.html";
+    return;
+  }
 
-</body>
-</html>
+  const paidUntil = new Date();
+  paidUntil.setDate(paidUntil.getDate() + 30);
+
+  const { error:updateError } = await client
+    .from("profiles")
+    .update({
+      active:true,
+      admin_blocked:false,
+      paid_until:paidUntil.toISOString(),
+      payment_status:"PAID"
+    })
+    .eq("id", data.user.id);
+
+  if (updateError) {
+    alert("Payment received, but activation failed.");
+    console.error(updateError);
+    return;
+  }
+
+}
+
+activateAfterPayment();
+
+</script>
