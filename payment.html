@@ -6,7 +6,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-
 *{
   box-sizing:border-box;
 }
@@ -21,67 +20,55 @@ body{
 .hero{
   background:linear-gradient(135deg,#111827,#1e3a8a,#2563eb);
   color:white;
-  padding:50px 20px;
+  padding:45px 20px;
   text-align:center;
 }
 
 .hero h1{
   margin:0;
-  font-size:42px;
+  font-size:40px;
   font-weight:900;
-}
-
-.hero p{
-  margin-top:10px;
-  font-size:18px;
 }
 
 .container{
-  max-width:900px;
+  max-width:850px;
   margin:0 auto;
-  padding:20px;
+  padding:22px;
 }
 
-.payment-card{
+.card{
   background:white;
   border-radius:22px;
-  padding:30px;
-  box-shadow:0 8px 24px rgba(0,0,0,0.10);
+  padding:28px;
+  box-shadow:0 8px 24px rgba(0,0,0,0.12);
 }
 
 .price{
-  font-size:62px;
+  font-size:56px;
   font-weight:900;
   color:#2563eb;
-  margin:10px 0;
+  margin:15px 0;
 }
 
-.price small{
-  font-size:22px;
+.price span{
+  font-size:20px;
   color:#64748b;
-}
-
-.feature-list{
-  margin-top:24px;
-  display:grid;
-  gap:14px;
 }
 
 .feature{
   background:#f8fafc;
-  border-radius:14px;
   padding:14px;
-  font-size:16px;
-  font-weight:700;
+  border-radius:14px;
+  margin:10px 0;
+  font-weight:800;
 }
 
 .pay-btn{
-  display:block;
   width:100%;
+  margin-top:24px;
+  padding:18px;
   border:none;
   border-radius:16px;
-  padding:18px;
-  margin-top:26px;
   background:#16a34a;
   color:white;
   font-size:20px;
@@ -89,33 +76,9 @@ body{
   cursor:pointer;
 }
 
-.pay-btn:hover{
-  opacity:0.92;
-}
-
-.status-box{
-  margin-top:24px;
-  background:#eff6ff;
-  border:2px solid #bfdbfe;
-  border-radius:16px;
-  padding:18px;
-}
-
-.status-title{
-  font-size:20px;
-  font-weight:900;
-  margin-bottom:10px;
-}
-
-.status-text{
-  font-size:16px;
-  color:#334155;
-  line-height:1.6;
-}
-
-.back-btn{
+.back{
   display:inline-block;
-  margin-top:20px;
+  margin-top:18px;
   background:#111827;
   color:white;
   text-decoration:none;
@@ -123,7 +86,6 @@ body{
   border-radius:12px;
   font-weight:900;
 }
-
 </style>
 </head>
 
@@ -131,88 +93,50 @@ body{
 
 <div class="hero">
   <h1>Dealer Subscription</h1>
-  <p>Keep your CarScoutZA dealer account active</p>
+  <p>Activate your CarScoutZA dealer account</p>
 </div>
 
 <div class="container">
+  <div class="card">
 
-  <div class="payment-card">
-
-    <h2>Dealer Package</h2>
+    <h2>Monthly Dealer Package</h2>
 
     <div class="price">
-      R999
-      <small>/month</small>
+      R999 <span>/ month</span>
     </div>
 
-    <div class="feature-list">
+    <div class="feature">✅ Dealer dashboard access</div>
+    <div class="feature">✅ Upload and manage vehicles</div>
+    <div class="feature">✅ Dealer profile page</div>
+    <div class="feature">✅ WhatsApp and call enquiries</div>
+    <div class="feature">✅ Vehicle limit: 40 vehicles</div>
 
-      <div class="feature">
-        Unlimited dealer exposure
-      </div>
+    <form action="https://www.payfast.co.za/eng/process" method="post">
 
-      <div class="feature">
-        Upload and manage vehicle stock
-      </div>
+      <input type="hidden" name="merchant_id" value="34937955">
 
-      <div class="feature">
-        Dealer share page included
-      </div>
+      <input type="hidden" name="merchant_key" value="eeo8gbmdxxey2">
 
-      <div class="feature">
-        WhatsApp and call tracking
-      </div>
+      <input type="hidden" name="return_url" value="https://carscoutza.com/dealer-admin.html">
 
-      <div class="feature">
-        Featured vehicle options
-      </div>
+      <input type="hidden" name="cancel_url" value="https://carscoutza.com/payment.html">
 
-      <div class="feature">
-        Dealer dashboard analytics
-      </div>
+      <input type="hidden" name="amount" value="999.00">
 
-    </div>
+      <input type="hidden" name="item_name" value="CarScoutZA Monthly Dealer Subscription">
 
-    <button class="pay-btn" onclick="startPayment()">
-      Pay Now
-    </button>
+      <button type="submit" class="pay-btn">
+        Pay R999 Now
+      </button>
 
-    <div class="status-box">
+    </form>
 
-      <div class="status-title">
-        Dealer Account Status
-      </div>
-
-      <div class="status-text" id="statusText">
-        Checking account...
-      </div>
-
-    </div>
-
-    <a href="dealer-admin.html" class="back-btn">
+    <a href="dealer-admin.html" class="back">
       Back to Dashboard
     </a>
 
   </div>
-
 </div>
-
-<script>
-
-function startPayment(){
-
-  alert(
-    "Next step: connect PayFast payment gateway."
-  );
-
-}
-
-document.getElementById("statusText").innerHTML = `
-  Your account payment system is ready.<br><br>
-  Next step is PayFast integration.
-`;
-
-</script>
 
 </body>
 </html>
