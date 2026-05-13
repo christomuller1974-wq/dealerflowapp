@@ -1031,10 +1031,39 @@
         return;
       }
 
-      if (!profile.is_active) {
-        showPendingApprovalScreen();
-        return;
-      }
+      const now = new Date();
+
+const paidUntil = profile.paid_until
+  ? new Date(profile.paid_until)
+ : null;
+
+const freeUntil = profile.admin_free_until
+  ? new Date(profile.admin_free_until)
+  : null;
+
+const paidActive = paidUntil && paidUntil > now;
+const freeActive = freeUntil && freeUntil > now;
+
+const hasFreeStatus =
+  profile.payment_status === "FREE_30_DAY";
+
+const hasPaidStatus =
+  profile.payment_status === "PAID";
+
+if (profile.admin_blocked) {
+  showPendingApprovalScreen();
+  return;
+}
+
+if (!profile.active && !hasFreeStatus && !hasPaidStatus) {
+  showPendingApprovalScreen();
+  return;
+}
+
+if (!paidActive && !freeActive && !hasFreeStatus && !hasPaidStatus) {
+  showPendingApprovalScreen();
+  return;
+}
 
       const okVehicle = await loadVehicle();
       if (!okVehicle) return;
