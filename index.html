@@ -508,7 +508,56 @@ async function loadCars(){
     );
 
     let data = await res.json();
+const profiles = await fetch(
+  supabaseUrl + "/rest/v1/profiles?select=id,active,admin_blocked,paid_until,admin_free_until,payment_status",
+  {
+    headers:{
+      apikey:supabaseKey,
+      Authorization:"Bearer " + supabaseKey
+    }
+  }
+).then(r => r.json());
 
+const activeDealerIds = new Set();
+
+const now = new Date();
+
+(profiles || []).forEach(function(p){
+
+  const paidUntil =
+    p.paid_until
+      ? new Date(p.paid_until)
+      : null;
+
+  const freeUntil =
+    p.admin_free_until
+      ? new Date(p.admin_free_until)
+      : null;
+
+  const paidActive =
+    paidUntil && paidUntil > now;
+
+  const freeActive =
+    freeUntil && freeUntil > now;
+
+  if(
+    p.active === true &&
+    p.admin_blocked !== true &&
+    (
+      paidActive ||
+      freeActive ||
+      p.payment_status === "PAID" ||
+      p.payment_status === "FREE_30_DAY"
+    )
+  ){
+    activeDealerIds.add(p.id);
+  }
+
+});
+
+data = data.filter(function(v){
+  return activeDealerIds.has(v.user_id);
+});
     if(!Array.isArray(data)){
 
       grid.innerHTML =
