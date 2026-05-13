@@ -557,7 +557,25 @@ const now = new Date();
 });
 
 data = data.filter(function(v){
-  return activeDealerIds.has(v.user_id);
+
+  const dealerProfile = (profiles || []).find(function(p){
+    return String(p.id) === String(v.user_id);
+  });
+
+  if (!dealerProfile) {
+    return true;
+  }
+
+  if (dealerProfile.admin_blocked === true) {
+    return false;
+  }
+
+  if (dealerProfile.active === false) {
+    return false;
+  }
+
+  return true;
+
 });
     if(!Array.isArray(data)){
 
