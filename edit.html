@@ -1030,7 +1030,15 @@
         setStatus("Could not load dealer profile.");
         return;
       }
+const email = (currentUser.email || "").toLowerCase().trim();
 
+if (email === "autoexcellence@telkomsa.net") {
+  const okVehicle = await loadVehicle();
+  if (!okVehicle) return;
+
+  setStatus("Owner edit access granted.");
+  return;
+}
       const now = new Date();
 
 const paidUntil = profile.paid_until
