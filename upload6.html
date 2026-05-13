@@ -707,12 +707,23 @@ const freeUntil = profile.admin_free_until
 const paidActive = paidUntil && paidUntil > now;
 const freeActive = freeUntil && freeUntil > now;
 
-if (!profile.active || profile.admin_blocked) {
+const hasFreeStatus =
+  profile.payment_status === "FREE_30_DAY";
+
+const hasPaidStatus =
+  profile.payment_status === "PAID";
+
+if (profile.admin_blocked) {
   showPendingApprovalScreen();
   return;
 }
 
-if (!paidActive && !freeActive) {
+if (!profile.active && !hasFreeStatus && !hasPaidStatus) {
+  showPendingApprovalScreen();
+  return;
+}
+
+if (!paidActive && !freeActive && !hasFreeStatus && !hasPaidStatus) {
   showPendingApprovalScreen();
   return;
 }
