@@ -541,17 +541,18 @@ const now = new Date();
     freeUntil && freeUntil > now;
 
   if(
-  (p.active === true || p.is_active === true) &&
   p.admin_blocked !== true &&
-    (
-      paidActive ||
-      freeActive ||
-      p.payment_status === "PAID" ||
-      p.payment_status === "FREE_30_DAY"
-    )
-  ){
-    activeDealerIds.add(p.id);
-  }
+  (
+    p.active === true ||
+    p.is_active === true ||
+    p.payment_status === "PAID" ||
+    p.payment_status === "FREE_30_DAY" ||
+    paidActive ||
+    freeActive
+  )
+){
+  activeDealerIds.add(p.id);
+}
 
 });
 
