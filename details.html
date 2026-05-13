@@ -876,7 +876,7 @@ async function loadVehicle(){
 
     const res = await fetch(
       supabaseUrl +
-      "/rest/v1/active_vehicles?select=*&id=eq." +
+      "/rest/v1/vehicles?select=*&id=eq." +
       encodeURIComponent(id),
 
       {
