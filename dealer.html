@@ -193,14 +193,10 @@
       document.getElementById("status").textContent = message;
     }
 
-    function getDealerFromUrl() {
-      const params = new URLSearchParams(window.location.search);
-
-      const dealer =
-        params.get("dealer") || "";
-
-      return dealer.replace(/-/g, " ");
-    }
+   function getDealerFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get("dealer") || "";
+}
 
     function getMainImage(vehicle) {
 
