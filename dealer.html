@@ -301,10 +301,11 @@ async function loadDealerVehicles() {
         : null;
 
     const dealerName =
-      profile?.dealer_name ||
-      profile?.dealer ||
-      profile?.name ||
-      "Dealer Stock";
+  vehicle?.dealer ||
+  profile?.dealer_name ||
+  profile?.dealer ||
+  profile?.name ||
+  "Dealer Stock";
 
     document.getElementById("dealerTitle").textContent =
       dealerName;
