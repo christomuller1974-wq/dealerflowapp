@@ -255,23 +255,159 @@
 
     async function loadDealerVehicles() {
 
-      const dealerId = getDealerFromUrl();
+  const dealerId = getDealerFromUrl();
 
-      const container =
-        document.getElementById("vehicleList");
+  const container =
+    document.getElementById("vehicleList");
 
-      if (!dealerid) {
+  if (!dealerId) {
+    setStatus("Missing dealer.");
+    container.innerHTML = `
+      <div class="empty-box">
+        Dealer not found.
+      </div>
+    `;
+    return;
+  }
 
-        setStatus("Missing dealer name.");
+  setStatus("Loading dealer stock...");
 
-        container.innerHTML = `
-          <div class="empty-box">
-            Dealer not found.
-          </div>
-        `;
+  try {
 
-        return;
+    const profileUrl =
+      supabaseUrl +
+      "/rest/v1/profiles?select=dealer_name,dealer,name&id=eq." +
+      encodeURIComponent(dealerId);
+
+    const profileRes = await fetch(profileUrl, {
+      headers:{
+        apikey:supabaseKey,
+        Authorization:"Bearer " + supabaseKey
       }
+    });
+
+    const profiles = await profileRes.json();
+
+    const profile = profiles && profiles[0] ? profiles[0] : null;
+
+    const dealerName =
+      profile?.dealer_name ||
+      profile?.dealer ||
+      profile?.name ||
+      "Dealer Stock";
+
+    document.getElementById("dealerTitle").textContent =
+      dealerName;
+
+    document.title =
+      dealerName + " | CarScoutZA";
+
+    const url =
+      supabaseUrl +
+      "/rest/v1/vehicles?select=*&user_id=eq." +
+      encodeURIComponent(dealerId) +
+      "&order=id.desc";
+
+    const res = await fetch(url, {
+      headers:{
+        apikey:supabaseKey,
+        Authorization:"Bearer " + supabaseKey
+      }
+    });
+
+    const data = await res.json();
+
+    container.innerHTML = "";
+
+    if (!Array.isArray(data) || data.length === 0) {
+      setStatus("No vehicles found.");
+      container.innerHTML = `
+        <div class="empty-box">
+          No vehicles found for this dealer.
+        </div>
+      `;
+      return;
+    }
+
+    data.forEach(vehicle => {
+
+      const mainImage = getMainImage(vehicle);
+
+      const fallbackTitle =
+        [
+          vehicle.year,
+          vehicle.make,
+          vehicle.model
+        ]
+        .filter(Boolean)
+        .join(" ");
+
+      const title =
+        vehicle.title ||
+        fallbackTitle ||
+        "No Title";
+
+      const card =
+        document.createElement("div");
+
+      card.className = "vehicle-card";
+
+      card.innerHTML = `
+        <img
+          src="${mainImage}"
+          class="vehicle-thumb"
+          alt="${title}"
+          onerror="this.src='https://via.placeholder.com/400x250?text=No+Image'"
+        >
+
+        <div class="vehicle-title">
+          ${title}
+        </div>
+
+        <div class="vehicle-meta">
+          Year: ${vehicle.year || "-"}
+        </div>
+
+        <div class="vehicle-meta">
+          Location: ${vehicle.location || "-"}
+        </div>
+
+        <div class="price">
+          R${vehicle.price || 0}
+        </div>
+
+        <div class="button-stack">
+
+          <a href="details.html?id=${vehicle.id}" class="btn btn-blue">
+            View
+          </a>
+
+          <a href="${callLink(vehicle.phone)}" class="btn btn-dark">
+            Call
+          </a>
+
+          <a href="${whatsappLink(vehicle.phone, title)}" target="_blank" class="btn btn-whatsapp">
+            WhatsApp
+          </a>
+
+        </div>
+      `;
+
+      container.appendChild(card);
+    });
+
+    setStatus("Dealer stock loaded.");
+
+  } catch (err) {
+    console.error(err);
+    setStatus("Could not load dealer stock.");
+    container.innerHTML = `
+      <div class="empty-box">
+        Could not load dealer stock.
+      </div>
+    `;
+  }
+}
 
       document.getElementById("dealerTitle").textContent =
         dealerName;
