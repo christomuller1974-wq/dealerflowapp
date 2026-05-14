@@ -255,12 +255,12 @@
 
     async function loadDealerVehicles() {
 
-      const dealerName = getDealerFromUrl();
+      const dealerId = getDealerFromUrl();
 
       const container =
         document.getElementById("vehicleList");
 
-      if (!dealerName) {
+      if (!dealerid) {
 
         setStatus("Missing dealer name.");
 
@@ -298,10 +298,10 @@
       try {
 
         const url =
-          supabaseUrl +
-          "/rest/v1/active_vehicles?select=*&dealer=eq." +
-          encodeURIComponent(dealerName) +
-          "&order=id.desc";
+  supabaseUrl +
+  "/rest/v1/vehicles?select=*&user_id=eq." +
+  encodeURIComponent(dealerId) +
+  "&order=id.desc";
 
         const res = await fetch(url, {
           headers: {
