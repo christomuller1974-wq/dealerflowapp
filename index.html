@@ -767,8 +767,7 @@ data = data.filter(function(v){
           </div>
 
           <div class="meta">
-            📍 ${v.location || "-"}
-          </div>
+            ${[v.province, v.town].filter(Boolean).join(", ") || v.location || ""}
 
           <div class="meta">
             🚗 ${v.mileage || "-"}
