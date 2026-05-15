@@ -774,11 +774,13 @@ const dealerProfile = (profiles || []).find(function(p){
           </div>
 
           <div class="meta">
-  ${
-  [
-    v.province || dealerProfile?.province,
-    v.town || dealerProfile?.town
-  ].filter(Boolean).join(", ") || v.location || "-"
+ 📍 ${
+[
+v.town || dealerProfile?.town,
+v.province || dealerProfile?.province
+]
+.filter(Boolean)
+.join(", ")
 }
 </div>
 
