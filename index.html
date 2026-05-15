@@ -780,7 +780,7 @@ v.town || dealerProfile?.town,
 v.province || dealerProfile?.province
 ]
 .filter(Boolean)
-.join(", ")
+.join(", ") || v.location || "-"
 }
 </div>
 
