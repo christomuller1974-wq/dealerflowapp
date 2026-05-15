@@ -526,20 +526,14 @@ function whatsappLink(phone, title){
     );
 }
 
-function dealerStockLink(vehicle){
+function dealerStockLink(vehicle) {
 
-  const dealerName =
-    vehicle.dealer ||
-    vehicle.dealer_name ||
-    "Dealer";
+  if (!vehicle.user_id) {
+    return "dealer.html";
+  }
 
-  const dealerSlug =
-    dealerName
-      .trim()
-      .replace(/\s+/g, "-");
+  return "dealer.html?dealer=" + encodeURIComponent(vehicle.user_id);
 
-  return "dealer.html?dealer=" +
-    encodeURIComponent(dealerSlug);
 }
 
 function getImages(vehicle){
