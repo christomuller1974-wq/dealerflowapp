@@ -357,7 +357,21 @@ async function loadDealerVehicles() {
     });
 
     const data = await res.json();
+if (Array.isArray(data) && data.length > 0) {
 
+  const firstVehicle = data[0];
+
+  const dealerName =
+    firstVehicle.dealer ||
+    firstVehicle.dealer_name ||
+    "Dealer Stock";
+
+  document.getElementById("dealerTitle").textContent =
+    dealerName;
+
+  document.title =
+    dealerName + " | CarScoutZA";
+}
     container.innerHTML = "";
 
     if (!Array.isArray(data) || data.length === 0) {
