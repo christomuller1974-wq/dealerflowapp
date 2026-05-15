@@ -268,80 +268,21 @@ async function loadDealerVehicles() {
     document.getElementById("vehicleList");
 
   if (!dealerId) {
+
     setStatus("Missing dealer.");
+
     container.innerHTML = `
       <div class="empty-box">
         Dealer not found.
       </div>
     `;
+
     return;
   }
 
   setStatus("Loading dealer stock...");
 
   try {
-
-    const profileUrl =
-      supabaseUrl +
-      "/rest/v1/profiles?select=dealer_name,dealer,name,active,admin_blocked,paid_until,admin_free_until,payment_status&id=eq." +
-      encodeURIComponent(dealerId);
-
-    const profileRes = await fetch(profileUrl, {
-      headers:{
-        apikey:supabaseKey,
-        Authorization:"Bearer " + supabaseKey
-      }
-    });
-
-    const profiles = await profileRes.json();
-
-    const profile =
-      profiles && profiles[0]
-        ? profiles[0]
-        : null;
-
-    const dealerName =
-  vehicle?.dealer ||
-  profile?.dealer_name ||
-  profile?.dealer ||
-  profile?.name ||
-  "Dealer Stock";
-
-    document.getElementById("dealerTitle").textContent =
-      dealerName;
-
-    document.title =
-      dealerName + " | CarScoutZA";
-
-    const metaDesc =
-      document.querySelector('meta[name="description"]');
-
-    if (metaDesc) {
-      metaDesc.setAttribute(
-        "content",
-        "Browse vehicles from " + dealerName + " on CarScoutZA."
-      );
-    }
-
-    if (profile && profile.admin_blocked === true) {
-      setStatus("Dealer not available.");
-      container.innerHTML = `
-        <div class="empty-box">
-          This dealer is currently not available.
-        </div>
-      `;
-      return;
-    }
-
-    if (profile && profile.active === false) {
-      setStatus("Dealer not active.");
-      container.innerHTML = `
-        <div class="empty-box">
-          This dealer is currently not active.
-        </div>
-      `;
-      return;
-    }
 
     const url =
       supabaseUrl +
@@ -357,50 +298,48 @@ async function loadDealerVehicles() {
     });
 
     const data = await res.json();
-if (Array.isArray(data) && data.length > 0) {
 
-  const firstVehicle = data[0];
-
-  const dealerName =
-    firstVehicle.dealer ||
-    firstVehicle.dealer_name ||
-    "Dealer Stock";
-
-  document.getElementById("dealerTitle").textContent =
-    dealerName;
-
-  document.title =
-    dealerName + " | CarScoutZA";
-}
     container.innerHTML = "";
 
-    if (!Array.isArray(data) || data.length === 0) {
+    if (
+      !Array.isArray(data) ||
+      data.length === 0
+    ) {
+
       setStatus("No vehicles found.");
+
       container.innerHTML = `
         <div class="empty-box">
           No vehicles found for this dealer.
         </div>
       `;
+
       return;
     }
 
-    data.forEach(vehicle => {
+    const firstVehicle = data[0];
+
+    const dealerName =
+      firstVehicle.dealer ||
+      firstVehicle.dealer_name ||
+      "Dealer Stock";
+
+    document.getElementById("dealerTitle").textContent =
+      dealerName;
+
+    document.title =
+      dealerName + " | CarScoutZA";
+
+    data.forEach(function(vehicle) {
 
       const mainImage =
         getMainImage(vehicle);
 
-      const fallbackTitle =
-        [
-          vehicle.year,
-          vehicle.make,
-          vehicle.model
-        ]
-        .filter(Boolean)
-        .join(" ");
-
       const title =
         vehicle.title ||
-        fallbackTitle ||
+        [vehicle.year, vehicle.make, vehicle.model]
+        .filter(Boolean)
+        .join(" ") ||
         "No Title";
 
       const card =
@@ -409,6 +348,7 @@ if (Array.isArray(data) && data.length > 0) {
       card.className = "vehicle-card";
 
       card.innerHTML = `
+
         <img
           src="${mainImage}"
           class="vehicle-thumb"
@@ -429,7 +369,7 @@ if (Array.isArray(data) && data.length > 0) {
         </div>
 
         <div class="price">
-          ${formatPrice(vehicle.price)}
+          R${vehicle.price || 0}
         </div>
 
         <div class="button-stack">
@@ -457,9 +397,11 @@ if (Array.isArray(data) && data.length > 0) {
           </a>
 
         </div>
+
       `;
 
       container.appendChild(card);
+
     });
 
     setStatus("Dealer stock loaded.");
