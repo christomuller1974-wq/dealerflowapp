@@ -126,21 +126,24 @@ body{
   color:#111827;
 }
 .grid{
-  max-width:1320px;
-  margin:auto;
-  margin-top:10px;
-  padding:20px;
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:24px;
+    max-width:1320px;
+    margin:auto;
+    margin-top:10px;
+    padding:20px;
+
+    display:grid;
+    grid-template-columns:repeat(4,minmax(280px,1fr));
+
+    gap:24px;
 }
 
-.grid:has(.card:only-child){
-  max-width:340px;
-}
+
 
 .card{
-  background:white;
+    width:100%;
+    min-width:0;
+
+    background:white;
   border-radius:18px;
   overflow:hidden;
   box-shadow:0 8px 24px rgba(0,0,0,0.10);
