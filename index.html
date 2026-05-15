@@ -514,7 +514,7 @@ async function loadCars(){
 
     let data = await res.json();
 const profiles = await fetch(
- supabaseUrl + "/rest/v1/profiles?select=id,active,admin_blocked,paid_until,admin_free_until,payment_status",
+ supabaseUrl + "/rest/v1/profiles?select=id,active,admin_blocked,paid_until,admin_free_until,payment_status,town,province",
   {
     headers:{
       apikey:supabaseKey,
