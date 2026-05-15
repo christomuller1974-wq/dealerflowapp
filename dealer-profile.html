@@ -1,1 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex,nofollow">
+<title>Edit Dealer Profile</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+
+<h1>Edit Dealer Profile</h1>
+
+<div id="status">Loading...</div>
+
+<label>Dealer Name</label>
+<input id="dealer_name">
+
+<br><br>
+
+<label>Phone</label>
+<input id="phone">
+
+<br><br>
+
+<label>Town</label>
+<input id="town">
+
+<br><br>
+
+<label>Province</label>
+
+<select id="province">
+  <option value="">Select Province</option>
+  <option>Gauteng</option>
+  <option>Western Cape</option>
+  <option>Eastern Cape</option>
+  <option>KwaZulu-Natal</option>
+  <option>Free State</option>
+  <option>Limpopo</option>
+  <option>Mpumalanga</option>
+  <option>North West</option>
+  <option>Northern Cape</option>
+</select>
+
+<br><br>
+
+<button onclick="saveProfile()">Save Profile</button>
+
+<br><br>
+
+<a href="dealer-admin.html">Back to Dashboard</a>
+
+<script>
+
+const supabaseUrl = "YOUR_SUPABASE_URL";
+const supabaseKey = "YOUR_SUPABASE_ANON_KEY";
+
+const client = supabase.createClient(
+  supabaseUrl,
+  supabaseKey
+);
+
+let user = null;
+
+function setStatus(msg) {
+  document.getElementById("status").innerText = msg;
+}
+
+async function loadProfile() {
+
+  const { data } = await client.auth.getUser();
+
+  if (!data.user) {
+    window.location.href = "login.html";
+    return;
+  }
+
+  user = data.user;
+
+  const { data: profile, error } = await client
+    .from("profiles")
+    .select("*")
+    .eq("id", user.id)
+    .single();
+
+  if (error) {
+    console.log(error);
+    setStatus("Could not load profile.");
+    return;
+  }
+
+  document.getElementById("dealer_name").value =
+    profile.dealer_name || profile.name || "";
+
+  document.getElementById("phone").value =
+    profile.phone || "";
+
+  document.getElementById("town").value =
+    profile.town || "";
+
+  document.getElementById("province").value =
+    profile.province || "";
+
+  setStatus("Profile loaded.");
+}
+
+async function saveProfile() {
+
+  const dealer_name =
+    document.getElementById("dealer_name").value.trim();
+
+  const phone =
+    document.getElementById("phone").value.trim();
+
+  const town =
+    document.getElementById("town").value.trim();
+
+  const province =
+    document.getElementById("province").value;
+
+  if (!dealer_name || !phone || !town || !province) {
+    setStatus("Please complete all fields.");
+    return;
+  }
+
+  const { error } = await client
+    .from("profiles")
+    .update({
+      dealer_name: dealer_name,
+      phone: phone,
+      town: town,
+      province: province,
+      location: province + ", " + town
+    })
+    .eq("id", user.id);
+
+  if (error) {
+    console.log(error);
+    setStatus("Could not save profile.");
+    return;
+  }
+
+  setStatus("Profile saved successfully.");
+}
+
+loadProfile();
+
+</script>
+
+</body>
+</html>
