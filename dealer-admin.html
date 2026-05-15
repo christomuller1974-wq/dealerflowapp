@@ -606,9 +606,10 @@ async function loadVehicles() {
         <div class="button-stack">
           <a href="details.html?id=${vehicle.id}" class="btn btn-blue">View</a>
           <a href="edit.html?id=${vehicle.id}" class="btn btn-green">Edit</a>
-          <button class="btn btn-gold" onclick="toggleFeatured(${vehicle.id}, ${isFeatured})">
-            ${isFeatured ? "Remove Featured" : "Mark Featured"}
-          </button>
+          <button class="btn btn-gold"
+onclick="startFeaturedPayment('${vehicle.id}')">
+⭐ Feature 7 Days - R200
+</button>
           <button class="btn btn-red" onclick="deleteVehicle(${vehicle.id})">Delete</button>
         </div>
       </div>
@@ -619,7 +620,29 @@ async function loadVehicles() {
 
   setStatus("Dashboard loaded successfully.");
 }
+function startFeaturedPayment(vehicleId) {
 
+  const paymentUrl =
+    "https://www.payfast.co.za/eng/process?" +
+
+    "merchant_id=YOUR_MERCHANT_ID" +
+    "&merchant_key=YOUR_MERCHANT_KEY" +
+
+    "&amount=200.00" +
+    "&item_name=" + encodeURIComponent("Featured Vehicle") +
+
+    "&return_url=" +
+    encodeURIComponent(
+      "https://carscoutza.com/feature-success.html?vehicle=" + vehicleId
+    ) +
+
+    "&cancel_url=" +
+    encodeURIComponent(
+      "https://carscoutza.com/dealer-admin.html"
+    );
+
+  window.location.href = paymentUrl;
+}
 async function toggleFeatured(vehicleId, currentlyFeatured) {
   setStatus("Updating featured status...");
 
