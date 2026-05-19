@@ -612,6 +612,10 @@ async function loadVehicles() {
           <button class="btn btn-gold"
 onclick="startFeaturedPayment('${vehicle.id}')">
 ⭐ Feature 7 Days - R200
+<button class="btn btn-blue"
+onclick="refreshVehicle('${vehicle.id}')">
+🔄 Refresh Vehicle
+</button>
 </button>
           <button class="btn btn-red" onclick="deleteVehicle(${vehicle.id})">Delete</button>
         </div>
@@ -730,6 +734,43 @@ if (!paidActive && !freeActive) {
 }
 
 await loadVehicles();
+}
+  async function refreshVehicle(vehicleId){
+
+const confirmed = confirm(
+"Refresh this vehicle to the top of listings?"
+);
+
+if(!confirmed) return;
+
+const response = await fetch(
+supabaseUrl + "/rest/v1/vehicles?id=eq." + vehicleId,
+{
+method: "PATCH",
+headers: {
+apikey: supabaseKey,
+Authorization: "Bearer " + supabaseKey,
+"Content-Type": "application/json",
+Prefer: "return=minimal"
+},
+body: JSON.stringify({
+refreshed_at: new Date().toISOString()
+})
+}
+);
+
+if(response.ok){
+
+alert("Vehicle refreshed successfully!");
+
+loadDealerVehicles();
+
+} else {
+
+alert("Refresh failed.");
+
+}
+
 }
 startDashboard();
 </script>
