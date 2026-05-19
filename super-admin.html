@@ -483,19 +483,30 @@ async function grantFree30Days(id) {
   loadDealers();
 }
 
-async function deactivateDealer(id) {
-  const { error } = await client
-    .from("profiles")
-    .update({
-      active:false
-    })
-    .eq("id", id);
+async function deactivateDealer(id){
 
-  if (error) {
-    alert("Failed to deactivate dealer");
-    console.error(error);
-    return;
-  }
+const ok = confirm("Deactivate this dealer?");
+if(!ok) return;
+
+const { error } = await client
+.from("profiles")
+.update({
+active: false,
+admin_blocked: true,
+payment_status:"DEACTIVATED"
+})
+.eq("id", id);
+
+if(error){
+console.log(error);
+alert("Failed to deactivate dealer");
+return;
+}
+
+alert("Dealer deactivated");
+loadDealers();
+
+}
 
   loadDealers();
 }
