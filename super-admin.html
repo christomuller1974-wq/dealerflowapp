@@ -512,7 +512,7 @@ loadDealers();
 async function deleteDealer(id) {
 
 const confirmDelete = confirm(
-"Delete this dealer account and all vehicles?"
+"Delete this dealer account and all vehicles? This cannot be undone."
 );
 
 if(!confirmDelete) return;
@@ -524,27 +524,25 @@ const { error: vehicleError } = await client
 
 if(vehicleError){
 console.log(vehicleError);
-alert("Failed to delete vehicles");
+alert("Failed to delete dealer vehicles.");
 return;
 }
 
-const { error } = await client
+const { error: profileError } = await client
 .from("profiles")
 .delete()
 .eq("id", id);
 
-if(error){
-console.log(error);
-alert("Failed to delete dealer");
+if(profileError){
+console.log(profileError);
+alert("Failed to delete dealer profile.");
 return;
 }
 
-alert("Dealer deleted successfully");
-
-loadDealers();
+alert("Dealer account deleted.");
+window.location.reload();
 
 }
-
 
 startAdmin();
 </script>
