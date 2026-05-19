@@ -501,7 +501,7 @@ async function loadCars(){
     const res = await fetch(
 
       supabaseUrl +
-      "/rest/v1/vehicles?select=*&order=id.desc",
+      "/rest/v1/vehicles?select=*&order=refreshed_at.desc.nullslast,id.desc",
 
       {
         headers:{
