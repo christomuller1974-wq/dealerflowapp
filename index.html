@@ -716,7 +716,23 @@ data = data.filter(function(v){
     data.length + " vehicles found";
 
     let html = "";
-    let featuredHtml = "";data.forEach(function(v){
+    const carsPerPage = 20;
+
+let currentPage =
+parseInt(
+new URLSearchParams(window.location.search).get("page")
+) || 1;
+
+const start =
+(currentPage - 1) * carsPerPage;
+
+const end =
+start + carsPerPage;
+
+const paginatedData =
+data.slice(start, end);
+    
+    let featuredHtml = "";paginatedData.forEach(function(v){
 const dealerProfile = (profiles || []).find(function(p){
   return String(p.id) === String(v.user_id);
 });
@@ -809,7 +825,39 @@ v.province || dealerProfile?.province
     grid.innerHTML =
     html ||
     '<div class="empty">No vehicles found</div>';
+const totalPages =
+Math.ceil(data.length / carsPerPage);
 
+if(totalPages > 1){
+
+let paginationHtml =
+'<div style="grid-column:1/-1;text-align:center;padding:20px;">';
+
+for(let i = 1; i <= totalPages; i++){
+
+paginationHtml += `
+<a href="?page=${i}"
+style="
+display:inline-block;
+margin:5px;
+padding:10px 16px;
+border-radius:10px;
+background:${i === currentPage ? '#2563eb' : '#111827'};
+color:white;
+text-decoration:none;
+font-weight:bold;
+">
+${i}
+</a>
+`;
+
+}
+
+paginationHtml += '</div>';
+
+grid.innerHTML += paginationHtml;
+
+}
     if(featuredHtml){
 
       featuredWrap.style.display =
