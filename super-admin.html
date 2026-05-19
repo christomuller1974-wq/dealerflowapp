@@ -432,7 +432,9 @@ async function loadDealers() {
           onclick="deactivateDealer('${d.id}')">
           Deactivate
         </button>
-
+<button class="danger-btn" onclick="deleteDealer('${d.id}')">
+Delete Account
+</button>
       </div>
     `;
 
@@ -507,7 +509,41 @@ alert("Dealer deactivated");
 loadDealers();
 
 }
+async function deleteDealer(id) {
 
+const confirmDelete = confirm(
+"Delete this dealer account and all vehicles?"
+);
+
+if(!confirmDelete) return;
+
+const { error: vehicleError } = await client
+.from("vehicles")
+.delete()
+.eq("user_id", id);
+
+if(vehicleError){
+console.log(vehicleError);
+alert("Failed to delete vehicles");
+return;
+}
+
+const { error } = await client
+.from("profiles")
+.delete()
+.eq("id", id);
+
+if(error){
+console.log(error);
+alert("Failed to delete dealer");
+return;
+}
+
+alert("Dealer deleted successfully");
+
+loadDealers();
+
+}
 
 
 startAdmin();
