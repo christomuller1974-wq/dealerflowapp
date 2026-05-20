@@ -159,11 +159,28 @@ body{
 }
 
 .img-wrap{
-  position:relative;
-  background:#e5e7eb;
-  overflow:hidden;
+position:relative;
+background:#e5e7eb;
+overflow:hidden;
+border-radius:16px;
+}
+.save-heart{
+position:absolute;
+top:10px;
+right:10px;
+background:white;
+padding:8px 10px;
+border-radius:50%;
+font-size:18px;
+cursor:pointer;
+box-shadow:0 2px 8px rgba(0,0,0,0.2);
+z-index:5;
+transition:0.2s;
 }
 
+.save-heart:hover{
+transform:scale(1.1);
+}
 .card img{
   width:100%;
   height:200px;
@@ -765,7 +782,10 @@ const dealerProfile = (profiles || []).find(function(p){
       <div class="card">
 
         <div class="img-wrap">
-
+<div class="save-heart"
+onclick="saveVehicle('${v.id}')">
+❤️
+</div>
           ${featured}
 
           <img
@@ -799,9 +819,7 @@ v.province || dealerProfile?.province
 .join(", ") || v.location || "-"
 }
 </div>
-<button class="save-btn" onclick="saveVehicle('${v.id}')">
-  ❤️ Save
-</button>
+
           <div class="meta">
             🚗 ${v.mileage || "-"}
           </div>
