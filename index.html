@@ -168,18 +168,20 @@ border-radius:16px;
 position:absolute;
 top:10px;
 right:10px;
-background:white;
-padding:8px 10px;
-border-radius:50%;
-font-size:18px;
+font-size:28px;
 cursor:pointer;
-box-shadow:0 2px 8px rgba(0,0,0,0.2);
 z-index:5;
 transition:0.2s;
+color:white;
+text-shadow:0 2px 8px rgba(0,0,0,0.5);
 }
 
 .save-heart:hover{
-transform:scale(1.1);
+transform:scale(1.15);
+}
+
+.save-heart.saved{
+color:red;
 }
 .card img{
   width:100%;
@@ -783,8 +785,8 @@ const dealerProfile = (profiles || []).find(function(p){
 
         <div class="img-wrap">
 <div class="save-heart"
-onclick="saveVehicle('${v.id}')">
-❤️
+onclick="toggleSave('${v.id}', this)">
+♡
 </div>
           ${featured}
 
@@ -916,17 +918,25 @@ function clearSearch(){
   loadCars();
 
 }
-function saveVehicle(id){
+function toggleSave(id, el){
 
-let saved =
+const saved =
 JSON.parse(localStorage.getItem("savedCars") || "[]");
 
 if(saved.includes(id)){
 
-alert("Vehicle already saved");
-return;
+const updated =
+saved.filter(x => x !== id);
 
-}
+localStorage.setItem(
+"savedCars",
+JSON.stringify(updated)
+);
+
+el.innerHTML = "♡";
+el.classList.remove("saved");
+
+} else {
 
 saved.push(id);
 
@@ -935,8 +945,9 @@ localStorage.setItem(
 JSON.stringify(saved)
 );
 
-alert("Vehicle saved ❤️");
-
+el.innerHTML = "♥";
+el.classList.add("saved");
+}
 }
 loadCars();
 
