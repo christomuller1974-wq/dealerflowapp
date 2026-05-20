@@ -799,7 +799,9 @@ v.province || dealerProfile?.province
 .join(", ") || v.location || "-"
 }
 </div>
-
+<button class="save-btn" onclick="saveVehicle('${v.id}')">
+  ❤️ Save
+</button>
           <div class="meta">
             🚗 ${v.mileage || "-"}
           </div>
@@ -896,7 +898,28 @@ function clearSearch(){
   loadCars();
 
 }
+function saveVehicle(id){
 
+let saved =
+JSON.parse(localStorage.getItem("savedCars") || "[]");
+
+if(saved.includes(id)){
+
+alert("Vehicle already saved");
+return;
+
+}
+
+saved.push(id);
+
+localStorage.setItem(
+"savedCars",
+JSON.stringify(saved)
+);
+
+alert("Vehicle saved ❤️");
+
+}
 loadCars();
 
 </script>
