@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Saved Vehicles | CarScoutZA</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:#f5f7fb;
+padding:20px;
+}
+
+.topbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
+}
+
+.title{
+font-size:32px;
+font-weight:bold;
+color:#111827;
+}
+
+.back-btn{
+background:#2563eb;
+color:white;
+padding:12px 18px;
+border-radius:10px;
+text-decoration:none;
+font-weight:bold;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+gap:20px;
+}
+
+.card{
+background:white;
+border-radius:18px;
+overflow:hidden;
+box-shadow:0 6px 18px rgba(0,0,0,0.08);
+}
+
+.img-wrap{
+position:relative;
+}
+
+.card img{
+width:100%;
+height:220px;
+object-fit:cover;
+cursor:pointer;
+}
+
+.remove-heart{
+position:absolute;
+top:10px;
+right:10px;
+font-size:28px;
+cursor:pointer;
+z-index:5;
+color:red;
+text-shadow:0 2px 8px rgba(0,0,0,0.5);
+}
+
+.card-body{
+padding:16px;
+}
+
+.price{
+font-size:34px;
+font-weight:bold;
+color:#ef4444;
+margin:10px 0;
+}
+
+.meta{
+margin:6px 0;
+color:#4b5563;
+}
+
+.empty{
+background:white;
+padding:40px;
+border-radius:20px;
+text-align:center;
+font-size:20px;
+font-weight:bold;
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="topbar">
+
+<div class="title">
+❤️ Saved Vehicles
+</div>
+
+<a href="index.html" class="back-btn">
+← Back To Cars
+</a>
+
+</div>
+
+<div id="grid" class="grid"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+const supabaseUrl =
+"https://ddmvzypiccryjndcwlre.supabase.co";
+
+const supabaseKey =
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
+
+const client =
+window.supabase.createClient(
+supabaseUrl,
+supabaseKey
+);
+
+async function loadSavedCars(){
+
+const saved =
+JSON.parse(localStorage.getItem("savedCars") || "[]");
+
+const grid =
+document.getElementById("grid");
+
+if(saved.length === 0){
+
+grid.innerHTML =
+'<div class="empty">No saved vehicles yet.</div>';
+
+return;
+}
+
+const { data, error } = await client
+.from("vehicles")
+.select("*")
+.in("id", saved);
+
+if(error){
+
+console.log(error);
+
+grid.innerHTML =
+'<div class="empty">Failed to load saved vehicles.</div>';
+
+return;
+}
+
+let html = "";
+
+data.forEach(v => {
+
+const img =
+v.image ||
+"https://via.placeholder.com/400x300?text=No+Image";
+
+html += `
+
+<div class="card">
+
+<div class="img-wrap">
+
+<div class="remove-heart"
+onclick="removeSaved('${v.id}')">
+♥
+</div>
+
+<img
+src="${img}"
+onclick="window.location.href='details.html?id=${v.id}'"
+>
+
+</div>
+
+<div class="card-body">
+
+<h2>${v.title || "Vehicle"}</h2>
+
+<div class="price">
+R${Number(v.price || 0).toLocaleString()}
+</div>
+
+<div class="meta">
+📍 ${v.location || "-"}
+</div>
+
+<div class="meta">
+🚗 ${v.mileage || "-"}
+</div>
+
+<div class="meta">
+🏢 ${v.dealer || "Dealer"}
+</div>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+grid.innerHTML = html;
+
+}
+
+function removeSaved(id){
+
+let saved =
+JSON.parse(localStorage.getItem("savedCars") || "[]");
+
+saved =
+saved.filter(x => x !== id);
+
+localStorage.setItem(
+"savedCars",
+JSON.stringify(saved)
+);
+
+loadSavedCars();
+
+}
+
+loadSavedCars();
+
+</script>
+
+</body>
+</html>
