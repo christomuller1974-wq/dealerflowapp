@@ -625,7 +625,8 @@ async function saveVehicle() {
       description: description,
       image: urls[0] || "",
       images: urls.slice(1).join(","),
-      user_id: user.id
+      user_id: user.id,
+      updated_at: new Date().toISOString(),
     };
 
     setStatus("Saving vehicle...");
