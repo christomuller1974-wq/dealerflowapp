@@ -188,7 +188,7 @@
 
     const supabaseKey =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
-const supabase =
+const client =
 window.supabase.createClient(
 supabaseUrl,
 supabaseKey
@@ -269,7 +269,7 @@ async function loadDealerVehicles() {
   const dealerId = getDealerFromUrl();
 
 
-const { data: profile } = await supabase
+const { data: profile } = await client
 .from("profiles")
 .select("dealer_name")
 .eq("id", dealerId)
