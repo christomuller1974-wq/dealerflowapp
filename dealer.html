@@ -263,7 +263,20 @@ function formatPrice(price) {
 async function loadDealerVehicles() {
 
   const dealerId = getDealerFromUrl();
+const dealerId = getDealerFromUrl();
 
+const { data: profile } = await client
+.from("profiles")
+.select("dealer_name")
+.eq("id", dealerId)
+.single();
+
+if(profile && profile.dealer_name){
+
+document.getElementById("dealerTitle").innerText =
+profile.dealer_name + " Stock";
+
+}
   const container =
     document.getElementById("vehicleList");
 
