@@ -265,7 +265,7 @@ async function loadDealerVehicles() {
   const dealerId = getDealerFromUrl();
 
 
-const { data: profile } = await client
+const { data: profile } = await supabase
 .from("profiles")
 .select("dealer_name")
 .eq("id", dealerId)
