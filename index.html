@@ -744,6 +744,13 @@ parseInt(
 new URLSearchParams(window.location.search).get("page")
 ) || 1;
 
+const totalPages =
+Math.ceil(data.length / carsPerPage) || 1;
+
+if(currentPage > totalPages){
+currentPage = 1;
+}
+
 const start =
 (currentPage - 1) * carsPerPage;
 
