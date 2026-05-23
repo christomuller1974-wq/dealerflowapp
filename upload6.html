@@ -554,12 +554,12 @@ async function loadProfile() {
   profile = data;
 const now = new Date();
 
-const paidUntil = currentProfile.paid_until
-    ? new Date(currentProfile.paid_until)
+const paidUntil = profile.paid_until
+    ? new Date(profile.paid_until)
     : null;
 
-const freeUntil = currentProfile.admin_free_until
-    ? new Date(currentProfile.admin_free_until)
+const freeUntil = profile.admin_free_until
+    ? new Date(profile.admin_free_until)
     : null;
 
 const paidActive = paidUntil && paidUntil > now;
