@@ -552,7 +552,24 @@ async function loadProfile() {
   }
 
   profile = data;
+const now = new Date();
 
+const paidUntil = currentProfile.paid_until
+    ? new Date(currentProfile.paid_until)
+    : null;
+
+const freeUntil = currentProfile.admin_free_until
+    ? new Date(currentProfile.admin_free_until)
+    : null;
+
+const paidActive = paidUntil && paidUntil > now;
+const freeActive = freeUntil && freeUntil > now;
+
+if (!paidActive && !freeActive) {
+    alert("Your subscription has expired.");
+    window.location.href = "pricing.html";
+    return;
+}
   document.getElementById("dealer").value =
     data.dealer_name || data.name || "";
 
