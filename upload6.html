@@ -565,7 +565,7 @@ const freeUntil = profile.admin_free_until
 const paidActive = paidUntil && paidUntil > now;
 const freeActive = freeUntil && freeUntil > now;
 
-if (!paidActive && !freeActive) {
+if (!profile.active && !paidActive && !freeActive) {
     alert("Your subscription has expired.");
     window.location.href = "pricing.html";
     return;
