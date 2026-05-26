@@ -958,7 +958,25 @@ el.classList.add("saved");
 }
 }
 loadCars();
+async function trackVisit(pageType) {
 
+  try {
+
+    await client
+      .from("site_visits")
+      .insert([
+        {
+          page_type: pageType,
+          created_at: new Date().toISOString()
+        }
+      ]);
+
+  } catch(err) {
+    console.log(err);
+  }
+}
+
+trackVisit("homepage");
 </script>
 
 </body>
