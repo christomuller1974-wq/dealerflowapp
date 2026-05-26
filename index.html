@@ -966,7 +966,7 @@ async function trackVisit(pageType) {
       .from("site_visits")
       .insert([
         {
-          page_type: pageType,
+          page: pageType,
           created_at: new Date().toISOString()
         }
       ]);
