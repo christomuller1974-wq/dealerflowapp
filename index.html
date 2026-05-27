@@ -659,8 +659,8 @@ data = data.filter(function(v){
       .toLowerCase();
 
       const vehicleProvince =
-      String(v.province || "")
-      .toLowerCase();
+String(v.location || "")
+.toLowerCase();
 
       if(search && !text.includes(search)){
         return false;
