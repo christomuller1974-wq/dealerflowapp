@@ -343,7 +343,7 @@ async function startAdmin() {
   }
 
   setStatus("Admin access granted.");
-
+loadStats();
   loadDealers();
 }
 
@@ -533,7 +533,40 @@ alert("Dealer account deleted.");
 window.location.reload();
 
 }
+async function loadStats() {
+  const today = new Date();
+  today.setHours(0,0,0,0);
 
+  const { count: totalVisits } = await client
+    .from("site_visits")
+    .select("*", { count:"exact", head:true });
+
+  const { count: todayVisits } = await client
+    .from("site_visits")
+    .select("*", { count:"exact", head:true })
+    .gte("created_at", today.toISOString());
+
+  const { count: dealerPageVisits } = await client
+    .from("site_visits")
+    .select("*", { count:"exact", head:true })
+    .eq("page", "dealer");
+
+  const { count: homePageVisits } = await client
+    .from("site_visits")
+    .select("*", { count:"exact", head:true })
+    .eq("page", "home");
+
+  const { count: detailPageVisits } = await client
+    .from("vehicle_clicks")
+    .select("*", { count:"exact", head:true })
+    .eq("click_type", "view");
+
+  document.getElementById("totalVisits").textContent = totalVisits || 0;
+  document.getElementById("todayVisits").textContent = todayVisits || 0;
+  document.getElementById("dealerPageVisits").textContent = dealerPageVisits || 0;
+  document.getElementById("detailPageVisits").textContent = detailPageVisits || 0;
+  document.getElementById("homePageVisits").textContent = homePageVisits || 0;
+}
 startAdmin();
 </script>
 
