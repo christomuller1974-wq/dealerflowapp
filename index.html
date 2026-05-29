@@ -962,14 +962,22 @@ async function trackVisit(pageType) {
 
   try {
 
-    await client
-      .from("site_visits")
-      .insert([
-        {
+    await fetch(
+      supabaseUrl + "/rest/v1/site_visits",
+      {
+        method: "POST",
+        headers: {
+          apikey: supabaseKey,
+          Authorization: "Bearer " + supabaseKey,
+          "Content-Type": "application/json",
+          Prefer: "return=minimal"
+        },
+        body: JSON.stringify({
           page: pageType,
           created_at: new Date().toISOString()
-        }
-      ]);
+        })
+      }
+    );
 
   } catch(err) {
     console.log(err);
