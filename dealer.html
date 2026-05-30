@@ -485,6 +485,25 @@ profile.dealer_name + " Stock";
 }
 
 loadDealerVehicles();
+async function trackVisit(pageType) {
+
+  try {
+
+    await client
+      .from("site_visits")
+      .insert([
+        {
+          page: pageType,
+          created_at: new Date().toISOString()
+        }
+      ]);
+
+  } catch(err) {
+    console.log(err);
+  }
+}
+
+trackVisit("dealer");
   </script>
 
 </body>
