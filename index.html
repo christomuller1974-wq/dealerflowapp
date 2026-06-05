@@ -757,10 +757,39 @@ const start =
 const end =
 start + carsPerPage;
 
+const featuredVehicles = data.filter(function(v){
+  return (
+    v.featured === true ||
+    v.featured === "true" ||
+    v.featured === 1 ||
+    v.featured === "1"
+  );
+});
+
+const normalVehicles = data.filter(function(v){
+  return !(
+    v.featured === true ||
+    v.featured === "true" ||
+    v.featured === 1 ||
+    v.featured === "1"
+  );
+});
+
+const totalPages =
+Math.ceil(normalVehicles.length / carsPerPage) || 1;
+
+const start =
+(currentPage - 1) * carsPerPage;
+
+const end =
+start + carsPerPage;
+
 const paginatedData =
-data.slice(start, end);
-    
-    let featuredHtml = "";paginatedData.forEach(function(v){
+normalVehicles.slice(start, end);
+
+let featuredHtml = "";
+
+featuredVehicles.forEach(function(v){
 const dealerProfile = (profiles || []).find(function(p){
   return String(p.id) === String(v.user_id);
 });
