@@ -780,7 +780,10 @@ normalVehicles.slice(start, end);
 
 let featuredHtml = "";
 
-featuredVehicles.forEach(function(v){
+const displayVehicles =
+featuredVehicles.concat(paginatedData);
+
+displayVehicles.forEach(function(v){
 const dealerProfile = (profiles || []).find(function(p){
   return String(p.id) === String(v.user_id);
 });
