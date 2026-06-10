@@ -499,7 +499,27 @@ function formatPrice(p){
   return "R" +
   num.toLocaleString("en-ZA");
 }
+function searchCars(){
 
+const params = new URLSearchParams();
+
+const search = document.getElementById("search").value.trim();
+const min = document.getElementById("min").value.trim();
+const max = document.getElementById("max").value.trim();
+const province = document.getElementById("province").value.trim();
+const sort = document.getElementById("sort").value.trim();
+
+if(search) params.set("search", search);
+if(min) params.set("min", min);
+if(max) params.set("max", max);
+if(province) params.set("province", province);
+if(sort) params.set("sort", sort);
+
+params.set("page", "1");
+
+window.location.href = "index.html?" + params.toString();
+
+}
 async function loadCars(){
 
   const grid =
