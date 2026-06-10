@@ -402,7 +402,7 @@ display:flex;
     <option value="high">Price High → Low</option>
   </select>
 
-  <button class="search-btn" onclick="loadCars()">
+  <button class="search-btn" onclick="searchCars()">
     Search
   </button>
 
@@ -611,11 +611,29 @@ data = data.filter(function(v){
       return;
     }
 
-    const search =
-    document.getElementById("search")
-    .value
-    .toLowerCase()
-    .trim();
+    const params =
+new URLSearchParams(window.location.search);
+
+document.getElementById("search").value =
+params.get("search") || document.getElementById("search").value;
+
+document.getElementById("min").value =
+params.get("min") || document.getElementById("min").value;
+
+document.getElementById("max").value =
+params.get("max") || document.getElementById("max").value;
+
+document.getElementById("province").value =
+params.get("province") || document.getElementById("province").value;
+
+document.getElementById("sort").value =
+params.get("sort") || document.getElementById("sort").value;
+
+const search =
+document.getElementById("search")
+.value
+.toLowerCase()
+.trim();
 
     const min =
     Number(
@@ -889,7 +907,7 @@ let paginationHtml =
 for(let i = 1; i <= totalPages; i++){
 
 paginationHtml += `
-<a href="?page=${i}"
+<a href="${buildPageLink(i)}"
 style="
 display:inline-block;
 margin:5px;
@@ -937,7 +955,16 @@ grid.innerHTML += paginationHtml;
   }
 
 }
+function buildPageLink(pageNumber){
 
+const params =
+new URLSearchParams(window.location.search);
+
+params.set("page", pageNumber);
+
+return "index.html?" + params.toString();
+
+}
 function clearSearch(){
 
   document.getElementById("search").value = "";
@@ -946,7 +973,7 @@ function clearSearch(){
   document.getElementById("province").value = "";
   document.getElementById("sort").value = "";
 
-  loadCars();
+  window.location.href = "index.html";
 
 }
 function toggleSave(id, el){
