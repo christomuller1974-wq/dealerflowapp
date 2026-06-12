@@ -793,22 +793,38 @@ new URLSearchParams(window.location.search).get("page")
 
 
 
+const now = new Date();
+
 const featuredVehicles = data.filter(function(v){
-  return (
+
+  const isFeatured =
     v.featured === true ||
     v.featured === "true" ||
     v.featured === 1 ||
-    v.featured === "1"
-  );
+    v.featured === "1";
+
+  if (!isFeatured) return false;
+
+  if (!v.featured_until) return false;
+
+  return new Date(v.featured_until) > now;
+
 });
 
 const normalVehicles = data.filter(function(v){
-  return !(
+
+  const isFeatured =
     v.featured === true ||
     v.featured === "true" ||
     v.featured === 1 ||
-    v.featured === "1"
-  );
+    v.featured === "1";
+
+  const notExpired =
+    v.featured_until &&
+    new Date(v.featured_until) > now;
+
+  return !(isFeatured && notExpired);
+
 });
 
 const totalPages =
