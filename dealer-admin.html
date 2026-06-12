@@ -573,7 +573,15 @@ async function loadVehicles() {
   vehicles.forEach(vehicle => {
     const mainImage = getMainImage(vehicle);
     const title = vehicle.title || [vehicle.year, vehicle.make, vehicle.model].filter(Boolean).join(" ") || "Vehicle";
-    const isFeatured = vehicle.featured === true || vehicle.featured === "true";
+    const isFeatured =
+(
+  vehicle.featured === true ||
+  vehicle.featured === "true" ||
+  vehicle.featured === 1 ||
+  vehicle.featured === "1"
+) &&
+vehicle.featured_until &&
+new Date(vehicle.featured_until) > new Date();
     const counts = clickCounts[String(vehicle.id)] || { total:0, view:0, call:0, whatsapp:0 };
 
     const card = document.createElement("div");
