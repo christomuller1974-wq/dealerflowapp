@@ -762,7 +762,8 @@ Authorization: "Bearer " + supabaseKey,
 Prefer: "return=minimal"
 },
 body: JSON.stringify({
-updated_at: new Date().toISOString()
+  refreshed_at: new Date().toISOString(),
+  updated_at: new Date().toISOString()
 })
 }
 );
