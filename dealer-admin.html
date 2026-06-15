@@ -744,7 +744,7 @@ if (!paidActive && !freeActive) {
 await loadVehicles();
 }
   async function refreshVehicle(vehicleId){
-
+console.log("REFRESH ID:", vehicleId);
 const confirmed = confirm(
 "Refresh this vehicle to the top of listings?"
 );
@@ -775,7 +775,7 @@ if(response.ok){
 
 alert("Vehicle refreshed successfully!");
 
-window.location.reload();
+//window.location.reload();
 
 } else {
 
