@@ -767,7 +767,8 @@ body: JSON.stringify({
 })
 }
 );
-
+console.log("STATUS:", response.status);
+console.log("OK:", response.ok);
 if(response.ok){
 
 alert("Vehicle refreshed successfully!");
