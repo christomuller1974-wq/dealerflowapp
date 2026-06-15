@@ -743,46 +743,32 @@ if (!paidActive && !freeActive) {
 
 await loadVehicles();
 }
-  async function refreshVehicle(vehicleId){
-console.log("REFRESH ID:", vehicleId);
-const confirmed = confirm(
-"Refresh this vehicle to the top of listings?"
-);
+ async function refreshVehicle(vehicleId){
 
-if(!confirmed) return;
+  const confirmed = confirm(
+    "Refresh this vehicle to the top of listings?"
+  );
 
-const response = await fetch(
-supabaseUrl + "/rest/v1/vehicles?id=eq." + vehicleId,
-{
-method: "PATCH",
-headers: {
-apikey: supabaseKey,
-Authorization: "Bearer " + supabaseKey,
-"Content-Type": "application/json",
-Prefer: "return=representation"
-},
-body: JSON.stringify({
-  updated_at: new Date().toISOString()
-})
-}
-);
-const result = await response.text();
-console.log("RESULT:", result);    
-console.log("STATUS:", response.status);
-console.log("OK:", response.ok);
-if(response.ok){
+  if(!confirmed) return;
 
-alert("Vehicle refreshed successfully!");
+  const { error } = await client
+    .from("vehicles")
+    .update({
+      updated_at: new Date().toISOString()
+    })
+    .eq("id", vehicleId);
 
-//window.location.reload();
+  if(error){
+    console.log(error);
+    alert("Refresh failed.");
+    return;
+  }
 
-} else {
-
-alert("Refresh failed.");
+  alert("Vehicle refreshed successfully!");
+  window.location.reload();
 
 }
 
-}
 startDashboard();
 </script>
 </body>
