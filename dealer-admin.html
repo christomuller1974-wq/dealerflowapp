@@ -759,7 +759,7 @@ headers: {
 apikey: supabaseKey,
 Authorization: "Bearer " + supabaseKey,
 "Content-Type": "application/json",
-Prefer: "return=minimal"
+Prefer: "return=representation"
 },
 body: JSON.stringify({
   refreshed_at: new Date().toISOString(),
@@ -767,6 +767,8 @@ body: JSON.stringify({
 })
 }
 );
+const result = await response.text();
+console.log("RESULT:", result);    
 console.log("STATUS:", response.status);
 console.log("OK:", response.ok);
 if(response.ok){
