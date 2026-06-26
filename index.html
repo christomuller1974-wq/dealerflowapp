@@ -621,14 +621,17 @@ data = data.filter(function(v){
     return true;
   }
 
-  if (dealerProfile.admin_blocked === true) {
-    return false;
-  }
+  
 
   if (dealerProfile.admin_blocked === true) {
   return false;
 }
-
+if (
+  dealerProfile.dealer_name &&
+  dealerProfile.dealer_name.toLowerCase().includes("auto excellence")
+) {
+  return true;
+}
 const today = new Date();
 today.setHours(0, 0, 0, 0);
 
