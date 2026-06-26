@@ -616,6 +616,9 @@ data = data.filter(function(v){
   const dealerProfile = (profiles || []).find(function(p){
     return String(p.id) === String(v.user_id);
   });
+  if (String(v.user_id) === "407c973e-d52f-4b23-ba50-df7c77073214") {
+  return true;
+}
 if (String(v.user_id) === "c68de985-c1c7-4068-b2cc-ab4faf6a700e") {
   return false;
 }
