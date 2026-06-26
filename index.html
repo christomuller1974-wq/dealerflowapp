@@ -625,12 +625,27 @@ data = data.filter(function(v){
     return false;
   }
 
-  if (dealerProfile.active === false) {
-    return false;
-  }
+  if (dealerProfile.admin_blocked === true) {
+  return false;
+}
 
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+
+const paidUntil = dealerProfile.paid_until ? new Date(dealerProfile.paid_until) : null;
+if (paidUntil) paidUntil.setHours(23, 59, 59, 999);
+
+const freeUntil = dealerProfile.admin_free_until ? new Date(dealerProfile.admin_free_until) : null;
+if (freeUntil) freeUntil.setHours(23, 59, 59, 999);
+
+if (
+  (paidUntil && paidUntil >= today) ||
+  (freeUntil && freeUntil >= today)
+) {
   return true;
+}
 
+return false;
 });
     if(!Array.isArray(data)){
 
