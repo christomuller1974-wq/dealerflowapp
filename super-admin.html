@@ -296,30 +296,27 @@ function formatDate(value) {
 }
 
 function getDealerStatus(d) {
-  const now = new Date();
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
 
-  const paidActive =
-    d.paid_until &&
-    new Date(d.paid_until) > now;
+  const paidUntil = d.paid_until ? new Date(d.paid_until) : null;
+  if (paidUntil) paidUntil.setHours(23, 59, 59, 999);
 
-  const freeActive =
-    d.admin_free_until &&
-    new Date(d.admin_free_until) > now;
+  const freeUntil = d.admin_free_until
+    ? new Date(d.admin_free_until)
+    : null;
+  if (freeUntil) freeUntil.setHours(23, 59, 59, 999);
 
   if (d.admin_blocked === true) {
     return "BLOCKED";
   }
 
-  if (freeActive) {
+  if (freeUntil && freeUntil >= today) {
     return "FREE ACCESS ACTIVE";
   }
 
-  if (paidActive) {
+  if (paidUntil && paidUntil >= today) {
     return "PAID ACTIVE";
-  }
-
-  if (d.active === true) {
-    return "ACTIVE";
   }
 
   return "INACTIVE / EXPIRED";
