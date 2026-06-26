@@ -617,7 +617,7 @@ data = data.filter(function(v){
     return String(p.id) === String(v.user_id);
   });
 
- if (!dealerProfile) {
+if (!dealerProfile) {
   return true;
 }
 
@@ -639,10 +639,14 @@ if (dealerProfile.active === true) {
 const today = new Date();
 today.setHours(0, 0, 0, 0);
 
-const paidUntil = dealerProfile.paid_until ? new Date(dealerProfile.paid_until) : null;
+const paidUntil = dealerProfile.paid_until
+  ? new Date(dealerProfile.paid_until)
+  : null;
 if (paidUntil) paidUntil.setHours(23, 59, 59, 999);
 
-const freeUntil = dealerProfile.admin_free_until ? new Date(dealerProfile.admin_free_until) : null;
+const freeUntil = dealerProfile.admin_free_until
+  ? new Date(dealerProfile.admin_free_until)
+  : null;
 if (freeUntil) freeUntil.setHours(23, 59, 59, 999);
 
 if (
@@ -650,9 +654,6 @@ if (
   (freeUntil && freeUntil >= today)
 ) {
   return true;
-}
-
-return false;
 }
 
 return false;
