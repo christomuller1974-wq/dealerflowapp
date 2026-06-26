@@ -617,21 +617,25 @@ data = data.filter(function(v){
     return String(p.id) === String(v.user_id);
   });
 
-  if (!dealerProfile) {
-    return true;
-  }
-
-  
-
-  if (dealerProfile.admin_blocked === true) {
-  return false;
-}
-if (
-  dealerProfile.dealer_name &&
-  dealerProfile.dealer_name.toLowerCase().includes("auto excellence")
-) {
+ if (!dealerProfile) {
   return true;
 }
+
+if (dealerProfile.admin_blocked === true) {
+  return false;
+}
+
+if (
+  dealerProfile.dealer_name &&
+  dealerProfile.dealer_name.toLowerCase().includes("rupping")
+) {
+  return false;
+}
+
+if (dealerProfile.active === true) {
+  return true;
+}
+
 const today = new Date();
 today.setHours(0, 0, 0, 0);
 
@@ -646,6 +650,9 @@ if (
   (freeUntil && freeUntil >= today)
 ) {
   return true;
+}
+
+return false;
 }
 
 return false;
