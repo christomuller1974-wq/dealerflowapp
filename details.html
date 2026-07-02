@@ -952,8 +952,9 @@ async function loadVehicle(){
       "";
 
     const featuredBadge =
-      ? `<div style="background:#facc15;color:#111827;padding:6px 14px;border-radius:999px;font-weight:900;display:inline-block;margin-bottom:10px;">⭐ Featured</div>`
-      : "";
+  v.featured
+    ? '<div style="background:#facc15;color:#111827;padding:6px 14px;border-radius:999px;font-weight:900;display:inline-block;margin-bottom:10px;">⭐ Featured</div>'
+    : "";
 
     let thumbs = "";
 
