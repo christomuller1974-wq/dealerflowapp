@@ -861,7 +861,9 @@ normalVehicles.slice(start, end);
 
 let featuredHtml = "";
 
-const displayVehicles = paginatedData;
+const displayVehicles = currentPage === 1
+  ? featuredVehicles.concat(paginatedData)
+  : paginatedData;
 
 displayVehicles.forEach(function(v){
 const dealerProfile = (profiles || []).find(function(p){
