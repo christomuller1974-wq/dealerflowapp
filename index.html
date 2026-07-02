@@ -147,7 +147,10 @@ body{
 
     gap:24px;
 }
-
+.featured-grid{
+  grid-template-columns:repeat(auto-fit, minmax(260px, 320px));
+  justify-content:start;
+}
 
 
 .card{
@@ -431,7 +434,7 @@ display:flex;
     </h2>
   </div>
 
-  <div id="featuredGrid" class="grid"></div>
+  <div id="featuredGrid" class="grid featured-grid"></div>
 
 </div>
 
