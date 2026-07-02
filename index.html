@@ -148,10 +148,15 @@ body{
     gap:24px;
 }
 .featured-grid{
-  grid-template-columns:repeat(auto-fit, minmax(260px, 320px));
-  justify-content:start;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 220px));
+    justify-content:start;
+    gap:16px;
 }
-
+.featured-grid .card{
+    transform: scale(0.82);
+    transform-origin: top left;
+    margin-right: -35px;
+}
 
 .card{
     width:100%;
