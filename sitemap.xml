@@ -402,4 +402,17 @@
   <changefreq>weekly</changefreq>
   <priority>0.8</priority>
 </url>
+  <url>
+  <loc>https://carscoutza.com/used-cars-for-sale-thohoyandou.html</loc>
+  <lastmod>2026-07-03</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+</url>
+
+<url>
+  <loc>https://carscoutza.com/used-cars-for-sale-bela-bela.html</loc>
+  <lastmod>2026-07-03</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+</url>
 </urlset>
