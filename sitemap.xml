@@ -45,4 +45,101 @@
   <loc>https://carscoutza.com/dealer-profile.html</loc>
   <priority>0.6</priority>
 </url>
+  <url>
+  <loc>https://carscoutza.com/used-cars-for-sale-upington.html</loc>
+  <lastmod>2026-07-03</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+</url>
+
+<url>
+  <loc>https://carscoutza.com/used-cars-for-sale-kuruman.html</loc>
+  <lastmod>2026-07-03</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+</url>
+
+<url>
+  <loc>https://carscoutza.com/used-cars-for-sale-springbok.html</loc>
+  <lastmod>2026-07-03</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+</url>
+
+<url>
+  <loc>https://carscoutza.com/used-cars-for-sale-de-aar.html</loc>
+  <lastmod>2026-07-03</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+</url>
+
+<url>
+  <loc>https://carscoutza.com/used-cars-for-sale-bloemfontein.html</loc>
+  <lastmod>2026-07-03</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+</url>
+
+<url>
+  <loc>https://carscoutza.com/used-cars-for-sale-welkom.html</loc>
+  <lastmod>2026-07-03</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+</url>
+
+<url>
+  <loc>https://carscoutza.com/used-cars-for-sale-kroonstad.html</loc>
+  <lastmod>2026-07-03</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+</url>
+
+<url>
+  <loc>https://carscoutza.com/used-cars-for-sale-bethlehem.html</loc>
+  <lastmod>2026-07-03</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+</url>
+
+<url>
+  <loc>https://carscoutza.com/used-cars-for-sale-sasolburg.html</loc>
+  <lastmod>2026-07-03</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+</url>
+
+<url>
+  <loc>https://carscoutza.com/used-cars-for-sale-rustenburg.html</loc>
+  <lastmod>2026-07-03</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+</url>
+
+<url>
+  <loc>https://carscoutza.com/used-cars-for-sale-potchefstroom.html</loc>
+  <lastmod>2026-07-03</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+</url>
+
+<url>
+  <loc>https://carscoutza.com/used-cars-for-sale-klerksdorp.html</loc>
+  <lastmod>2026-07-03</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+</url>
+
+<url>
+  <loc>https://carscoutza.com/used-cars-for-sale-mahikeng.html</loc>
+  <lastmod>2026-07-03</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+</url>
+
+<url>
+  <loc>https://carscoutza.com/used-cars-for-sale-brits.html</loc>
+  <lastmod>2026-07-03</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+</url>
 </urlset>
