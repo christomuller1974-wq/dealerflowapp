@@ -15,7 +15,7 @@ padding:30px;
 line-height:1.6;
 }
 
-input,select,textarea,button{
+input,textarea,button{
 width:100%;
 padding:12px;
 margin:8px 0 18px;
@@ -32,8 +32,12 @@ cursor:pointer;
 }
 
 textarea{
-height:420px;
+height:330px;
 font-family:monospace;
+}
+
+.small{
+height:150px;
 }
 </style>
 </head>
@@ -43,7 +47,7 @@ font-family:monospace;
 <h1>CarScoutZA SEO Page Generator</h1>
 
 <label>Vehicle Name</label>
-<input id="vehicle" placeholder="Example: Toyota Hilux">
+<input id="vehicle" placeholder="Example: Ford Ranger">
 
 <label>City</label>
 <input id="city" placeholder="Example: Bloemfontein">
@@ -56,12 +60,25 @@ font-family:monospace;
 <h2>File Name</h2>
 <input id="filename" readonly>
 
-<h2>Copy This Code</h2>
+<h2>Sitemap Block</h2>
+<textarea id="sitemap" class="small" readonly></textarea>
+
+<button onclick="copySitemap()">Copy Sitemap Block</button>
+
+<h2>Copy This HTML Code</h2>
 <textarea id="output" readonly></textarea>
 
-<button onclick="copyCode()">Copy Code</button>
+<button onclick="copyCode()">Copy HTML Code</button>
 
 <script>
+function titleCase(str){
+  return str
+    .toLowerCase()
+    .split(" ")
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
 function slugify(text){
   return text
     .toLowerCase()
@@ -71,17 +88,28 @@ function slugify(text){
 }
 
 function generatePage(){
-  const vehicle = document.getElementById("vehicle").value.trim();
-  const city = document.getElementById("city").value.trim();
-  const province = document.getElementById("province").value.trim();
+  const vehicleRaw = document.getElementById("vehicle").value.trim();
+  const cityRaw = document.getElementById("city").value.trim();
+  const provinceRaw = document.getElementById("province").value.trim();
 
-  if(!vehicle || !city || !province){
+  if(!vehicleRaw || !cityRaw || !provinceRaw){
     alert("Please enter vehicle, city and province.");
     return;
   }
 
+  const vehicle = titleCase(vehicleRaw);
+  const city = titleCase(cityRaw);
+  const province = titleCase(provinceRaw);
+
   const fileName = slugify(vehicle) + "-for-sale-" + slugify(city) + ".html";
   const url = "https://carscoutza.com/" + fileName;
+
+  const sitemapBlock = `<url>
+  <loc>${url}</loc>
+  <lastmod>2026-07-06</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+</url>`;
 
   const code = `<!DOCTYPE html>
 <html lang="en">
@@ -96,6 +124,30 @@ function generatePage(){
 <meta name="keywords" content="${vehicle} for sale ${city}, used ${vehicle} ${city}, ${vehicle} for sale ${province}, ${vehicle} South Africa">
 
 <link rel="canonical" href="${url}">
+
+<meta property="og:title" content="${vehicle} for Sale in ${city} | CarScoutZA">
+<meta property="og:description" content="Browse ${vehicle} vehicles for sale in ${city}. Contact trusted dealerships directly through CarScoutZA.">
+<meta property="og:url" content="${url}">
+<meta property="og:type" content="website">
+
+<meta name="twitter:title" content="${vehicle} for Sale in ${city} | CarScoutZA">
+<meta name="twitter:description" content="Browse ${vehicle} vehicles for sale in ${city}. Contact trusted dealerships directly through CarScoutZA.">
+<meta name="twitter:card" content="summary_large_image">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "${vehicle} for Sale in ${city}",
+  "description": "Browse ${vehicle} vehicles for sale in ${city} on CarScoutZA.",
+  "url": "${url}",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "CarScoutZA",
+    "url": "https://carscoutza.com"
+  }
+}
+<\/script>
 
 <style>
 body{
@@ -173,6 +225,7 @@ Browse All Vehicles
 </html>`;
 
   document.getElementById("filename").value = fileName;
+  document.getElementById("sitemap").value = sitemapBlock;
   document.getElementById("output").value = code;
 }
 
@@ -180,7 +233,14 @@ function copyCode(){
   const output = document.getElementById("output");
   output.select();
   document.execCommand("copy");
-  alert("Code copied.");
+  alert("HTML code copied.");
+}
+
+function copySitemap(){
+  const sitemap = document.getElementById("sitemap");
+  sitemap.select();
+  document.execCommand("copy");
+  alert("Sitemap block copied.");
 }
 </script>
 
