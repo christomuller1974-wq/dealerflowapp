@@ -460,20 +460,40 @@ You can also browse other used cars, bakkies, SUVs and hatchbacks available from
   function generateAllVehicles(){
 
 const vehicles = [
-  "Toyota Hilux",
-  "Ford Ranger",
-  "VW Polo",
-  "Toyota Fortuner",
-  "Ford EcoSport",
-  "Isuzu D-Max",
-  "Suzuki Swift",
-  "BMW 3 Series",
-  "Mercedes-Benz C-Class",
-  "Hyundai Creta"
+"Toyota Hilux",
+"Ford Ranger",
+"VW Polo",
+"Toyota Fortuner",
+"Ford EcoSport",
+"Isuzu D-Max",
+"Suzuki Swift",
+"BMW 3 Series",
+"Mercedes-Benz C-Class",
+"Hyundai Creta"
 ];
 
-alert("Vehicle list ready: " + vehicles.length + " models.");
+let allHtml = "";
+let allSitemap = "";
+let allFiles = "";
 
+vehicles.forEach(function(vehicle){
+
+    document.getElementById("vehicle").value = vehicle;
+
+    generateAllCities();
+
+    allFiles += document.getElementById("filename").value + "\n";
+    allSitemap += document.getElementById("sitemap").value + "\n";
+    allHtml += document.getElementById("output").value + "\n";
+
+});
+
+document.getElementById("filename").value = allFiles;
+document.getElementById("sitemap").value = allSitemap;
+document.getElementById("output").value = allHtml;
+
+alert("Finished generating SEO pages for " + vehicles.length + " vehicle models.");
+    
 }
 </script>
 
