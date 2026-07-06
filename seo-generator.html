@@ -74,7 +74,9 @@ height:150px;
 <textarea id="output" readonly></textarea>
 
 <button onclick="copyCode()">Copy HTML Code</button>
-
+<button onclick="downloadZip()">
+📦 Download ZIP Files
+</button>
 <script>
 function titleCase(str){
   return str
@@ -535,7 +537,65 @@ document.getElementById("output").value = allHtml;
 alert("Finished generating SEO pages for " + vehicles.length + " vehicle models.");
     
 }
-  
+ async function downloadZip(){
+
+  if (typeof JSZip === "undefined") {
+    alert("ZIP library did not load. Please refresh the page and try again.");
+    return;
+  }
+
+  const output = document.getElementById("output").value.trim();
+
+  if (!output) {
+    alert("Please generate SEO pages first.");
+    return;
+  }
+
+  const zip = new JSZip();
+
+  const parts = output.split("FILE NAME:");
+
+  let count = 0;
+
+  parts.forEach(function(part){
+
+    const trimmed = part.trim();
+
+    if (!trimmed) return;
+
+    const firstLineEnd = trimmed.indexOf("\n");
+
+    if (firstLineEnd === -1) return;
+
+    const filename = trimmed.substring(0, firstLineEnd).trim();
+
+    const htmlStart = trimmed.indexOf("<!DOCTYPE html>");
+
+    if (htmlStart === -1) return;
+
+    const html = trimmed.substring(htmlStart);
+
+    if (filename && html) {
+      zip.file(filename, html);
+      count++;
+    }
+
+  });
+
+  if (count === 0) {
+    alert("No HTML files found. Please generate pages first.");
+    return;
+  }
+
+  const content = await zip.generateAsync({type:"blob"});
+
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(content);
+  link.download = "carscoutza-seo-pages.zip";
+  link.click();
+
+  alert("ZIP created with " + count + " HTML files.");
+} 
 </script>
 
 </body>
