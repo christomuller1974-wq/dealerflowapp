@@ -244,10 +244,215 @@ function copySitemap(){
   document.execCommand("copy");
   alert("Sitemap block copied.");
 }
-  function generateAllCities(){
+function generateAllCities(){
 
-alert("Coming next... 🚀 This will automatically generate SEO pages for every city.");
+  const vehicleRaw = document.getElementById("vehicle").value.trim();
 
+  if(!vehicleRaw){
+    alert("Please enter a vehicle name first.");
+    return;
+  }
+
+  const vehicle = titleCase(vehicleRaw);
+
+  const cities = [
+    ["Kimberley","Northern Cape"],
+    ["Upington","Northern Cape"],
+    ["Kuruman","Northern Cape"],
+    ["Springbok","Northern Cape"],
+    ["De Aar","Northern Cape"],
+
+    ["Bloemfontein","Free State"],
+    ["Welkom","Free State"],
+    ["Kroonstad","Free State"],
+    ["Bethlehem","Free State"],
+    ["Sasolburg","Free State"],
+
+    ["Rustenburg","North West"],
+    ["Potchefstroom","North West"],
+    ["Klerksdorp","North West"],
+    ["Mahikeng","North West"],
+    ["Brits","North West"],
+
+    ["Johannesburg","Gauteng"],
+    ["Pretoria","Gauteng"],
+    ["Centurion","Gauteng"],
+    ["Midrand","Gauteng"],
+    ["Randburg","Gauteng"],
+    ["Roodepoort","Gauteng"],
+    ["Kempton Park","Gauteng"],
+    ["Benoni","Gauteng"],
+    ["Boksburg","Gauteng"],
+    ["Alberton","Gauteng"],
+
+    ["Cape Town","Western Cape"],
+    ["Bellville","Western Cape"],
+    ["Paarl","Western Cape"],
+    ["Stellenbosch","Western Cape"],
+    ["George","Western Cape"],
+    ["Mossel Bay","Western Cape"],
+    ["Worcester","Western Cape"],
+
+    ["Durban","KwaZulu-Natal"],
+    ["Pinetown","KwaZulu-Natal"],
+    ["Pietermaritzburg","KwaZulu-Natal"],
+    ["Richards Bay","KwaZulu-Natal"],
+    ["Ballito","KwaZulu-Natal"],
+    ["Newcastle","KwaZulu-Natal"],
+
+    ["Gqeberha","Eastern Cape"],
+    ["East London","Eastern Cape"],
+    ["Kariega","Eastern Cape"],
+    ["Makhanda","Eastern Cape"],
+    ["Queenstown","Eastern Cape"],
+
+    ["Polokwane","Limpopo"],
+    ["Tzaneen","Limpopo"],
+    ["Mokopane","Limpopo"],
+    ["Thohoyandou","Limpopo"],
+    ["Bela-Bela","Limpopo"],
+
+    ["Mbombela","Mpumalanga"],
+    ["Witbank","Mpumalanga"],
+    ["Secunda","Mpumalanga"],
+    ["Ermelo","Mpumalanga"],
+    ["Standerton","Mpumalanga"]
+  ];
+
+  let fileList = "";
+  let sitemapBlocks = "";
+  let htmlOutput = "";
+
+  cities.forEach(function(item){
+    const city = item[0];
+    const province = item[1];
+
+    const fileName = slugify(vehicle) + "-for-sale-" + slugify(city) + ".html";
+    const url = "https://carscoutza.com/" + fileName;
+
+    fileList += fileName + "\n";
+
+    sitemapBlocks += `<url>
+  <loc>${url}</loc>
+  <lastmod>2026-07-06</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+</url>
+
+`;
+
+    htmlOutput += `==============================
+FILE NAME: ${fileName}
+==============================
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>${vehicle} for Sale in ${city} | CarScoutZA</title>
+
+<meta name="description" content="Browse ${vehicle} vehicles for sale in ${city}. Find trusted dealerships, finance options and quality used vehicles on CarScoutZA.">
+
+<meta name="keywords" content="${vehicle} for sale ${city}, used ${vehicle} ${city}, ${vehicle} for sale ${province}, ${vehicle} South Africa">
+
+<link rel="canonical" href="${url}">
+
+<meta property="og:title" content="${vehicle} for Sale in ${city} | CarScoutZA">
+<meta property="og:description" content="Browse ${vehicle} vehicles for sale in ${city}. Contact trusted dealerships directly through CarScoutZA.">
+<meta property="og:url" content="${url}">
+<meta property="og:type" content="website">
+
+<meta name="twitter:title" content="${vehicle} for Sale in ${city} | CarScoutZA">
+<meta name="twitter:description" content="Browse ${vehicle} vehicles for sale in ${city}. Contact trusted dealerships directly through CarScoutZA.">
+<meta name="twitter:card" content="summary_large_image">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "${vehicle} for Sale in ${city}",
+  "description": "Browse ${vehicle} vehicles for sale in ${city} on CarScoutZA.",
+  "url": "${url}",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "CarScoutZA",
+    "url": "https://carscoutza.com"
+  }
+}
+<\\/script>
+
+<style>
+body{
+font-family:Arial,sans-serif;
+max-width:1000px;
+margin:auto;
+padding:40px;
+line-height:1.8;
+color:#333;
+}
+h1{color:#0056c9;}
+h2{margin-top:40px;}
+a{color:#0056c9;text-decoration:none;font-weight:bold;}
+.button{
+display:inline-block;
+margin-top:30px;
+padding:15px 30px;
+background:#0056c9;
+color:white;
+border-radius:6px;
+text-decoration:none;
+}
+</style>
+</head>
+
+<body>
+
+<h1>${vehicle} for Sale in ${city}</h1>
+
+<p>
+Looking for a ${vehicle} for sale in ${city}? CarScoutZA helps buyers connect directly with trusted dealerships across ${province}. Browse quality used vehicles, compare options and contact dealers directly by phone or WhatsApp.
+</p>
+
+<h2>Why Buy Through CarScoutZA?</h2>
+
+<ul>
+<li>Trusted South African dealerships</li>
+<li>Finance available</li>
+<li>Trade-ins welcome</li>
+<li>Quality used vehicles</li>
+<li>Direct dealer contact</li>
+<li>WhatsApp enquiries</li>
+<li>No middlemen</li>
+</ul>
+
+<h2>Find ${vehicle} Deals in ${city}</h2>
+
+<p>
+CarScoutZA makes it simple to find ${vehicle} vehicles for sale in ${city}. Whether you are buying your first vehicle, upgrading your family car, or looking for a reliable work vehicle, CarScoutZA helps you connect with dealerships quickly and easily.
+</p>
+
+<h2>Browse More Vehicles</h2>
+
+<p>
+You can also browse other used cars, bakkies, SUVs and hatchbacks available from dealers across South Africa.
+</p>
+
+<a class="button" href="https://carscoutza.com">Browse All Vehicles</a>
+
+</body>
+</html>
+
+
+`;
+  });
+
+  document.getElementById("filename").value = fileList;
+  document.getElementById("sitemap").value = sitemapBlocks;
+  document.getElementById("output").value = htmlOutput;
+
+  alert("Generated " + cities.length + " SEO pages for " + vehicle + ".");
 }
 </script>
 
