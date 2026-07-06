@@ -58,6 +58,9 @@ height:150px;
   <button onclick="generateAllVehicles()">
 🚗 Generate All Vehicles
 </button>
+  <button onclick="generateEverythingZip()">
+🚀 Generate EVERYTHING ZIP
+</button>
 <label>Province</label>
 <input id="province" placeholder="Example: Free State">
 
@@ -597,6 +600,18 @@ alert("Finished generating SEO pages for " + vehicles.length + " vehicle models.
 
   alert("ZIP created with " + count + " HTML files.");
 } 
+  async function generateEverythingZip(){
+
+    // Generate all vehicles first
+    generateAllVehicles();
+
+    // Give the browser a second to finish
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    // Create the ZIP
+    downloadZip();
+
+}
 </script>
 
 </body>
