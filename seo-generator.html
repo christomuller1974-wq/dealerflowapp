@@ -97,7 +97,16 @@ function slugify(text){
     .replace(/[^a-z0-9]+/g,"-")
     .replace(/^-+|-+$/g,"");
 }
+const vehicleInfo = {
 
+"Porsche Macan":{
+summary:"The Porsche Macan combines sports car performance with SUV practicality and premium comfort.",
+type:"Luxury SUV",
+fuel:"Petrol",
+competitors:"BMW X3, Mercedes-Benz GLC, Audi Q5"
+}
+
+};
 function generatePage(){
   const vehicleRaw = document.getElementById("vehicle").value.trim();
   const cityRaw = document.getElementById("city").value.trim();
@@ -109,9 +118,15 @@ function generatePage(){
   }
 
   const vehicle = titleCase(vehicleRaw);
+  
   const city = titleCase(cityRaw);
   const province = titleCase(provinceRaw);
-
+const info = vehicleInfo[vehicle] || {
+  summary: `Browse quality ${vehicle} vehicles for sale in ${city}.`,
+  type: "Used Vehicle",
+  fuel: "Petrol / Diesel",
+  competitors: "Similar vehicles"
+};
   const fileName = slugify(vehicle) + "-for-sale-" + slugify(city) + ".html";
   const url = "https://carscoutza.com/" + fileName;
 
@@ -457,7 +472,7 @@ text-decoration:none;
 <h1>${vehicle} for Sale in ${city}</h1>
 
 <p>
-Looking for a ${vehicle} for sale in ${city}? CarScoutZA helps buyers connect directly with trusted dealerships across ${province}. Browse quality used vehicles, compare options and contact dealers directly by phone or WhatsApp.
+${info.summary}
 </p>
 
 <h2>Why Buy Through CarScoutZA?</h2>
