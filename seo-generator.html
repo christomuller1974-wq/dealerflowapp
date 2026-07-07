@@ -127,7 +127,9 @@ const info = vehicleInfo[vehicle] || {
   summary: `Browse quality ${vehicle} vehicles for sale in ${city}.`,
   type: "Used Vehicle",
   fuel: "Petrol / Diesel",
-  competitors: "Similar vehicles"
+  competitors: "Similar vehicles",
+  idealFor: `Buyers looking for a quality ${vehicle} from trusted South African dealerships.`,
+  buyingTip: `When buying a used ${vehicle}, check the service history, mileage, condition and finance options before making a decision.`
 };
   const fileName = slugify(vehicle) + "-for-sale-" + slugify(city) + ".html";
   const url = "https://carscoutza.com/" + fileName;
