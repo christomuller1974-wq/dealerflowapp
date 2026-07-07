@@ -100,24 +100,29 @@ function slugify(text){
 
   const vehicleInfo = {
 
-"Porsche Macan":{
+
+    "Porsche Macan":{
 summary:"Looking for a Porsche Macan? CarScoutZA connects you directly with trusted South African dealerships that can help you compare models, arrange finance and find the right Porsche Macan for your lifestyle.",
-idealFor:"Families, business professionals and buyers looking for premium performance with everyday practicality."
+idealFor:"Families, business professionals and buyers looking for premium performance with everyday practicality.",
+category:"Luxury SUV"
 },
 
 "Ford Ranger":{
 summary:"Looking for a Ford Ranger? CarScoutZA connects you directly with trusted dealerships that can help you compare Ranger models, arrange finance and find the right vehicle for your needs.",
-idealFor:"Business owners, families, farmers and buyers looking for a dependable bakkie for work and everyday driving."
+idealFor:"Business owners, families, farmers and buyers looking for a dependable bakkie for work and everyday driving.",
+category:"Bakkie"
 },
 
 "Toyota Hilux":{
 summary:"Looking for a Toyota Hilux? Browse available Hilux models from trusted CarScoutZA dealerships and speak directly with professionals who can help you choose the right vehicle.",
-idealFor:"Farmers, contractors, business owners, families and anyone looking for a reliable and versatile bakkie."
+idealFor:"Farmers, contractors, business owners, families and anyone looking for a reliable and versatile bakkie.",
+category:"Bakkie"
 },
 
 "Nissan NP200":{
 summary:"Looking for a Nissan NP200? CarScoutZA connects you with trusted dealerships that can help you compare vehicles, arrange finance and find the right NP200 for your business or personal needs.",
-idealFor:"Small business owners, delivery services, tradesmen and buyers looking for an affordable workhorse."
+idealFor:"Small business owners, delivery services, tradesmen and buyers looking for an affordable workhorse.",
+category:"Small Bakkie"
 }
 
 };
@@ -135,9 +140,11 @@ function generatePage(){
   
   const city = titleCase(cityRaw);
   const province = titleCase(provinceRaw);
-const info = vehicleInfo[vehicle] || {
+
+  const info = vehicleInfo[vehicle] || {
   summary: `Looking for a ${vehicle}? CarScoutZA connects you directly with trusted South African dealerships that can help you compare options, arrange finance and find the right vehicle for your needs.`,
-  idealFor: `Buyers looking for a quality ${vehicle} with help from trusted South African dealers.`
+  idealFor: `Buyers looking for a quality ${vehicle} with help from trusted South African dealers.`,
+  category: "Used Vehicle"
 };
   const fileName = slugify(vehicle) + "-for-sale-" + slugify(city) + ".html";
   const url = "https://carscoutza.com/" + fileName;
@@ -240,8 +247,7 @@ ${info.idealFor}
 <h2>Used ${vehicle} Vehicles in ${city}</h2>
 
 <p>
-CarScoutZA helps buyers in ${city} and across ${province} find quality ${vehicle} vehicles from trusted dealerships.
-Whether you are looking for a reliable daily drive, a family vehicle, a workhorse or an upgrade, this page is designed to help you start your search quickly.
+Whether you're buying your first vehicle, upgrading to something newer or searching for the perfect ${vehicle}, CarScoutZA makes the process simple. Browse vehicles from trusted dealerships in ${city}, compare your options and speak directly with knowledgeable dealers who can answer your questions, assist with finance and help you make the right buying decision.
 </p>
 
 <p>
