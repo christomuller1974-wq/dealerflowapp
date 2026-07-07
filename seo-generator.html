@@ -136,12 +136,8 @@ function generatePage(){
   const city = titleCase(cityRaw);
   const province = titleCase(provinceRaw);
 const info = vehicleInfo[vehicle] || {
-  summary: `Browse quality ${vehicle} vehicles for sale in ${city}.`,
-  type: "Used Vehicle",
-  fuel: "Petrol / Diesel",
-  competitors: "Similar vehicles",
-  idealFor: `Buyers looking for a quality ${vehicle} from trusted South African dealerships.`,
-  buyingTip: `When buying a used ${vehicle}, check the service history, mileage, condition and finance options before making a decision.`
+  summary: `Looking for a ${vehicle}? CarScoutZA connects you directly with trusted South African dealerships that can help you compare options, arrange finance and find the right vehicle for your needs.`,
+  idealFor: `Buyers looking for a quality ${vehicle} with help from trusted South African dealers.`
 };
   const fileName = slugify(vehicle) + "-for-sale-" + slugify(city) + ".html";
   const url = "https://carscoutza.com/" + fileName;
