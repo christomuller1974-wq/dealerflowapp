@@ -97,54 +97,29 @@ function slugify(text){
     .replace(/[^a-z0-9]+/g,"-")
     .replace(/^-+|-+$/g,"");
 }
-const vehicleInfo = {
+
+  const vehicleInfo = {
 
 "Porsche Macan":{
-summary:"The Porsche Macan combines sports car performance with SUV practicality and premium comfort.",
-type:"Luxury SUV",
-fuel:"Petrol",
-competitors:"BMW X3, Mercedes-Benz GLC, Audi Q5",
-idealFor:"Families, business professionals and buyers who want performance with SUV practicality.",
-buyingTip:"When buying a used Porsche Macan, check service history, tyre condition, brake wear and that all electronic features are working correctly.",
-engines:"2.0 Turbo, 2.9 V6, 3.0 V6",
-strengths:"Excellent performance, premium interior, superb handling.",
-economy:"Depending on model, approximately 8–11 L/100 km."
+summary:"Looking for a Porsche Macan? CarScoutZA connects you directly with trusted South African dealerships that can help you compare models, arrange finance and find the right Porsche Macan for your lifestyle.",
+idealFor:"Families, business professionals and buyers looking for premium performance with everyday practicality."
 },
 
 "Ford Ranger":{
-summary:"The Ford Ranger is one of South Africa's most popular bakkies, known for strong towing ability, modern comfort and everyday practicality.",
-type:"Bakkie",
-fuel:"Diesel / Petrol",
-competitors:"Toyota Hilux, Isuzu D-Max, VW Amarok",
-idealFor:"Business owners, families, farmers and buyers who need a strong, practical bakkie for work and lifestyle use.",
-buyingTip:"When buying a used Ford Ranger, check service history, mileage, towing use, suspension condition and whether all electronics are working correctly.",
-engines:"2.0 Single Turbo, 2.0 Bi-Turbo, 2.2 TDCi, 3.2 TDCi, 3.0 V6 Diesel",
-strengths:"Excellent towing ability, strong resale value, comfortable interior, advanced safety features.",
-economy:"Depending on the engine, expect approximately 7–10 L/100 km during normal driving."
+summary:"Looking for a Ford Ranger? CarScoutZA connects you directly with trusted dealerships that can help you compare Ranger models, arrange finance and find the right vehicle for your needs.",
+idealFor:"Business owners, families, farmers and buyers looking for a dependable bakkie for work and everyday driving."
 },
 
 "Toyota Hilux":{
-summary:"The Toyota Hilux is one of South Africa's most trusted bakkies, known for reliability, durability, strong resale value and excellent off-road ability.",
-type:"Bakkie",
-fuel:"Diesel / Petrol",
-competitors:"Ford Ranger, Isuzu D-Max, Nissan Navara",
-idealFor:"Farmers, business owners, contractors, families and buyers who need a reliable bakkie for work and everyday use.",
-buyingTip:"When buying a used Toyota Hilux, check the service history, mileage, 4x4 system where applicable, suspension condition and signs of heavy work use.",
-engines:"2.4 GD-6 Diesel, 2.8 GD-6 Diesel",
-strengths:"Legendary reliability, outstanding resale value, excellent off-road ability.",
-economy:"Most models average around 7–9 L/100 km."
+summary:"Looking for a Toyota Hilux? Browse available Hilux models from trusted CarScoutZA dealerships and speak directly with professionals who can help you choose the right vehicle.",
+idealFor:"Farmers, contractors, business owners, families and anyone looking for a reliable and versatile bakkie."
 },
+
 "Nissan NP200":{
-summary:"The Nissan NP200 is a popular small workhorse bakkie in South Africa, known for affordability, practicality and low running costs.",
-type:"Small Bakkie",
-fuel:"Petrol",
-competitors:"Chevrolet Utility, Ford Bantam, Fiat Strada",
-idealFor:"Small businesses, delivery work, tradesmen and buyers who need an affordable light-duty bakkie.",
-buyingTip:"When buying a used Nissan NP200, check load-bin condition, clutch wear, service history, suspension condition and signs of heavy commercial use.",
-engines:"1.6 Petrol",
-strengths:"Affordable to buy, economical to run, practical load bin, simple maintenance.",
-economy:"Most models average around 7–8 L/100 km depending on load and driving style."
+summary:"Looking for a Nissan NP200? CarScoutZA connects you with trusted dealerships that can help you compare vehicles, arrange finance and find the right NP200 for your business or personal needs.",
+idealFor:"Small business owners, delivery services, tradesmen and buyers looking for an affordable workhorse."
 }
+
 };
 function generatePage(){
   const vehicleRaw = document.getElementById("vehicle").value.trim();
