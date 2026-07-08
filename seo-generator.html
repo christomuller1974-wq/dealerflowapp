@@ -141,10 +141,16 @@ function generatePage(){
   const city = titleCase(cityRaw);
   const province = titleCase(provinceRaw);
 
-  const info = vehicleInfo[vehicle] || {
-  summary: `Looking for a ${vehicle}? CarScoutZA connects you directly with trusted South African dealerships that can help you compare options, arrange finance and find the right vehicle for your needs.`,
-  idealFor: `Buyers looking for a quality ${vehicle} with help from trusted South African dealers.`,
-  category: "Used Vehicle"
+ const info = vehicleInfo[vehicle] || {
+summary:`Looking for a ${vehicle}? CarScoutZA connects you directly with trusted dealerships in South Africa that can help you compare vehicles, arrange finance and find the right ${vehicle} for your needs.`,
+
+idealFor:`Private buyers, families, business owners and anyone looking for a quality ${vehicle} from a trusted dealership.`,
+
+category:"Used Vehicle",
+
+cta:`Our trusted dealer network is ready to help you find the perfect ${vehicle}. Whether you're comparing models, arranging finance or looking for a specific vehicle, CarScoutZA connects you directly with experienced dealerships.`,
+
+button:`Help Me Find My ${vehicle}`
 };
   const fileName = slugify(vehicle) + "-for-sale-" + slugify(city) + ".html";
   const url = "https://carscoutza.com/" + fileName;
@@ -321,14 +327,15 @@ Many South African dealerships accept trade-ins. If you currently own a vehicle,
 Stock changes regularly. If the exact ${vehicle} is not currently available in ${city}, you can browse nearby areas or contact dealers to help source the right vehicle.
 </p>
 
+
 <h2>Ready to Speak to a Trusted Dealer?</h2>
 
 <p>
-Whether you're ready to buy today or simply have a few questions, our trusted dealer network is here to help. Compare vehicles, arrange finance, discuss trade-ins or ask a dealer to source the perfect ${vehicle} for you.
+${info.cta || `Our trusted dealer network is ready to help you find the perfect ${vehicle}. Compare vehicles, arrange finance and speak directly with experienced dealerships.`}
 </p>
 
 <a class="button" href="https://carscoutza.com">
-Help Me Find My ${vehicle}
+${info.button || `Help Me Find My ${vehicle}`}
 </a>
 
 <p style="font-size:14px;color:#666;margin-top:20px;">
