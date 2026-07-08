@@ -827,7 +827,7 @@ document.getElementById("output").value = allHtml;
 alert("Finished generating SEO pages for " + vehicles.length + " vehicle models.");
     
 }
- async function downloadZip(){
+async function downloadZip(){
 
   if (typeof JSZip === "undefined") {
     alert("ZIP library did not load. Please refresh the page and try again.");
@@ -835,6 +835,7 @@ alert("Finished generating SEO pages for " + vehicles.length + " vehicle models.
   }
 
   const output = document.getElementById("output").value.trim();
+  const sitemapBlocks = document.getElementById("sitemap").value.trim();
 
   if (!output) {
     alert("Please generate SEO pages first.");
@@ -842,12 +843,19 @@ alert("Finished generating SEO pages for " + vehicles.length + " vehicle models.
   }
 
   const zip = new JSZip();
-const robotsContent = [
-  "User-agent: *",
-  "Allow: /",
-  "",
-  "Sitemap: https://carscoutza.com/sitemap.xml"
-].join("\n");
+
+  const robotsContent = [
+    "User-agent: *",
+    "Allow: /",
+    "",
+    "Sitemap: https://carscoutza.com/sitemap.xml"
+  ].join("\n");
+
+  const sitemapContent = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${sitemapBlocks}
+</urlset>`;
+
   const parts = output.split("FILE NAME:");
 
   let count = 0;
@@ -862,7 +870,7 @@ const robotsContent = [
 
     if (firstLineEnd === -1) return;
 
-    const filename = trimmed.substring(0, firstLineEnd).trim();
+    const fileName = trimmed.substring(0, firstLineEnd).trim();
 
     const htmlStart = trimmed.indexOf("<!DOCTYPE html>");
 
@@ -870,13 +878,10 @@ const robotsContent = [
 
     const html = trimmed.substring(htmlStart);
 
-   if (fileName && html) {
-    zip.file(fileName, html);
-    zip.file("sitemap.xml", sitemapBlocks);
-    zip.file("robots.txt", robotsContent);
-
-    count++;
-}
+    if (fileName && html) {
+      zip.file(fileName, html);
+      count++;
+    }
 
   });
 
@@ -884,6 +889,9 @@ const robotsContent = [
     alert("No HTML files found. Please generate pages first.");
     return;
   }
+
+  zip.file("sitemap.xml", sitemapContent);
+  zip.file("robots.txt", robotsContent);
 
   const content = await zip.generateAsync({type:"blob"});
 
@@ -893,7 +901,7 @@ const robotsContent = [
   link.click();
 
   alert("ZIP created with " + count + " HTML files.");
-} 
+}
   async function generateEverythingZip(){
 
     // Generate all vehicles first
