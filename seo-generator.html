@@ -459,7 +459,13 @@ function generateAllCities(){
   cities.forEach(function(item){
     const city = item[0];
     const province = item[1];
-
+const info = vehicleInfo[vehicle] || {
+summary:`Looking for a ${vehicle}? CarScoutZA connects you directly with trusted dealerships in South Africa that can help you compare vehicles, arrange finance and find the right ${vehicle} for your needs.`,
+idealFor:`Private buyers, families, business owners and anyone looking for a quality ${vehicle} from a trusted dealership.`,
+category:"Used Vehicle",
+cta:`Our trusted dealer network is ready to help you find the perfect ${vehicle}. Whether you're comparing models, arranging finance or looking for a specific vehicle, CarScoutZA connects you directly with experienced dealerships.`,
+button:`Help Me Find My ${vehicle}`
+};
     const fileName = slugify(vehicle) + "-for-sale-" + slugify(city) + ".html";
     const url = "https://carscoutza.com/" + fileName;
 
