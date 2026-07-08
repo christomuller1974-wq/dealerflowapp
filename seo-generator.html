@@ -842,7 +842,10 @@ alert("Finished generating SEO pages for " + vehicles.length + " vehicle models.
   }
 
   const zip = new JSZip();
+const robotsContent = `User-agent: *
+Allow: /
 
+Sitemap: https://carscoutza.com/sitemap.xml`;
   const parts = output.split("FILE NAME:");
 
   let count = 0;
@@ -865,10 +868,13 @@ alert("Finished generating SEO pages for " + vehicles.length + " vehicle models.
 
     const html = trimmed.substring(htmlStart);
 
-    if (filename && html) {
-      zip.file(filename, html);
-      count++;
-    }
+   if (fileName && html) {
+    zip.file(fileName, html);
+    zip.file("sitemap.xml", sitemapBlocks);
+    zip.file("robots.txt", robotsContent);
+
+    count++;
+}
 
   });
 
