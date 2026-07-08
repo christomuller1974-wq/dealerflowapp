@@ -842,10 +842,12 @@ alert("Finished generating SEO pages for " + vehicles.length + " vehicle models.
   }
 
   const zip = new JSZip();
-const robotsContent = `User-agent: *
-Allow: /
-
-Sitemap: https://carscoutza.com/sitemap.xml`;
+const robotsContent = [
+  "User-agent: *",
+  "Allow: /",
+  "",
+  "Sitemap: https://carscoutza.com/sitemap.xml"
+].join("\n");
   const parts = output.split("FILE NAME:");
 
   let count = 0;
