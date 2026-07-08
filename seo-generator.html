@@ -87,7 +87,17 @@ function titleCase(str){
     .toLowerCase()
     .split(" ")
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
+    .join(" ")
+    .replace("Cx-5","CX-5")
+    .replace("Cx-3","CX-3")
+    .replace("Mx-5","MX-5")
+    .replace("X3","X3")
+    .replace("X5","X5")
+    .replace("Q5","Q5")
+    .replace("A3","A3")
+    .replace("D-max","D-Max")
+    .replace("T-cross","T-Cross")
+    .replace("Np200","NP200");
 }
 
 function slugify(text){
