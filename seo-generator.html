@@ -91,13 +91,17 @@ function titleCase(str){
     .replace("Cx-5","CX-5")
     .replace("Cx-3","CX-3")
     .replace("Mx-5","MX-5")
-    .replace("X3","X3")
-    .replace("X5","X5")
-    .replace("Q5","Q5")
-    .replace("A3","A3")
     .replace("D-max","D-Max")
     .replace("T-cross","T-Cross")
-    .replace("Np200","NP200");
+    .replace("Np200","NP200")
+    .replace(/\bVw\b/g,"VW")
+    .replace(/\bBmw\b/g,"BMW")
+    .replace(/\bGwm\b/g,"GWM")
+    .replace(/\bMg\b/g,"MG")
+    .replace(/\bGlc\b/g,"GLC")
+    .replace(/\bGle\b/g,"GLE")
+    .replace(/\bGls\b/g,"GLS")
+    .replace(/\bGt\b/g,"GT");
 }
 
 function slugify(text){
