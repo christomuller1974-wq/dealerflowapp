@@ -876,7 +876,8 @@ ${sitemapBlocks}
 
     if (htmlStart === -1) return;
 
-    const html = trimmed.substring(htmlStart);
+    const htmlEnd = trimmed.indexOf("</html>") + 7;
+const html = trimmed.substring(htmlStart, htmlEnd);
 
     if (fileName && html) {
       zip.file(fileName, html);
