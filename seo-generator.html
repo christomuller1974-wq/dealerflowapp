@@ -87,21 +87,7 @@ function titleCase(str){
     .toLowerCase()
     .split(" ")
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ")
-    .replace("Cx-5","CX-5")
-    .replace("Cx-3","CX-3")
-    .replace("Mx-5","MX-5")
-    .replace("D-max","D-Max")
-    .replace("T-cross","T-Cross")
-    .replace("Np200","NP200")
-    .replace(/\bVw\b/g,"VW")
-    .replace(/\bBmw\b/g,"BMW")
-    .replace(/\bGwm\b/g,"GWM")
-    .replace(/\bMg\b/g,"MG")
-    .replace(/\bGlc\b/g,"GLC")
-    .replace(/\bGle\b/g,"GLE")
-    .replace(/\bGls\b/g,"GLS")
-    .replace(/\bGt\b/g,"GT");
+    .join(" ");
 }
 
 function slugify(text){
@@ -155,16 +141,10 @@ function generatePage(){
   const city = titleCase(cityRaw);
   const province = titleCase(provinceRaw);
 
- const info = vehicleInfo[vehicle] || {
-summary:`Looking for a ${vehicle}? CarScoutZA connects you directly with trusted dealerships in South Africa that can help you compare vehicles, arrange finance and find the right ${vehicle} for your needs.`,
-
-idealFor:`Private buyers, families, business owners and anyone looking for a quality ${vehicle} from a trusted dealership.`,
-
-category:"Used Vehicle",
-
-cta:`Our trusted dealer network is ready to help you find the perfect ${vehicle}. Whether you're comparing models, arranging finance or looking for a specific vehicle, CarScoutZA connects you directly with experienced dealerships.`,
-
-button:`Contact a Dealer About This ${vehicle}`
+  const info = vehicleInfo[vehicle] || {
+  summary: `Looking for a ${vehicle}? CarScoutZA connects you directly with trusted South African dealerships that can help you compare options, arrange finance and find the right vehicle for your needs.`,
+  idealFor: `Buyers looking for a quality ${vehicle} with help from trusted South African dealers.`,
+  category: "Used Vehicle"
 };
   const fileName = slugify(vehicle) + "-for-sale-" + slugify(city) + ".html";
   const url = "https://carscoutza.com/" + fileName;
@@ -182,21 +162,21 @@ button:`Contact a Dealer About This ${vehicle}`
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Used ${vehicle} for Sale in ${city} | CarScoutZA</title>
+<title>${vehicle} for Sale in ${city} | CarScoutZA</title>
 
-<meta name="description" content="Browse used ${vehicle} vehicles for sale in ${city} from trusted dealerships. Compare vehicles, apply for finance and contact dealers directly through CarScoutZA.">
+<meta name="description" content="Browse ${vehicle} vehicles for sale in ${city}. Find trusted dealerships, finance options and quality used vehicles on CarScoutZA.">
 
 <meta name="keywords" content="${vehicle} for sale ${city}, used ${vehicle} ${city}, ${vehicle} for sale ${province}, ${vehicle} South Africa">
 
 <link rel="canonical" href="${url}">
 
 <meta property="og:title" content="${vehicle} for Sale in ${city} | CarScoutZA">
-<meta property="og:description" content="Browse used ${vehicle} vehicles for sale in ${city}. Compare vehicles and contact trusted dealerships directly through CarScoutZA.">
+<meta property="og:description" content="Browse ${vehicle} vehicles for sale in ${city}. Contact trusted dealerships directly through CarScoutZA.">
 <meta property="og:url" content="${url}">
 <meta property="og:type" content="website">
 
 <meta name="twitter:title" content="${vehicle} for Sale in ${city} | CarScoutZA">
-<meta name="twitter:description" content="Browse used ${vehicle} vehicles for sale in ${city}. Compare vehicles and contact trusted dealerships directly through CarScoutZA.">
+<meta name="twitter:description" content="Browse ${vehicle} vehicles for sale in ${city}. Contact trusted dealerships directly through CarScoutZA.">
 <meta name="twitter:card" content="summary_large_image">
 
 <script type="application/ld+json">
@@ -288,10 +268,10 @@ CarScoutZA was built with one goal in mind: connecting serious vehicle buyers di
 <li>🇿🇦 Proudly South African</li>
 </ul>
 
-<h2>Ready to Speak to a Dealer About This ${vehicle}?</h2>
+<h2>Ready to Find Your Next ${vehicle}?</h2>
 
 <p>
-Whether you've already decided on a ${vehicle} or you're still comparing your options, our trusted dealer network is ready to help. Speak directly with experienced dealerships, discuss finance, arrange a trade-in or ask a dealer to source the right vehicle for you.. Whether you are buying your first vehicle, upgrading your family car, or looking for a reliable work vehicle, CarScoutZA helps you connect with dealerships quickly and easily.
+CarScoutZA makes it simple to find ${vehicle} vehicles for sale in ${city}. Whether you are buying your first vehicle, upgrading your family car, or looking for a reliable work vehicle, CarScoutZA helps you connect with dealerships quickly and easily.
 </p>
 
 
@@ -341,15 +321,14 @@ Many South African dealerships accept trade-ins. If you currently own a vehicle,
 Stock changes regularly. If the exact ${vehicle} is not currently available in ${city}, you can browse nearby areas or contact dealers to help source the right vehicle.
 </p>
 
-
 <h2>Ready to Speak to a Trusted Dealer?</h2>
 
 <p>
-${info.cta || `Our trusted dealer network is ready to help you find the perfect ${vehicle}. Compare vehicles, arrange finance and speak directly with experienced dealerships.`}
+Whether you're ready to buy today or simply have a few questions, our trusted dealer network is here to help. Compare vehicles, arrange finance, discuss trade-ins or ask a dealer to source the perfect ${vehicle} for you.
 </p>
 
 <a class="button" href="https://carscoutza.com">
-${info.button || `Help Me Find My ${vehicle}`}
+Help Me Find My ${vehicle}
 </a>
 
 <p style="font-size:14px;color:#666;margin-top:20px;">
@@ -459,13 +438,7 @@ function generateAllCities(){
   cities.forEach(function(item){
     const city = item[0];
     const province = item[1];
-const info = vehicleInfo[vehicle] || {
-summary:`Looking for a ${vehicle}? CarScoutZA connects you directly with trusted dealerships in South Africa that can help you compare vehicles, arrange finance and find the right ${vehicle} for your needs.`,
-idealFor:`Private buyers, families, business owners and anyone looking for a quality ${vehicle} from a trusted dealership.`,
-category:"Used Vehicle",
-cta:`Our trusted dealer network is ready to help you find the perfect ${vehicle}. Whether you're comparing models, arranging finance or looking for a specific vehicle, CarScoutZA connects you directly with experienced dealerships.`,
-button:`Help Me Find My ${vehicle}`
-};
+
     const fileName = slugify(vehicle) + "-for-sale-" + slugify(city) + ".html";
     const url = "https://carscoutza.com/" + fileName;
 
@@ -520,7 +493,7 @@ FILE NAME: ${fileName}
     "url": "https://carscoutza.com"
   }
 }
-<\/script>
+<\\/script>
 
 <style>
 body{
@@ -597,15 +570,16 @@ CarScoutZA makes it simple to find ${vehicle} vehicles for sale in ${city}. Whet
 
 <ul>
 
-<li><a href="https://carscoutza.com/${fileName}">Used ${vehicle}</a></li>
+<li><a href="https://carscoutza.com/${slug}.html">Used ${vehicle}</a></li>
 
-<li><a href="https://carscoutza.com/${fileName}">${vehicle} Finance</a></li>
+<li><a href="https://carscoutza.com/${slug}.html">${vehicle} Finance</a></li>
 
-<li><a href="https://carscoutza.com/${fileName}">${vehicle} Price</a></li>
+<li><a href="https://carscoutza.com/${slug}.html">${vehicle} Price</a></li>
 
-<li><a href="https://carscoutza.com/${fileName}">${vehicle} Deals</a></li>
+<li><a href="https://carscoutza.com/${slug}.html">${vehicle} Deals</a></li>
 
-<li><a href="https://carscoutza.com/${fileName}">${vehicle} Specials</a></li>
+<li><a href="https://carscoutza.com/${slug}.html">${vehicle} Specials</a></li>
+
 </ul>
 
 
@@ -827,7 +801,7 @@ document.getElementById("output").value = allHtml;
 alert("Finished generating SEO pages for " + vehicles.length + " vehicle models.");
     
 }
-async function downloadZip(){
+ async function downloadZip(){
 
   if (typeof JSZip === "undefined") {
     alert("ZIP library did not load. Please refresh the page and try again.");
@@ -835,7 +809,6 @@ async function downloadZip(){
   }
 
   const output = document.getElementById("output").value.trim();
-  const sitemapBlocks = document.getElementById("sitemap").value.trim();
 
   if (!output) {
     alert("Please generate SEO pages first.");
@@ -843,18 +816,6 @@ async function downloadZip(){
   }
 
   const zip = new JSZip();
-
-  const robotsContent = [
-    "User-agent: *",
-    "Allow: /",
-    "",
-    "Sitemap: https://carscoutza.com/sitemap.xml"
-  ].join("\n");
-
-  const sitemapContent = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${sitemapBlocks}
-</urlset>`;
 
   const parts = output.split("FILE NAME:");
 
@@ -870,17 +831,16 @@ ${sitemapBlocks}
 
     if (firstLineEnd === -1) return;
 
-    const fileName = trimmed.substring(0, firstLineEnd).trim();
+    const filename = trimmed.substring(0, firstLineEnd).trim();
 
     const htmlStart = trimmed.indexOf("<!DOCTYPE html>");
 
     if (htmlStart === -1) return;
 
-    const htmlEnd = trimmed.indexOf("</html>") + 7;
-const html = trimmed.substring(htmlStart, htmlEnd);
+    const html = trimmed.substring(htmlStart);
 
-    if (fileName && html) {
-      zip.file(fileName, html);
+    if (filename && html) {
+      zip.file(filename, html);
       count++;
     }
 
@@ -891,9 +851,6 @@ const html = trimmed.substring(htmlStart, htmlEnd);
     return;
   }
 
-  zip.file("sitemap.xml", sitemapContent);
-  zip.file("robots.txt", robotsContent);
-
   const content = await zip.generateAsync({type:"blob"});
 
   const link = document.createElement("a");
@@ -902,7 +859,7 @@ const html = trimmed.substring(htmlStart, htmlEnd);
   link.click();
 
   alert("ZIP created with " + count + " HTML files.");
-}
+} 
   async function generateEverythingZip(){
 
     // Generate all vehicles first
@@ -912,7 +869,7 @@ const html = trimmed.substring(htmlStart, htmlEnd);
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     // Create the ZIP
-    await downloadZip();
+    downloadZip();
 
 }
 </script>
