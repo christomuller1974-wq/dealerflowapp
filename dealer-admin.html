@@ -443,25 +443,41 @@ function updateStats() {
 async function loadClickCounts() {
   clickCounts = {};
 
-  const { data, error } = await client
-    .from("vehicle_clicks")
-    .select("*")
-    .eq("dealer_user_id", currentUser.id);
+  const allClicks = [];
+  const batchSize = 1000;
+  let from = 0;
 
-  if (error) {
-    console.log(error);
-    return;
+  while (true) {
+    const { data, error } = await client
+      .from("vehicle_clicks")
+      .select("vehicle_id, click_type")
+      .eq("dealer_user_id", currentUser.id)
+      .range(from, from + batchSize - 1);
+
+    if (error) {
+      console.error("Error loading dealer click statistics:", error);
+      return;
+    }
+
+    const batch = data || [];
+    allClicks.push(...batch);
+
+    if (batch.length < batchSize) {
+      break;
+    }
+
+    from += batchSize;
   }
 
-  (data || []).forEach(function(click) {
+  allClicks.forEach(function(click) {
     const id = String(click.vehicle_id);
 
     if (!clickCounts[id]) {
       clickCounts[id] = {
-        total:0,
-        view:0,
-        call:0,
-        whatsapp:0
+        total: 0,
+        view: 0,
+        call: 0,
+        whatsapp: 0
       };
     }
 
@@ -471,6 +487,8 @@ async function loadClickCounts() {
     if (click.click_type === "call") clickCounts[id].call++;
     if (click.click_type === "whatsapp") clickCounts[id].whatsapp++;
   });
+
+  console.log("Loaded dealer click records:", allClicks.length);
 }
 
 function showPendingApprovalScreen() {
