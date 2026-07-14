@@ -419,6 +419,10 @@ async function loadDealers() {
           onclick="deactivateDealer('${d.id}')">
           Deactivate
         </button>
+        <button class="btn btn-dark"
+  onclick="changeLoginEmail('${d.id}')">
+  Change Login Email
+</button>
 <button class="danger-btn" onclick="deleteDealer('${d.id}')">
 Delete Account
 </button>
@@ -529,6 +533,55 @@ return;
 alert("Dealer account deleted.");
 window.location.reload();
 
+}
+  async function changeLoginEmail(dealerId) {
+  const newEmail = prompt(
+    "Enter the dealership's new login email address:"
+  );
+
+  if (!newEmail) return;
+
+  const cleanEmail = newEmail.toLowerCase().trim();
+
+  const confirmChange = confirm(
+    "Change this dealer's login email to:\n\n" +
+    cleanEmail +
+    "\n\nThe dealer ID, vehicles, statistics and subscription will remain unchanged."
+  );
+
+  if (!confirmChange) return;
+
+  try {
+    const { data, error } = await client.functions.invoke("super-api", {
+      body: {
+        action: "change-login-email",
+        dealerId: dealerId,
+        newEmail: cleanEmail
+      }
+    });
+
+    if (error) {
+      console.error(error);
+      alert("Could not change the login email.");
+      return;
+    }
+
+    if (!data || data.success !== true) {
+      console.error(data);
+      alert(data?.error || "Could not change the login email.");
+      return;
+    }
+
+    alert(
+      "Login email changed successfully.\n\n" +
+      "New email: " +
+      cleanEmail +
+      "\n\nThe dealer can now use Forgot Password to create a new password."
+    );
+  } catch (error) {
+    console.error(error);
+    alert("Unexpected error while changing the login email.");
+  }
 }
 async function loadStats() {
   const today = new Date();
