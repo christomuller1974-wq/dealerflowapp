@@ -57,6 +57,61 @@ color:white;
 border-radius:6px;
 text-decoration:none;
 }
+#vehicle-results{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(260px,320px));
+gap:20px;
+margin-top:25px;
+justify-content:start;
+}
+
+.seo-vehicle-card{
+border:1px solid #ddd;
+border-radius:10px;
+overflow:hidden;
+background:white;
+box-shadow:0 3px 12px rgba(0,0,0,0.08);
+}
+
+.seo-vehicle-card img{
+width:100%;
+height:220px;
+object-fit:cover;
+display:block;
+}
+
+.seo-vehicle-card-body{
+padding:16px;
+}
+
+.seo-vehicle-card h3{
+margin:0 0 10px;
+font-size:19px;
+color:#222;
+}
+
+.seo-vehicle-price{
+font-size:21px;
+font-weight:bold;
+color:#0056c9;
+margin-bottom:8px;
+}
+
+.seo-vehicle-meta{
+font-size:14px;
+color:#555;
+margin-top:5px;
+}
+
+.seo-details-button{
+display:inline-block;
+margin-top:15px;
+padding:10px 18px;
+background:#0056c9;
+color:white;
+border-radius:6px;
+text-decoration:none;
+}
 </style>
 </head>
 
@@ -80,12 +135,17 @@ Looking for a Audi A1? CarScoutZA connects you directly with trusted dealerships
 <li>No middlemen</li>
 </ul>
 
-<h2>Find Audi A1 Deals in Boksburg</h2>
+<section id="live-vehicles-section">
 
-<p>
-CarScoutZA makes it simple to find Audi A1 vehicles for sale in Boksburg. Whether you are buying your first vehicle, upgrading your family car, or looking for a reliable work vehicle, CarScoutZA helps you connect with dealerships quickly and easily.
+<h2>Audi A1 Vehicles Available in Boksburg</h2>
+
+<p id="vehicle-results-message">
+Checking the latest Audi A1 vehicles available in Boksburg...
 </p>
 
+<div id="vehicle-results"></div>
+
+</section>
 <h2>Related Vehicle Searches</h2>
 
 <p>You may also be interested in:</p>
@@ -127,9 +187,279 @@ CarScoutZA makes it simple to find Audi A1 vehicles for sale in Boksburg. Whethe
 <a class="button" href="https://carscoutza.com">
 Browse All Vehicles
 </a>
+<script>
 
+const seoVehicle = "Audi A1";
+const seoCity = "Boksburg";
+
+/*
+Copy the exact supabaseUrl and supabaseKey values
+from index.html and paste them below.
+*/
+const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
+
+function normaliseSeoText(value){
+  return String(value || "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
+function getSeoVehicleImage(vehicle){
+
+  if(vehicle.image && String(vehicle.image).trim()){
+    return String(vehicle.image).trim();
+  }
+
+  if(Array.isArray(vehicle.images) && vehicle.images.length){
+    return vehicle.images[0];
+  }
+
+  if(typeof vehicle.images === "string" && vehicle.images.trim()){
+
+    try{
+      const parsedImages = JSON.parse(vehicle.images);
+
+      if(Array.isArray(parsedImages) && parsedImages.length){
+        return parsedImages[0];
+      }
+    }catch(error){
+      return vehicle.images.trim();
+    }
+
+  }
+
+  return "https://via.placeholder.com/400x300?text=No+Image";
+}
+
+function formatSeoPrice(price){
+
+  const number = Number(
+    String(price || "").replace(/D/g,"")
+  );
+
+  if(!number){
+    return "Price on request";
+  }
+
+  return "R" + number.toLocaleString("en-ZA");
+}
+
+function getSeoLocation(vehicle, profile){
+
+  return [
+    vehicle.town || profile.town,
+    vehicle.province || profile.province
+  ]
+  .filter(Boolean)
+  .join(", ") ||
+  vehicle.location ||
+  "South Africa";
+}
+function renderSeoVehicles(vehicleList, profileMap){
+
+  const results =
+    document.getElementById("vehicle-results");
+
+  results.innerHTML = "";
+
+  vehicleList.slice(0,12).forEach(function(vehicle){
+
+    const profile =
+      profileMap[
+        String(vehicle.user_id || vehicle.dealer_id || "")
+      ] || {};
+
+    const title =
+      [
+        vehicle.year,
+        vehicle.make,
+        vehicle.model
+      ]
+      .filter(Boolean)
+      .join(" ") ||
+      vehicle.title ||
+      "Vehicle";
+
+    const card = document.createElement("article");
+    card.className = "seo-vehicle-card";
+
+    const image = document.createElement("img");
+    image.src = getSeoVehicleImage(vehicle);
+    image.alt = title + " for sale";
+    image.loading = "lazy";
+
+    image.onerror = function(){
+      this.src =
+        "https://via.placeholder.com/400x300?text=No+Image";
+    };
+
+    const body = document.createElement("div");
+    body.className = "seo-vehicle-card-body";
+
+    const heading = document.createElement("h3");
+    heading.textContent = title;
+
+    const price = document.createElement("div");
+    price.className = "seo-vehicle-price";
+    price.textContent = formatSeoPrice(vehicle.price);
+
+    const location = document.createElement("div");
+    location.className = "seo-vehicle-meta";
+    location.textContent =
+      "📍 " + getSeoLocation(vehicle, profile);
+
+    const mileage = document.createElement("div");
+    mileage.className = "seo-vehicle-meta";
+    mileage.textContent =
+      "🚗 " + (vehicle.mileage || "Mileage not listed");
+
+    const dealer = document.createElement("div");
+    dealer.className = "seo-vehicle-meta";
+    dealer.textContent =
+      "🏢 " +
+      (
+        vehicle.dealer ||
+        vehicle.dealer_name ||
+        "CarScoutZA Dealer"
+      );
+
+    const link = document.createElement("a");
+    link.className = "seo-details-button";
+    link.href =
+      "details.html?id=" +
+      encodeURIComponent(vehicle.id);
+    link.textContent = "View Vehicle Details";
+
+    body.appendChild(heading);
+    body.appendChild(price);
+    body.appendChild(location);
+    body.appendChild(mileage);
+    body.appendChild(dealer);
+    body.appendChild(link);
+
+    card.appendChild(image);
+    card.appendChild(body);
+
+    results.appendChild(card);
+
+  });
+
+}
+async function checkLiveVehicles(){
+
+  const message =
+    document.getElementById("vehicle-results-message");
+
+  try{
+
+    const vehicleResponse = await fetch(
+      supabaseUrl +
+      "/rest/v1/vehicles?select=*&order=updated_at.desc.nullslast,id.desc",
+      {
+        headers:{
+          apikey: supabaseKey,
+          Authorization: "Bearer " + supabaseKey
+        }
+      }
+    );
+
+    const profileResponse = await fetch(
+      supabaseUrl +
+      "/rest/v1/profiles?select=id,town,province",
+      {
+        headers:{
+          apikey: supabaseKey,
+          Authorization: "Bearer " + supabaseKey
+        }
+      }
+    );
+
+    if(!vehicleResponse.ok || !profileResponse.ok){
+      throw new Error("Could not load vehicle information.");
+    }
+
+    const vehicles = await vehicleResponse.json();
+    const profiles = await profileResponse.json();
+
+    const profileMap = {};
+
+    profiles.forEach(function(profile){
+      profileMap[String(profile.id)] = profile;
+    });
+
+    const wantedVehicle = normaliseSeoText(seoVehicle);
+    const wantedCity = normaliseSeoText(seoCity);
+
+    const exactMatches = vehicles.filter(function(v){
+
+      const profile =
+        profileMap[String(v.user_id || v.dealer_id || "")] || {};
+
+      const fullVehicleName = normaliseSeoText(
+        (v.make || "") + " " + (v.model || "")
+      );
+
+      const vehicleLocation = normaliseSeoText(
+        v.town ||
+        profile.town ||
+        v.location ||
+        ""
+      );
+
+      return (
+        fullVehicleName.includes(wantedVehicle) &&
+        vehicleLocation.includes(wantedCity)
+      );
+
+    });
+
+    if(exactMatches.length > 0){
+
+      message.textContent =
+        exactMatches.length +
+        " matching Audi A1 vehicle" +
+        (exactMatches.length === 1 ? "" : "s") +
+        " currently available in Boksburg.";
+renderSeoVehicles(exactMatches, profileMap);
+    }else{
+
+      message.textContent =
+  "No exact Audi A1 matches are currently available in Boksburg. Showing Audi A1 vehicles available elsewhere in South Africa.";
+const sameVehicleElsewhere = vehicles.filter(function(v){
+
+  const fullVehicleName = normaliseSeoText(
+    (v.make || "") + " " + (v.model || "")
+  );
+
+  return fullVehicleName.includes(wantedVehicle);
+
+});
+
+renderSeoVehicles(
+  sameVehicleElsewhere,
+  profileMap
+);
+    }
+
+    console.log(
+      "SEO exact matches:",
+      exactMatches
+    );
+
+  }catch(error){
+
+    console.error(error);
+
+    message.textContent =
+      "Vehicle availability changes daily. Browse the latest CarScoutZA stock below.";
+
+  }
+
+}
+
+checkLiveVehicles();
+
+</script>
 </body>
 </html>
-
-
-==============================
