@@ -593,7 +593,127 @@ Checking the latest ${vehicle} vehicles available in ${city}...
 <a class="button" href="https://carscoutza.com">
 Browse All Vehicles
 </a>
+<script>
 
+const seoVehicle = "${vehicle}";
+const seoCity = "${city}";
+
+/*
+Copy the exact supabaseUrl and supabaseKey values
+from index.html and paste them below.
+*/
+const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
+
+function normaliseSeoText(value){
+  return String(value || "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
+
+async function checkLiveVehicles(){
+
+  const message =
+    document.getElementById("vehicle-results-message");
+
+  try{
+
+    const vehicleResponse = await fetch(
+      supabaseUrl +
+      "/rest/v1/vehicles?select=*&order=updated_at.desc.nullslast,id.desc",
+      {
+        headers:{
+          apikey: supabaseKey,
+          Authorization: "Bearer " + supabaseKey
+        }
+      }
+    );
+
+    const profileResponse = await fetch(
+      supabaseUrl +
+      "/rest/v1/profiles?select=id,town,province",
+      {
+        headers:{
+          apikey: supabaseKey,
+          Authorization: "Bearer " + supabaseKey
+        }
+      }
+    );
+
+    if(!vehicleResponse.ok || !profileResponse.ok){
+      throw new Error("Could not load vehicle information.");
+    }
+
+    const vehicles = await vehicleResponse.json();
+    const profiles = await profileResponse.json();
+
+    const profileMap = {};
+
+    profiles.forEach(function(profile){
+      profileMap[String(profile.id)] = profile;
+    });
+
+    const wantedVehicle = normaliseSeoText(seoVehicle);
+    const wantedCity = normaliseSeoText(seoCity);
+
+    const exactMatches = vehicles.filter(function(v){
+
+      const profile =
+        profileMap[String(v.user_id || v.dealer_id || "")] || {};
+
+      const fullVehicleName = normaliseSeoText(
+        (v.make || "") + " " + (v.model || "")
+      );
+
+      const vehicleLocation = normaliseSeoText(
+        v.town ||
+        profile.town ||
+        v.location ||
+        ""
+      );
+
+      return (
+        fullVehicleName.includes(wantedVehicle) &&
+        vehicleLocation.includes(wantedCity)
+      );
+
+    });
+
+    if(exactMatches.length > 0){
+
+      message.textContent =
+        exactMatches.length +
+        " matching ${vehicle} vehicle" +
+        (exactMatches.length === 1 ? "" : "s") +
+        " currently available in ${city}.";
+
+    }else{
+
+      message.textContent =
+        "No exact ${vehicle} matches are currently available in ${city}. Relevant alternatives will be shown below.";
+
+    }
+
+    console.log(
+      "SEO exact matches:",
+      exactMatches
+    );
+
+  }catch(error){
+
+    console.error(error);
+
+    message.textContent =
+      "Vehicle availability changes daily. Browse the latest CarScoutZA stock below.";
+
+  }
+
+}
+
+checkLiveVehicles();
+
+<\/script>
 </body>
 </html>
 
