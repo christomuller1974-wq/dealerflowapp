@@ -229,9 +229,10 @@ text-decoration:none;
 }
 #vehicle-results{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+grid-template-columns:repeat(auto-fill,minmax(260px,320px));
 gap:20px;
 margin-top:25px;
+justify-content:start;
 }
 
 .seo-vehicle-card{
@@ -244,7 +245,7 @@ box-shadow:0 3px 12px rgba(0,0,0,0.08);
 
 .seo-vehicle-card img{
 width:100%;
-height:180px;
+height:220px;
 object-fit:cover;
 display:block;
 }
