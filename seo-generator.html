@@ -941,8 +941,21 @@ renderSeoVehicles(exactMatches, profileMap);
     }else{
 
       message.textContent =
-        "No exact ${vehicle} matches are currently available in ${city}. Relevant alternatives will be shown below.";
+  "No exact ${vehicle} matches are currently available in ${city}. Showing ${vehicle} vehicles available elsewhere in South Africa.";
+const sameVehicleElsewhere = vehicles.filter(function(v){
 
+  const fullVehicleName = normaliseSeoText(
+    (v.make || "") + " " + (v.model || "")
+  );
+
+  return fullVehicleName.includes(wantedVehicle);
+
+});
+
+renderSeoVehicles(
+  sameVehicleElsewhere,
+  profileMap
+);
     }
 
     console.log(
