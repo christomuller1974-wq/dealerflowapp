@@ -1158,7 +1158,12 @@ alert("Finished generating SEO pages for " + vehicles.length + " vehicle models.
 
     if (htmlStart === -1) return;
 
-    const html = trimmed.substring(htmlStart);
+    const nextSeparator = trimmed.indexOf("==============================", htmlStart);
+
+const html =
+  nextSeparator === -1
+    ? trimmed.substring(htmlStart).trim()
+    : trimmed.substring(htmlStart, nextSeparator).trim();
 
     if (filename && html) {
       zip.file(filename, html);
