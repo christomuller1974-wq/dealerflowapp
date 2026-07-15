@@ -716,6 +716,96 @@ function getSeoLocation(vehicle, profile){
   vehicle.location ||
   "South Africa";
 }
+function renderSeoVehicles(vehicleList, profileMap){
+
+  const results =
+    document.getElementById("vehicle-results");
+
+  results.innerHTML = "";
+
+  vehicleList.slice(0,12).forEach(function(vehicle){
+
+    const profile =
+      profileMap[
+        String(vehicle.user_id || vehicle.dealer_id || "")
+      ] || {};
+
+    const title =
+      [
+        vehicle.year,
+        vehicle.make,
+        vehicle.model
+      ]
+      .filter(Boolean)
+      .join(" ") ||
+      vehicle.title ||
+      "Vehicle";
+
+    const card = document.createElement("article");
+    card.className = "seo-vehicle-card";
+
+    const image = document.createElement("img");
+    image.src = getSeoVehicleImage(vehicle);
+    image.alt = title + " for sale";
+    image.loading = "lazy";
+
+    image.onerror = function(){
+      this.src =
+        "https://via.placeholder.com/400x300?text=No+Image";
+    };
+
+    const body = document.createElement("div");
+    body.className = "seo-vehicle-card-body";
+
+    const heading = document.createElement("h3");
+    heading.textContent = title;
+
+    const price = document.createElement("div");
+    price.className = "seo-vehicle-price";
+    price.textContent = formatSeoPrice(vehicle.price);
+
+    const location = document.createElement("div");
+    location.className = "seo-vehicle-meta";
+    location.textContent =
+      "📍 " + getSeoLocation(vehicle, profile);
+
+    const mileage = document.createElement("div");
+    mileage.className = "seo-vehicle-meta";
+    mileage.textContent =
+      "🚗 " + (vehicle.mileage || "Mileage not listed");
+
+    const dealer = document.createElement("div");
+    dealer.className = "seo-vehicle-meta";
+    dealer.textContent =
+      "🏢 " +
+      (
+        vehicle.dealer ||
+        vehicle.dealer_name ||
+        "CarScoutZA Dealer"
+      );
+
+    const link = document.createElement("a");
+    link.className = "seo-details-button";
+    link.href =
+      "details.html?id=" +
+      encodeURIComponent(vehicle.id);
+    link.textContent = "View Vehicle Details";
+
+    body.appendChild(heading);
+    body.appendChild(price);
+    body.appendChild(location);
+    body.appendChild(mileage);
+    body.appendChild(dealer);
+    body.appendChild(link);
+
+    card.appendChild(image);
+    card.appendChild(body);
+
+    results.appendChild(card);
+
+  });
+
+}
 async function checkLiveVehicles(){
 
   const message =
@@ -791,7 +881,7 @@ async function checkLiveVehicles(){
         " matching ${vehicle} vehicle" +
         (exactMatches.length === 1 ? "" : "s") +
         " currently available in ${city}.";
-
+renderSeoVehicles(exactMatches, profileMap);
     }else{
 
       message.textContent =
