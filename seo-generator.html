@@ -665,7 +665,57 @@ function normaliseSeoText(value){
     .replace(/[^a-z0-9]+/g, " ")
     .trim();
 }
+function getSeoVehicleImage(vehicle){
 
+  if(vehicle.image && String(vehicle.image).trim()){
+    return String(vehicle.image).trim();
+  }
+
+  if(Array.isArray(vehicle.images) && vehicle.images.length){
+    return vehicle.images[0];
+  }
+
+  if(typeof vehicle.images === "string" && vehicle.images.trim()){
+
+    try{
+      const parsedImages = JSON.parse(vehicle.images);
+
+      if(Array.isArray(parsedImages) && parsedImages.length){
+        return parsedImages[0];
+      }
+    }catch(error){
+      return vehicle.images.trim();
+    }
+
+  }
+
+  return "https://via.placeholder.com/400x300?text=No+Image";
+}
+
+function formatSeoPrice(price){
+
+  const number = Number(
+    String(price || "").replace(/\D/g,"")
+  );
+
+  if(!number){
+    return "Price on request";
+  }
+
+  return "R" + number.toLocaleString("en-ZA");
+}
+
+function getSeoLocation(vehicle, profile){
+
+  return [
+    vehicle.town || profile.town,
+    vehicle.province || profile.province
+  ]
+  .filter(Boolean)
+  .join(", ") ||
+  vehicle.location ||
+  "South Africa";
+}
 async function checkLiveVehicles(){
 
   const message =
