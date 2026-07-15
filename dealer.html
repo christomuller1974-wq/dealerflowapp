@@ -396,18 +396,12 @@ profile.dealer_name + " Stock";
       return;
     }
 
-    const firstVehicle = data[0];
-
     const dealerName =
-      firstVehicle.dealer ||
-      firstVehicle.dealer_name ||
-      "Dealer Stock";
+  document.getElementById("dealerTitle").textContent.trim() ||
+  "Dealer Stock";
 
-    document.getElementById("dealerTitle").textContent =
-      dealerName;
-
-    document.title =
-      dealerName + " | CarScoutZA";
+document.title =
+  dealerName + " | CarScoutZA";
 
     data.forEach(function(vehicle) {
 
