@@ -5,6 +5,19 @@
 
 <title id="pageTitle">Vehicle Details | CarScoutZA</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+  const vehicleId = new URLSearchParams(window.location.search).get("id");
+
+  if (vehicleId) {
+    const canonicalLink = document.createElement("link");
+    canonicalLink.rel = "canonical";
+    canonicalLink.href =
+      "https://carscoutza.com/details.html?id=" +
+      encodeURIComponent(vehicleId);
+
+    document.head.appendChild(canonicalLink);
+  }
+</script>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18195864875">
 </script>
