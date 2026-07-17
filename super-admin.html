@@ -274,6 +274,10 @@ body {
   <strong id="totalCalls">0</strong>
   <span>Total Calls</span>
 </div>
+    <div class="stat-card">
+  <strong id="totalLeadsGenerated">0</strong>
+  <span>Total Leads Generated</span>
+</div>
   </div>
 
  <!-- Dealer Traffic Hidden For Now -->
@@ -632,6 +636,8 @@ const { count: totalWhatsApps } = await client
   document.getElementById("homePageVisits").textContent = homePageVisits || 0;
   document.getElementById("totalWhatsApps").textContent = totalWhatsApps || 0;
   document.getElementById("totalCalls").textContent = totalCalls || 0;
+  document.getElementById("totalLeadsGenerated").textContent =
+  (totalWhatsApps || 0) + (totalCalls || 0);
 }
 startAdmin();
 </script>
