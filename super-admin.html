@@ -266,7 +266,14 @@ body {
       <strong id="homePageVisits">0</strong>
       <span>Homepage Visits</span>
     </div>
-
+<div class="stat-card">
+  <strong id="totalWhatsApps">0</strong>
+  <span>Total WhatsApps</span>
+</div>
+    <div class="stat-card">
+  <strong id="totalCalls">0</strong>
+  <span>Total Calls</span>
+</div>
   </div>
 
  <!-- Dealer Traffic Hidden For Now -->
@@ -610,12 +617,21 @@ async function loadStats() {
     .from("vehicle_clicks")
     .select("*", { count:"exact", head:true })
     .eq("click_type", "view");
-
+const { count: totalWhatsApps } = await client
+  .from("vehicle_clicks")
+  .select("*", { count:"exact", head:true })
+  .eq("click_type", "whatsapp");
+  const { count: totalCalls } = await client
+  .from("vehicle_clicks")
+  .select("*", { count:"exact", head:true })
+  .eq("click_type", "call");
   document.getElementById("totalVisits").textContent = totalVisits || 0;
   document.getElementById("todayVisits").textContent = todayVisits || 0;
   document.getElementById("dealerPageVisits").textContent = dealerPageVisits || 0;
   document.getElementById("detailPageVisits").textContent = detailPageVisits || 0;
   document.getElementById("homePageVisits").textContent = homePageVisits || 0;
+  document.getElementById("totalWhatsApps").textContent = totalWhatsApps || 0;
+  document.getElementById("totalCalls").textContent = totalCalls || 0;
 }
 startAdmin();
 </script>
