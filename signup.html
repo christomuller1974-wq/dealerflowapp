@@ -283,7 +283,31 @@ button.submit-btn:hover {
 
       <div>
         <label>Password</label>
-        <input id="password" type="password" placeholder="Password">
+        <div style="position:relative;">
+  <input
+    id="password"
+    type="password"
+    placeholder="Password"
+    style="padding-right:50px;"
+  >
+
+  <button
+    type="button"
+    onclick="togglePasswordVisibility()"
+    aria-label="Show or hide password"
+    style="
+      position:absolute;
+      right:10px;
+      top:50%;
+      transform:translateY(-50%);
+      border:none;
+      background:transparent;
+      cursor:pointer;
+      font-size:20px;
+      padding:4px;
+    "
+  >👁️</button>
+</div>
       </div>
     </div>
 
@@ -301,7 +325,15 @@ const client = window.supabase.createClient(supabaseUrl, supabaseKey);
 function setStatus(msg) {
   document.getElementById("status").textContent = msg;
 }
+function togglePasswordVisibility() {
+  const passwordInput = document.getElementById("password");
 
+  if (passwordInput.type === "password") {
+    passwordInput.type = "text";
+  } else {
+    passwordInput.type = "password";
+  }
+}
 function toggleProvinceDropdown() {
   document.getElementById("provinceSelect").classList.toggle("open");
 }
