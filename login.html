@@ -172,7 +172,31 @@
 
       <div class="field">
         <label for="password">Password</label>
-        <input type="password" id="password" placeholder="Enter your password">
+        <div style="position:relative;">
+  <input
+    type="password"
+    id="password"
+    placeholder="Enter your password"
+    style="padding-right:50px;"
+  >
+
+  <button
+    type="button"
+    onclick="togglePasswordVisibility()"
+    aria-label="Show or hide password"
+    style="
+      position:absolute;
+      right:10px;
+      top:50%;
+      transform:translateY(-50%);
+      border:none;
+      background:transparent;
+      cursor:pointer;
+      font-size:20px;
+      padding:4px;
+    "
+  >👁️</button>
+</div>
       </div>
 
       <div class="submit-row">
@@ -198,7 +222,15 @@
       document.getElementById("status").textContent = message;
       console.log(message);
     }
+function togglePasswordVisibility() {
+  const passwordInput = document.getElementById("password");
 
+  if (passwordInput.type === "password") {
+    passwordInput.type = "text";
+  } else {
+    passwordInput.type = "password";
+  }
+}
     function setBusy(isBusy) {
       const btn = document.getElementById("loginBtn");
       btn.disabled = isBusy;
