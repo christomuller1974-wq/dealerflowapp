@@ -375,12 +375,33 @@ async function loadDealers() {
     list.innerHTML = "<div class='empty-box'>No dealers found.</div>";
     return;
   }
-const { data: dealerClicks, error: clickError } = await client
-  .from("vehicle_clicks")
-  .select("dealer_user_id, click_type");
+const dealerClicks = [];
+const batchSize = 1000;
+let from = 0;
 
-if (clickError) {
-  console.error("Could not load dealer statistics:", clickError);
+while (true) {
+  const { data: batch, error: clickError } = await client
+    .from("vehicle_clicks")
+    .select("dealer_user_id, click_type")
+    .range(from, from + batchSize - 1);
+
+  if (clickError) {
+    console.error(
+      "Could not load dealer statistics:",
+      clickError
+    );
+    break;
+  }
+
+  const rows = batch || [];
+
+  dealerClicks.push(...rows);
+
+  if (rows.length < batchSize) {
+    break;
+  }
+
+  from += batchSize;
 }
 
 const dealerStats = {};
