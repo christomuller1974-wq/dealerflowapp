@@ -375,12 +375,53 @@ async function loadDealers() {
     list.innerHTML = "<div class='empty-box'>No dealers found.</div>";
     return;
   }
+const { data: dealerClicks, error: clickError } = await client
+  .from("vehicle_clicks")
+  .select("dealer_user_id, click_type");
 
+if (clickError) {
+  console.error("Could not load dealer statistics:", clickError);
+}
+
+const dealerStats = {};
+
+(dealerClicks || []).forEach(click => {
+  const dealerId = click.dealer_user_id;
+
+  if (!dealerId) return;
+
+  if (!dealerStats[dealerId]) {
+    dealerStats[dealerId] = {
+      views: 0,
+      whatsapp: 0,
+      calls: 0
+    };
+  }
+
+  if (click.click_type === "view") {
+    dealerStats[dealerId].views++;
+  }
+
+  if (click.click_type === "whatsapp") {
+    dealerStats[dealerId].whatsapp++;
+  }
+
+  if (click.click_type === "call") {
+    dealerStats[dealerId].calls++;
+  }
+});
   data.forEach(d => {
     const row = document.createElement("div");
 
     row.className = "dealer-row";
+const stats = dealerStats[d.id] || {
+  views: 0,
+  whatsapp: 0,
+  calls: 0
+};
 
+const totalLeads =
+  stats.whatsapp + stats.calls;
     row.innerHTML = `
       <div class="dealer-info">
 
@@ -407,7 +448,21 @@ async function loadDealers() {
         <div class="dealer-meta">
           Vehicle Limit: ${d.vehicle_limit || 40}
         </div>
+<div class="dealer-meta" style="margin-top:10px; font-weight:700;">
+  Vehicle Views: ${stats.views}
+</div>
 
+<div class="dealer-meta">
+  WhatsApps: ${stats.whatsapp}
+</div>
+
+<div class="dealer-meta">
+  Calls: ${stats.calls}
+</div>
+
+<div class="dealer-meta" style="font-weight:800;">
+  Total Leads: ${totalLeads}
+</div>
         <div class="dealer-status">
           ${getDealerStatus(d)}
         </div>
