@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Dealer Performance | CarScoutZA</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #111c38, #315ed6);
+      color: white;
+      text-align: center;
+      padding: 38px 20px;
+    }
+
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: 38px;
+    }
+
+    .hero p {
+      margin: 0;
+      font-size: 17px;
+    }
+
+    .page {
+      width: min(1250px, 94%);
+      margin: 0 auto;
+      padding: 20px 0 50px;
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .button-link {
+      display: inline-block;
+      text-decoration: none;
+      background: #111827;
+      color: white;
+      padding: 12px 18px;
+      border-radius: 10px;
+      font-weight: 700;
+    }
+
+    .button-link.blue {
+      background: #315ed6;
+    }
+
+    .status {
+      background: white;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 18px;
+      font-weight: 700;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    }
+
+    .dealer-box {
+      background: white;
+      border-radius: 16px;
+      padding: 22px;
+      margin-bottom: 18px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    }
+
+    .dealer-box h2 {
+      margin: 0 0 10px;
+      font-size: 30px;
+    }
+
+    .dealer-detail {
+      margin: 5px 0;
+      font-size: 16px;
+    }
+
+    .read-only-note {
+      margin-top: 14px;
+      display: inline-block;
+      background: #eef2ff;
+      color: #1e40af;
+      padding: 9px 12px;
+      border-radius: 8px;
+      font-weight: 700;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(130px, 1fr));
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: 15px;
+      padding: 18px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    }
+
+    .stat-number {
+      font-size: 30px;
+      font-weight: 900;
+      color: #111827;
+    }
+
+    .stat-label {
+      color: #5b6474;
+      font-weight: 700;
+      margin-top: 3px;
+    }
+
+    .section-title {
+      font-size: 30px;
+      margin: 25px 0 16px;
+    }
+
+    .vehicle-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .vehicle-card {
+      background: white;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.09);
+    }
+
+    .image-wrap {
+      position: relative;
+      background: #d1d5db;
+      aspect-ratio: 16 / 10;
+      overflow: hidden;
+    }
+
+    .vehicle-image {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .featured-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: #f59e0b;
+      color: #111827;
+      padding: 7px 10px;
+      border-radius: 7px;
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .vehicle-body {
+      padding: 17px;
+    }
+
+    .vehicle-title {
+      font-size: 21px;
+      line-height: 1.25;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+
+    .vehicle-price {
+      font-size: 22px;
+      font-weight: 900;
+      color: #1746c7;
+      margin-bottom: 8px;
+    }
+
+    .vehicle-meta {
+      color: #4b5563;
+      margin: 4px 0;
+    }
+
+    .performance-box {
+      background: #f3f4f6;
+      border-radius: 10px;
+      padding: 12px;
+      margin-top: 14px;
+    }
+
+    .performance-title {
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+
+    .performance-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 7px;
+    }
+
+    .performance-item {
+      text-align: center;
+      background: white;
+      border-radius: 8px;
+      padding: 9px 4px;
+    }
+
+    .performance-number {
+      display: block;
+      font-size: 20px;
+      font-weight: 900;
+    }
+
+    .performance-label {
+      display: block;
+      font-size: 11px;
+      color: #5b6474;
+      margin-top: 3px;
+    }
+
+    .view-button {
+      display: block;
+      margin-top: 13px;
+      text-align: center;
+      text-decoration: none;
+      background: #315ed6;
+      color: white;
+      padding: 11px;
+      border-radius: 9px;
+      font-weight: 800;
+    }
+
+    .empty-box {
+      background: white;
+      border-radius: 14px;
+      padding: 25px;
+      text-align: center;
+      font-weight: 700;
+    }
+
+    @media (max-width: 1050px) {
+      .stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .vehicle-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 700px) {
+      .hero {
+        padding: 28px 15px;
+      }
+
+      .hero h1 {
+        font-size: 30px;
+      }
+
+      .page {
+        width: 92%;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .vehicle-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .performance-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .dealer-box h2 {
+        font-size: 26px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="hero">
+    <h1>Dealer Performance</h1>
+    <p>Super Admin read-only stock and vehicle statistics</p>
+  </header>
+
+  <main class="page">
+
+    <div class="top-actions">
+      <a class="button-link" href="super-admin.html">
+        Back to Super Admin
+      </a>
+
+      <a
+        class="button-link blue"
+        id="publicDealerLink"
+        href="#"
+        target="_blank"
+        style="display:none;"
+      >
+        Open Public Dealer Page
+      </a>
+    </div>
+
+    <div id="status" class="status">
+      Loading dealer performance...
+    </div>
+
+    <section id="dealerBox" class="dealer-box" style="display:none;">
+      <h2 id="dealerName">Dealer</h2>
+
+      <div class="dealer-detail">
+        Phone: <span id="dealerPhone">-</span>
+      </div>
+
+      <div class="dealer-detail">
+        Town: <span id="dealerTown">-</span>
+      </div>
+
+      <div class="dealer-detail">
+        Province: <span id="dealerProvince">-</span>
+      </div>
+
+      <div class="read-only-note">
+        Read-only Super Admin view — no dealer stock can be edited here.
+      </div>
+    </section>
+
+    <section id="statsGrid" class="stats-grid" style="display:none;">
+      <div class="stat-card">
+        <div id="totalVehicles" class="stat-number">0</div>
+        <div class="stat-label">Total Vehicles</div>
+      </div>
+
+      <div class="stat-card">
+        <div id="featuredVehicles" class="stat-number">0</div>
+        <div class="stat-label">Featured Vehicles</div>
+      </div>
+
+      <div class="stat-card">
+        <div id="totalClicks" class="stat-number">0</div>
+        <div class="stat-label">Total Clicks</div>
+      </div>
+
+      <div class="stat-card">
+        <div id="totalViews" class="stat-number">0</div>
+        <div class="stat-label">Total Views</div>
+      </div>
+
+      <div class="stat-card">
+        <div id="totalCalls" class="stat-number">0</div>
+        <div class="stat-label">Total Calls</div>
+      </div>
+
+      <div class="stat-card">
+        <div id="totalWhatsApps" class="stat-number">0</div>
+        <div class="stat-label">Total WhatsApps</div>
+      </div>
+    </section>
+
+    <h2 id="stockHeading" class="section-title" style="display:none;">
+      Dealer Stock
+    </h2>
+
+    <section id="vehicleList" class="vehicle-grid"></section>
+
+  </main>
+
+  <script>
+    const supabaseUrl =
+      "https://ddmvzypiccryjndcwlre.supabase.co";
+
+    const supabaseKey =
+      "sb_publishable_D7saHOTE_JhSlMnSgBnIhQ_mOA0UD9s";
+
+    const client = window.supabase.createClient(
+      supabaseUrl,
+      supabaseKey
+    );
+
+    const ADMIN_EMAIL = "autoexcellence@telkomsa.net";
+
+    let dealerId = "";
+    let clickCounts = {};
+
+    function setStatus(message) {
+      document.getElementById("status").textContent = message;
+    }
+
+    function formatPrice(price) {
+      const amount = Number(
+        String(price || "").replace(/\D/g, "")
+      );
+
+      if (!amount) {
+        return "Price on request";
+      }
+
+      return "R " + amount.toLocaleString("en-ZA");
+    }
+
+    function formatMileage(mileage) {
+      const amount = Number(
+        String(mileage || "").replace(/\D/g, "")
+      );
+
+      if (!amount) {
+        return "-";
+      }
+
+      return amount.toLocaleString("en-ZA") + " km";
+    }
+
+    function getMainImage(vehicle) {
+      if (
+        vehicle.image &&
+        String(vehicle.image).trim()
+      ) {
+        return String(vehicle.image).trim();
+      }
+
+      if (
+        vehicle.images &&
+        String(vehicle.images).trim()
+      ) {
+        return String(vehicle.images)
+          .split(",")[0]
+          .trim();
+      }
+
+      return "https://via.placeholder.com/600x400?text=No+Image";
+    }
+
+    function isVehicleFeatured(vehicle) {
+      const featuredValue =
+        vehicle.featured === true ||
+        vehicle.featured === 1 ||
+        vehicle.featured === "1";
+
+      if (!featuredValue) {
+        return false;
+      }
+
+      if (!vehicle.featured_until) {
+        return true;
+      }
+
+      return new Date(vehicle.featured_until) > new Date();
+    }
+
+    async function confirmSuperAdmin() {
+      const {
+        data: { user },
+        error
+      } = await client.auth.getUser();
+
+      if (error || !user) {
+        window.location.href = "login.html";
+        return false;
+      }
+
+      const email = String(user.email || "")
+        .toLowerCase()
+        .trim();
+
+      if (email !== ADMIN_EMAIL.toLowerCase()) {
+        setStatus("Super Admin access denied.");
+        return false;
+      }
+
+      return true;
+    }
+
+    async function loadDealerProfile() {
+      const { data, error } = await client
+        .from("profiles")
+        .select("*")
+        .eq("id", dealerId)
+        .single();
+
+      if (error || !data) {
+        console.error(error);
+        setStatus("Could not load this dealer's profile.");
+        return null;
+      }
+
+      document.getElementById("dealerName").textContent =
+        data.dealer_name || data.name || "Dealer";
+
+      document.getElementById("dealerPhone").textContent =
+        data.phone || "-";
+
+      document.getElementById("dealerTown").textContent =
+        data.town || "-";
+
+      document.getElementById("dealerProvince").textContent =
+        data.province || "-";
+
+      document.getElementById("dealerBox").style.display =
+        "block";
+
+      document.getElementById("publicDealerLink").href =
+        "dealer.html?dealer=" + encodeURIComponent(dealerId);
+
+      document.getElementById("publicDealerLink").style.display =
+        "inline-block";
+
+      return data;
+    }
+
+    async function loadClickCounts() {
+      clickCounts = {};
+
+      const allClicks = [];
+      const batchSize = 1000;
+      let from = 0;
+
+      while (true) {
+        const { data, error } = await client
+          .from("vehicle_clicks")
+          .select("vehicle_id, click_type")
+          .eq("dealer_user_id", dealerId)
+          .range(from, from + batchSize - 1);
+
+        if (error) {
+          console.error(
+            "Could not load click statistics:",
+            error
+          );
+          break;
+        }
+
+        const batch = data || [];
+
+        allClicks.push(...batch);
+
+        if (batch.length < batchSize) {
+          break;
+        }
+
+        from += batchSize;
+      }
+
+      allClicks.forEach(click => {
+        const vehicleId = String(click.vehicle_id || "");
+
+        if (!vehicleId) {
+          return;
+        }
+
+        if (!clickCounts[vehicleId]) {
+          clickCounts[vehicleId] = {
+            total: 0,
+            view: 0,
+            call: 0,
+            whatsapp: 0
+          };
+        }
+
+        clickCounts[vehicleId].total++;
+
+        if (click.click_type === "view") {
+          clickCounts[vehicleId].view++;
+        }
+
+        if (click.click_type === "call") {
+          clickCounts[vehicleId].call++;
+        }
+
+        if (click.click_type === "whatsapp") {
+          clickCounts[vehicleId].whatsapp++;
+        }
+      });
+    }
+
+    function updateSummary(vehicles) {
+      let totalClicks = 0;
+      let totalViews = 0;
+      let totalCalls = 0;
+      let totalWhatsApps = 0;
+
+      Object.keys(clickCounts).forEach(vehicleId => {
+        const counts = clickCounts[vehicleId];
+
+        totalClicks += counts.total || 0;
+        totalViews += counts.view || 0;
+        totalCalls += counts.call || 0;
+        totalWhatsApps += counts.whatsapp || 0;
+      });
+
+      const featuredTotal = vehicles.filter(
+        isVehicleFeatured
+      ).length;
+
+      document.getElementById("totalVehicles").textContent =
+        vehicles.length;
+
+      document.getElementById("featuredVehicles").textContent =
+        featuredTotal;
+
+      document.getElementById("totalClicks").textContent =
+        totalClicks;
+
+      document.getElementById("totalViews").textContent =
+        totalViews;
+
+      document.getElementById("totalCalls").textContent =
+        totalCalls;
+
+      document.getElementById("totalWhatsApps").textContent =
+        totalWhatsApps;
+
+      document.getElementById("statsGrid").style.display =
+        "grid";
+    }
+
+    function displayVehicles(vehicles) {
+      const container =
+        document.getElementById("vehicleList");
+
+      container.innerHTML = "";
+
+      document.getElementById("stockHeading").style.display =
+        "block";
+
+      if (!vehicles.length) {
+        container.innerHTML = `
+          <div class="empty-box">
+            This dealer currently has no vehicles advertised.
+          </div>
+        `;
+        return;
+      }
+
+      vehicles.forEach(vehicle => {
+        const vehicleId = String(vehicle.id);
+
+        const counts = clickCounts[vehicleId] || {
+          total: 0,
+          view: 0,
+          call: 0,
+          whatsapp: 0
+        };
+
+        const title = [
+          vehicle.year,
+          vehicle.make,
+          vehicle.model
+        ]
+          .filter(Boolean)
+          .join(" ");
+
+        const image = getMainImage(vehicle);
+        const featured = isVehicleFeatured(vehicle);
+
+        const card = document.createElement("article");
+
+        card.className = "vehicle-card";
+
+        card.innerHTML = `
+          <div class="image-wrap">
+            ${
+              featured
+                ? '<div class="featured-badge">Featured</div>'
+                : ""
+            }
+
+            <img
+              class="vehicle-image"
+              src="${image}"
+              alt="${title || "Vehicle"}"
+              onerror="this.src='https://via.placeholder.com/600x400?text=No+Image'"
+            >
+          </div>
+
+          <div class="vehicle-body">
+            <div class="vehicle-title">
+              ${title || "Vehicle"}
+            </div>
+
+            <div class="vehicle-price">
+              ${formatPrice(vehicle.price)}
+            </div>
+
+            <div class="vehicle-meta">
+              Mileage: ${formatMileage(vehicle.mileage)}
+            </div>
+
+            <div class="vehicle-meta">
+              Location: ${vehicle.location || "-"}
+            </div>
+
+            <div class="performance-box">
+              <div class="performance-title">
+                Vehicle Performance
+              </div>
+
+              <div class="performance-grid">
+                <div class="performance-item">
+                  <span class="performance-number">
+                    ${counts.total}
+                  </span>
+                  <span class="performance-label">
+                    Total
+                  </span>
+                </div>
+
+                <div class="performance-item">
+                  <span class="performance-number">
+                    ${counts.view}
+                  </span>
+                  <span class="performance-label">
+                    Views
+                  </span>
+                </div>
+
+                <div class="performance-item">
+                  <span class="performance-number">
+                    ${counts.call}
+                  </span>
+                  <span class="performance-label">
+                    Calls
+                  </span>
+                </div>
+
+                <div class="performance-item">
+                  <span class="performance-number">
+                    ${counts.whatsapp}
+                  </span>
+                  <span class="performance-label">
+                    WhatsApps
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <a
+              class="view-button"
+              href="details.html?id=${encodeURIComponent(vehicle.id)}"
+              target="_blank"
+            >
+              View Live Advert
+            </a>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    async function loadVehicles() {
+      const { data, error } = await client
+        .from("vehicles")
+        .select("*")
+        .eq("user_id", dealerId)
+        .order("id", { ascending: false });
+
+      if (error) {
+        console.error(error);
+        setStatus("Could not load this dealer's vehicles.");
+        return;
+      }
+
+      const vehicles = data || [];
+
+      updateSummary(vehicles);
+      displayVehicles(vehicles);
+
+      setStatus(
+        "Read-only dealer performance loaded successfully."
+      );
+    }
+
+    async function startPage() {
+      const allowed = await confirmSuperAdmin();
+
+      if (!allowed) {
+        return;
+      }
+
+      const params = new URLSearchParams(
+        window.location.search
+      );
+
+      dealerId = params.get("dealer") || "";
+
+      if (!dealerId) {
+        setStatus("No dealer was selected.");
+        return;
+      }
+
+      const profile = await loadDealerProfile();
+
+      if (!profile) {
+        return;
+      }
+
+      await loadClickCounts();
+      await loadVehicles();
+    }
+
+    startPage();
+  </script>
+
+</body>
+</html>
