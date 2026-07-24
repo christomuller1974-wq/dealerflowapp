@@ -570,7 +570,7 @@ async function loadCars(){
     const res = await fetch(
 
       supabaseUrl +
-      "/rest/v1/vehicles?select=*&order=updated_at.desc.nullslast,id.desc",
+      "/rest/v1/active_vehicles?select=*&order=updated_at.desc.nullslast,id.desc",
 
       {
         headers:{
