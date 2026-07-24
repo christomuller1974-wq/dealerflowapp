@@ -730,8 +730,13 @@ const freeUntil = profile.admin_free_until
   ? new Date(profile.admin_free_until)
   : null;
 
+const trialUntil = profile.trial_expires
+  ? new Date(profile.trial_expires)
+  : null;
+
 const paidActive = paidUntil && paidUntil > now;
 const freeActive = freeUntil && freeUntil > now;
+const trialActive = trialUntil && trialUntil > now;
 
 const hasFreeStatus =
   profile.payment_status === "FREE_30_DAY";
@@ -744,12 +749,15 @@ if (profile.admin_blocked) {
   return;
 }
 
-if (!profile.active && !hasFreeStatus && !hasPaidStatus) {
-  showPendingApprovalScreen();
-  return;
-}
 
-if (!paidActive && !freeActive && !hasFreeStatus && !hasPaidStatus) {
+
+if (
+  !paidActive &&
+  !freeActive &&
+  !trialActive &&
+  !hasFreeStatus &&
+  !hasPaidStatus
+) {
   showPendingApprovalScreen();
   return;
 }
