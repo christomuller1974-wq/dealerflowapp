@@ -552,6 +552,7 @@ async function grantFree30Days(id) {
     .from("profiles")
     .update({
       active:true,
+      dealer_verified:true,
       admin_blocked:false,
       admin_free_until:freeUntil.toISOString(),
       payment_status:"FREE_30_DAY"
