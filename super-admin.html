@@ -504,9 +504,9 @@ const totalLeads =
         </button>
 
         <button class="btn btn-blue"
-          onclick="grantFree30Days('${d.id}')">
-          30-Day Free Access
-        </button>
+  onclick="grantFree30Days('${d.id}')">
+  Verify & Start 30-Day Trial
+</button>
 
         <button class="btn btn-red"
           onclick="deactivateDealer('${d.id}')">
@@ -564,7 +564,7 @@ async function grantFree30Days(id) {
     return;
   }
 
-  alert("30-day free access granted");
+  alert("Dealer verified. Vehicles are now live and the 30-day trial has started.");
 
   loadDealers();
 }
