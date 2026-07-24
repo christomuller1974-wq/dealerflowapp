@@ -746,15 +746,19 @@ const freeUntil = currentProfile.admin_free_until
   ? new Date(currentProfile.admin_free_until)
   : null;
 
+const trialUntil = currentProfile.trial_expires
+  ? new Date(currentProfile.trial_expires)
+  : null;
+
 const paidActive = paidUntil && paidUntil > now;
 const freeActive = freeUntil && freeUntil > now;
-
-if (!currentProfile.active || currentProfile.admin_blocked) {
+const trialActive = trialUntil && trialUntil > now;
+if (currentProfile.admin_blocked) {
   showPendingApprovalScreen();
   return;
 }
 
-if (!paidActive && !freeActive) {
+if (!paidActive && !freeActive && !trialActive) {
   showPendingApprovalScreen();
   return;
 }
