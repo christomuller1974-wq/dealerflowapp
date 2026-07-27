@@ -337,6 +337,14 @@ const MAX_IMAGES = 10;
 const MAX_FILE_SIZE = 12 * 1024 * 1024;
 
 let files = [];
+  let uploadInProgress = false;
+
+window.addEventListener("beforeunload", function (event) {
+  if (!uploadInProgress) return;
+
+  event.preventDefault();
+  event.returnValue = "";
+});
 let user = null;
 let profile = null;
 
@@ -625,7 +633,9 @@ async function saveVehicle() {
       return;
     }
 
-    setStatus("Uploading...");
+    uploadInProgress = true;
+saveBtn.innerText = "Uploading — Please Wait";
+setStatus("Uploading vehicle — DO NOT close or leave this page.");
 
     let urls = [];
 
@@ -663,7 +673,8 @@ async function saveVehicle() {
       } else {
         setStatus("Error saving vehicle.");
       }
-
+uploadInProgress = false;
+saveBtn.innerText = "Save Vehicle";
       saveBtn.disabled = false;
       return;
     }
@@ -693,7 +704,8 @@ async function saveVehicle() {
     console.log(err);
     setStatus("Something went wrong while saving.");
   }
-
+uploadInProgress = false;
+saveBtn.innerText = "Save Vehicle";
   saveBtn.disabled = false;
 }
 
