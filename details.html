@@ -892,7 +892,7 @@ async function loadVehicle(){
 
     const res = await fetch(
       supabaseUrl +
-      "/rest/v1/public_verified_vehicles?select=*&id=eq." +
+     "/rest/v1/public_active_verified_vehicles_test?select=*&id=eq." +
       encodeURIComponent(id),
 
       {
