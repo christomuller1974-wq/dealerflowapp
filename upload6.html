@@ -459,7 +459,12 @@ document.getElementById("photos").addEventListener("change", e => {
   }
 
   render();
-  setStatus("Images ready to upload.");
+  setStatus(
+  files.length +
+  (files.length === 1
+    ? " image selected and ready to upload."
+    : " images selected and ready to upload.")
+);
 });
 
 async function compress(file) {
