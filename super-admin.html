@@ -278,6 +278,10 @@ body {
   <strong id="totalLeadsGenerated">0</strong>
   <span>Total Leads Generated</span>
 </div>
+    <div class="stat-card">
+  <strong id="totalVehicles">0</strong>
+  <span>Total Vehicles on Site</span>
+</div>
   </div>
 
  <!-- Dealer Traffic Hidden For Now -->
@@ -332,7 +336,18 @@ function getDealerStatus(d) {
 
   return "INACTIVE / EXPIRED";
 }
+async function loadTotalVehicles() {
+  const { count, error } = await client
+    .from("public_active_verified_vehicles_test")
+    .select("*", { count: "exact", head: true });
 
+  if (error) {
+    console.error("Could not load total vehicles:", error);
+    return;
+  }
+
+  document.getElementById("totalVehicles").textContent = count || 0;
+   }
 async function startAdmin() {
   setStatus("Checking admin access...");
 
@@ -352,6 +367,7 @@ async function startAdmin() {
 
   setStatus("Admin access granted.");
 loadStats();
+  loadTotalVehicles();
   loadDealers();
 }
 
