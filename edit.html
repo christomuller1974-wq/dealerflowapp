@@ -792,7 +792,19 @@
         data.phone || profile?.phone || "";
 
       document.getElementById("description").value = data.description || "";
-      document.getElementById("featured").checked = !!data.featured;
+      const featuredCheckbox = document.getElementById("featured");
+
+const paidFeatureUntil = data.featured_until
+  ? new Date(data.featured_until)
+  : null;
+
+const paidFeatureActive =
+  data.featured === true &&
+  paidFeatureUntil &&
+  paidFeatureUntil > new Date();
+
+featuredCheckbox.checked = paidFeatureActive;
+featuredCheckbox.disabled = !paidFeatureActive;
 
       imageList = parseImages(data.image, data.images);
       originalStorageUrls = getStorageBackedUrls(imageList.map(item => item.url));
@@ -935,7 +947,18 @@
         const dealer = document.getElementById("dealer").value.trim();
         const phone = document.getElementById("phone").value.trim();
         const description = document.getElementById("description").value.trim();
-        const featured = document.getElementById("featured").checked;
+        const featuredUntil = currentVehicle?.featured_until
+  ? new Date(currentVehicle.featured_until)
+  : null;
+
+const hasActivePaidFeature =
+  currentVehicle?.featured === true &&
+  featuredUntil &&
+  featuredUntil > new Date();
+
+const featured =
+  hasActivePaidFeature &&
+  document.getElementById("featured").checked;
 
         const title = [year, make, model].filter(Boolean).join(" ");
 
