@@ -87,8 +87,8 @@ body{
 
 .search-bar input,
 .search-bar select{
-  flex:1;
-  min-width:140px;
+ flex:1 1 90px;
+min-width:90px;
   padding:12px;
   border:1px solid #dbe1e8;
   border-radius:12px;
@@ -409,7 +409,13 @@ display:flex;
   <input id="min" placeholder="Min Price" type="number">
 
   <input id="max" placeholder="Max Price" type="number">
+<select id="minYear">
+  <option value="">Min Year</option>
+</select>
 
+<select id="maxYear">
+  <option value="">Max Year</option>
+</select>
   <select id="province">
     <option value="">All Provinces</option>
     <option>Gauteng</option>
@@ -534,10 +540,14 @@ const params = new URLSearchParams();
 const search = document.getElementById("search").value.trim();
 const min = document.getElementById("min").value.trim();
 const max = document.getElementById("max").value.trim();
+  const minYear = document.getElementById("minYear").value.trim();
+const maxYear = document.getElementById("maxYear").value.trim();
 const province = document.getElementById("province").value.trim();
 const sort = document.getElementById("sort").value.trim();
 
 if(search) params.set("search", search);
+  if(minYear) params.set("minYear", minYear);
+if(maxYear) params.set("maxYear", maxYear);
 if(min) params.set("min", min);
 if(max) params.set("max", max);
 if(province) params.set("province", province);
@@ -547,6 +557,9 @@ params.set("page", "1");
 
 window.location.href = "index.html?" + params.toString();
 
+}
+  function clearSearch() {
+  window.location.href = "index.html";
 }
 async function loadCars(){
 
@@ -688,6 +701,11 @@ params.get("min") || document.getElementById("min").value;
 
 document.getElementById("max").value =
 params.get("max") || document.getElementById("max").value;
+ document.getElementById("minYear").value =
+params.get("minYear") || document.getElementById("minYear").value;
+
+document.getElementById("maxYear").value =
+params.get("maxYear") || document.getElementById("maxYear").value;   
 
 document.getElementById("province").value =
 params.get("province") || document.getElementById("province").value;
@@ -710,7 +728,8 @@ document.getElementById("search")
     Number(
       document.getElementById("max").value
     ) || 999999999;
-
+const minYear = document.getElementById("minYear").value;
+const maxYear = document.getElementById("maxYear").value;
     const province =
     document.getElementById("province")
     .value
@@ -757,7 +776,15 @@ String(v.location || "")
       if(price > max){
         return false;
       }
+const vehicleYear = Number(v.year) || 0;
 
+if(minYear && vehicleYear < Number(minYear)){
+  return false;
+}
+
+if(maxYear && vehicleYear > Number(maxYear)){
+  return false;
+}
       if(province){
 
         if(
@@ -1132,6 +1159,20 @@ el.innerHTML = "♥";
 el.classList.add("saved");
 }
 }
+  function populateYearDropdowns() {
+  const newestYear = new Date().getFullYear() + 1;
+  const oldestYear = 1980;
+
+  const minYearSelect = document.getElementById("minYear");
+  const maxYearSelect = document.getElementById("maxYear");
+
+  for (let year = newestYear; year >= oldestYear; year--) {
+    minYearSelect.add(new Option(year, year));
+    maxYearSelect.add(new Option(year, year));
+  }
+}
+
+populateYearDropdowns();
 loadCars();
 async function trackVisit(pageType) {
 
