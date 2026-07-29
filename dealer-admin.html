@@ -676,20 +676,29 @@ function startFeaturedPayment(vehicleId) {
   window.location.href = paymentUrl;
 }
 async function toggleFeatured(vehicleId, currentlyFeatured) {
-  setStatus("Updating featured status...");
+  if (!currentlyFeatured) {
+    setStatus("Payment is required to feature a vehicle.");
+    return;
+  }
+
+  setStatus("Removing featured status...");
 
   const { error } = await client
     .from("vehicles")
-    .update({ featured: !currentlyFeatured })
+    .update({
+      featured: false,
+      featured_until: null
+    })
     .eq("id", vehicleId)
     .eq("user_id", currentUser.id);
 
   if (error) {
     console.log(error);
-    setStatus("Could not update featured status.");
+    setStatus("Could not remove featured status.");
     return;
   }
 
+  setStatus("Featured status removed.");
   loadVehicles();
 }
 
