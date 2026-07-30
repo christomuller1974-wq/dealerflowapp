@@ -386,7 +386,8 @@ async function signup() {
     setStatus("Account created. Please check your email to confirm.");
     return;
   }
-
+const trialExpires = new Date();
+trialExpires.setDate(trialExpires.getDate() + 30);
   const { error: profileError } = await client
     .from("profiles")
     .insert({
@@ -395,7 +396,8 @@ async function signup() {
       phone: phone,
       province: province,
       location: location,
-      is_active: false
+is_active: false,
+trial_expires: trialExpires.toISOString()
     });
 
   if (profileError) {
@@ -404,7 +406,7 @@ async function signup() {
     return;
   }
 
-  setStatus("Account created successfully. Log in to upload your stock. Your vehicles will be published after dealership verification.");
+ setStatus("Account created successfully. Please log in and continue uploading your stock. Dealership verification will be completed within 24 to 48 hours. Your vehicles will be published after verification.");
 
   setTimeout(function() {
     window.location.href = "login.html";
