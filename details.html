@@ -645,7 +645,67 @@ function updateSEO(vehicle, title, imageUrl){
     .getElementById("ogImage")
     .setAttribute("content", imageUrl || "");
 }
+function updateVehicleSchema(vehicle, title, imageUrl) {
+  const oldSchema = document.getElementById("vehicleSchema");
 
+  if (oldSchema) {
+    oldSchema.remove();
+  }
+
+  const numericPrice = Number(
+    String(vehicle.price || "").replace(/[^\d.]/g, "")
+  );
+
+  const numericMileage = Number(
+    String(vehicle.mileage || "").replace(/[^\d.]/g, "")
+  );
+
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "Vehicle",
+    "name": title,
+    "url": window.location.href,
+    "image": imageUrl || undefined,
+    "vehicleModelDate": vehicle.year
+      ? String(vehicle.year)
+      : undefined,
+    "brand": vehicle.make
+      ? {
+          "@type": "Brand",
+          "name": vehicle.make
+        }
+      : undefined,
+    "model": vehicle.model || undefined,
+    "mileageFromOdometer": numericMileage
+      ? {
+          "@type": "QuantitativeValue",
+          "value": numericMileage,
+          "unitCode": "KMT"
+        }
+      : undefined,
+    "offers": numericPrice
+      ? {
+          "@type": "Offer",
+          "priceCurrency": "ZAR",
+          "price": numericPrice,
+          "availability": "https://schema.org/InStock",
+          "url": window.location.href
+        }
+      : undefined
+  };
+
+  const cleanSchema = JSON.parse(
+    JSON.stringify(schema)
+  );
+
+  const script = document.createElement("script");
+
+  script.id = "vehicleSchema";
+  script.type = "application/ld+json";
+  script.textContent = JSON.stringify(cleanSchema);
+
+  document.head.appendChild(script);
+}
 async function trackSiteVisit(vehicle){
 
   try {
@@ -946,7 +1006,11 @@ async function loadVehicle(){
       title,
       images[0]
     );
-
+updateVehicleSchema(
+  v,
+  title,
+  images[0]
+);
     trackSiteVisit(v);
 
     trackVehicleClick(
