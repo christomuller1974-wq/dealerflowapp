@@ -5,7 +5,7 @@
   <title>Edit Vehicle</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
+<script src="vehicle-data.js"></script>
   <style>
     * {
       box-sizing: border-box;
@@ -369,16 +369,38 @@
       </div>
 
       <div class="two-col">
-        <div class="field">
-          <label for="make">Make</label>
-          <input type="text" id="make" />
-        </div>
+  <div class="field">
+    <label for="make">Make</label>
+    <select id="make">
+      <option value="">Select make</option>
+    </select>
+    <input
+      id="makeOther"
+      placeholder="Enter make"
+      style="display:none; margin-top:8px;"
+    >
+  </div>
 
-        <div class="field">
-          <label for="model">Model</label>
-          <input type="text" id="model" />
-        </div>
-      </div>
+  <div class="field">
+    <label for="model">Model</label>
+    <select id="model" disabled>
+      <option value="">Select make first</option>
+    </select>
+    <input
+      id="modelOther"
+      placeholder="Enter model"
+      style="display:none; margin-top:8px;"
+    >
+  </div>
+</div>
+
+<div class="field">
+  <label for="variant">Variant / Derivative</label>
+  <input
+    id="variant"
+    placeholder="e.g. 2.8 GD-6 4x4 Auto Double Cab"
+  >
+</div>
 
       <div class="two-col">
         <div class="field">
@@ -753,7 +775,170 @@
     function getStorageBackedUrls(urls) {
       return urls.filter(url => extractStoragePath(url));
     }
+const vehicleData = window.CARSCOUT_VEHICLE_DATA || {};
 
+function addDropdownOption(select, value, text) {
+  const option = document.createElement("option");
+  option.value = value;
+  option.textContent = text;
+  select.appendChild(option);
+}
+
+function populateModelDropdown(make) {
+  const modelSelect = document.getElementById("model");
+
+  if (!make || make === "__other__") {
+    modelSelect.innerHTML =
+      '<option value="__other__">Other / Not listed</option>';
+    modelSelect.disabled = false;
+    return;
+  }
+
+  modelSelect.innerHTML =
+    '<option value="">Select model</option>';
+
+  vehicleData[make].forEach(model => {
+    addDropdownOption(modelSelect, model, model);
+  });
+
+  addDropdownOption(
+    modelSelect,
+    "__other__",
+    "Other / Not listed"
+  );
+
+  modelSelect.disabled = false;
+}
+
+function initMakeModelDropdowns() {
+  const makeSelect = document.getElementById("make");
+  const modelSelect = document.getElementById("model");
+  const makeOther = document.getElementById("makeOther");
+  const modelOther = document.getElementById("modelOther");
+
+  makeSelect.innerHTML =
+    '<option value="">Select make</option>';
+
+  Object.keys(vehicleData).sort().forEach(make => {
+    addDropdownOption(makeSelect, make, make);
+  });
+
+  addDropdownOption(
+    makeSelect,
+    "__other__",
+    "Other / Not listed"
+  );
+
+  makeSelect.addEventListener("change", () => {
+    const selectedMake = makeSelect.value;
+
+    makeOther.style.display =
+      selectedMake === "__other__" ? "block" : "none";
+    makeOther.value = "";
+
+    modelOther.style.display = "none";
+    modelOther.value = "";
+
+    if (!selectedMake) {
+      modelSelect.innerHTML =
+        '<option value="">Select make first</option>';
+      modelSelect.disabled = true;
+      return;
+    }
+
+    populateModelDropdown(selectedMake);
+
+    if (selectedMake === "__other__") {
+      modelOther.style.display = "block";
+    }
+  });
+
+  modelSelect.addEventListener("change", () => {
+    modelOther.style.display =
+      modelSelect.value === "__other__" ? "block" : "none";
+
+    if (modelSelect.value !== "__other__") {
+      modelOther.value = "";
+    }
+  });
+}
+
+function setMakeModelValues(
+  existingMake,
+  existingModel,
+  existingVariant
+) {
+  const makeSelect = document.getElementById("make");
+  const modelSelect = document.getElementById("model");
+  const makeOther = document.getElementById("makeOther");
+  const modelOther = document.getElementById("modelOther");
+  const variantInput = document.getElementById("variant");
+
+  const rawMake = (existingMake || "").trim();
+  const rawModel = (existingModel || "").trim();
+
+  const standardMake = Object.keys(vehicleData).find(make =>
+    make.localeCompare(rawMake, undefined, {
+      sensitivity: "base"
+    }) === 0
+  );
+
+  if (!standardMake) {
+    makeSelect.value = "__other__";
+    makeOther.style.display = "block";
+    makeOther.value = rawMake;
+
+    populateModelDropdown("__other__");
+    modelSelect.value = "__other__";
+    modelOther.style.display = "block";
+    modelOther.value = rawModel;
+
+    variantInput.value = existingVariant || "";
+    return;
+  }
+
+  makeSelect.value = standardMake;
+  makeOther.style.display = "none";
+  makeOther.value = "";
+
+  populateModelDropdown(standardMake);
+
+  const standardModels = [...vehicleData[standardMake]]
+    .sort((a, b) => b.length - a.length);
+
+  const matchedModel = standardModels.find(model => {
+    const saved = rawModel.toLowerCase();
+    const standard = model.toLowerCase();
+
+    return (
+      saved === standard ||
+      saved.startsWith(standard + " ") ||
+      saved.startsWith(standard + "-")
+    );
+  });
+
+  if (!matchedModel) {
+    modelSelect.value = "__other__";
+    modelOther.style.display = "block";
+    modelOther.value = rawModel;
+    variantInput.value = existingVariant || "";
+    return;
+  }
+
+  modelSelect.value = matchedModel;
+  modelOther.style.display = "none";
+  modelOther.value = "";
+
+  const oldModelRemainder = rawModel
+    .slice(matchedModel.length)
+    .replace(/^[\s\-–—]+/, "")
+    .trim();
+
+  variantInput.value =
+    existingVariant || oldModelRemainder;
+}
+
+initMakeModelDropdowns();
     async function loadVehicle() {
       setStatus("Loading vehicle...");
 
@@ -773,8 +958,11 @@
       const profile = await loadDealerProfile();
       currentVehicle = data;
 
-      document.getElementById("make").value = data.make || "";
-      document.getElementById("model").value = data.model || "";
+      setMakeModelValues(
+  data.make,
+  data.model,
+  data.variant
+);
       document.getElementById("year").value = data.year || "";
       document.getElementById("price").value = data.price || "";
       document.getElementById("mileage").value = data.mileage || "";
@@ -938,8 +1126,18 @@ featuredCheckbox.disabled = !paidFeatureActive;
       saveBtn.disabled = true;
 
       try {
-        const make = document.getElementById("make").value.trim();
-        const model = document.getElementById("model").value.trim();
+       const selectedMake = document.getElementById("make").value;
+const selectedModel = document.getElementById("model").value;
+
+const make = selectedMake === "__other__"
+  ? document.getElementById("makeOther").value.trim()
+  : selectedMake;
+
+const model = selectedModel === "__other__"
+  ? document.getElementById("modelOther").value.trim()
+  : selectedModel;
+
+const variant = document.getElementById("variant").value.trim();
         const year = document.getElementById("year").value;
         const price = document.getElementById("price").value.trim();
         const mileage = document.getElementById("mileage").value.trim();
@@ -960,7 +1158,7 @@ const featured =
   hasActivePaidFeature &&
   document.getElementById("featured").checked;
 
-        const title = [year, make, model].filter(Boolean).join(" ");
+        const title = [year, make, model, variant].filter(Boolean).join(" ");
 
         if (!make || !model || !year || !price || !mileage || !location || !dealer || !phone) {
           setStatus("Please complete all required fields.");
@@ -986,6 +1184,7 @@ const featured =
             title: title,
             make: make,
             model: model,
+            variant: variant,
             year: year,
             price: price,
             mileage: mileage,
