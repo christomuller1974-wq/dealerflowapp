@@ -273,16 +273,30 @@ button:disabled {
     <div id="preview" class="preview-grid"></div>
 
     <div class="two-col">
-      <div class="field">
-        <label for="make">Make</label>
-        <input id="make" placeholder="e.g. Toyota">
-      </div>
+  <div class="field">
+    <label for="make">Make</label>
+    <select id="make">
+      <option value="">Select make</option>
+    </select>
+    <input
+      id="makeOther"
+      placeholder="Enter make"
+      style="display:none; margin-top:8px;"
+    >
+  </div>
 
-      <div class="field">
-        <label for="model">Model</label>
-        <input id="model" placeholder="e.g. Hilux">
-      </div>
-    </div>
+  <div class="field">
+    <label for="model">Model</label>
+    <select id="model" disabled>
+      <option value="">Select make first</option>
+    </select>
+    <input
+      id="modelOther"
+      placeholder="Enter model"
+      style="display:none; margin-top:8px;"
+    >
+  </div>
+</div>
 
     <div class="two-col">
       <div class="field">
@@ -380,7 +394,81 @@ function initYears() {
     select.appendChild(o);
   }
 }
+function initMakeModelDropdowns() {
+  const vehicleData = window.CARSCOUT_VEHICLE_DATA || {};
+  const makeSelect = document.getElementById("make");
+  const modelSelect = document.getElementById("model");
+  const makeOther = document.getElementById("makeOther");
+  const modelOther = document.getElementById("modelOther");
 
+  makeSelect.innerHTML = '<option value="">Select make</option>';
+
+  Object.keys(vehicleData).sort().forEach(make => {
+    const option = document.createElement("option");
+    option.value = make;
+    option.textContent = make;
+    makeSelect.appendChild(option);
+  });
+
+  const otherMakeOption = document.createElement("option");
+  otherMakeOption.value = "__other__";
+  otherMakeOption.textContent = "Other / Not listed";
+  makeSelect.appendChild(otherMakeOption);
+
+  makeSelect.addEventListener("change", () => {
+    const selectedMake = makeSelect.value;
+
+    makeOther.style.display =
+      selectedMake === "__other__" ? "block" : "none";
+    makeOther.value = "";
+
+    modelOther.style.display = "none";
+    modelOther.value = "";
+
+    if (!selectedMake) {
+      modelSelect.innerHTML =
+        '<option value="">Select make first</option>';
+      modelSelect.disabled = true;
+      return;
+    }
+
+    if (selectedMake === "__other__") {
+      modelSelect.innerHTML =
+        '<option value="__other__">Other / Not listed</option>';
+      modelSelect.disabled = false;
+      modelOther.style.display = "block";
+      return;
+    }
+
+    modelSelect.innerHTML =
+      '<option value="">Select model</option>';
+
+    vehicleData[selectedMake].forEach(model => {
+      const option = document.createElement("option");
+      option.value = model;
+      option.textContent = model;
+      modelSelect.appendChild(option);
+    });
+
+    const otherModelOption = document.createElement("option");
+    otherModelOption.value = "__other__";
+    otherModelOption.textContent = "Other / Not listed";
+    modelSelect.appendChild(otherModelOption);
+
+    modelSelect.disabled = false;
+  });
+
+  modelSelect.addEventListener("change", () => {
+    modelOther.style.display =
+      modelSelect.value === "__other__" ? "block" : "none";
+
+    if (modelSelect.value !== "__other__") {
+      modelOther.value = "";
+    }
+  });
+}
+
+initMakeModelDropdowns();
 function render() {
   let preview = document.getElementById("preview");
   preview.innerHTML = "";
@@ -608,9 +696,17 @@ async function saveVehicle() {
       return;
     }
 
-    const make = document.getElementById("make").value.trim();
-    const model = document.getElementById("model").value.trim();
-    const year = document.getElementById("year").value;
+   const selectedMake = document.getElementById("make").value;
+const selectedModel = document.getElementById("model").value;
+
+const make = selectedMake === "__other__"
+  ? document.getElementById("makeOther").value.trim()
+  : selectedMake;
+
+const model = selectedModel === "__other__"
+  ? document.getElementById("modelOther").value.trim()
+  : selectedModel;
+    const year = document.getElementById("year").value.trim();
     const price = document.getElementById("price").value.trim();
     const mileage = document.getElementById("mileage").value.trim();
     const location = document.getElementById("location").value.trim();
@@ -680,7 +776,16 @@ saveBtn.innerText = "Save Vehicle";
     }
 
     document.getElementById("make").value = "";
-    document.getElementById("model").value = "";
+
+document.getElementById("model").innerHTML =
+  '<option value="">Select make first</option>';
+document.getElementById("model").disabled = true;
+
+document.getElementById("makeOther").value = "";
+document.getElementById("makeOther").style.display = "none";
+
+document.getElementById("modelOther").value = "";
+document.getElementById("modelOther").style.display = "none";
     document.getElementById("year").value = "";
     document.getElementById("price").value = "";
     document.getElementById("mileage").value = "";
