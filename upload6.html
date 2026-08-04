@@ -297,7 +297,13 @@ button:disabled {
     >
   </div>
 </div>
-
+<div class="field">
+  <label for="variant">Variant / Derivative</label>
+  <input
+    id="variant"
+    placeholder="e.g. 2.8 GD-6 4x4 Auto Double Cab"
+  >
+</div>
     <div class="two-col">
       <div class="field">
         <label for="year">Year</label>
@@ -706,6 +712,7 @@ const make = selectedMake === "__other__"
 const model = selectedModel === "__other__"
   ? document.getElementById("modelOther").value.trim()
   : selectedModel;
+    const variant = document.getElementById("variant").value.trim();
     const year = document.getElementById("year").value.trim();
     const price = document.getElementById("price").value.trim();
     const mileage = document.getElementById("mileage").value.trim();
@@ -714,7 +721,7 @@ const model = selectedModel === "__other__"
     const phone = document.getElementById("phone").value.trim();
     const description = document.getElementById("description").value.trim();
 
-    const title = [year, make, model].filter(Boolean).join(" ");
+    const title = [year, make, model, variant].filter(Boolean).join(" ");
 
     if (!make || !model || !year || !price || !mileage || !location || !dealer || !phone) {
       setStatus("Please complete all required fields.");
@@ -744,6 +751,7 @@ setStatus("Uploading vehicle — DO NOT close or leave this page.");
       title: title,
       make: make,
       model: model,
+      variant: variant,
       year: year,
       price: price,
       mileage: mileage,
@@ -786,6 +794,7 @@ document.getElementById("makeOther").style.display = "none";
 
 document.getElementById("modelOther").value = "";
 document.getElementById("modelOther").style.display = "none";
+    document.getElementById("variant").value = "";
     document.getElementById("year").value = "";
     document.getElementById("price").value = "";
     document.getElementById("mileage").value = "";
