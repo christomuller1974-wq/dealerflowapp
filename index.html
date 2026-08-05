@@ -96,7 +96,30 @@ min-width:90px;
   outline:none;
   background:white;
 }
+.results-filters{
+  width:100%;
+  margin-top:16px;
+  padding:14px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(145px, 1fr));
+  gap:10px;
+  background:white;
+  border:1px solid #dbe1e8;
+  border-radius:14px;
+  box-shadow:0 6px 18px rgba(0,0,0,0.08);
+}
 
+.results-filters input,
+.results-filters select{
+  width:100%;
+  min-width:0;
+  padding:12px;
+  border:1px solid #dbe1e8;
+  border-radius:10px;
+  font-size:14px;
+  outline:none;
+  background:white;
+}
 .search-btn,
 .clear-btn{
   border:none;
@@ -418,8 +441,37 @@ display:flex;
 <select id="modelSearch" disabled>
   <option value="">Select make first</option>
 </select>
-  <input id="search" placeholder="Variant, keyword or dealer">
+  <input id="search" placeholder="Keyword e.g. 2.8, 4x4 or dealer">
 
+  <button class="search-btn" onclick="searchCars()">
+    Search
+  </button>
+
+ 
+
+  
+
+</div>
+
+<div id="featuredWrap" style="display:none; margin-bottom:0;">
+  
+
+  <div class="section-wrap">
+    <h2 class="section-title">
+      ⭐ Featured Vehicles
+    </h2>
+  </div>
+
+  <div id="featuredGrid" class="grid featured-grid"></div>
+
+</div>
+
+<div class="section-wrap">
+  <h2 class="section-title">
+    Latest Vehicles
+  </h2>
+  <div id="count" class="count-box"></div>
+  <div class="results-filters">
   <input id="min" placeholder="Min Price" type="number">
 
   <input id="max" placeholder="Max Price" type="number">
@@ -442,42 +494,15 @@ display:flex;
     <option>North West</option>
     <option>Northern Cape</option>
   </select>
-
+<button class="clear-btn" onclick="clearSearch()">
+    Clear Filters
+  </button>
   <select id="sort">
-    <option value="">Sort</option>
+   <option value="">Sort by</option>
     <option value="low">Price Low → High</option>
     <option value="high">Price High → Low</option>
   </select>
-
-  <button class="search-btn" onclick="searchCars()">
-    Search
-  </button>
-
-  <button class="clear-btn" onclick="clearSearch()">
-    Clear
-  </button>
-
-  <div id="count" class="count-box"></div>
-
 </div>
-
-<div id="featuredWrap" style="display:none; margin-bottom:0;">
-  
-
-  <div class="section-wrap">
-    <h2 class="section-title">
-      ⭐ Featured Vehicles
-    </h2>
-  </div>
-
-  <div id="featuredGrid" class="grid featured-grid"></div>
-
-</div>
-
-<div class="section-wrap">
-  <h2 class="section-title">
-    Latest Vehicles
-  </h2>
 </div>
 
 <div id="grid" class="grid"></div>
