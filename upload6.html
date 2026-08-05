@@ -271,7 +271,15 @@ button:disabled {
     </div>
 
     <div id="preview" class="preview-grid"></div>
-
+<div class="field">
+  <label for="listingType">What are you listing?</label>
+  <select id="listingType">
+    <option value="vehicle">Vehicle</option>
+    <option value="motorcycle_leisure">
+      Motorcycle or Leisure Vehicle
+    </option>
+  </select>
+</div>
     <div class="two-col">
   <div class="field">
     <label for="make">Make</label>
@@ -406,7 +414,7 @@ function initMakeModelDropdowns() {
   const modelSelect = document.getElementById("model");
   const makeOther = document.getElementById("makeOther");
   const modelOther = document.getElementById("modelOther");
-
+const listingType = document.getElementById("listingType");
   makeSelect.innerHTML = '<option value="">Select make</option>';
 
   Object.keys(vehicleData).sort().forEach(make => {
@@ -472,6 +480,46 @@ function initMakeModelDropdowns() {
       modelOther.value = "";
     }
   });
+  function updateListingTypeFields() {
+  const flexibleListing =
+    listingType.value === "motorcycle_leisure";
+
+  if (flexibleListing) {
+    makeSelect.value = "__other__";
+    makeSelect.dispatchEvent(new Event("change"));
+
+    makeSelect.style.display = "none";
+    modelSelect.style.display = "none";
+
+    makeOther.placeholder = "Enter make";
+    modelOther.placeholder = "Enter model";
+    return;
+  }
+
+  makeSelect.style.display = "block";
+  makeSelect.disabled = false;
+  makeSelect.value = "";
+
+  modelSelect.style.display = "block";
+  modelSelect.innerHTML =
+    '<option value="">Select make first</option>';
+  modelSelect.disabled = true;
+
+  makeOther.value = "";
+  makeOther.style.display = "none";
+  makeOther.placeholder = "Enter make";
+
+  modelOther.value = "";
+  modelOther.style.display = "none";
+  modelOther.placeholder = "Enter model";
+}
+
+listingType.addEventListener(
+  "change",
+  updateListingTypeFields
+);
+
+updateListingTypeFields();
 }
 
 initMakeModelDropdowns();
@@ -712,6 +760,8 @@ const make = selectedMake === "__other__"
 const model = selectedModel === "__other__"
   ? document.getElementById("modelOther").value.trim()
   : selectedModel;
+    const listingType =
+  document.getElementById("listingType").value;
     const variant = document.getElementById("variant").value.trim();
     const year = document.getElementById("year").value.trim();
     const price = document.getElementById("price").value.trim();
@@ -751,6 +801,7 @@ setStatus("Uploading vehicle — DO NOT close or leave this page.");
       title: title,
       make: make,
       model: model,
+      listing_type: listingType,
       variant: variant,
       year: year,
       price: price,
@@ -788,7 +839,11 @@ saveBtn.innerText = "Save Vehicle";
 document.getElementById("model").innerHTML =
   '<option value="">Select make first</option>';
 document.getElementById("model").disabled = true;
+const listingTypeSelect =
+  document.getElementById("listingType");
 
+listingTypeSelect.value = "vehicle";
+listingTypeSelect.dispatchEvent(new Event("change"));
 document.getElementById("makeOther").value = "";
 document.getElementById("makeOther").style.display = "none";
 
