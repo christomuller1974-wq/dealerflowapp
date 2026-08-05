@@ -377,7 +377,7 @@ display:flex;
 }
 }
 </style>
-  
+  <script src="vehicle-data.js"></script>
 </head>
 
 <body>
@@ -403,8 +403,22 @@ display:flex;
 🔍 Search Cars
 </button>
 <div class="search-bar">
+<select id="listingTypeSearch">
+  <option value="">All Listing Types</option>
+  <option value="vehicle">Vehicles</option>
+  <option value="motorcycle_leisure">
+    Motorcycles & Leisure
+  </option>
+</select>
 
-  <input id="search" placeholder="Search make or model">
+<select id="makeSearch">
+  <option value="">All Makes</option>
+</select>
+
+<select id="modelSearch" disabled>
+  <option value="">Select make first</option>
+</select>
+  <input id="search" placeholder="Variant, keyword or dealer">
 
   <input id="min" placeholder="Min Price" type="number">
 
@@ -535,10 +549,89 @@ function formatPrice(p){
   return "R" +
   num.toLocaleString("en-ZA");
 }
+  function initHomepageMakeModelSearch() {
+  const vehicleData =
+    window.CARSCOUT_VEHICLE_DATA || {};
+
+  const listingTypeSelect =
+    document.getElementById("listingTypeSearch");
+
+  const makeSelect =
+    document.getElementById("makeSearch");
+
+  const modelSelect =
+    document.getElementById("modelSearch");
+
+  makeSelect.innerHTML =
+    '<option value="">All Makes</option>';
+
+  Object.keys(vehicleData).sort().forEach(make => {
+    const option = document.createElement("option");
+    option.value = make;
+    option.textContent = make;
+    makeSelect.appendChild(option);
+  });
+
+  makeSelect.addEventListener("change", () => {
+    const selectedMake = makeSelect.value;
+
+    if (!selectedMake) {
+      modelSelect.innerHTML =
+        '<option value="">Select make first</option>';
+      modelSelect.disabled = true;
+      return;
+    }
+
+    modelSelect.innerHTML =
+      '<option value="">All Models</option>';
+
+    vehicleData[selectedMake].forEach(model => {
+      const option = document.createElement("option");
+      option.value = model;
+      option.textContent = model;
+      modelSelect.appendChild(option);
+    });
+
+    modelSelect.disabled = false;
+  });
+
+  listingTypeSelect.addEventListener("change", () => {
+    const flexibleListing =
+      listingTypeSelect.value ===
+      "motorcycle_leisure";
+
+    if (flexibleListing) {
+      makeSelect.value = "";
+      makeSelect.disabled = true;
+
+      modelSelect.innerHTML =
+        '<option value="">Use keyword search</option>';
+      modelSelect.disabled = true;
+      return;
+    }
+
+    makeSelect.disabled = false;
+
+    if (!makeSelect.value) {
+      modelSelect.innerHTML =
+        '<option value="">Select make first</option>';
+      modelSelect.disabled = true;
+    }
+  });
+}
+
+initHomepageMakeModelSearch();
 function searchCars(){
 
 const params = new URLSearchParams();
+const listingType =
+  document.getElementById("listingTypeSearch").value;
 
+const make =
+  document.getElementById("makeSearch").value;
+
+const model =
+  document.getElementById("modelSearch").value;
 const search = document.getElementById("search").value.trim();
 const min = document.getElementById("min").value.trim();
 const max = document.getElementById("max").value.trim();
@@ -546,7 +639,17 @@ const max = document.getElementById("max").value.trim();
 const maxYear = document.getElementById("maxYear").value.trim();
 const province = document.getElementById("province").value.trim();
 const sort = document.getElementById("sort").value.trim();
+if(listingType) {
+  params.set("listingType", listingType);
+}
 
+if(make) {
+  params.set("make", make);
+}
+
+if(model) {
+  params.set("model", model);
+}
 if(search) params.set("search", search);
   if(minYear) params.set("minYear", minYear);
 if(maxYear) params.set("maxYear", maxYear);
@@ -694,7 +797,32 @@ return false;
 
     const params =
 new URLSearchParams(window.location.search);
+const listingTypeFromUrl =
+  params.get("listingType") || "";
 
+const makeFromUrl =
+  params.get("make") || "";
+
+const modelFromUrl =
+  params.get("model") || "";
+
+const listingTypeSelect =
+  document.getElementById("listingTypeSearch");
+
+const makeSelect =
+  document.getElementById("makeSearch");
+
+const modelSelect =
+  document.getElementById("modelSearch");
+
+listingTypeSelect.value = listingTypeFromUrl;
+listingTypeSelect.dispatchEvent(new Event("change"));
+
+if (listingTypeFromUrl !== "motorcycle_leisure") {
+  makeSelect.value = makeFromUrl;
+  makeSelect.dispatchEvent(new Event("change"));
+  modelSelect.value = modelFromUrl;
+}
 document.getElementById("search").value =
 params.get("search") || document.getElementById("search").value;
 
@@ -714,7 +842,20 @@ params.get("province") || document.getElementById("province").value;
 
 document.getElementById("sort").value =
 params.get("sort") || document.getElementById("sort").value;
+const selectedListingType =
+  document.getElementById("listingTypeSearch").value;
 
+const selectedMake =
+  document.getElementById("makeSearch")
+    .value
+    .toLowerCase()
+    .trim();
+
+const selectedModel =
+  document.getElementById("modelSearch")
+    .value
+    .toLowerCase()
+    .trim();
 const search =
 document.getElementById("search")
 .value
@@ -742,12 +883,44 @@ const maxYear = document.getElementById("maxYear").value;
     document.getElementById("sort").value;
 
     data = data.filter(function(v){
+const vehicleListingType =
+  v.listing_type || "vehicle";
 
+const vehicleMake =
+  String(v.make || "").toLowerCase().trim();
+
+const vehicleModel =
+  String(v.model || "").toLowerCase().trim();
+
+if (
+  selectedListingType &&
+  vehicleListingType !== selectedListingType
+) {
+  return false;
+}
+
+if (
+  selectedMake &&
+  vehicleMake !== selectedMake
+) {
+  return false;
+}
+
+if (
+  selectedModel &&
+  vehicleModel !== selectedModel &&
+  !vehicleModel.startsWith(selectedModel + " ") &&
+  !vehicleModel.startsWith(selectedModel + "-")
+) {
+  return false;
+}
       const text =
       (
         (v.year || "") + " " +
         (v.make || "") + " " +
         (v.model || "") + " " +
+        (v.variant || "") + " " +
+(v.description || "") + " " +
         (v.title || "") + " " +
         (v.dealer || "") + " " +
         (v.dealer_name || "")
@@ -1120,7 +1293,17 @@ return "index.html?" + params.toString();
 
 }
 function clearSearch(){
+const listingTypeSelect =
+  document.getElementById("listingTypeSearch");
 
+const makeSelect =
+  document.getElementById("makeSearch");
+
+listingTypeSelect.value = "";
+listingTypeSelect.dispatchEvent(new Event("change"));
+
+makeSelect.value = "";
+makeSelect.dispatchEvent(new Event("change"));
   document.getElementById("search").value = "";
   document.getElementById("min").value = "";
   document.getElementById("max").value = "";
