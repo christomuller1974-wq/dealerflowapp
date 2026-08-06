@@ -108,7 +108,34 @@ min-width:90px;
   border-radius:14px;
   box-shadow:0 6px 18px rgba(0,0,0,0.08);
 }
+.results-actions{
+  gap:10px;
+  margin:12px 0 4px;
+  flex-wrap:wrap;
+}
 
+.results-action-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:140px;
+  padding:11px 18px;
+  border:none;
+  border-radius:10px;
+  color:white;
+  font-size:14px;
+  font-weight:800;
+  text-decoration:none;
+  cursor:pointer;
+}
+
+.results-action-btn.home{
+  background:#2563eb;
+}
+
+.results-action-btn.clear{
+  background:#111827;
+}
 .results-filters input,
 .results-filters select{
   width:100%;
@@ -398,7 +425,7 @@ position:static;
 .search-bar.mobile-open{
 display:flex;
 }
-}
+
   .results-filters{
   display:none;
 }
@@ -406,7 +433,7 @@ display:flex;
 .results-filters.mobile-open{
   display:grid;
 }
- } 
+}
 </style>
   <script src="vehicle-data.js"></script>
 </head>
@@ -479,6 +506,23 @@ display:flex;
     Latest Vehicles
   </h2>
   <div id="count" class="count-box"></div>
+  <div
+  id="resultsActions"
+  class="results-actions"
+  style="display:none;"
+>
+  <a href="index.html" class="results-action-btn home">
+    Home
+  </a>
+
+  <button
+    type="button"
+    class="results-action-btn clear"
+    onclick="clearSearch()"
+  >
+    Clear Search
+  </button>
+</div>
   <div class="results-filters">
   <input id="min" placeholder="Min Price" type="number">
 
@@ -1392,6 +1436,12 @@ el.classList.add("saved");
 
 populateYearDropdowns();
 loadCars();
+  const resultsActions =
+  document.getElementById("resultsActions");
+
+if (resultsActions && window.location.search) {
+  resultsActions.style.display = "flex";
+}
 async function trackVisit(pageType) {
 
   try {
