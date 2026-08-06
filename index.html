@@ -399,6 +399,14 @@ position:static;
 display:flex;
 }
 }
+  .results-filters{
+  display:none;
+}
+
+.results-filters.mobile-open{
+  display:grid;
+}
+ } 
 </style>
   <script src="vehicle-data.js"></script>
 </head>
@@ -422,7 +430,7 @@ display:flex;
   </div>
 
 </div>
-<button class="mobile-search-toggle" onclick="document.querySelector('.search-bar').classList.toggle('mobile-open')">
+<button class="mobile-search-toggle" onclick="document.querySelector('.search-bar').classList.toggle('mobile-open'); document.querySelector('.results-filters').classList.toggle('mobile-open')">
 🔍 Search Cars
 </button>
 <div class="search-bar">
