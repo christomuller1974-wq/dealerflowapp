@@ -502,7 +502,7 @@ display:flex;
 </div>
 
 <div class="section-wrap">
-  <h2 class="section-title">
+ <h2 id="resultsTitle" class="section-title">
     Latest Vehicles
   </h2>
   <div id="count" class="count-box"></div>
@@ -554,6 +554,13 @@ display:flex;
     <option value="low">Price Low → High</option>
     <option value="high">Price High → Low</option>
   </select>
+    <button
+  type="button"
+  class="search-btn apply-filters-btn"
+  onclick="searchCars()"
+>
+  Apply Filters
+</button>
 </div>
 </div>
 
@@ -1438,9 +1445,11 @@ populateYearDropdowns();
 loadCars();
   const resultsActions =
   document.getElementById("resultsActions");
-
+const resultsTitle =
+  document.getElementById("resultsTitle");
 if (resultsActions && window.location.search) {
   resultsActions.style.display = "flex";
+  resultsTitle.textContent = "Search Results";
 }
 async function trackVisit(pageType) {
 
