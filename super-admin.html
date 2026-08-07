@@ -295,25 +295,25 @@ body {
   margin-bottom:18px;
 ">
   <button
-    class="btn btn-green"
-    onclick="showDealerSection('ACTIVE')"
-  >
-    Active Dealers
-  </button>
+  class="btn btn-green"
+  onclick="showDealerSection('ACTIVE')"
+>
+  Active Dealers (<span id="activeDealerCount">0</span>)
+</button>
 
-  <button
-    class="btn btn-blue"
-    onclick="showDealerSection('PENDING')"
-  >
-    Pending Approvals
-  </button>
+<button
+  class="btn btn-blue"
+  onclick="showDealerSection('PENDING')"
+>
+  Pending Approvals (<span id="pendingDealerCount">0</span>)
+</button>
 
-  <button
-    class="btn btn-red"
-    onclick="showDealerSection('DECLINED')"
-  >
-    Declined Dealers
-  </button>
+<button
+  class="btn btn-red"
+  onclick="showDealerSection('DECLINED')"
+>
+  Declined Dealers (<span id="declinedDealerCount">0</span>)
+</button>
 </div>
 
 
@@ -334,7 +334,39 @@ let currentDealerSection = "ACTIVE";
 
 function showDealerSection(status) {
   currentDealerSection = status;
+  loadDealerCounts();
   loadDealers();
+}
+  async function loadDealerCounts() {
+  const [
+    activeResult,
+    pendingResult,
+    declinedResult
+  ] = await Promise.all([
+    client
+      .from("profiles")
+      .select("*", { count: "exact", head: true })
+      .eq("approval_status", "ACTIVE"),
+
+    client
+      .from("profiles")
+      .select("*", { count: "exact", head: true })
+      .eq("approval_status", "PENDING"),
+
+    client
+      .from("profiles")
+      .select("*", { count: "exact", head: true })
+      .eq("approval_status", "DECLINED")
+  ]);
+
+  document.getElementById("activeDealerCount").textContent =
+    activeResult.count || 0;
+
+  document.getElementById("pendingDealerCount").textContent =
+    pendingResult.count || 0;
+
+  document.getElementById("declinedDealerCount").textContent =
+    declinedResult.count || 0;
 }
 function setStatus(msg) {
   document.getElementById("status").textContent = msg;
@@ -403,6 +435,7 @@ async function startAdmin() {
   setStatus("Admin access granted.");
 loadStats();
   loadTotalVehicles();
+  loadDealerCounts();
   loadDealers();
 }
 
@@ -512,7 +545,9 @@ const totalLeads =
   white-space:nowrap;
   color:${d.dealer_verified ? "#15803d" : "#b45309"};
 ">
-  ${d.dealer_verified
+ ${d.approval_status === "DECLINED"
+  ? "❌ DECLINED DEALER"
+  : d.dealer_verified
     ? "✅ VERIFIED DEALER"
     : "⏳ VERIFICATION PENDING"}
 </span>
@@ -568,49 +603,64 @@ const totalLeads =
 
       </div>
 
-      <div class="dealer-actions">
+     <div class="dealer-actions">
 
-       ${currentDealerSection === "ACTIVE" ? `
-  <button
-    class="btn btn-green"
-    onclick="activateDealer('${d.id}')"
-  >
-    Activate
-  </button>
-` : ""}
+  ${currentDealerSection === "ACTIVE" ? `
+    <button
+      class="btn btn-green"
+      onclick="activateDealer('${d.id}')"
+    >
+      Activate
+    </button>
 
-      ${currentDealerSection === "PENDING" ? `
+    <button
+      class="btn btn-red"
+      onclick="deactivateDealer('${d.id}')"
+    >
+      Deactivate
+    </button>
+
+    <button
+      class="btn btn-red"
+      onclick="declineDealer('${d.id}')"
+    >
+      Move to Declined
+    </button>
+  ` : ""}
+
+  ${currentDealerSection === "PENDING" ? `
+    <button
+      class="btn btn-blue"
+      onclick="grantFree30Days('${d.id}')"
+    >
+      Verify & Start 30-Day Trial
+    </button>
+
+    <button
+      class="btn btn-red"
+      onclick="declineDealer('${d.id}')"
+    >
+      Decline Dealer
+    </button>
+  ` : ""}
+
+  ${currentDealerSection === "DECLINED" ? `
+    <button
+      class="btn btn-green"
+      onclick="reinstateDealer('${d.id}')"
+    >
+      Reinstate Dealer
+    </button>
+  ` : ""}
+
   <button
-    class="btn btn-blue"
-    onclick="grantFree30Days('${d.id}')"
+    class="btn btn-dark"
+    onclick="changeLoginEmail('${d.id}')"
   >
-    Verify & Start 30-Day Trial
+    Change Login Email
   </button>
-` : ""}
-${currentDealerSection === "PENDING" ? `
-  <button
-    class="btn btn-red"
-    onclick="declineDealer('${d.id}')"
-  >
-    Decline Dealer
-  </button>
-` : ""}
-       ${currentDealerSection === "ACTIVE" ? `
-  <button
-    class="btn btn-red"
-    onclick="deactivateDealer('${d.id}')"
-  >
-    Deactivate
-  </button>
-` : ""}
-        <button class="btn btn-dark"
-  onclick="changeLoginEmail('${d.id}')">
-  Change Login Email
-</button>
-<button class="danger-btn" onclick="deleteDealer('${d.id}')">
-Delete Account
-</button>
-      </div>
+
+</div>
     `;
 
     list.appendChild(row);
@@ -657,9 +707,10 @@ async function grantFree30Days(id) {
     return;
   }
 
-  alert("Dealer verified. Vehicles are now live and the 30-day trial has started.");
+ alert("Dealer verified. Vehicles are now live and the 30-day trial has started.");
 
-  loadDealers();
+loadDealerCounts();
+loadDealers();
 }
 async function declineDealer(id) {
   const reason = prompt(
@@ -696,7 +747,36 @@ async function declineDealer(id) {
     return;
   }
 
-  alert("Dealer declined and moved to Declined Dealers.");
+ alert("Dealer declined and moved to Declined Dealers.");
+loadDealerCounts();
+loadDealers();
+   }
+  async function reinstateDealer(id) {
+  const ok = confirm(
+    "Reinstate this dealer as an approved CarScoutZA dealer?"
+  );
+
+  if (!ok) return;
+
+  const { error } = await client
+    .from("profiles")
+    .update({
+      approval_status: "ACTIVE",
+      dealer_verified: true,
+      active: true,
+      admin_blocked: false
+    })
+    .eq("id", id);
+
+  if (error) {
+    console.error(error);
+    alert("Failed to reinstate dealer.");
+    return;
+  }
+
+  alert("Dealer reinstated and moved to Active Dealers.");
+
+  loadDealerCounts();
   loadDealers();
 }
 async function deactivateDealer(id){
