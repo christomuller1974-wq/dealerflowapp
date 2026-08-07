@@ -554,52 +554,51 @@ const totalLeads =
   </a>
 </div>
 
-        <div class="dealer-meta">
-          Phone: ${d.phone || "-"}
-        </div>
+       <div class="dealer-meta">
+  Phone: ${d.phone || "-"}
+</div>
 
-        <div class="dealer-meta">
-          Paid Until: ${formatDate(d.paid_until)}
-        </div>
-
-        <div class="dealer-meta">
-          Free Access Until: ${formatDate(d.admin_free_until)}
-        </div>
-
-        <div class="dealer-meta">
-          Payment Status: ${d.payment_status || "UNPAID"}
-        </div>
-
-        <div class="dealer-meta">
-          Vehicle Limit: ${d.vehicle_limit || 40}
-        </div>
-        ${currentDealerSection === "DECLINED" ? `
+${currentDealerSection === "DECLINED" ? `
   <div class="dealer-meta" style="margin-top:10px;">
     Declined Reason: ${d.decline_reason || "-"}
   </div>
+` : `
+  <div class="dealer-meta">
+    Paid Until: ${formatDate(d.paid_until)}
+  </div>
 
   <div class="dealer-meta">
-    Declined Date: ${formatDate(d.declined_at)}
+    Free Access Until: ${formatDate(d.admin_free_until)}
   </div>
-` : ""}
-<div class="dealer-meta" style="margin-top:10px; font-weight:700;">
-  Vehicle Views: ${stats.views}
-</div>
 
-<div class="dealer-meta">
-  WhatsApps: ${stats.whatsapp}
-</div>
+  <div class="dealer-meta">
+    Payment Status: ${d.payment_status || "UNPAID"}
+  </div>
 
-<div class="dealer-meta">
-  Calls: ${stats.calls}
-</div>
+  <div class="dealer-meta">
+    Vehicle Limit: ${d.vehicle_limit || 40}
+  </div>
 
-<div class="dealer-meta" style="font-weight:800;">
-  Total Leads: ${totalLeads}
-</div>
-        <div class="dealer-status">
-          ${getDealerStatus(d)}
-        </div>
+  <div class="dealer-meta" style="margin-top:10px; font-weight:700;">
+    Vehicle Views: ${stats.views}
+  </div>
+
+  <div class="dealer-meta">
+    WhatsApps: ${stats.whatsapp}
+  </div>
+
+  <div class="dealer-meta">
+    Calls: ${stats.calls}
+  </div>
+
+  <div class="dealer-meta" style="font-weight:800;">
+    Total Leads: ${totalLeads}
+  </div>
+
+  <div class="dealer-status">
+    ${getDealerStatus(d)}
+  </div>
+`}
 
       </div>
 
