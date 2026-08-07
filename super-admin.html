@@ -284,8 +284,38 @@ body {
 </div>
   </div>
 
- <!-- Dealer Traffic Hidden For Now -->
-<div class="section-title">Dealers</div>
+<!-- Dealer Management Sections -->
+
+<div class="section-title">Dealer Management</div>
+
+<div style="
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:18px;
+">
+  <button
+    class="btn btn-green"
+    onclick="showDealerSection('ACTIVE')"
+  >
+    Active Dealers
+  </button>
+
+  <button
+    class="btn btn-blue"
+    onclick="showDealerSection('PENDING')"
+  >
+    Pending Approvals
+  </button>
+
+  <button
+    class="btn btn-red"
+    onclick="showDealerSection('DECLINED')"
+  >
+    Declined Dealers
+  </button>
+</div>
+
 
 <div id="dealerList" class="dealer-list"></div>
 
@@ -300,7 +330,12 @@ const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const client = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 const ADMIN_EMAIL = "autoexcellence@telkomsa.net";
+let currentDealerSection = "ACTIVE";
 
+function showDealerSection(status) {
+  currentDealerSection = status;
+  loadDealers();
+}
 function setStatus(msg) {
   document.getElementById("status").textContent = msg;
 }
@@ -372,10 +407,11 @@ loadStats();
 }
 
 async function loadDealers() {
-  const { data, error } = await client
-    .from("profiles")
-    .select("*")
-    .order("dealer_name", { ascending:true });
+ const { data, error } = await client
+  .from("profiles")
+  .select("*")
+  .eq("approval_status", currentDealerSection)
+  .order("dealer_name", { ascending:true });
 
   const list = document.getElementById("dealerList");
 
@@ -502,6 +538,15 @@ const totalLeads =
         <div class="dealer-meta">
           Vehicle Limit: ${d.vehicle_limit || 40}
         </div>
+        ${currentDealerSection === "DECLINED" ? `
+  <div class="dealer-meta" style="margin-top:10px;">
+    Declined Reason: ${d.decline_reason || "-"}
+  </div>
+
+  <div class="dealer-meta">
+    Declined Date: ${formatDate(d.declined_at)}
+  </div>
+` : ""}
 <div class="dealer-meta" style="margin-top:10px; font-weight:700;">
   Vehicle Views: ${stats.views}
 </div>
@@ -530,11 +575,22 @@ const totalLeads =
           Activate
         </button>
 
-        <button class="btn btn-blue"
-  onclick="grantFree30Days('${d.id}')">
-  Verify & Start 30-Day Trial
-</button>
-
+      ${currentDealerSection === "PENDING" ? `
+  <button
+    class="btn btn-blue"
+    onclick="grantFree30Days('${d.id}')"
+  >
+    Verify & Start 30-Day Trial
+  </button>
+` : ""}
+${currentDealerSection === "PENDING" ? `
+  <button
+    class="btn btn-red"
+    onclick="declineDealer('${d.id}')"
+  >
+    Decline Dealer
+  </button>
+` : ""}
         <button class="btn btn-red"
           onclick="deactivateDealer('${d.id}')">
           Deactivate
@@ -580,6 +636,7 @@ async function grantFree30Days(id) {
     .update({
       active:true,
       dealer_verified:true,
+      approval_status:"ACTIVE",
       admin_blocked:false,
       admin_free_until:freeUntil.toISOString(),
       payment_status:"FREE_30_DAY"
@@ -596,7 +653,44 @@ async function grantFree30Days(id) {
 
   loadDealers();
 }
+async function declineDealer(id) {
+  const reason = prompt(
+    "Enter the reason for declining this dealer:"
+  );
 
+  if (!reason || !reason.trim()) {
+    return;
+  }
+
+  const confirmDecline = confirm(
+    "Decline this dealer?\n\nReason:\n" + reason.trim()
+  );
+
+  if (!confirmDecline) {
+    return;
+  }
+
+  const { error } = await client
+    .from("profiles")
+    .update({
+      approval_status: "DECLINED",
+      dealer_verified: false,
+      active: false,
+      admin_blocked: true,
+      decline_reason: reason.trim(),
+      declined_at: new Date().toISOString()
+    })
+    .eq("id", id);
+
+  if (error) {
+    console.error(error);
+    alert("Failed to decline dealer.");
+    return;
+  }
+
+  alert("Dealer declined and moved to Declined Dealers.");
+  loadDealers();
+}
 async function deactivateDealer(id){
 
 const ok = confirm("Deactivate this dealer?");
