@@ -613,19 +613,26 @@ const totalLeads =
       Activate
     </button>
 
-    <button
-      class="btn btn-red"
-      onclick="deactivateDealer('${d.id}')"
-    >
-      Deactivate
-    </button>
+   <button
+  class="btn btn-red"
+  onclick="deactivateDealer('${d.id}')"
+>
+  Deactivate
+</button>
 
-    <button
-      class="btn btn-red"
-      onclick="declineDealer('${d.id}')"
-    >
-      Move to Declined
-    </button>
+<button
+  class="btn btn-blue"
+  onclick="extendFree30Days('${d.id}')"
+>
+  Grant / Extend 30 Days
+</button>
+
+<button
+  class="btn btn-red"
+  onclick="declineDealer('${d.id}')"
+>
+  Move to Declined
+</button>
   ` : ""}
 
   ${currentDealerSection === "PENDING" ? `
@@ -711,6 +718,65 @@ async function grantFree30Days(id) {
 
 loadDealerCounts();
 loadDealers();
+}
+  async function extendFree30Days(id) {
+  const { data, error: fetchError } = await client
+    .from("profiles")
+    .select("admin_free_until")
+    .eq("id", id)
+    .single();
+
+  if (fetchError) {
+    console.error(fetchError);
+    alert("Could not load the dealer's current access date.");
+    return;
+  }
+
+  const now = new Date();
+  let baseDate = now;
+
+  if (data?.admin_free_until) {
+    const currentExpiry = new Date(data.admin_free_until);
+
+    if (currentExpiry > now) {
+      baseDate = currentExpiry;
+    }
+  }
+
+  const newFreeUntil = new Date(baseDate);
+  newFreeUntil.setDate(newFreeUntil.getDate() + 30);
+
+  const ok = confirm(
+    "Grant this dealer another 30 days of free access?\n\n" +
+    "New expiry date: " +
+    newFreeUntil.toLocaleDateString("en-ZA")
+  );
+
+  if (!ok) return;
+
+  const { error } = await client
+    .from("profiles")
+    .update({
+      active: true,
+      admin_blocked: false,
+      admin_free_until: newFreeUntil.toISOString(),
+      payment_status: "FREE_30_DAY"
+    })
+    .eq("id", id);
+
+  if (error) {
+    console.error(error);
+    alert("Failed to extend dealer access.");
+    return;
+  }
+
+  alert(
+    "Dealer access extended by 30 days.\n\nNew expiry: " +
+    newFreeUntil.toLocaleDateString("en-ZA")
+  );
+
+  loadDealerCounts();
+  loadDealers();
 }
 async function declineDealer(id) {
   const reason = prompt(
