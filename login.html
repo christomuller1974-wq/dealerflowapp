@@ -252,21 +252,52 @@ function togglePasswordVisibility() {
         setBusy(true);
         setStatus("Signing in...");
 
-        const { error } = await client.auth.signInWithPassword({
-          email: email,
-          password: password
-        });
+       const { data, error } = await client.auth.signInWithPassword({
+  email: email,
+  password: password
+});
 
-        if (error) {
-          setStatus("Login failed: " + error.message);
-          setBusy(false);
-          return;
-        }
+if (error) {
+  setStatus("Login failed: " + error.message);
+  setBusy(false);
+  return;
+}
 
-        setStatus("Login successful. Redirecting...");
-        setTimeout(() => {
-          window.location.href = "dealer-admin.html";
-        }, 800);
+const userId = data.user.id;
+
+const { data: profile, error: profileError } = await client
+  .from("profiles")
+  .select("approval_status")
+  .eq("id", userId)
+  .single();
+
+if (profileError) {
+  console.error(profileError);
+  setStatus("Could not verify dealer account.");
+  await client.auth.signOut();
+  setBusy(false);
+  return;
+}
+
+if (profile && profile.approval_status === "DECLINED") {
+  await client.auth.signOut();
+
+  alert(
+    "REGISTRATION DECLINED\n\n" +
+    "Your CarScoutZA dealer registration has been declined.\n\n" +
+    "If you would like us to review your application, please contact CarScoutZA Admin on 082 574 4526.\n\n" +
+    "Additional dealership verification may be required."
+  );
+
+  setStatus("Registration declined. Please contact CarScoutZA Admin.");
+  setBusy(false);
+  return;
+}
+
+setStatus("Login successful. Redirecting...");
+setTimeout(() => {
+  window.location.href = "dealer-admin.html";
+}, 800);
 
       } catch (err) {
         console.log(err);
