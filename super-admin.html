@@ -570,10 +570,14 @@ const totalLeads =
 
       <div class="dealer-actions">
 
-        <button class="btn btn-green"
-          onclick="activateDealer('${d.id}')">
-          Activate
-        </button>
+       ${currentDealerSection === "ACTIVE" ? `
+  <button
+    class="btn btn-green"
+    onclick="activateDealer('${d.id}')"
+  >
+    Activate
+  </button>
+` : ""}
 
       ${currentDealerSection === "PENDING" ? `
   <button
@@ -591,10 +595,14 @@ ${currentDealerSection === "PENDING" ? `
     Decline Dealer
   </button>
 ` : ""}
-        <button class="btn btn-red"
-          onclick="deactivateDealer('${d.id}')">
-          Deactivate
-        </button>
+       ${currentDealerSection === "ACTIVE" ? `
+  <button
+    class="btn btn-red"
+    onclick="deactivateDealer('${d.id}')"
+  >
+    Deactivate
+  </button>
+` : ""}
         <button class="btn btn-dark"
   onclick="changeLoginEmail('${d.id}')">
   Change Login Email
