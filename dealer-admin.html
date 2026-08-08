@@ -507,7 +507,34 @@ function showPendingApprovalScreen() {
     </div>
   `;
 }
+function showDeclinedDealerScreen() {
+  const reason = currentProfile?.decline_reason || "Please contact CarScoutZA Admin for more information.";
 
+  document.body.innerHTML = `
+    <div class="approval-wrap">
+      <div class="approval-card">
+        <h2>Dealer Access Declined</h2>
+
+        <p>Your CarScoutZA dealer access has been declined.</p>
+
+        <p><strong>Reason:</strong> ${reason}</p>
+
+        <p>
+          If you would like your account reviewed, please contact
+          CarScoutZA Admin on <strong>082 574 4526</strong>.
+        </p>
+
+        <p>Additional dealership verification or information may be required.</p>
+
+        <div class="approval-actions">
+          <a href="index.html" class="top-btn">Back to Website</a>
+          <a href="tel:0825744526" class="top-btn blue">Contact Admin</a>
+          <button class="top-btn" onclick="logout()">Logout</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
 async function requireUser() {
   const { data, error } = await client.auth.getUser();
 
@@ -762,6 +789,10 @@ const trialUntil = currentProfile.trial_expires
 const paidActive = paidUntil && paidUntil > now;
 const freeActive = freeUntil && freeUntil > now;
 const trialActive = trialUntil && trialUntil > now;
+  if (currentProfile.approval_status === "DECLINED") {
+  showDeclinedDealerScreen();
+  return;
+}
 if (currentProfile.admin_blocked) {
   showPendingApprovalScreen();
   return;
