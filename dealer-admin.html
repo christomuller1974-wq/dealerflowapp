@@ -389,6 +389,56 @@ function setStatus(message) {
   console.log(message);
 }
 
+let refreshStatus = null;
+
+function formatRefreshDate(value) {
+  if (!value) return "";
+
+  return new Date(value).toLocaleString("en-ZA", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit"
+  });
+}
+
+async function loadRefreshStatus() {
+  const { data, error } = await client.rpc(
+    "get_vehicle_refresh_status"
+  );
+
+  if (error || !data || !data.success) {
+    console.log("Could not load refresh status:", error || data);
+    document.getElementById("refreshRemaining").textContent =
+      "Refresh allowance unavailable";
+    return null;
+  }
+
+  refreshStatus = data;
+
+  document.getElementById("refreshRemaining").textContent =
+    `${data.remaining_30_days} of 10 remaining`;
+
+  if (data.remaining_24_hours > 0) {
+    document.getElementById("refreshDailyLimit").textContent =
+      `Maximum: 2 per rolling 24 hours ` +
+      `(${data.remaining_24_hours} available now)`;
+  } else {
+    document.getElementById("refreshDailyLimit").textContent =
+      `Daily refresh limit reached. Available again: ` +
+      formatRefreshDate(data.daily_available_at);
+  }
+
+  document.getElementById("refreshNextCredit").textContent =
+    data.next_credit_at
+      ? `Next refresh credit returns: ` +
+        formatRefreshDate(data.next_credit_at)
+      : "All 10 refresh credits are currently available.";
+
+  return data;
+}
+
 function formatPrice(price) {
   const num = Number(String(price || "").replace(/\D/g, ""));
   if (!num) return "R0";
