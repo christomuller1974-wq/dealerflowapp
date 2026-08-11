@@ -1085,11 +1085,11 @@ if(maxYear && vehicleYear > Number(maxYear)){
 
       data.sort(function(a,b){
 
-        const aPrice =
-        Number(
-          String(a.price || "")
-          .replace(/\D/g,"")
-        ) || 0;
+      const aPrice =
+  Number(
+    String(a.price || "")
+      .replace(/\D/g,"")
+  ) || 0;
 
         const bPrice =
         Number(
@@ -1186,7 +1186,7 @@ const dealerProfile = (profiles || []).find(function(p){
       : "";
 
       const title =
-      [v.year, v.make, v.model]
+      [v.year, v.make, v.model, v.variant]
       .filter(Boolean)
       .join(" ") ||
       v.title ||
