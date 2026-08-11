@@ -786,13 +786,13 @@ card.innerHTML = `
         <div class="button-stack">
           <a href="details.html?id=${vehicle.id}" class="btn btn-blue">View</a>
           <a href="edit.html?id=${vehicle.id}" class="btn btn-green">Edit</a>
-          <button class="btn btn-gold"
+         <button class="btn btn-gold"
 onclick="startFeaturedPayment('${vehicle.id}')">
 ⭐ Feature 7 Days - R200
-<button class="btn btn-blue"
-onclick="refreshVehicle('${vehicle.id}')">
-🔄 Refresh Vehicle
 </button>
+
+<button class="btn btn-blue" ${refreshButtonAttribute}>
+${refreshButton.text}
 </button>
           <button class="btn btn-red" onclick="deleteVehicle(${vehicle.id})">Delete</button>
         </div>
