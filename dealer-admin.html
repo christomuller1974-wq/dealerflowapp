@@ -869,9 +869,10 @@ if (!paidActive && !freeActive && !trialActive) {
   return;
 }
 
+await loadRefreshStatus();
 await loadVehicles();
 }
- async function refreshVehicle(vehicleId){
+async function refreshVehicle(vehicleId) {
 
   const confirmed = confirm(
     "Refresh this vehicle to the top of listings?"
