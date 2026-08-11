@@ -751,6 +751,11 @@ card.className = "vehicle-card";
 const refreshButton =
   getVehicleRefreshButton(vehicle.id);
 
+const refreshButtonAttribute =
+  refreshButton.disabled
+    ? "disabled"
+    : `onclick="refreshVehicle('${vehicle.id}')"`;
+
 card.innerHTML = `
       <div class="vehicle-thumb-wrap">
         ${isFeatured ? '<div class="featured-badge">Featured</div>' : ''}
