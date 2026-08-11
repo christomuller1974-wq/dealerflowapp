@@ -873,29 +873,53 @@ await loadRefreshStatus();
 await loadVehicles();
 }
 async function refreshVehicle(vehicleId) {
-
   const confirmed = confirm(
-    "Refresh this vehicle to the top of listings?"
+    "Use 1 vehicle refresh credit?\n\n" +
+    "This vehicle will move higher in Latest Vehicles."
   );
 
-  if(!confirmed) return;
+  if (!confirmed) return;
 
-  const { error } = await client
-    .from("vehicles")
-    .update({
-      updated_at: new Date().toISOString()
-    })
-    .eq("id", vehicleId);
+  const { data, error } = await client.rpc(
+    "refresh_vehicle_with_limits",
+    {
+      p_vehicle_id: Number(vehicleId)
+    }
+  );
 
-  if(error){
-    console.log(error);
-    alert("Refresh failed.");
+  if (error) {
+    console.log("Refresh failed:", error);
+    alert("Refresh failed. Please try again.");
     return;
   }
 
-  alert("Vehicle refreshed successfully!");
-  window.location.reload();
+  if (!data || !data.success) {
+    let message =
+      data?.message || "This vehicle cannot be refreshed now.";
 
+    if (data?.available_at) {
+      message +=
+        "\nAvailable again: " +
+        formatRefreshDate(data.available_at);
+    }
+
+    if (data?.next_credit_at) {
+      message +=
+        "\nNext credit returns: " +
+        formatRefreshDate(data.next_credit_at);
+    }
+
+    alert(message);
+    await loadRefreshStatus();
+    return;
+  }
+
+  alert(
+    "Vehicle refreshed successfully!\n\n" +
+    `${data.remaining_30_days} of 10 refreshes remaining.`
+  );
+
+  window.location.reload();
 }
 
 startDashboard();
