@@ -834,6 +834,7 @@ async function startDashboard() {
 const email = (currentUser.email || "").toLowerCase().trim();
 
 if (email === MAIN_ADMIN_EMAIL.toLowerCase()) {
+  await loadRefreshStatus();
   await loadVehicles();
   return;
 }
