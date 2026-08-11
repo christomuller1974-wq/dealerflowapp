@@ -745,10 +745,13 @@ vehicle.featured_until &&
 new Date(vehicle.featured_until) > new Date();
     const counts = clickCounts[String(vehicle.id)] || { total:0, view:0, call:0, whatsapp:0 };
 
-    const card = document.createElement("div");
-    card.className = "vehicle-card";
+   const card = document.createElement("div");
+card.className = "vehicle-card";
 
-    card.innerHTML = `
+const refreshButton =
+  getVehicleRefreshButton(vehicle.id);
+
+card.innerHTML = `
       <div class="vehicle-thumb-wrap">
         ${isFeatured ? '<div class="featured-badge">Featured</div>' : ''}
         <img
