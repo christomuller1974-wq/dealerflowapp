@@ -402,8 +402,58 @@ function formatRefreshDate(value) {
     minute: "2-digit"
   });
 }
+function getVehicleRefreshButton(vehicleId) {
+  if (!refreshStatus) {
+    return {
+      disabled: true,
+      text: "Refresh status unavailable"
+    };
+  }
+
+  if (refreshStatus.remaining_30_days <= 0) {
+    return {
+      disabled: true,
+      text: "No refresh credits remaining"
+    };
+  }
+
+  if (refreshStatus.remaining_24_hours <= 0) {
+    return {
+      disabled: true,
+      text: "Daily refresh limit reached"
+    };
+  }
+
+  const cooldown =
+    refreshStatus.vehicle_cooldowns.find(
+      item => Number(item.vehicle_id) === Number(vehicleId)
+    );
+
+  if (cooldown) {
+    const millisecondsRemaining =
+      new Date(cooldown.available_at) - new Date();
+
+    const daysRemaining = Math.max(
+      1,
+      Math.ceil(millisecondsRemaining / 86400000)
+    );
+
+    return {
+      disabled: true,
+      text:
+        `Available again in ${daysRemaining} ` +
+        `${daysRemaining === 1 ? "day" : "days"}`
+    };
+  }
+
+  return {
+    disabled: false,
+    text: "↻ Refresh Vehicle"
+  };
+}
 
 async function loadRefreshStatus() {
+
   const { data, error } = await client.rpc(
     "get_vehicle_refresh_status"
   );
