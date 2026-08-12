@@ -314,6 +314,12 @@ body {
 >
   Declined Dealers (<span id="declinedDealerCount">0</span>)
 </button>
+  <button
+  class="btn btn-blue"
+  onclick="shuffleVehicles()"
+>
+  🔀 Shuffle Vehicles
+</button>
 </div>
 
 
@@ -717,6 +723,33 @@ async function grantFree30Days(id) {
 
 loadDealerCounts();
 loadDealers();
+}
+  async function shuffleVehicles() {
+  const confirmed = confirm(
+    "Shuffle all currently active dealer vehicles?\n\n" +
+    "This will randomly mix the normal vehicle order on CarScoutZA."
+  );
+
+  if (!confirmed) return;
+
+  try {
+    const { data, error } = await client.rpc("admin_shuffle_vehicles");
+
+    if (error) {
+      console.error(error);
+      alert("Shuffle failed. Please try again.");
+      return;
+    }
+
+    alert(
+      "Vehicle shuffle completed successfully." +
+      (data !== null && data !== undefined ? "\nVehicles shuffled: " + data : "")
+    );
+
+  } catch (err) {
+    console.error(err);
+    alert("Something went wrong while shuffling the vehicles.");
+  }
 }
   async function extendFree30Days(id) {
   const { data, error: fetchError } = await client
