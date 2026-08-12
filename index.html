@@ -772,8 +772,7 @@ async function loadCars(){
     const res = await fetch(
 
       supabaseUrl +
-      "/rest/v1/public_active_verified_vehicles_test?select=*&order=updated_at.desc.nullslast,id.desc",
-
+     "/rest/v1/public_active_verified_vehicles_test?select=*",
       {
         headers:{
           apikey:supabaseKey,
@@ -1058,7 +1057,83 @@ if(maxYear && vehicleYear > Number(maxYear)){
       return true;
 
     });
+// Default CarScoutZA order:
+// New uploads / refreshes after the latest Admin Shuffle come first.
+// Otherwise use the saved random shuffle order.
+// Before the first shuffle, use normal latest-activity order.
+if (sort !== "low" && sort !== "high") {
 
+  const getActivityTime = (v) => {
+    const times = [
+      v.refreshed_at,
+      v.updated_at,
+      v.created_at
+    ]
+      .filter(Boolean)
+      .map(value => new Date(value).getTime())
+      .filter(Number.isFinite);
+
+    return times.length ? Math.max(...times) : 0;
+  };
+
+  const shuffleTimes = data
+    .map(v => v.admin_shuffle_at ? new Date(v.admin_shuffle_at).getTime() : 0)
+    .filter(time => Number.isFinite(time) && time > 0);
+
+  const latestShuffleAt =
+    shuffleTimes.length ? Math.max(...shuffleTimes) : 0;
+
+  data.sort(function(a, b) {
+
+    const aActivity = getActivityTime(a);
+    const bActivity = getActivityTime(b);
+
+    // Before Super Admin has ever shuffled:
+    // keep the normal newest / refreshed vehicles first.
+    if (!latestShuffleAt) {
+      if (bActivity !== aActivity) {
+        return bActivity - aActivity;
+      }
+
+      return Number(b.id || 0) - Number(a.id || 0);
+    }
+
+    const aNewSinceShuffle = aActivity > latestShuffleAt;
+    const bNewSinceShuffle = bActivity > latestShuffleAt;
+
+    // Anything genuinely uploaded/refreshed after the shuffle rises above it.
+    if (aNewSinceShuffle !== bNewSinceShuffle) {
+      return aNewSinceShuffle ? -1 : 1;
+    }
+
+    // Both had activity after the shuffle: newest activity wins.
+    if (aNewSinceShuffle && bNewSinceShuffle) {
+      if (bActivity !== aActivity) {
+        return bActivity - aActivity;
+      }
+
+      return Number(b.id || 0) - Number(a.id || 0);
+    }
+
+    // Both belong to the shuffled stock.
+    const aShuffleOrder = Number(a.admin_shuffle_order);
+    const bShuffleOrder = Number(b.admin_shuffle_order);
+
+    const aHasShuffleOrder = Number.isFinite(aShuffleOrder);
+    const bHasShuffleOrder = Number.isFinite(bShuffleOrder);
+
+    if (aHasShuffleOrder && bHasShuffleOrder) {
+      return aShuffleOrder - bShuffleOrder;
+    }
+
+    if (aHasShuffleOrder !== bHasShuffleOrder) {
+      return aHasShuffleOrder ? -1 : 1;
+    }
+
+    // Safety fallback.
+    return bActivity - aActivity;
+  });
+}
     if(sort === "low"){
 
       data.sort(function(a,b){
