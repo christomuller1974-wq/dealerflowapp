@@ -1305,6 +1305,7 @@ const dealerProfile = (profiles || []).find(function(p){
 <div class="save-heart"
 onclick="toggleSave('${v.id}', this)">
 ♡
+</div>
 <div
   class="share-whatsapp"
   onclick="event.stopPropagation(); shareVehicleWhatsApp('${v.id}', '${title.replace(/'/g, "\\'")}', '${String(v.price || "").replace(/'/g, "\\'")}')"
