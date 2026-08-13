@@ -550,7 +550,7 @@ function whatsappLink(phone, title){
 }
 function shareVehicleWhatsApp() {
   if (!currentVehicle) return;
-
+trackVehicleClick("share", currentVehicle);
   const vehicleTitle =
     currentVehicle.title ||
     [
