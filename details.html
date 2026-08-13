@@ -202,6 +202,7 @@ html, body {
 
 .btn-call { background: #111827; }
 .btn-whatsapp { background: #25d366; }
+  .btn-share { background: #2563eb; }
 .btn-dealer { background: #3156c7; }
 .btn-enquire { background: #0ea5e9; }
 
@@ -547,7 +548,31 @@ function whatsappLink(phone, title){
       " on CarScoutZA and I'm interested."
     );
 }
+function shareVehicleWhatsApp() {
+  if (!currentVehicle) return;
 
+  const vehicleTitle =
+    currentVehicle.title ||
+    [
+      currentVehicle.year,
+      currentVehicle.make,
+      currentVehicle.model,
+      currentVehicle.variant
+    ].filter(Boolean).join(" ");
+
+  const message =
+    "Check out this " +
+    vehicleTitle +
+    " on CarScoutZA" +
+    (currentVehicle.price ? "\n" + formatPrice(currentVehicle.price) : "") +
+    "\n\n" +
+    window.location.href;
+
+  const shareUrl =
+    "https://wa.me/?text=" + encodeURIComponent(message);
+
+  window.open(shareUrl, "_blank");
+}
 function dealerStockLink(vehicle) {
 
   if (!vehicle.user_id) {
@@ -1178,7 +1203,12 @@ updateVehicleSchema(
           >
             WhatsApp
           </a>
-
+<button
+  class="btn btn-share"
+  onclick="shareVehicleWhatsApp()"
+>
+  ⤴ Share
+</button>
           <button
             class="btn btn-enquire"
             onclick="openEnquire()"
