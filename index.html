@@ -260,26 +260,21 @@ transform:scale(1.15);
 .save-heart.saved{
 color:red;
 }
-  .share-whatsapp{
+ .share-whatsapp{
   position:absolute;
-  top:12px;
+  top:10px;
   right:52px;
-  width:34px;
-  height:34px;
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:#25D366;
-  color:white;
-  font-size:18px;
-  font-weight:bold;
+  font-size:26px;
   cursor:pointer;
   z-index:5;
-  box-shadow:0 2px 8px rgba(0,0,0,0.25);
   transition:0.2s;
+  color:red;
+  text-shadow:0 2px 8px rgba(255,255,255,0.9);
 }
 
+.share-whatsapp:hover{
+  transform:scale(1.15);
+}
 .share-whatsapp:hover{
   transform:scale(1.12);
 }
@@ -1304,13 +1299,12 @@ const dealerProfile = (profiles || []).find(function(p){
 <div class="save-heart"
 onclick="toggleSave('${v.id}', this)">
 ♡
-</div>
 <div
   class="share-whatsapp"
   onclick="event.stopPropagation(); shareVehicleWhatsApp('${v.id}', '${title.replace(/'/g, "\\'")}', '${String(v.price || "").replace(/'/g, "\\'")}')"
   title="Share on WhatsApp"
 >
-  ↗
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.6" y1="10.5" x2="15.4" y2="6.5"></line><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"></line></svg>
 </div>
           ${featured}
 
