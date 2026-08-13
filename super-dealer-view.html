@@ -565,14 +565,14 @@
         if (!vehicleId) {
           return;
         }
-
-        if (!clickCounts[vehicleId]) {
-          clickCounts[vehicleId] = {
-            total: 0,
-            view: 0,
-            call: 0,
-            whatsapp: 0
-          };
+if (!clickCounts[vehicleId]) {
+       clickCounts[vehicleId] = {
+  total: 0,
+  view: 0,
+  call: 0,
+  whatsapp: 0,
+  share: 0
+};
         }
 
         clickCounts[vehicleId].total++;
@@ -588,6 +588,9 @@
         if (click.click_type === "whatsapp") {
           clickCounts[vehicleId].whatsapp++;
         }
+        if (click.click_type === "share") {
+  clickCounts[vehicleId].share++;
+}
       });
     }
 
@@ -653,12 +656,13 @@
       vehicles.forEach(vehicle => {
         const vehicleId = String(vehicle.id);
 
-        const counts = clickCounts[vehicleId] || {
-          total: 0,
-          view: 0,
-          call: 0,
-          whatsapp: 0
-        };
+       const counts = clickCounts[vehicleId] || {
+  total: 0,
+  view: 0,
+  call: 0,
+  whatsapp: 0,
+  share: 0
+};
 
         const title = [
           vehicle.year,
@@ -749,6 +753,14 @@
                     WhatsApps
                   </span>
                 </div>
+                <div class="performance-item">
+  <span class="performance-number">
+    ${counts.share}
+  </span>
+  <span class="performance-label">
+    Shares
+  </span>
+</div>
               </div>
             </div>
 
