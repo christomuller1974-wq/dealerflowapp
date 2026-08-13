@@ -1528,6 +1528,7 @@ el.classList.add("saved");
 }
 }
   function shareVehicleWhatsApp(id, title, price) {
+    trackVehicleShare(id);
   const vehicleUrl =
     window.location.origin +
     "/details.html?id=" +
@@ -1575,6 +1576,29 @@ const resultsTitle =
 if (resultsActions && window.location.search) {
   resultsActions.style.display = "flex";
   resultsTitle.textContent = "Search Results";
+}
+  async function trackVehicleShare(vehicleId) {
+  try {
+    await fetch(
+      supabaseUrl + "/rest/v1/vehicle_clicks",
+      {
+        method: "POST",
+        headers: {
+          apikey: supabaseKey,
+          Authorization: "Bearer " + supabaseKey,
+          "Content-Type": "application/json",
+          Prefer: "return=minimal"
+        },
+        body: JSON.stringify({
+          vehicle_id: vehicleId,
+          click_type: "share",
+          created_at: new Date().toISOString()
+        })
+      }
+    );
+  } catch (err) {
+    console.log(err);
+  }
 }
 async function trackVisit(pageType) {
 
