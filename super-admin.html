@@ -451,7 +451,22 @@ async function loadDealers() {
   .select("*")
   .eq("approval_status", currentDealerSection)
   .order("dealer_name", { ascending:true });
+const { data: vehicleRows, error: vehicleError } = await client
+  .from("vehicles")
+  .select("user_id");
 
+if (vehicleError) {
+  console.error("Could not load vehicle counts:", vehicleError);
+}
+
+const vehicleCounts = {};
+
+(vehicleRows || []).forEach(vehicle => {
+  if (!vehicle.user_id) return;
+
+  vehicleCounts[vehicle.user_id] =
+    (vehicleCounts[vehicle.user_id] || 0) + 1;
+});
   const list = document.getElementById("dealerList");
 
   list.innerHTML = "";
@@ -503,11 +518,12 @@ const dealerStats = {};
   if (!dealerId) return;
 
   if (!dealerStats[dealerId]) {
-    dealerStats[dealerId] = {
-      views: 0,
-      whatsapp: 0,
-      calls: 0
-    };
+   dealerStats[dealerId] = {
+  views: 0,
+  whatsapp: 0,
+  calls: 0,
+  share: 0
+};
   }
 
   if (click.click_type === "view") {
@@ -521,6 +537,9 @@ const dealerStats = {};
   if (click.click_type === "call") {
     dealerStats[dealerId].calls++;
   }
+  if (click.click_type === "share") {
+  dealerStats[dealerId].share++;
+}
 });
   data.forEach(d => {
     const row = document.createElement("div");
@@ -529,7 +548,8 @@ const dealerStats = {};
 const stats = dealerStats[d.id] || {
   views: 0,
   whatsapp: 0,
-  calls: 0
+  calls: 0,
+  share: 0
 };
 
 const totalLeads =
@@ -584,7 +604,9 @@ ${currentDealerSection === "DECLINED" ? `
   <div class="dealer-meta">
     Vehicle Limit: ${d.vehicle_limit || 40}
   </div>
-
+<div class="dealer-meta">
+  Current Stock: ${vehicleCounts[d.id] || 0}
+</div>
   <div class="dealer-meta" style="margin-top:10px; font-weight:700;">
     Vehicle Views: ${stats.views}
   </div>
@@ -596,7 +618,9 @@ ${currentDealerSection === "DECLINED" ? `
   <div class="dealer-meta">
     Calls: ${stats.calls}
   </div>
-
+<div class="dealer-meta">
+  Shares: ${stats.share}
+</div>
   <div class="dealer-meta" style="font-weight:800;">
     Total Leads: ${totalLeads}
   </div>
