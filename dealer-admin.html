@@ -349,6 +349,10 @@ body {
       <strong id="dealerWhatsapps">0</strong>
       <span>Total WhatsApps</span>
     </div>
+    <div class="stat-card">
+  <strong id="dealerShares">0</strong>
+  <span>Total Shares</span>
+</div>
   </div>
 
   <div class="share-box" id="refreshAllowance">
@@ -542,18 +546,20 @@ function updateStats() {
   let totalViews = 0;
   let totalCalls = 0;
   let totalWhatsapps = 0;
-
+let totalShares = 0;
   Object.keys(clickCounts).forEach(function(id) {
     totalClicks += clickCounts[id].total || 0;
     totalViews += clickCounts[id].view || 0;
     totalCalls += clickCounts[id].call || 0;
     totalWhatsapps += clickCounts[id].whatsapp || 0;
+    totalShares += clickCounts[id].share || 0;
   });
 
   document.getElementById("dealerTotalClicks").textContent = totalClicks;
   document.getElementById("dealerViews").textContent = totalViews;
   document.getElementById("dealerCalls").textContent = totalCalls;
   document.getElementById("dealerWhatsapps").textContent = totalWhatsapps;
+  document.getElementById("dealerShares").textContent = totalShares;
 }
 
 async function loadClickCounts() {
@@ -593,7 +599,8 @@ async function loadClickCounts() {
         total: 0,
         view: 0,
         call: 0,
-        whatsapp: 0
+        whatsapp: 0,
+        share: 0
       };
     }
 
@@ -602,6 +609,7 @@ async function loadClickCounts() {
     if (click.click_type === "view") clickCounts[id].view++;
     if (click.click_type === "call") clickCounts[id].call++;
     if (click.click_type === "whatsapp") clickCounts[id].whatsapp++;
+  if (click.click_type === "share") clickCounts[id].share++;
   });
 
   console.log("Loaded dealer click records:", allClicks.length);
@@ -743,7 +751,7 @@ async function loadVehicles() {
 ) &&
 vehicle.featured_until &&
 new Date(vehicle.featured_until) > new Date();
-    const counts = clickCounts[String(vehicle.id)] || { total:0, view:0, call:0, whatsapp:0 };
+    const counts = clickCounts[String(vehicle.id)] || { total:0, view:0, call:0, whatsapp:0, share:0 };
 
    const card = document.createElement("div");
 card.className = "vehicle-card";
@@ -781,6 +789,7 @@ card.innerHTML = `
           <div>👁️ Views: ${counts.view}</div>
           <div>📞 Calls: ${counts.call}</div>
           <div>💬 WhatsApp: ${counts.whatsapp}</div>
+          <div>↗ Shares: ${counts.share}</div>
         </div>
 
         <div class="button-stack">
