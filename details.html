@@ -270,6 +270,44 @@ html, body {
   font-size: 14px;
   font-weight: 700;
 }
+  .dealer-description {
+  margin-top: 18px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.dealer-description summary {
+  position: relative;
+  padding: 14px 42px 14px 16px;
+  color: #0f172a;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  list-style: none;
+}
+
+.dealer-description summary::-webkit-details-marker {
+  display: none;
+}
+
+.dealer-description summary::after {
+  content: "▼";
+  position: absolute;
+  right: 16px;
+}
+
+.dealer-description[open] summary::after {
+  content: "▲";
+}
+
+.dealer-description .description {
+  margin-top: 0;
+  border: 0;
+  border-top: 1px solid #e2e8f0;
+  border-radius: 0;
+}
 .modal {
   display: none;
   position: fixed;
@@ -1222,10 +1260,17 @@ const vehicleHighlights = highlightItems.length
 
             </div>
 
-            <div class="description">
-              ${v.description || "No description available."}
-            </div>
-${vehicleHighlights}
+           ${vehicleHighlights}
+
+${v.description ? `
+  <details class="dealer-description" ${window.innerWidth > 768 ? "open" : ""}>
+    <summary>Dealer Description</summary>
+    <div class="description">
+      ${v.description}
+    </div>
+  </details>
+` : ""}
+
           </div>
 
         </div>
