@@ -241,7 +241,35 @@ html, body {
   white-space: pre-wrap;
   color: #334155;
 }
+.vehicle-highlights {
+  margin-top: 18px;
+  padding: 16px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+}
 
+.vehicle-highlights h3 {
+  margin: 0 0 12px;
+  font-size: 18px;
+  color: #0f172a;
+}
+
+.highlight-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 10px;
+}
+
+.highlight-item {
+  padding: 11px 12px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 10px;
+  color: #1e3a8a;
+  font-size: 14px;
+  font-weight: 700;
+}
 .modal {
   display: none;
   position: fixed;
@@ -1067,7 +1095,41 @@ updateVehicleSchema(
         >
       `;
     });
+const highlightItems = [];
 
+if (v.transmission === "manual") highlightItems.push("✓ Manual");
+if (v.transmission === "automatic") highlightItems.push("✓ Automatic");
+
+if (v.drivetrain === "4x2") highlightItems.push("✓ 4x2");
+if (v.drivetrain === "4x4") highlightItems.push("✓ 4x4");
+if (v.drivetrain === "awd") highlightItems.push("✓ AWD");
+
+if (v.service_history === "full") highlightItems.push("✓ Full Service History");
+if (v.service_history === "partial") highlightItems.push("✓ Partial Service History");
+
+if (v.finance_available === true) highlightItems.push("✓ Finance Available");
+
+if (v.warranty_status === "included") highlightItems.push("✓ Warranty Included");
+if (v.warranty_status === "available") highlightItems.push("✓ Warranty Available");
+
+if (v.spare_key === true) highlightItems.push("✓ Spare Key");
+if (v.trade_ins_welcome === true) highlightItems.push("✓ Trade-ins Welcome");
+if (v.nationwide_delivery === true) highlightItems.push("✓ Nationwide Delivery");
+
+if (v.vehicle_condition === "excellent") highlightItems.push("⭐ Excellent Condition");
+if (v.vehicle_condition === "good") highlightItems.push("✓ Good Condition");
+if (v.vehicle_condition === "average") highlightItems.push("✓ Average Condition");
+
+const vehicleHighlights = highlightItems.length
+  ? `
+    <div class="vehicle-highlights">
+      <h3>Vehicle Highlights</h3>
+      <div class="highlight-grid">
+        ${highlightItems.map(item => `<div class="highlight-item">${item}</div>`).join("")}
+      </div>
+    </div>
+  `
+  : "";
     document
       .getElementById("content")
       .innerHTML = `
@@ -1163,7 +1225,7 @@ updateVehicleSchema(
             <div class="description">
               ${v.description || "No description available."}
             </div>
-
+${vehicleHighlights}
           </div>
 
         </div>
