@@ -450,7 +450,76 @@
         <label for="description">Description</label>
         <textarea id="description"></textarea>
       </div>
-
+<div class="field">
+  <label for="transmission">Transmission</label>
+  <select id="transmission">
+    <option value="">Not specified</option>
+    <option value="manual">Manual</option>
+    <option value="automatic">Automatic</option>
+  </select>
+</div>
+      <div class="field">
+  <label for="drivetrain">Drivetrain</label>
+  <select id="drivetrain">
+    <option value="">Not specified</option>
+    <option value="4x2">4x2</option>
+    <option value="4x4">4x4</option>
+    <option value="awd">AWD</option>
+  </select>
+</div>
+      <div class="field">
+  <label for="serviceHistory">Service History</label>
+  <select id="serviceHistory">
+    <option value="">Not specified</option>
+    <option value="full">Full Service History</option>
+    <option value="partial">Partial Service History</option>
+  </select>
+</div>
+      <div class="field">
+  
+  <div class="checkbox-row">
+    <input type="checkbox" id="financeAvailable">
+    <span>Finance Available</span>
+  </div>
+</div>
+      <div class="field">
+  <label for="warrantyStatus">Warranty</label>
+  <select id="warrantyStatus">
+    <option value="">Not specified</option>
+    <option value="included">Warranty Included</option>
+    <option value="available">Warranty Available</option>
+  </select>
+</div>
+      <div class="field">
+  
+  <div class="checkbox-row">
+    <input type="checkbox" id="spareKey">
+    <span>Spare Key</span>
+  </div>
+</div>
+      <div class="field">
+ 
+  <div class="checkbox-row">
+    <input type="checkbox" id="tradeInsWelcome">
+    <span>Trade-ins Welcome</span>
+  </div>
+</div>
+      <div class="field">
+  
+  <div class="checkbox-row">
+    <input type="checkbox" id="nationwideDelivery">
+    <span>Nationwide Delivery</span>
+  </div>
+</div>
+      <div class="field">
+  <label for="vehicleCondition">Vehicle Condition</label>
+  <select id="vehicleCondition">
+    <option value="">Not specified</option>
+    <option value="excellent">Excellent</option>
+    <option value="good">Good</option>
+    <option value="average">Average</option>
+  </select>
+</div>
       <div class="field">
         <label>Featured Vehicle</label>
         <div class="checkbox-row">
@@ -1050,6 +1119,15 @@ if (savedListingType === "motorcycle_leisure") {
         data.phone || profile?.phone || "";
 
       document.getElementById("description").value = data.description || "";
+      document.getElementById("transmission").value = data.transmission || "";
+document.getElementById("drivetrain").value = data.drivetrain || "";
+document.getElementById("serviceHistory").value = data.service_history || "";
+document.getElementById("financeAvailable").checked = data.finance_available === true;
+document.getElementById("warrantyStatus").value = data.warranty_status || "";
+document.getElementById("spareKey").checked = data.spare_key === true;
+document.getElementById("tradeInsWelcome").checked = data.trade_ins_welcome === true;
+document.getElementById("nationwideDelivery").checked = data.nationwide_delivery === true;
+document.getElementById("vehicleCondition").value = data.vehicle_condition || "";
       const featuredCheckbox = document.getElementById("featured");
 
 const paidFeatureUntil = data.featured_until
@@ -1216,7 +1294,17 @@ const variant = document.getElementById("variant").value.trim();
         const dealer = document.getElementById("dealer").value.trim();
         const phone = document.getElementById("phone").value.trim();
         const description = document.getElementById("description").value.trim();
+        const transmission = document.getElementById("transmission").value;
+const drivetrain = document.getElementById("drivetrain").value;
+const serviceHistory = document.getElementById("serviceHistory").value;
+const financeAvailable = document.getElementById("financeAvailable").checked;
+const warrantyStatus = document.getElementById("warrantyStatus").value;
+const spareKey = document.getElementById("spareKey").checked;
+const tradeInsWelcome = document.getElementById("tradeInsWelcome").checked;
+const nationwideDelivery = document.getElementById("nationwideDelivery").checked;
+const vehicleCondition = document.getElementById("vehicleCondition").value;
         const featuredUntil = currentVehicle?.featured_until
+         
   ? new Date(currentVehicle.featured_until)
   : null;
 
@@ -1264,6 +1352,15 @@ const featured =
             dealer: dealer,
             phone: phone,
             description: description,
+            transmission: transmission || null,
+drivetrain: drivetrain || null,
+service_history: serviceHistory || null,
+finance_available: financeAvailable,
+warranty_status: warrantyStatus || null,
+spare_key: spareKey,
+trade_ins_welcome: tradeInsWelcome,
+nationwide_delivery: nationwideDelivery,
+vehicle_condition: vehicleCondition || null,
             featured: featured,
             image: mainImage,
             images: extraImages.join(",")
