@@ -355,6 +355,24 @@ button:disabled {
       <label for="description">Description</label>
       <textarea id="description" placeholder="Vehicle description"></textarea>
     </div>
+    <div class="field">
+  <label for="transmission">Transmission</label>
+  <select id="transmission">
+    <option value="">Not specified</option>
+    <option value="manual">Manual</option>
+    <option value="automatic">Automatic</option>
+  </select>
+</div>
+
+<div class="field">
+  <label for="drivetrain">Drivetrain</label>
+  <select id="drivetrain">
+    <option value="">Not specified</option>
+    <option value="4x2">4x2</option>
+    <option value="4x4">4x4</option>
+    <option value="awd">AWD</option>
+  </select>
+</div>
 <div class="field">
   <label for="serviceHistory">Service History</label>
   <select id="serviceHistory">
@@ -824,6 +842,8 @@ const model = selectedModel === "__other__"
     const dealer = document.getElementById("dealer").value.trim();
     const phone = document.getElementById("phone").value.trim();
     const description = document.getElementById("description").value.trim();
+    const transmission = document.getElementById("transmission").value;
+const drivetrain = document.getElementById("drivetrain").value;
 const serviceHistory = document.getElementById("serviceHistory").value;
 const financeAvailable = document.getElementById("financeAvailable").checked;
 const warrantyStatus = document.getElementById("warrantyStatus").value;
@@ -870,6 +890,8 @@ setStatus("Uploading vehicle — DO NOT close or leave this page.");
       dealer: dealer,
       phone: phone,
       description: description,
+      transmission: transmission || null,
+drivetrain: drivetrain || null,
       service_history: serviceHistory || null,
 finance_available: financeAvailable,
 warranty_status: warrantyStatus || null,
@@ -921,6 +943,8 @@ document.getElementById("modelOther").style.display = "none";
     document.getElementById("price").value = "";
     document.getElementById("mileage").value = "";
     document.getElementById("description").value = "";
+    document.getElementById("transmission").value = "";
+document.getElementById("drivetrain").value = "";
     document.getElementById("serviceHistory").value = "";
 document.getElementById("financeAvailable").checked = false;
 document.getElementById("warrantyStatus").value = "";
