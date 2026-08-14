@@ -98,7 +98,13 @@ input, select, textarea {
   font-family:Arial, sans-serif;
   box-sizing:border-box;
 }
-
+input[type="checkbox"] {
+  width: auto;
+  padding: 0;
+  margin: 0 8px 0 0;
+  vertical-align: middle;
+  cursor: pointer;
+}
 textarea {
   min-height:100px;
   resize:vertical;
@@ -349,7 +355,55 @@ button:disabled {
       <label for="description">Description</label>
       <textarea id="description" placeholder="Vehicle description"></textarea>
     </div>
-
+<div class="field">
+  <label for="serviceHistory">Service History</label>
+  <select id="serviceHistory">
+    <option value="">Not specified</option>
+    <option value="full">Full Service History</option>
+    <option value="partial">Partial Service History</option>
+  </select>
+</div>
+    <div class="field">
+  <label>
+    <input type="checkbox" id="financeAvailable">
+    Finance Available
+  </label>
+</div>
+    <div class="field">
+  <label for="warrantyStatus">Warranty</label>
+  <select id="warrantyStatus">
+    <option value="">Not specified</option>
+    <option value="included">Warranty Included</option>
+    <option value="available">Warranty Available</option>
+  </select>
+</div>
+    <div class="field">
+  <label>
+    <input type="checkbox" id="spareKey">
+    Spare Key
+  </label>
+</div>
+    <div class="field">
+  <label>
+    <input type="checkbox" id="tradeInsWelcome">
+    Trade-ins Welcome
+  </label>
+</div>
+    <div class="field">
+  <label>
+    <input type="checkbox" id="nationwideDelivery">
+    Nationwide Delivery
+  </label>
+</div>
+    <div class="field">
+  <label for="vehicleCondition">Vehicle Condition</label>
+  <select id="vehicleCondition">
+    <option value="">Not specified</option>
+    <option value="excellent">Excellent</option>
+    <option value="good">Good</option>
+    <option value="average">Average</option>
+  </select>
+</div>
     <button onclick="saveVehicle()" id="saveBtn">Save Vehicle</button>
 
   </div>
@@ -770,7 +824,13 @@ const model = selectedModel === "__other__"
     const dealer = document.getElementById("dealer").value.trim();
     const phone = document.getElementById("phone").value.trim();
     const description = document.getElementById("description").value.trim();
-
+const serviceHistory = document.getElementById("serviceHistory").value;
+const financeAvailable = document.getElementById("financeAvailable").checked;
+const warrantyStatus = document.getElementById("warrantyStatus").value;
+const spareKey = document.getElementById("spareKey").checked;
+const tradeInsWelcome = document.getElementById("tradeInsWelcome").checked;
+const nationwideDelivery = document.getElementById("nationwideDelivery").checked;
+const vehicleCondition = document.getElementById("vehicleCondition").value;
     const title = [year, make, model, variant].filter(Boolean).join(" ");
 
     if (!make || !model || !year || !price || !mileage || !location || !dealer || !phone) {
@@ -810,6 +870,13 @@ setStatus("Uploading vehicle — DO NOT close or leave this page.");
       dealer: dealer,
       phone: phone,
       description: description,
+      service_history: serviceHistory || null,
+finance_available: financeAvailable,
+warranty_status: warrantyStatus || null,
+spare_key: spareKey,
+trade_ins_welcome: tradeInsWelcome,
+nationwide_delivery: nationwideDelivery,
+vehicle_condition: vehicleCondition || null,
       image: urls[0] || "",
       images: urls.slice(1).join(","),
       user_id: user.id,
@@ -854,6 +921,13 @@ document.getElementById("modelOther").style.display = "none";
     document.getElementById("price").value = "";
     document.getElementById("mileage").value = "";
     document.getElementById("description").value = "";
+    document.getElementById("serviceHistory").value = "";
+document.getElementById("financeAvailable").checked = false;
+document.getElementById("warrantyStatus").value = "";
+document.getElementById("spareKey").checked = false;
+document.getElementById("tradeInsWelcome").checked = false;
+document.getElementById("nationwideDelivery").checked = false;
+document.getElementById("vehicleCondition").value = "";
     document.getElementById("photos").value = "";
     files = [];
     render();
