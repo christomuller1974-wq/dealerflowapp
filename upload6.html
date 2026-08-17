@@ -350,7 +350,15 @@ button:disabled {
         <input id="phone" placeholder="Phone">
       </div>
     </div>
-
+<div class="field">
+  <label for="vehicleStatus">Vehicle Status</label>
+  <select id="vehicleStatus">
+    <option value="">Not specified</option>
+    <option value="new">New</option>
+    <option value="demo">Demo</option>
+    <option value="used">Used</option>
+  </select>
+</div>
     <div class="field">
       <label for="description">Description</label>
       <textarea id="description" placeholder="Vehicle description"></textarea>
@@ -843,6 +851,7 @@ const model = selectedModel === "__other__"
     const phone = document.getElementById("phone").value.trim();
     const description = document.getElementById("description").value.trim();
     const transmission = document.getElementById("transmission").value;
+    const vehicleStatus = document.getElementById("vehicleStatus").value;
 const drivetrain = document.getElementById("drivetrain").value;
 const serviceHistory = document.getElementById("serviceHistory").value;
 const financeAvailable = document.getElementById("financeAvailable").checked;
@@ -890,6 +899,7 @@ setStatus("Uploading vehicle — DO NOT close or leave this page.");
       dealer: dealer,
       phone: phone,
       description: description,
+      vehicle_status: vehicleStatus || null,
       transmission: transmission || null,
 drivetrain: drivetrain || null,
       service_history: serviceHistory || null,
@@ -943,6 +953,7 @@ document.getElementById("modelOther").style.display = "none";
     document.getElementById("price").value = "";
     document.getElementById("mileage").value = "";
     document.getElementById("description").value = "";
+    document.getElementById("vehicleStatus").value = "";
     document.getElementById("transmission").value = "";
 document.getElementById("drivetrain").value = "";
     document.getElementById("serviceHistory").value = "";
