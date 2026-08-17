@@ -446,10 +446,15 @@
         </div>
       </div>
 
-      <div class="field">
-        <label for="description">Description</label>
-        <textarea id="description"></textarea>
-      </div>
+     <div class="field">
+  <label for="vehicleStatus">Vehicle Status</label>
+  <select id="vehicleStatus">
+    <option value="">Not specified</option>
+    <option value="new">New</option>
+    <option value="demo">Demo</option>
+    <option value="used">Used</option>
+  </select>
+</div>
 <div class="field">
   <label for="transmission">Transmission</label>
   <select id="transmission">
@@ -527,7 +532,10 @@
           <span>Show this vehicle as featured</span>
         </div>
       </div>
-
+<div class="field">
+  <label for="description">Description</label>
+  <textarea id="description" placeholder="Vehicle description"></textarea>
+</div>
       <button id="saveBtn" class="save-btn" onclick="saveVehicle()">Update Vehicle</button>
     </div>
   </div>
@@ -1119,6 +1127,7 @@ if (savedListingType === "motorcycle_leisure") {
         data.phone || profile?.phone || "";
 
       document.getElementById("description").value = data.description || "";
+      document.getElementById("vehicleStatus").value = data.vehicle_status || "";
       document.getElementById("transmission").value = data.transmission || "";
 document.getElementById("drivetrain").value = data.drivetrain || "";
 document.getElementById("serviceHistory").value = data.service_history || "";
@@ -1294,6 +1303,7 @@ const variant = document.getElementById("variant").value.trim();
         const dealer = document.getElementById("dealer").value.trim();
         const phone = document.getElementById("phone").value.trim();
         const description = document.getElementById("description").value.trim();
+        const vehicleStatus = document.getElementById("vehicleStatus").value;
         const transmission = document.getElementById("transmission").value;
 const drivetrain = document.getElementById("drivetrain").value;
 const serviceHistory = document.getElementById("serviceHistory").value;
@@ -1352,6 +1362,7 @@ const featured =
             dealer: dealer,
             phone: phone,
             description: description,
+            vehicle_status: vehicleStatus || null,
             transmission: transmission || null,
 drivetrain: drivetrain || null,
 service_history: serviceHistory || null,
