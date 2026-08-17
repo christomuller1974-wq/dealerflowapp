@@ -184,7 +184,114 @@ html, body {
   font-weight: 900;
   margin: 8px 0 16px;
 }
+.finance-calculator {
+  margin: 0 0 16px;
+  background: #ffffff;
+  border: 1px solid #dbe5f1;
+  border-radius: 12px;
+  overflow: hidden;
+}
 
+.finance-calculator summary {
+  position: relative;
+  padding: 15px 42px 15px 16px;
+  color: #0f172a;
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+  list-style: none;
+}
+
+.finance-calculator summary::-webkit-details-marker {
+  display: none;
+}
+
+.finance-calculator summary::after {
+  content: "▼";
+  position: absolute;
+  right: 16px;
+  color: #315bd4;
+}
+
+.finance-calculator[open] summary::after {
+  content: "▲";
+}
+
+.finance-calculator-content {
+  padding: 16px;
+  background: #f8fafc;
+  border-top: 1px solid #dbe5f1;
+}
+
+.finance-field {
+  margin-bottom: 14px;
+  text-align: left;
+}
+
+.finance-field label {
+  display: block;
+  margin-bottom: 6px;
+  color: #334155;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.finance-field input,
+.finance-field select {
+  width: 100%;
+  padding: 12px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 9px;
+  color: #0f172a;
+  font-size: 15px;
+  box-sizing: border-box;
+}
+
+.finance-field input[readonly] {
+  background: #eef2f7;
+  color: #475569;
+}
+
+.calculate-instalment-btn {
+  width: 100%;
+  padding: 13px;
+  background: #315bd4;
+  border: none;
+  border-radius: 10px;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.calculate-instalment-btn:hover {
+  background: #2548ad;
+}
+
+.instalment-result {
+  margin-top: 14px;
+  padding: 14px;
+  background: #eaf2ff;
+  border: 1px solid #b9d4ff;
+  border-radius: 10px;
+  color: #173f91;
+  font-size: 17px;
+  font-weight: 900;
+  text-align: center;
+}
+
+.instalment-result:empty {
+  display: none;
+}
+
+.finance-disclaimer {
+  margin-top: 12px;
+  color: #64748b;
+  font-size: 12px;
+  line-height: 1.5;
+  text-align: center;
+}
 .btn {
   display: block;
   width: 100%;
@@ -575,7 +682,49 @@ function formatPrice(price){
   return "R" +
     num.toLocaleString("en-ZA");
 }
+function calculateInstallment() {
+  const priceInput = document.getElementById("financePrice");
+  const depositInput = document.getElementById("financeDeposit");
+  const interestInput = document.getElementById("financeInterest");
+  const termInput = document.getElementById("financeTerm");
+  const result = document.getElementById("instalmentResult");
 
+  if (
+    !priceInput ||
+    !depositInput ||
+    !interestInput ||
+    !termInput ||
+    !result
+  ) {
+    return;
+  }
+
+  const price = Number(priceInput.value) || 0;
+  const deposit = Number(depositInput.value) || 0;
+  const annualInterest = Number(interestInput.value) || 0;
+  const months = Number(termInput.value) || 72;
+  const financeAmount = Math.max(price - deposit, 0);
+
+  if (financeAmount <= 0) {
+    result.textContent = "Please enter a valid finance amount.";
+    return;
+  }
+
+  const monthlyInterest = annualInterest / 100 / 12;
+
+  const monthlyInstalment =
+    monthlyInterest === 0
+      ? financeAmount / months
+      : financeAmount *
+        monthlyInterest *
+        Math.pow(1 + monthlyInterest, months) /
+        (Math.pow(1 + monthlyInterest, months) - 1);
+
+  result.textContent =
+    "Estimated Instalment: ± R" +
+    Math.round(monthlyInstalment).toLocaleString("en-ZA") +
+    " per month";
+}
 function cleanPhone(phone){
 
   return String(phone || "")
@@ -1284,7 +1433,60 @@ ${v.description ? `
           <div class="price">
             ${formatPrice(v.price)}
           </div>
+<details class="finance-calculator">
+  <summary>What will my instalment be?</summary>
 
+  <div class="finance-calculator-content">
+    <div class="finance-field">
+      <label for="financePrice">Vehicle Price</label>
+      <input
+        type="number"
+        id="financePrice"
+        value="${String(v.price || "").replace(/[^\d.]/g, "")}"
+        readonly
+      >
+    </div>
+
+    <div class="finance-field">
+      <label for="financeDeposit">Deposit</label>
+      <input type="number" id="financeDeposit" value="0" min="0">
+    </div>
+
+    <div class="finance-field">
+      <label for="financeInterest">Interest Rate (%)</label>
+      <input
+        type="number"
+        id="financeInterest"
+        value="13"
+        min="0"
+        step="0.1"
+      >
+    </div>
+
+    <div class="finance-field">
+      <label for="financeTerm">Repayment Term</label>
+      <select id="financeTerm">
+        <option value="48">48 months</option>
+        <option value="60">60 months</option>
+        <option value="72" selected>72 months</option>
+      </select>
+    </div>
+
+    <button
+      type="button"
+      class="calculate-instalment-btn"
+      onclick="calculateInstallment()"
+    >
+      Calculate Instalment
+    </button>
+
+    <div id="instalmentResult" class="instalment-result"></div>
+
+    <div class="finance-disclaimer">
+      Indicative estimate only. Finance subject to approval and terms and conditions.
+    </div>
+  </div>
+</details>
           <a
             href="${callLink(dealerPhone)}"
             onclick="trackVehicleClick('call', currentVehicle)"
