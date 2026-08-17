@@ -194,10 +194,11 @@ html, body {
 
 .finance-calculator summary {
   position: relative;
-  padding: 16px 48px 16px 16px;
-  background: #315bd4;
-  color: #ffffff;
-  font-size: 17px;
+  padding: 13px 40px 13px 14px;
+  background: #eaf2ff;
+  border-left: 4px solid #315bd4;
+  color: #173f91;
+  font-size: 15px;
   font-weight: 900;
   cursor: pointer;
   list-style: none;
@@ -211,7 +212,7 @@ html, body {
   content: "▼";
   position: absolute;
   right: 16px;
- color: #ffffff;
+color: #315bd4;
 }
 
 .finance-calculator[open] summary::after {
@@ -253,7 +254,12 @@ html, body {
   background: #eef2f7;
   color: #475569;
 }
-
+#financePrice {
+  background: #fff7f7;
+  color: #dc2626;
+  font-size: 16px;
+  font-weight: 900;
+}
 .calculate-instalment-btn {
   width: 100%;
   padding: 13px;
@@ -1436,17 +1442,16 @@ ${v.description ? `
             ${formatPrice(v.price)}
           </div>
 <details class="finance-calculator">
-  <summary>💰 Calculate my monthly instalment</summary>
+  <summary>💰 Check my instalment</summary>
 
   <div class="finance-calculator-content">
     <div class="finance-field">
       <label for="financePrice">Vehicle Price</label>
-      <input
-        type="number"
-        id="financePrice"
-        value="${String(v.price || "").replace(/[^\d.]/g, "")}"
-        readonly
-      >
+     type="text"
+id="financePrice"
+value="${formatPrice(v.price)}"
+readonly
+>
     </div>
 
     <div class="finance-field">
