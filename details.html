@@ -194,10 +194,11 @@ html, body {
 
 .finance-calculator summary {
   position: relative;
-  padding: 15px 42px 15px 16px;
-  color: #0f172a;
-  font-size: 16px;
-  font-weight: 800;
+  padding: 16px 48px 16px 16px;
+  background: #315bd4;
+  color: #ffffff;
+  font-size: 17px;
+  font-weight: 900;
   cursor: pointer;
   list-style: none;
 }
@@ -210,7 +211,7 @@ html, body {
   content: "▼";
   position: absolute;
   right: 16px;
-  color: #315bd4;
+ color: #ffffff;
 }
 
 .finance-calculator[open] summary::after {
@@ -699,7 +700,8 @@ function calculateInstallment() {
     return;
   }
 
-  const price = Number(priceInput.value) || 0;
+  const price =
+  Number(String(priceInput.value).replace(/[^\d.]/g, "")) || 0;
   const deposit = Number(depositInput.value) || 0;
   const annualInterest = Number(interestInput.value) || 0;
   const months = Number(termInput.value) || 72;
@@ -1434,7 +1436,7 @@ ${v.description ? `
             ${formatPrice(v.price)}
           </div>
 <details class="finance-calculator">
-  <summary>What will my instalment be?</summary>
+  <summary>💰 Calculate my monthly instalment</summary>
 
   <div class="finance-calculator-content">
     <div class="finance-field">
