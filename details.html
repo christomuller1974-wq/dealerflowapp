@@ -1291,7 +1291,9 @@ updateVehicleSchema(
       `;
     });
 const highlightItems = [];
-
+if (v.vehicle_status === "new") highlightItems.push("🆕 New Vehicle");
+if (v.vehicle_status === "demo") highlightItems.push("🚘 Demo Vehicle");
+if (v.vehicle_status === "used") highlightItems.push("✓ Used Vehicle");
 if (v.transmission === "manual") highlightItems.push("✓ Manual");
 if (v.transmission === "automatic") highlightItems.push("✓ Automatic");
 
