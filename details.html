@@ -771,9 +771,9 @@ function whatsappLink(phone, title){
       " on CarScoutZA and I'm interested."
     );
 }
-function shareVehicleWhatsApp() {
+async function shareVehicleWhatsApp() {
   if (!currentVehicle) return;
-trackVehicleClick("share", currentVehicle);
+await trackVehicleClick("share", currentVehicle);
   const vehicleTitle =
     currentVehicle.title ||
     [
