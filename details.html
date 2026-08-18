@@ -1424,9 +1424,7 @@ const vehicleHighlights = highlightItems.length
 ${String(v.description || "").trim() ? `
   <details class="dealer-description" ${window.innerWidth > 768 ? "open" : ""}>
     <summary>Dealer Description</summary>
-    <div class="description">
-     ${String(v.description || "").trim()}
-    </div>
+   <div class="description">${String(v.description || "").trim()}</div>
   </details>
 ` : ""}
 
