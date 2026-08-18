@@ -1301,7 +1301,7 @@ onclick="toggleSave('${v.id}', this)">
 </div>
 <div
   class="share-whatsapp"
-  onclick="event.stopPropagation(); shareVehicleWhatsApp('${v.id}', '${title.replace(/'/g, "\\'")}', '${String(v.price || "").replace(/'/g, "\\'")}')"
+  onclick="event.stopPropagation(); shareVehicleWhatsApp('${v.id}', '${title.replace(/'/g, "\\'")}', '${String(v.price || "").replace(/'/g, "\\'"), '${v.user_id || ""}'}')"
   title="Share on WhatsApp"
 >
   ⤴
@@ -1527,8 +1527,8 @@ el.innerHTML = "♥";
 el.classList.add("saved");
 }
 }
- async function shareVehicleWhatsApp(id, title, price) {
-    await trackVehicleShare(id);
+ async function shareVehicleWhatsApp(id, title, price, dealerUserId) {
+  await trackVehicleShare(id, dealerUserId);
   const vehicleUrl =
     window.location.origin +
     "/details.html?id=" +
@@ -1577,7 +1577,7 @@ if (resultsActions && window.location.search) {
   resultsActions.style.display = "flex";
   resultsTitle.textContent = "Search Results";
 }
-  async function trackVehicleShare(vehicleId) {
+  async function trackVehicleShare(vehicleId, dealerUserId) {
   try {
     await fetch(
       supabaseUrl + "/rest/v1/vehicle_clicks",
@@ -1590,10 +1590,11 @@ if (resultsActions && window.location.search) {
           "Content-Type": "application/json",
           Prefer: "return=minimal"
         },
-        body: JSON.stringify({
-          vehicle_id: vehicleId,
-          click_type: "share",
-          created_at: new Date().toISOString()
+       body: JSON.stringify({
+  vehicle_id: vehicleId,
+  dealer_user_id: dealerUserId,
+  click_type: "share"
+})
         })
       }
     );
