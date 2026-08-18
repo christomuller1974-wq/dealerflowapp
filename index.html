@@ -1577,9 +1577,9 @@ if (resultsActions && window.location.search) {
   resultsActions.style.display = "flex";
   resultsTitle.textContent = "Search Results";
 }
-  async function trackVehicleShare(vehicleId, dealerUserId) {
+ async function trackVehicleShare(vehicleId, dealerUserId) {
   try {
-    await fetch(
+    const response = await fetch(
       supabaseUrl + "/rest/v1/vehicle_clicks",
       {
         method: "POST",
@@ -1590,16 +1590,23 @@ if (resultsActions && window.location.search) {
           "Content-Type": "application/json",
           Prefer: "return=minimal"
         },
-       body: JSON.stringify({
-  vehicle_id: vehicleId,
-  dealer_user_id: dealerUserId,
-  click_type: "share"
-})
+        body: JSON.stringify({
+          vehicle_id: vehicleId,
+          dealer_user_id: dealerUserId || null,
+          click_type: "share"
         })
       }
     );
+
+    if (!response.ok) {
+      console.log(
+        "Share tracking failed:",
+        response.status,
+        await response.text()
+      );
+    }
   } catch (err) {
-    console.log(err);
+    console.log("Share tracking error:", err);
   }
 }
 async function trackVisit(pageType) {
