@@ -1527,8 +1527,8 @@ el.innerHTML = "♥";
 el.classList.add("saved");
 }
 }
-  function shareVehicleWhatsApp(id, title, price) {
-    trackVehicleShare(id);
+ async function shareVehicleWhatsApp(id, title, price) {
+    await trackVehicleShare(id);
   const vehicleUrl =
     window.location.origin +
     "/details.html?id=" +
@@ -1583,6 +1583,7 @@ if (resultsActions && window.location.search) {
       supabaseUrl + "/rest/v1/vehicle_clicks",
       {
         method: "POST",
+        keepalive: true,
         headers: {
           apikey: supabaseKey,
           Authorization: "Bearer " + supabaseKey,
