@@ -1301,7 +1301,7 @@ onclick="toggleSave('${v.id}', this)">
 </div>
 <div
   class="share-whatsapp"
-  onclick="event.stopPropagation(); shareVehicleWhatsApp('${v.id}', '${title.replace(/'/g, "\\'")}', '${String(v.price || "").replace(/'/g, "\\'"), '${v.user_id || ""}'}')"
+onclick="event.stopPropagation(); shareVehicleWhatsApp('${v.id}', '${title.replace(/'/g, "\\'")}', '${String(v.price || "").replace(/[^\d]/g, "")}', '${v.user_id || ""}');"
   title="Share on WhatsApp"
 >
   ⤴
