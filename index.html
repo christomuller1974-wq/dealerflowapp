@@ -1528,7 +1528,7 @@ el.classList.add("saved");
 }
 }
  async function shareVehicleWhatsApp(id, title, price, dealerUserId) {
-  await trackVehicleShare(id, dealerUserId);
+trackVehicleShare(id, dealerUserId);
   const vehicleUrl =
     window.location.origin +
     "/details.html?id=" +
