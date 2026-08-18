@@ -1577,7 +1577,7 @@ if (resultsActions && window.location.search) {
   resultsActions.style.display = "flex";
   resultsTitle.textContent = "Search Results";
 }
- async function trackVehicleShare(vehicleId, dealerUserId) {
+async function trackVehicleShare(vehicleId, dealerUserId) {
   try {
     const response = await fetch(
       supabaseUrl + "/rest/v1/vehicle_clicks",
