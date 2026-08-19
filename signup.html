@@ -245,7 +245,10 @@ button.submit-btn:hover {
         <label>Phone</label>
         <input id="phone" placeholder="Phone number">
       </div>
-
+<div>
+  <label>WhatsApp Number (optional)</label>
+  <input id="whatsappPhone" placeholder="Leave blank to use phone number">
+</div>
       <div>
         <label>Province</label>
 
@@ -360,6 +363,7 @@ async function signup() {
   const dealerName = document.getElementById("dealerName").value.trim();
   const phone = document.getElementById("phone").value.trim();
   const province = document.getElementById("province").value.trim();
+  const whatsappPhone = document.getElementById("whatsappPhone").value.trim();
   const location = document.getElementById("location").value.trim();
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value.trim();
@@ -394,6 +398,7 @@ trialExpires.setDate(trialExpires.getDate() + 30);
       id: data.user.id,
       dealer_name: dealerName,
       phone: phone,
+      whatsapp_phone: whatsappPhone || phone,
       province: province,
       location: location,
       approval_status: "PENDING",
