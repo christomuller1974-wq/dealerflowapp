@@ -24,7 +24,10 @@
 <input id="phone">
 
 <br><br>
+<label>WhatsApp Number</label>
+<input id="whatsappPhone" placeholder="Leave blank to use call number">
 
+<br><br>
 <label>Town</label>
 <input id="town">
 
@@ -94,7 +97,8 @@ async function loadProfile() {
 
   document.getElementById("dealer_name").value =
     profile.dealer_name || profile.name || "";
-
+document.getElementById("whatsappPhone").value =
+  profile.whatsapp_phone || profile.phone || "";
   document.getElementById("phone").value =
     profile.phone || "";
 
@@ -110,7 +114,8 @@ async function loadProfile() {
 async function saveProfile() {
   const dealer_name =
     document.getElementById("dealer_name").value.trim();
-
+const whatsappPhone =
+  document.getElementById("whatsappPhone").value.trim();
   const phone =
     document.getElementById("phone").value.trim();
 
@@ -134,6 +139,7 @@ async function saveProfile() {
     .update({
       dealer_name: dealer_name,
       phone: phone,
+      whatsapp_phone: whatsappPhone || phone,
       town: town,
       province: province,
       location: location
@@ -151,7 +157,7 @@ async function saveProfile() {
     .update({
       dealer: dealer_name,
       phone: phone,
-      
+     whatsapp_phone: whatsappPhone || phone, 
       
       location: location
     })
