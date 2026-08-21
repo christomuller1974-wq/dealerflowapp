@@ -445,7 +445,11 @@
           <input type="text" id="phone" />
         </div>
       </div>
-
+<div class="field">
+  <label for="whatsappPhone">WhatsApp Number (optional)</label>
+  <input type="tel" id="whatsappPhone"
+    placeholder="Leave blank to use call number">
+</div>
      <div class="field">
   <label for="vehicleStatus">Vehicle Status</label>
   <select id="vehicleStatus">
@@ -1125,7 +1129,8 @@ if (savedListingType === "motorcycle_leisure") {
 
       document.getElementById("phone").value =
         data.phone || profile?.phone || "";
-
+document.getElementById("whatsappPhone").value =
+  data.whatsapp_phone || profile?.whatsapp_phone || data.phone || profile?.phone || "";
       document.getElementById("description").value = data.description || "";
       document.getElementById("vehicleStatus").value = data.vehicle_status || "";
       document.getElementById("transmission").value = data.transmission || "";
@@ -1297,6 +1302,8 @@ const listingType =
   document.getElementById("listingType").value;
 const variant = document.getElementById("variant").value.trim();
         const year = document.getElementById("year").value;
+        const whatsappPhone =
+  document.getElementById("whatsappPhone").value.trim();
         const price = document.getElementById("price").value.trim();
         const mileage = document.getElementById("mileage").value.trim();
         const location = document.getElementById("location").value.trim();
@@ -1361,6 +1368,7 @@ const featured =
             location: location,
             dealer: dealer,
             phone: phone,
+            whatsapp_phone: whatsappPhone || phone,
             description: description,
             vehicle_status: vehicleStatus || null,
             transmission: transmission || null,
