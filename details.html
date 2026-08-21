@@ -1275,7 +1275,9 @@ updateVehicleSchema(
       v.phone ||
       v.dealer_phone ||
       "";
-
+const whatsappPhone =
+  v.whatsapp_phone ||
+  dealerPhone;
   const featuredBadge = '';
 
     let thumbs = "";
@@ -1513,7 +1515,7 @@ readonly
   ${dealerPhone}
 </div>
           <a
-            href="${whatsappLink(dealerPhone, title)}"
+            href="${whatsappLink(whatsappPhone, title)}"
             onclick="trackVehicleClick('whatsapp', currentVehicle)"
             target="_blank"
             class="btn btn-whatsapp"
