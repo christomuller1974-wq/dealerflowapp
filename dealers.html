@@ -276,13 +276,21 @@
       </p>
     </section>
 
-    <section class="filter-panel">
-      <label for="provinceFilter">Filter dealers by province</label>
+   <section class="filter-panel">
+  <label for="provinceFilter">Filter dealers by province</label>
 
-      <select id="provinceFilter">
-        <option value="">All Provinces</option>
-      </select>
-    </section>
+  <select id="provinceFilter">
+    <option value="">All Provinces</option>
+  </select>
+
+  <label for="cityFilter" style="margin-top: 16px;">
+    Filter dealers by city
+  </label>
+
+  <select id="cityFilter" disabled>
+    <option value="">Select a province first</option>
+  </select>
+</section>
 
     <p id="directorySummary" class="directory-summary"></p>
 
@@ -311,11 +319,14 @@
       supabaseKey
     );
 
-    const provinceFilter =
-      document.getElementById("provinceFilter");
+  const provinceFilter =
+  document.getElementById("provinceFilter");
 
-    const directorySummary =
-      document.getElementById("directorySummary");
+const cityFilter =
+  document.getElementById("cityFilter");
+
+const directorySummary =
+  document.getElementById("directorySummary");
 
     const statusBox =
       document.getElementById("statusBox");
@@ -391,38 +402,49 @@
       return card;
     }
 
-    function renderDealers() {
-      const selectedProvince = provinceFilter.value;
+   function renderDealers() {
+  const selectedProvince = provinceFilter.value;
+  const selectedCity = cityFilter.value;
 
-      const filteredDealers = selectedProvince
-        ? allDealers.filter(
-            (dealer) =>
-              cleanText(dealer.province) === selectedProvince
-          )
-        : allDealers;
+  let filteredDealers = allDealers;
 
-      dealerGrid.replaceChildren();
+  if (selectedProvince) {
+    filteredDealers = filteredDealers.filter(
+      (dealer) =>
+        cleanText(dealer.province) === selectedProvince
+    );
+  }
 
-      if (filteredDealers.length === 0) {
-        showStatus(
-          "No active verified dealers were found for this province."
-        );
-        return;
-      }
+  if (selectedCity) {
+    filteredDealers = filteredDealers.filter(
+      (dealer) =>
+        cleanText(dealer.town) === selectedCity
+    );
+  }
 
-      filteredDealers.forEach((dealer) => {
-        dealerGrid.appendChild(createDealerCard(dealer));
-      });
+  dealerGrid.replaceChildren();
 
-      const dealerWord =
-        filteredDealers.length === 1 ? "dealer" : "dealers";
+  if (filteredDealers.length === 0) {
+    showStatus(
+      "No active verified dealers were found for this selection."
+    );
+    return;
+  }
 
-      directorySummary.textContent =
-        `${filteredDealers.length} verified ${dealerWord}`;
+  filteredDealers.forEach((dealer) => {
+    dealerGrid.appendChild(createDealerCard(dealer));
+  });
 
-      statusBox.classList.add("hidden");
-      dealerGrid.classList.remove("hidden");
-    }
+  const dealerWord =
+    filteredDealers.length === 1 ? "dealer" : "dealers";
+
+  directorySummary.textContent =
+    `${filteredDealers.length} verified ${dealerWord}`;
+
+  statusBox.classList.add("hidden");
+  dealerGrid.classList.remove("hidden");
+}
+    
 
     function populateProvinceFilter() {
       const provinces = [
@@ -440,7 +462,44 @@
         provinceFilter.appendChild(option);
       });
     }
+function populateCityFilter() {
+  const selectedProvince = provinceFilter.value;
 
+  cityFilter.replaceChildren();
+
+  const defaultOption = document.createElement("option");
+  defaultOption.value = "";
+
+  if (!selectedProvince) {
+    defaultOption.textContent = "Select a province first";
+    cityFilter.appendChild(defaultOption);
+    cityFilter.disabled = true;
+    return;
+  }
+
+  defaultOption.textContent = "All Cities";
+  cityFilter.appendChild(defaultOption);
+  cityFilter.disabled = false;
+
+  const cities = [
+    ...new Set(
+      allDealers
+        .filter(
+          (dealer) =>
+            cleanText(dealer.province) === selectedProvince
+        )
+        .map((dealer) => cleanText(dealer.town))
+        .filter(Boolean)
+    )
+  ].sort((a, b) => a.localeCompare(b));
+
+  cities.forEach((city) => {
+    const option = document.createElement("option");
+    option.value = city;
+    option.textContent = city;
+    cityFilter.appendChild(option);
+  });
+}
     async function loadDealers() {
       showStatus("Loading dealers...");
 
@@ -469,13 +528,21 @@
         return;
       }
 
-      populateProvinceFilter();
-      renderDealers();
-    }
+    populateProvinceFilter();
+populateCityFilter();
+renderDealers();
+}
 
-    provinceFilter.addEventListener("change", renderDealers);
+provinceFilter.addEventListener("change", () => {
+  cityFilter.value = "";
+  populateCityFilter();
+  renderDealers();
+});
 
-    loadDealers();
+cityFilter.addEventListener("change", renderDealers);
+
+loadDealers();
+      
   </script>
 </body>
 </html>
