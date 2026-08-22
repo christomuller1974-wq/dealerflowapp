@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>Dealer Directory | CarScoutZA</title>
+
+  <meta
+    name="description"
+    content="Browse active verified vehicle dealers on CarScoutZA by province."
+  />
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f4f7fb;
+      color: #172033;
+    }
+
+    .site-header {
+      background: #0b4f9c;
+      color: white;
+      padding: 20px 16px;
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.14);
+    }
+
+    .header-inner {
+      width: min(1120px, 100%);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .brand {
+      color: white;
+      text-decoration: none;
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .home-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 10px 17px;
+      border: 1px solid rgba(255, 255, 255, 0.75);
+      border-radius: 8px;
+      color: white;
+      text-decoration: none;
+      font-weight: 700;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .home-link:hover {
+      background: white;
+      color: #0b4f9c;
+    }
+
+    main {
+      width: min(1120px, calc(100% - 32px));
+      margin: 34px auto 60px;
+    }
+
+    .intro {
+      margin-bottom: 24px;
+    }
+
+    .intro h1 {
+      margin: 0 0 10px;
+      color: #0b4f9c;
+      font-size: clamp(28px, 5vw, 42px);
+      line-height: 1.15;
+    }
+
+    .intro p {
+      margin: 0;
+      color: #5f6b7a;
+      font-size: 17px;
+      line-height: 1.6;
+    }
+
+    .filter-panel {
+      margin-bottom: 24px;
+      padding: 20px;
+      background: white;
+      border: 1px solid #dfe7f1;
+      border-radius: 12px;
+      box-shadow: 0 5px 18px rgba(20, 43, 75, 0.07);
+    }
+
+    .filter-panel label {
+      display: block;
+      margin-bottom: 8px;
+      color: #26364d;
+      font-weight: 700;
+    }
+
+    .filter-panel select {
+      width: 100%;
+      min-height: 48px;
+      padding: 11px 40px 11px 13px;
+      border: 1px solid #bac7d8;
+      border-radius: 8px;
+      background: white;
+      color: #172033;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .filter-panel select:focus {
+      border-color: #0b4f9c;
+      outline: 3px solid rgba(11, 79, 156, 0.14);
+    }
+
+    .directory-summary {
+      margin: 0 0 16px;
+      color: #5f6b7a;
+      font-weight: 700;
+    }
+
+    .dealer-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .dealer-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      min-height: 190px;
+      padding: 22px;
+      border: 1px solid #dfe7f1;
+      border-radius: 12px;
+      background: white;
+      color: inherit;
+      text-decoration: none;
+      box-shadow: 0 5px 18px rgba(20, 43, 75, 0.07);
+      transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
+    }
+
+    .dealer-card:hover,
+    .dealer-card:focus {
+      transform: translateY(-3px);
+      border-color: #0b4f9c;
+      box-shadow: 0 10px 25px rgba(20, 43, 75, 0.14);
+      outline: none;
+    }
+
+    .verified-label {
+      display: inline-flex;
+      align-self: flex-start;
+      margin-bottom: 14px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #e9f6ee;
+      color: #18733b;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .dealer-card h2 {
+      margin: 0 0 10px;
+      color: #0b4f9c;
+      font-size: 21px;
+      line-height: 1.3;
+    }
+
+    .dealer-location {
+      margin: 0 0 18px;
+      color: #5f6b7a;
+      line-height: 1.5;
+    }
+
+    .view-stock {
+      margin-top: auto;
+      color: #0b4f9c;
+      font-weight: 800;
+    }
+
+    .status-box {
+      padding: 28px 20px;
+      border: 1px solid #dfe7f1;
+      border-radius: 12px;
+      background: white;
+      color: #5f6b7a;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    .status-box.error {
+      border-color: #efcaca;
+      background: #fff7f7;
+      color: #a52727;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @media (max-width: 850px) {
+      .dealer-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 580px) {
+      .site-header {
+        padding: 16px;
+      }
+
+      .header-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .brand {
+        font-size: 25px;
+      }
+
+      .home-link {
+        width: 100%;
+      }
+
+      main {
+        width: min(100% - 24px, 1120px);
+        margin-top: 24px;
+      }
+
+      .filter-panel {
+        padding: 16px;
+      }
+
+      .dealer-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      .dealer-card {
+        min-height: 170px;
+        padding: 19px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="index.html">CarScoutZA</a>
+      <a class="home-link" href="index.html">Back to Website</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="intro">
+      <h1>Dealer Directory</h1>
+      <p>
+        Browse active verified dealers and view their available vehicle stock.
+      </p>
+    </section>
+
+    <section class="filter-panel">
+      <label for="provinceFilter">Filter dealers by province</label>
+
+      <select id="provinceFilter">
+        <option value="">All Provinces</option>
+      </select>
+    </section>
+
+    <p id="directorySummary" class="directory-summary"></p>
+
+    <div id="statusBox" class="status-box">
+      Loading dealers...
+    </div>
+
+    <div
+      id="dealerGrid"
+      class="dealer-grid hidden"
+      aria-live="polite"
+    ></div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    const supabaseUrl =
+      "https://ddmvzypiccryjndcwlre.supabase.co";
+
+    const supabaseKey =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
+
+    const client = window.supabase.createClient(
+      supabaseUrl,
+      supabaseKey
+    );
+
+    const provinceFilter =
+      document.getElementById("provinceFilter");
+
+    const directorySummary =
+      document.getElementById("directorySummary");
+
+    const statusBox =
+      document.getElementById("statusBox");
+
+    const dealerGrid =
+      document.getElementById("dealerGrid");
+
+    let allDealers = [];
+
+    function cleanText(value) {
+      return String(value || "").trim();
+    }
+
+    function getDealerLocation(dealer) {
+      const town = cleanText(dealer.town);
+      const province = cleanText(dealer.province);
+
+      if (town && province) {
+        return `${town}, ${province}`;
+      }
+
+      if (town) {
+        return town;
+      }
+
+      if (province) {
+        return province;
+      }
+
+      return cleanText(dealer.location) || "South Africa";
+    }
+
+    function showStatus(message, isError = false) {
+      statusBox.textContent = message;
+      statusBox.classList.toggle("error", isError);
+      statusBox.classList.remove("hidden");
+      dealerGrid.classList.add("hidden");
+      directorySummary.textContent = "";
+    }
+
+    function createDealerCard(dealer) {
+      const dealerId = cleanText(dealer.id);
+      const dealerName =
+        cleanText(dealer.dealer_name) || "Verified Dealer";
+
+      const card = document.createElement("a");
+      card.className = "dealer-card";
+      card.href =
+        `dealer.html?dealer=${encodeURIComponent(dealerId)}`;
+
+      const verifiedLabel = document.createElement("span");
+      verifiedLabel.className = "verified-label";
+      verifiedLabel.textContent = "✓ Verified Dealer";
+
+      const heading = document.createElement("h2");
+      heading.textContent = dealerName;
+
+      const location = document.createElement("p");
+      location.className = "dealer-location";
+      location.textContent = getDealerLocation(dealer);
+
+      const viewStock = document.createElement("span");
+      viewStock.className = "view-stock";
+      viewStock.textContent = "View Dealer Stock →";
+
+      card.append(
+        verifiedLabel,
+        heading,
+        location,
+        viewStock
+      );
+
+      return card;
+    }
+
+    function renderDealers() {
+      const selectedProvince = provinceFilter.value;
+
+      const filteredDealers = selectedProvince
+        ? allDealers.filter(
+            (dealer) =>
+              cleanText(dealer.province) === selectedProvince
+          )
+        : allDealers;
+
+      dealerGrid.replaceChildren();
+
+      if (filteredDealers.length === 0) {
+        showStatus(
+          "No active verified dealers were found for this province."
+        );
+        return;
+      }
+
+      filteredDealers.forEach((dealer) => {
+        dealerGrid.appendChild(createDealerCard(dealer));
+      });
+
+      const dealerWord =
+        filteredDealers.length === 1 ? "dealer" : "dealers";
+
+      directorySummary.textContent =
+        `${filteredDealers.length} verified ${dealerWord}`;
+
+      statusBox.classList.add("hidden");
+      dealerGrid.classList.remove("hidden");
+    }
+
+    function populateProvinceFilter() {
+      const provinces = [
+        ...new Set(
+          allDealers
+            .map((dealer) => cleanText(dealer.province))
+            .filter(Boolean)
+        )
+      ].sort((a, b) => a.localeCompare(b));
+
+      provinces.forEach((province) => {
+        const option = document.createElement("option");
+        option.value = province;
+        option.textContent = province;
+        provinceFilter.appendChild(option);
+      });
+    }
+
+    async function loadDealers() {
+      showStatus("Loading dealers...");
+
+      const { data, error } = await client
+        .from("public_active_verified_dealers")
+        .select("id, dealer_name, town, province, location")
+        .order("province", { ascending: true })
+        .order("town", { ascending: true })
+        .order("dealer_name", { ascending: true });
+
+      if (error) {
+        console.error("Dealer directory error:", error);
+
+        showStatus(
+          "We could not load the dealer directory. Please try again shortly.",
+          true
+        );
+
+        return;
+      }
+
+      allDealers = Array.isArray(data) ? data : [];
+
+      if (allDealers.length === 0) {
+        showStatus("No active verified dealers are available yet.");
+        return;
+      }
+
+      populateProvinceFilter();
+      renderDealers();
+    }
+
+    provinceFilter.addEventListener("change", renderDealers);
+
+    loadDealers();
+  </script>
+</body>
+</html>
