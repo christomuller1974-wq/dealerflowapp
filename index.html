@@ -364,16 +364,21 @@ footer{
   background-position:65% center;
 }
 
-  .hero-buttons{
-top:8px;
-right:8px;
-gap:8px;
+ .hero-buttons{
+  top:8px;
+  left:8px;
+  right:8px;
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0, 1fr));
+  gap:8px;
 }
 
 .hero-buttons a{
-padding:10px 14px;
-font-size:13px;
-border-radius:14px;
+  padding:10px 8px;
+  font-size:13px;
+  border-radius:14px;
+  text-align:center;
+  white-space:nowrap;
 }
 
  
@@ -460,7 +465,9 @@ display:flex;
 <div class="hero">
 
   <div class="hero-buttons">
-
+<a href="dealers.html" class="contact-btn">
+  Dealers
+</a>
     <a href="contact.html" class="contact-btn">
       Contact
     </a>
