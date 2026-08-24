@@ -12,12 +12,44 @@
   const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
 
   const client = supabase.createClient(supabaseUrl, supabaseKey);
+  async function loadVerifiedDealers() {
+  document.getElementById("status").textContent = "Loading verified dealers...";
+
+  const { data, error } = await client
+    .from("profiles")
+    .select("id, dealer_name, town, province")
+    .eq("verified", true);
+
+  if (error) {
+    console.error(error);
+    document.getElementById("status").textContent =
+      "Could not load verified dealers.";
+    return;
+  }
+
+  document.getElementById("status").textContent =
+    `Loaded ${data.length} verified dealers.`;
+
+  const list = document.getElementById("dealerList");
+  list.innerHTML = "";
+
+  data.forEach(function(dealer) {
+    const item = document.createElement("p");
+
+    item.textContent =
+      `${dealer.dealer_name} | ${dealer.town} | ${dealer.province}`;
+
+    list.appendChild(item);
+  });
+}
 </script>
 <body>
 
   <h1>CarScoutZA Dealer SEO Generator</h1>
 
   <p id="status">Ready to load verified dealers...</p>
+<button onclick="loadVerifiedDealers()">Load Verified Dealers</button>
 
+<div id="dealerList"></div>
 </body>
 </html>
