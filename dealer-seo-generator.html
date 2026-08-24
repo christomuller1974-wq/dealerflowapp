@@ -17,7 +17,7 @@
 
   const { data, error } = await client
     .from("profiles")
-    .select("id, dealer_name, town, province")
+  .select("id, dealer_name, town, province, location")
     .eq("dealer_verified", true);
 
   if (error) {
