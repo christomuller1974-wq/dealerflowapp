@@ -46,6 +46,12 @@ data.forEach(function(dealer) {
 
   city = city || "Unknown City";
 
+city = city
+  .toLowerCase()
+  .replace(/\b\w/g, function(char) {
+    return char.toUpperCase();
+  });
+
   const province = dealer.province || "Unknown Province";
 
   if (!grouped[province]) {
