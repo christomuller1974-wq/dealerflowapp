@@ -33,8 +33,9 @@
   const list = document.getElementById("dealerList");
   list.innerHTML = "";
 
- data.forEach(function(dealer) {
-  const item = document.createElement("p");
+const grouped = {};
+
+data.forEach(function(dealer) {
 
   let city = dealer.town;
 
@@ -43,11 +44,45 @@
     city = parts[parts.length - 1].trim();
   }
 
-  item.textContent =
-    `${dealer.dealer_name} | ${city || "Unknown City"} | ${dealer.province}`;
+  city = city || "Unknown City";
 
-  list.appendChild(item);
+  const province = dealer.province || "Unknown Province";
+
+  if (!grouped[province]) {
+    grouped[province] = {};
+  }
+
+  if (!grouped[province][city]) {
+    grouped[province][city] = [];
+  }
+
+  grouped[province][city].push(dealer);
 });
+
+Object.keys(grouped).sort().forEach(function(province) {
+
+  const provinceHeading = document.createElement("h2");
+  provinceHeading.textContent = province;
+  list.appendChild(provinceHeading);
+
+  Object.keys(grouped[province]).sort().forEach(function(city) {
+
+    const cityHeading = document.createElement("h3");
+    cityHeading.textContent = city;
+    list.appendChild(cityHeading);
+
+    grouped[province][city].forEach(function(dealer) {
+
+      const item = document.createElement("p");
+      item.textContent = dealer.dealer_name;
+
+      list.appendChild(item);
+    });
+
+  });
+
+});
+    
 }
 </script>
 <body>
