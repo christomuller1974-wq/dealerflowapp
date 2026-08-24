@@ -456,6 +456,74 @@ display:flex;
   display:grid;
 }
 }
+  /* New CarScoutZA mobile homepage header */
+.mobile-hero-logo,
+.mobile-secondary-links{
+  display:none;
+}
+
+@media (max-width:768px){
+
+  .hero{
+    width:100%;
+    height:auto;
+    min-height:0;
+    padding:16px 18px 14px;
+    background:#ffffff;
+    overflow:visible;
+    box-sizing:border-box;
+  }
+
+  .mobile-hero-logo{
+    display:block;
+    width:100%;
+    max-width:430px;
+    height:auto;
+    margin:0 auto 14px;
+  }
+
+  .hero-buttons{
+    position:static;
+    display:grid;
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:10px;
+    width:100%;
+  }
+
+  .hero-buttons .mobile-hide-link{
+    display:none;
+  }
+
+  .hero-buttons a{
+    padding:12px 10px;
+    border:1px solid #dbe5f2;
+    border-radius:14px;
+    background:#ffffff;
+    color:#0757b9;
+    box-shadow:0 4px 12px rgba(15, 57, 110, 0.08);
+    font-size:15px;
+    font-weight:900;
+    text-align:center;
+    white-space:nowrap;
+  }
+
+  .mobile-secondary-links{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:7px;
+    margin-top:13px;
+    color:#64748b;
+    font-size:12px;
+  }
+
+  .mobile-secondary-links a{
+    color:#475569;
+    font-weight:700;
+    text-decoration:none;
+  }
+}
 </style>
   <script src="vehicle-data.js"></script>
 </head>
@@ -464,23 +532,43 @@ display:flex;
 
 <div class="hero">
 
+  <img
+    src="carscoutza-mobile-logo-white.png"
+    class="mobile-hero-logo"
+    alt="CarScoutZA - Find Your Perfect Ride Today"
+  >
+
   <div class="hero-buttons">
-<a href="dealers.html" class="contact-btn">
-  Dealers
-</a>
-    <a href="contact.html" class="contact-btn">
+
+    <a href="dealers.html" class="contact-btn mobile-dealers-btn">
+      Dealers
+    </a>
+
+    <a href="contact.html" class="contact-btn mobile-hide-link">
       Contact
     </a>
-<a href="saved.html" class="contact-btn">
-  ❤️ Saved
-</a>
-    <a href="dealer-admin.html" class="login-btn">
+
+    <a href="saved.html" class="contact-btn mobile-saved-btn">
+      💗 Saved
+    </a>
+
+    <a href="dealer-admin.html" class="login-btn mobile-hide-link">
       Dealer Login
     </a>
 
   </div>
 
+  <div class="mobile-secondary-links">
+    <a href="contact.html">Contact</a>
+    <span>•</span>
+    <span>
+      Are you a dealer?
+      <a href="dealer-admin.html">Login</a>
+    </span>
+  </div>
+
 </div>
+
 <button class="mobile-search-toggle" onclick="document.querySelector('.search-bar').classList.toggle('mobile-open'); document.querySelector('.results-filters').classList.toggle('mobile-open')">
 🔍 Search Cars
 </button>
