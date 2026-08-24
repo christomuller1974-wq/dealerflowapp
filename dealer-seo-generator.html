@@ -296,9 +296,21 @@ list.appendChild(item);
 
     city = city || "unknown-city";
 
-    const slug = slugify(dealer.dealer_name);
-    const citySlug = slugify(city);
-    const fileName = `${slug}-${citySlug}.html`;
+   const slug = dealer.dealer_name
+  .toLowerCase()
+  .replace(/[^a-z0-9]+/g, "-")
+  .replace(/^-+|-+$/g, "");
+
+const citySlug = city
+  .toLowerCase()
+  .replace(/[^a-z0-9]+/g, "-")
+  .replace(/^-+|-+$/g, "");
+
+const finalSlug = slug.includes(citySlug)
+  ? slug
+  : `${slug}-${citySlug}`;
+
+const fileName = `${finalSlug}.html`;
 
     entries += `  <url>
     <loc>https://carscoutza.com/${fileName}</loc>
