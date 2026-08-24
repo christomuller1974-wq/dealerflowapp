@@ -80,9 +80,21 @@ Object.keys(grouped).sort().forEach(function(province) {
     grouped[province][city].forEach(function(dealer) {
 
       const item = document.createElement("p");
-      item.textContent = dealer.dealer_name;
 
-      list.appendChild(item);
+const slug = dealer.dealer_name
+  .toLowerCase()
+  .replace(/[^a-z0-9]+/g, "-")
+  .replace(/^-+|-+$/g, "");
+
+const citySlug = city
+  .toLowerCase()
+  .replace(/[^a-z0-9]+/g, "-")
+  .replace(/^-+|-+$/g, "");
+
+item.textContent =
+  `${dealer.dealer_name} → ${slug}-${citySlug}.html`;
+
+list.appendChild(item);
     });
 
   });
