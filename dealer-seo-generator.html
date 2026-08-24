@@ -33,14 +33,21 @@
   const list = document.getElementById("dealerList");
   list.innerHTML = "";
 
-  data.forEach(function(dealer) {
-    const item = document.createElement("p");
+ data.forEach(function(dealer) {
+  const item = document.createElement("p");
 
-    item.textContent =
-      `${dealer.dealer_name} | ${dealer.town} | ${dealer.province}`;
+  let city = dealer.town;
 
-    list.appendChild(item);
-  });
+  if (!city && dealer.location) {
+    const parts = dealer.location.split(",");
+    city = parts[parts.length - 1].trim();
+  }
+
+  item.textContent =
+    `${dealer.dealer_name} | ${city || "Unknown City"} | ${dealer.province}`;
+
+  list.appendChild(item);
+});
 }
 </script>
 <body>
