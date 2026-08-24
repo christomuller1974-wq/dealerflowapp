@@ -277,6 +277,49 @@ list.appendChild(item);
 
   alert(`Finished generating ${verifiedDealers.length} dealer SEO pages.`);
 }
+
+  function generateSitemapEntries() {
+  if (!verifiedDealers || verifiedDealers.length === 0) {
+    alert("Please click Load Verified Dealers first.");
+    return;
+  }
+
+  let entries = "";
+
+  verifiedDealers.forEach(function(dealer) {
+    let city = dealer.town;
+
+    if (!city && dealer.location) {
+      const parts = dealer.location.split(",");
+      city = parts[parts.length - 1].trim();
+    }
+
+    city = city || "unknown-city";
+
+    const slug = slugify(dealer.dealer_name);
+    const citySlug = slugify(city);
+    const fileName = `${slug}-${citySlug}.html`;
+
+    entries += `  <url>
+    <loc>https://carscoutza.com/${fileName}</loc>
+  </url>
+`;
+  });
+
+  const blob = new Blob([entries], { type: "text/plain" });
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "dealer-sitemap-entries.txt";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+
+  URL.revokeObjectURL(url);
+
+  alert(`Generated ${verifiedDealers.length} dealer sitemap entries.`);
+}
 </script>
 <body>
 
@@ -286,6 +329,7 @@ list.appendChild(item);
 <button onclick="loadVerifiedDealers()">Load Verified Dealers</button>
 <button onclick="generateTestDealerPage()">Generate Test Dealer Page</button>
   <button onclick="generateAllDealerPages()">Generate All Dealer SEO Pages</button>
+  <button onclick="generateSitemapEntries()">Generate Dealer Sitemap Entries</button>
 <div id="dealerList"></div>
 </body>
 </html>
