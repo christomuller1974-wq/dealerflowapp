@@ -708,6 +708,49 @@ display:flex;
     color:#cbd5e1;
   }
 }
+  /* Compact desktop spacing so vehicles remain visible */
+@media (min-width:769px){
+
+  .hero{
+    padding:8px 32px 6px;
+  }
+
+  .mobile-hero-logo{
+    max-width:400px;
+    margin:0 auto 6px;
+  }
+
+  .hero-buttons{
+    max-width:560px;
+    gap:8px;
+  }
+
+  .hero-buttons a{
+    padding:8px 10px;
+    border-radius:12px;
+    font-size:14px;
+  }
+
+  .mobile-secondary-links{
+    margin-top:6px;
+    font-size:11px;
+  }
+
+  .mobile-search-toggle{
+    max-width:560px;
+    margin:10px auto 8px;
+    padding:12px;
+    border-radius:14px;
+    font-size:18px;
+  }
+
+  .mobile-trust-strip{
+    max-width:560px;
+    margin:0 auto 4px;
+    padding:7px 10px;
+    font-size:12px;
+  }
+}
 </style>
   <script src="vehicle-data.js"></script>
 </head>
@@ -725,7 +768,7 @@ display:flex;
   <div class="hero-buttons">
 
     <a href="dealers.html" class="contact-btn mobile-dealers-btn">
-      Dealers
+      Find a Dealer
     </a>
 
     <a href="contact.html" class="contact-btn mobile-hide-link">
