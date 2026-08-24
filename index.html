@@ -801,6 +801,48 @@ display:flex;
     white-space:nowrap;
   }
 }
+  /* Keep desktop vehicles visible above the fold */
+@media (min-width:769px){
+
+  .mobile-hero-logo{
+    max-width:400px;
+    margin:0 auto 3px;
+    transform:scaleX(1.22);
+    transform-origin:center;
+  }
+
+  .search-bar{
+    margin:5px auto 8px;
+    padding:8px;
+    gap:8px;
+    border-radius:12px;
+  }
+
+  .search-bar input,
+  .search-bar select{
+    padding:9px 10px;
+  }
+
+  .search-bar .search-btn{
+    padding:9px 16px;
+  }
+
+  .mobile-trust-strip{
+    margin:0 auto 2px;
+    padding:5px 10px;
+  }
+
+  .results-filters{
+    margin-top:8px;
+    padding:8px;
+    gap:8px;
+  }
+
+  .results-filters input,
+  .results-filters select{
+    padding:9px 10px;
+  }
+}
 </style>
   <script src="vehicle-data.js"></script>
 </head>
