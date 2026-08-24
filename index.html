@@ -751,6 +751,56 @@ display:flex;
     font-size:12px;
   }
 }
+  /* Wider desktop logo and permanent desktop search row */
+@media (min-width:769px){
+
+  .mobile-hero-logo{
+    max-width:520px;
+    margin:0 auto 6px;
+  }
+
+  .mobile-search-toggle{
+    display:none;
+  }
+
+  .search-bar{
+    display:flex;
+    align-items:center;
+    flex-wrap:nowrap;
+    gap:10px;
+    width:calc(100% - 76px);
+    max-width:1276px;
+    margin:10px auto 14px;
+    padding:14px;
+    position:static;
+    top:auto;
+    box-sizing:border-box;
+    background:#ffffff;
+    border:1px solid #dbe1e8;
+    border-radius:14px;
+    box-shadow:0 6px 18px rgba(0, 0, 0, 0.08);
+    backdrop-filter:none;
+    z-index:auto;
+  }
+
+  .search-bar input,
+  .search-bar select{
+    flex:1 1 180px;
+    min-width:0;
+    padding:12px;
+    background:#ffffff;
+    border:1px solid #dbe1e8;
+    border-radius:10px;
+    font-size:14px;
+  }
+
+  .search-bar .search-btn{
+    flex:0 0 130px;
+    padding:12px 18px;
+    border-radius:10px;
+    white-space:nowrap;
+  }
+}
 </style>
   <script src="vehicle-data.js"></script>
 </head>
