@@ -524,6 +524,55 @@ display:flex;
     text-decoration:none;
   }
 }
+  /* Mobile trust strip */
+.mobile-trust-strip{
+  display:none;
+}
+
+@media (max-width:768px){
+
+  .mobile-trust-strip{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:8px;
+    width:calc(100% - 36px);
+    margin:0 auto 8px;
+    padding:11px 12px;
+    box-sizing:border-box;
+    border-top:1px solid #e2e8f0;
+    border-bottom:1px solid #e2e8f0;
+    background:#ffffff;
+    color:#475569;
+    font-size:12px;
+    font-weight:800;
+  }
+
+  .trust-item{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    white-space:nowrap;
+  }
+
+  .trust-check{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:19px;
+    height:19px;
+    border-radius:50%;
+    background:#dcfce7;
+    color:#15803d;
+    font-size:13px;
+    font-weight:900;
+  }
+
+  .trust-divider{
+    color:#cbd5e1;
+  }
+}
 </style>
   <script src="vehicle-data.js"></script>
 </head>
@@ -599,7 +648,18 @@ display:flex;
   
 
 </div>
+<div class="mobile-trust-strip">
+  <span class="trust-item">
+    <span class="trust-check">✓</span>
+    Verified Dealers
+  </span>
 
+  <span class="trust-divider">•</span>
+
+  <span class="trust-item">
+    🇿🇦 Vehicles Nationwide
+  </span>
+</div>
 <div id="featuredWrap" style="display:none; margin-bottom:0;">
   
 
