@@ -300,7 +300,14 @@ body {
 >
   Active Dealers (<span id="activeDealerCount">0</span>)
 </button>
-
+  
+<button
+  class="btn btn-blue"
+  style="background:#f59e0b;"
+  onclick="showDealerSection('EXPIRED')"
+>
+  Expired Access (<span id="expiredDealerCount">0</span>)
+</button>
 <button
   class="btn btn-blue"
   onclick="showDealerSection('PENDING')"
@@ -343,7 +350,21 @@ function showDealerSection(status) {
   loadDealerCounts();
   loadDealers();
 }
-  async function loadDealerCounts() {
+function hasCurrentDealerAccess(dealer) {
+  const now = Date.now();
+
+  const paidUntil = dealer.paid_until
+    ? new Date(dealer.paid_until).getTime()
+    : 0;
+
+  const freeUntil = dealer.admin_free_until
+    ? new Date(dealer.admin_free_until).getTime()
+    : 0;
+
+  return paidUntil >= now || freeUntil >= now;
+}
+
+async function loadDealerCounts() {
   const [
     activeResult,
     pendingResult,
@@ -351,7 +372,9 @@ function showDealerSection(status) {
   ] = await Promise.all([
     client
       .from("profiles")
-      .select("*", { count: "exact", head: true })
+      .select(
+        "paid_until, admin_free_until, dealer_verified, admin_blocked"
+      )
       .eq("approval_status", "ACTIVE"),
 
     client
@@ -365,8 +388,32 @@ function showDealerSection(status) {
       .eq("approval_status", "DECLINED")
   ]);
 
+  if (activeResult.error) {
+    console.error(
+      "Could not calculate active and expired dealers:",
+      activeResult.error
+    );
+  }
+
+  const verifiedDealers = (activeResult.data || []).filter(
+    (dealer) =>
+      dealer.dealer_verified === true &&
+      dealer.admin_blocked !== true
+  );
+
+  const activeDealers = verifiedDealers.filter(
+    hasCurrentDealerAccess
+  );
+
+  const expiredDealers = verifiedDealers.filter(
+    (dealer) => !hasCurrentDealerAccess(dealer)
+  );
+
   document.getElementById("activeDealerCount").textContent =
-    activeResult.count || 0;
+    activeDealers.length;
+
+  document.getElementById("expiredDealerCount").textContent =
+    expiredDealers.length;
 
   document.getElementById("pendingDealerCount").textContent =
     pendingResult.count || 0;
@@ -446,11 +493,16 @@ loadStats();
 }
 
 async function loadDealers() {
- const { data, error } = await client
+const queryStatus =
+  currentDealerSection === "EXPIRED"
+    ? "ACTIVE"
+    : currentDealerSection;
+
+let { data, error } = await client
   .from("profiles")
   .select("*")
-  .eq("approval_status", currentDealerSection)
-  .order("dealer_name", { ascending:true });
+  .eq("approval_status", queryStatus)
+  .order("dealer_name", { ascending: true });
 const { data: vehicleRows, error: vehicleError } = await client
   .from("vehicles")
   .select("user_id");
@@ -476,7 +528,26 @@ const vehicleCounts = {};
     list.innerHTML = "<div class='empty-box'>Could not load dealers.</div>";
     return;
   }
+if (
+  currentDealerSection === "ACTIVE" ||
+  currentDealerSection === "EXPIRED"
+) {
+  data = (data || []).filter((dealer) => {
+    const isVerifiedAndAvailable =
+      dealer.dealer_verified === true &&
+      dealer.admin_blocked !== true;
 
+    if (!isVerifiedAndAvailable) {
+      return false;
+    }
+
+    const hasAccess = hasCurrentDealerAccess(dealer);
+
+    return currentDealerSection === "ACTIVE"
+      ? hasAccess
+      : !hasAccess;
+  });
+}
   if (!data || data.length === 0) {
     list.innerHTML = "<div class='empty-box'>No dealers found.</div>";
     return;
