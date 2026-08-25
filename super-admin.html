@@ -344,7 +344,7 @@ const client = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 const ADMIN_EMAIL = "autoexcellence@telkomsa.net";
 let currentDealerSection = "ACTIVE";
-
+let dealerLoadRequestId = 0;
 function showDealerSection(status) {
   currentDealerSection = status;
   loadDealerCounts();
@@ -493,6 +493,7 @@ loadStats();
 }
 
 async function loadDealers() {
+  const loadRequestId = ++dealerLoadRequestId;
 const queryStatus =
   currentDealerSection === "EXPIRED"
     ? "ACTIVE"
@@ -769,7 +770,7 @@ ${currentDealerSection === "DECLINED" ? `
 
 </div>
     `;
-
+if (loadRequestId !== dealerLoadRequestId) return;
     list.appendChild(row);
   });
 }
