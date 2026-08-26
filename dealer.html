@@ -63,11 +63,42 @@
   }
 
 }
-   .hero {
+  .hero {
   background: linear-gradient(135deg, #3156c7, #1f3f9e);
   color: white;
-  text-align: center;
-  padding: 24px 16px;
+  padding: 0;
+}
+
+.hero-content {
+  display: flex;
+  align-items: stretch;
+  min-height: 230px;
+}
+
+.hero-copy {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
+  padding: 30px 6%;
+}
+
+.dealer-logo-wrap {
+  width: 34%;
+  min-width: 260px;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 24px;
+}
+
+.dealer-logo-wrap img {
+  width: 100%;
+  height: 210px;
+  object-fit: contain;
+  background: transparent;
+  border: none;
+  box-shadow: none;
 }
 
     .hero h1 {
@@ -204,7 +235,25 @@
       .hero h1 {
         font-size: 34px;
       }
+.hero-content {
+  flex-direction: column;
+}
 
+.dealer-logo-wrap {
+  order: -1;
+  width: 100%;
+  min-width: 0;
+  padding: 18px 20px 0;
+}
+
+.dealer-logo-wrap img {
+  height: 120px;
+}
+
+.hero-copy {
+  text-align: center;
+  padding: 16px 20px 24px;
+}
       .vehicle-grid {
         grid-template-columns: 1fr;
       }
@@ -220,14 +269,26 @@
     Find affordable vehicles, dealer contact details, and nationwide listings updated daily.
   </p>
 </div>
-  <div class="hero">
-    <p>
-CarScoutZA dealer stock listings for used vehicles in South Africa.
-Browse dealer inventory, vehicle prices, contact details and available cars online.
-</p>
-    <h1 id="dealerTitle">Dealer Stock</h1>
-    <p>Browse available vehicles from this dealer</p>
+ <div class="hero">
+  <div class="hero-content">
+
+    <div class="hero-copy">
+      <p>
+        CarScoutZA dealer stock listings for used vehicles in South Africa.
+        Browse dealer inventory, vehicle prices, contact details and available cars online.
+      </p>
+
+      <h1 id="dealerTitle">Dealer Stock</h1>
+
+      <p>Browse available vehicles from this dealer</p>
+    </div>
+
+    <div id="dealerLogoWrap" class="dealer-logo-wrap" style="display:none;">
+      <img id="dealerLogo" alt="Dealer Logo">
+    </div>
+
   </div>
+</div>
 
   <div class="container">
 
@@ -333,7 +394,7 @@ async function loadDealerVehicles() {
 
 const { data: profile } = await client
 .from("profiles")
-.select("dealer_name")
+.select("dealer_name, logo_url")
 .eq("id", dealerId)
 .single();
 
@@ -341,7 +402,12 @@ if(profile && profile.dealer_name){
 
 document.getElementById("dealerTitle").innerText =
 profile.dealer_name + " Stock";
-
+const dealerLogoWrap = document.getElementById("dealerLogoWrap");
+const dealerLogo = document.getElementById("dealerLogo");
+  if (profile.logo_url && dealerLogoWrap && dealerLogo) {
+  dealerLogo.src = profile.logo_url;
+  dealerLogoWrap.style.display = "flex";
+}
 }
   const container =
     document.getElementById("vehicleList");
