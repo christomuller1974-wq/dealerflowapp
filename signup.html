@@ -240,7 +240,14 @@ button.submit-btn:hover {
         <label>Dealer Name</label>
         <input id="dealerName" placeholder="Dealer name">
       </div>
-
+<div>
+  <label>Dealer Logo / Dealership Image</label>
+  <input
+    type="file"
+    id="dealerLogo"
+    accept="image/*"
+  >
+</div>
       <div>
         <label>Phone</label>
         <input id="phone" placeholder="Phone number">
@@ -361,6 +368,7 @@ document.addEventListener("click", function(e) {
 
 async function signup() {
   const dealerName = document.getElementById("dealerName").value.trim();
+  const dealerLogoFile = document.getElementById("dealerLogo").files[0] || null;
   const phone = document.getElementById("phone").value.trim();
   const province = document.getElementById("province").value.trim();
   const whatsappPhone = document.getElementById("whatsappPhone").value.trim();
@@ -390,6 +398,26 @@ async function signup() {
     setStatus("Account created. Please check your email to confirm.");
     return;
   }
+  let logoUrl = null;
+  if (dealerLogoFile) {
+  setStatus("Uploading dealer logo...");
+    const logoPath = data.user.id + "/logo";
+    const { error: logoError } = await client.storage
+  .from("dealer-logos")
+  .upload(logoPath, dealerLogoFile, {
+    upsert: true,
+    contentType: dealerLogoFile.type
+  });
+    if (logoError) console.log("Dealer logo upload error:", logoError);
+    if (!logoError) {
+  const { data: logoData } = client.storage
+    .from("dealer-logos")
+    .getPublicUrl(logoPath);
+
+  logoUrl = logoData.publicUrl;
+}
+
+}
 const trialExpires = new Date();
 trialExpires.setDate(trialExpires.getDate() + 30);
   const { error: profileError } = await client
@@ -401,6 +429,7 @@ trialExpires.setDate(trialExpires.getDate() + 30);
       whatsapp_phone: whatsappPhone || phone,
       province: province,
       location: location,
+      logo_url: logoUrl,
       approval_status: "PENDING",
 is_active: false,
 trial_expires: trialExpires.toISOString()
