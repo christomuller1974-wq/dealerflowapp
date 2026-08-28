@@ -456,6 +456,393 @@ display:flex;
   display:grid;
 }
 }
+  /* New CarScoutZA mobile homepage header */
+.mobile-hero-logo,
+.mobile-secondary-links{
+  display:none;
+}
+
+@media (max-width:768px){
+
+  .hero{
+    width:100%;
+    height:auto;
+    min-height:0;
+    padding:16px 18px 14px;
+    background:#ffffff;
+    overflow:visible;
+    box-sizing:border-box;
+  }
+
+  .mobile-hero-logo{
+    display:block;
+    width:100%;
+    max-width:430px;
+    height:auto;
+    margin:0 auto 14px;
+  }
+
+  .hero-buttons{
+    position:static;
+    display:grid;
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:10px;
+    width:100%;
+  }
+
+  .hero-buttons .mobile-hide-link{
+    display:none;
+  }
+
+  .hero-buttons a{
+    padding:12px 10px;
+    border:1px solid #dbe5f2;
+    border-radius:14px;
+    background:#ffffff;
+    color:#0757b9;
+    box-shadow:0 4px 12px rgba(15, 57, 110, 0.08);
+    font-size:15px;
+    font-weight:900;
+    text-align:center;
+    white-space:nowrap;
+  }
+
+  .mobile-secondary-links{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:7px;
+    margin-top:13px;
+    color:#64748b;
+    font-size:12px;
+  }
+
+  .mobile-secondary-links a{
+    color:#475569;
+    font-weight:700;
+    text-decoration:none;
+  }
+}
+  /* Mobile trust strip */
+.mobile-trust-strip{
+  display:none;
+}
+
+@media (max-width:768px){
+
+  .mobile-trust-strip{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:8px;
+    width:calc(100% - 36px);
+    margin:0 auto 8px;
+    padding:11px 12px;
+    box-sizing:border-box;
+    border-top:1px solid #e2e8f0;
+    border-bottom:1px solid #e2e8f0;
+    background:#ffffff;
+    color:#475569;
+    font-size:12px;
+    font-weight:800;
+  }
+
+  .trust-item{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    white-space:nowrap;
+  }
+
+  .trust-check{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:19px;
+    height:19px;
+    border-radius:50%;
+    background:#dcfce7;
+    color:#15803d;
+    font-size:13px;
+    font-weight:900;
+  }
+
+  .trust-divider{
+    color:#cbd5e1;
+  }
+}
+  /* Matching clean desktop homepage */
+@media (min-width:769px){
+
+  .hero{
+    width:100%;
+    height:auto;
+    min-height:0;
+    padding:24px 32px 18px;
+    background:#ffffff;
+    overflow:visible;
+    box-sizing:border-box;
+  }
+
+  .mobile-hero-logo{
+    display:block;
+    width:100%;
+    max-width:650px;
+    height:auto;
+    margin:0 auto 18px;
+  }
+
+  .hero-buttons{
+    position:static;
+    display:grid;
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:12px;
+    width:100%;
+    max-width:650px;
+    margin:0 auto;
+  }
+
+  .hero-buttons .mobile-hide-link{
+    display:none;
+  }
+
+  .hero-buttons a{
+    padding:13px 12px;
+    border:1px solid #dbe5f2;
+    border-radius:14px;
+    background:#ffffff;
+    color:#0757b9;
+    box-shadow:0 4px 12px rgba(15, 57, 110, 0.08);
+    font-size:16px;
+    font-weight:900;
+    text-align:center;
+    white-space:nowrap;
+  }
+
+  .mobile-secondary-links{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:7px;
+    margin-top:13px;
+    color:#64748b;
+    font-size:13px;
+  }
+
+  .mobile-secondary-links a{
+    color:#475569;
+    font-weight:700;
+    text-decoration:none;
+  }
+
+  .mobile-search-toggle{
+    display:block;
+    width:calc(100% - 64px);
+    max-width:650px;
+    margin:22px auto 18px;
+    padding:18px;
+    border:none;
+    border-radius:18px;
+    background:#2563eb;
+    color:#ffffff;
+    font-size:22px;
+    font-weight:900;
+    cursor:pointer;
+  }
+
+  .search-bar{
+    display:none;
+    position:static;
+    width:calc(100% - 64px);
+    max-width:1180px;
+    margin:0 auto 24px;
+  }
+
+  .search-bar.mobile-open{
+    display:flex;
+  }
+
+  .mobile-trust-strip{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:8px;
+    width:calc(100% - 64px);
+    max-width:650px;
+    margin:0 auto 14px;
+    padding:11px 12px;
+    box-sizing:border-box;
+    border-top:1px solid #e2e8f0;
+    border-bottom:1px solid #e2e8f0;
+    background:#ffffff;
+    color:#475569;
+    font-size:13px;
+    font-weight:800;
+  }
+
+  .trust-item{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    white-space:nowrap;
+  }
+
+  .trust-check{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:19px;
+    height:19px;
+    border-radius:50%;
+    background:#dcfce7;
+    color:#15803d;
+    font-size:13px;
+    font-weight:900;
+  }
+
+  .trust-divider{
+    color:#cbd5e1;
+  }
+}
+  /* Compact desktop spacing so vehicles remain visible */
+@media (min-width:769px){
+
+  .hero{
+    padding:8px 32px 6px;
+  }
+
+  .mobile-hero-logo{
+    max-width:400px;
+    margin:0 auto 6px;
+  }
+
+  .hero-buttons{
+    max-width:560px;
+    gap:8px;
+  }
+
+  .hero-buttons a{
+    padding:8px 10px;
+    border-radius:12px;
+    font-size:14px;
+  }
+
+  .mobile-secondary-links{
+    margin-top:6px;
+    font-size:11px;
+  }
+
+  .mobile-search-toggle{
+    max-width:560px;
+    margin:10px auto 8px;
+    padding:12px;
+    border-radius:14px;
+    font-size:18px;
+  }
+
+  .mobile-trust-strip{
+    max-width:560px;
+    margin:0 auto 4px;
+    padding:7px 10px;
+    font-size:12px;
+  }
+}
+  /* Wider desktop logo and permanent desktop search row */
+@media (min-width:769px){
+
+  .mobile-hero-logo{
+    max-width:520px;
+    margin:0 auto 6px;
+  }
+
+  .mobile-search-toggle{
+    display:none;
+  }
+
+  .search-bar{
+    display:flex;
+    align-items:center;
+    flex-wrap:nowrap;
+    gap:10px;
+    width:calc(100% - 76px);
+    max-width:1276px;
+    margin:10px auto 14px;
+    padding:14px;
+    position:static;
+    top:auto;
+    box-sizing:border-box;
+    background:#ffffff;
+    border:1px solid #dbe1e8;
+    border-radius:14px;
+    box-shadow:0 6px 18px rgba(0, 0, 0, 0.08);
+    backdrop-filter:none;
+    z-index:auto;
+  }
+
+  .search-bar input,
+  .search-bar select{
+    flex:1 1 180px;
+    min-width:0;
+    padding:12px;
+    background:#ffffff;
+    border:1px solid #dbe1e8;
+    border-radius:10px;
+    font-size:14px;
+  }
+
+  .search-bar .search-btn{
+    flex:0 0 130px;
+    padding:12px 18px;
+    border-radius:10px;
+    white-space:nowrap;
+  }
+}
+  /* Keep desktop vehicles visible above the fold */
+@media (min-width:769px){
+
+  .mobile-hero-logo{
+    max-width:400px;
+    margin:0 auto 3px;
+    transform:scaleX(1.22);
+    transform-origin:center;
+  }
+
+  .search-bar{
+    margin:5px auto 8px;
+    padding:8px;
+    gap:8px;
+    border-radius:12px;
+  }
+
+  .search-bar input,
+  .search-bar select{
+    padding:9px 10px;
+  }
+
+  .search-bar .search-btn{
+    padding:9px 16px;
+  }
+
+  .mobile-trust-strip{
+    margin:0 auto 2px;
+    padding:5px 10px;
+  }
+
+  .results-filters{
+    margin-top:8px;
+    padding:8px;
+    gap:8px;
+  }
+
+  .results-filters input,
+  .results-filters select{
+    padding:9px 10px;
+  }
+}
 </style>
   <script src="vehicle-data.js"></script>
 </head>
@@ -464,23 +851,43 @@ display:flex;
 
 <div class="hero">
 
+  <img
+    src="carscoutza-mobile-logo-white.png"
+    class="mobile-hero-logo"
+    alt="CarScoutZA - Find Your Perfect Ride Today"
+  >
+
   <div class="hero-buttons">
-<a href="dealers.html" class="contact-btn">
-  Dealers
-</a>
-    <a href="contact.html" class="contact-btn">
+
+    <a href="dealers.html" class="contact-btn mobile-dealers-btn">
+      Find a Dealer
+    </a>
+
+    <a href="contact.html" class="contact-btn mobile-hide-link">
       Contact
     </a>
-<a href="saved.html" class="contact-btn">
-  ❤️ Saved
-</a>
-    <a href="dealer-admin.html" class="login-btn">
+
+    <a href="saved.html" class="contact-btn mobile-saved-btn">
+      💗 Saved
+    </a>
+
+    <a href="dealer-admin.html" class="login-btn mobile-hide-link">
       Dealer Login
     </a>
 
   </div>
 
+  <div class="mobile-secondary-links">
+    <a href="contact.html">Contact</a>
+    <span>•</span>
+    <span>
+      Are you a dealer?
+      <a href="dealer-admin.html">Login</a>
+    </span>
+  </div>
+
 </div>
+
 <button class="mobile-search-toggle" onclick="document.querySelector('.search-bar').classList.toggle('mobile-open'); document.querySelector('.results-filters').classList.toggle('mobile-open')">
 🔍 Search Cars
 </button>
@@ -511,7 +918,18 @@ display:flex;
   
 
 </div>
+<div class="mobile-trust-strip">
+  <span class="trust-item">
+    <span class="trust-check">✓</span>
+    Verified Dealers
+  </span>
 
+  <span class="trust-divider">•</span>
+
+  <span class="trust-item">
+    🇿🇦 Vehicles Nationwide
+  </span>
+</div>
 <div id="featuredWrap" style="display:none; margin-bottom:0;">
   
 

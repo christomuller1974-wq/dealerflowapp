@@ -174,7 +174,13 @@
       font-size: 13px;
       font-weight: 800;
     }
-
+.dealer-card-logo {
+  width: 100%;
+  height: 100px;
+  object-fit: contain;
+  margin-bottom: 14px;
+  background: transparent;
+}
     .dealer-card h2 {
       margin: 0 0 10px;
       color: #0b4f9c;
@@ -387,11 +393,17 @@ const directorySummary =
       const location = document.createElement("p");
       location.className = "dealer-location";
       location.textContent = getDealerLocation(dealer);
+const dealerLogo = document.createElement("img");
 
+if (dealer.logo_url) {
+  dealerLogo.src = dealer.logo_url;
+  dealerLogo.alt = dealerName + " logo";
+  dealerLogo.className = "dealer-card-logo";
+}
       const viewStock = document.createElement("span");
       viewStock.className = "view-stock";
       viewStock.textContent = "View Dealer Stock →";
-
+if (dealer.logo_url) card.appendChild(dealerLogo);
       card.append(
         verifiedLabel,
         heading,
@@ -505,7 +517,7 @@ function populateCityFilter() {
 
       const { data, error } = await client
         .from("public_active_verified_dealers")
-        .select("id, dealer_name, town, province, location")
+        .select("id, dealer_name, town, province, location, logo_url")
         .order("province", { ascending: true })
         .order("town", { ascending: true })
         .order("dealer_name", { ascending: true });

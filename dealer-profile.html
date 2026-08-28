@@ -14,7 +14,24 @@
 <h1>Edit Dealer Profile</h1>
 
 <div id="status">Loading...</div>
+<br>
 
+<label>Dealer Logo</label><br>
+<img
+  id="logoPreview"
+  alt="Dealer Logo"
+  style="display:none; width:90px; height:90px; object-fit:contain; border:1px solid #ddd; border-radius:10px; margin:8px 0;"
+>
+
+<br>
+
+<input
+  type="file"
+  id="dealerLogo"
+  accept="image/png,image/jpeg,image/webp"
+>
+
+<br><br>
 <label>Dealer Name</label>
 <input id="dealer_name">
 
@@ -107,10 +124,24 @@ document.getElementById("whatsappPhone").value =
 
   document.getElementById("province").value =
     profile.province || "";
+const logoPreview = document.getElementById("logoPreview");
 
+if (profile.logo_url) {
+  logoPreview.src = profile.logo_url;
+  logoPreview.style.display = "block";
+}
   setStatus("Profile loaded.");
 }
+document.getElementById("dealerLogo").addEventListener("change", function() {
+  const file = this.files[0];
 
+  if (!file) return;
+
+  const logoPreview = document.getElementById("logoPreview");
+
+  logoPreview.src = URL.createObjectURL(file);
+  logoPreview.style.display = "block";
+});
 async function saveProfile() {
   const dealer_name =
     document.getElementById("dealer_name").value.trim();
@@ -124,7 +155,10 @@ const whatsappPhone =
 
   const province =
     document.getElementById("province").value;
+const logoFile =
+  document.getElementById("dealerLogo").files[0];
 
+let logoUrl = null;
   if (!dealer_name || !phone || !town || !province) {
     setStatus("Please complete all fields.");
     return;
@@ -133,7 +167,30 @@ const whatsappPhone =
   setStatus("Saving profile...");
 
   const location = province + ", " + town;
+if (logoFile) {
+  setStatus("Uploading dealer logo...");
 
+  const logoPath = user.id + "/logo";
+
+  const { error: logoError } = await client.storage
+    .from("dealer-logos")
+    .upload(logoPath, logoFile, {
+      upsert: true,
+      contentType: logoFile.type
+    });
+
+  if (logoError) {
+    console.log(logoError);
+    setStatus("Could not upload dealer logo.");
+    return;
+  }
+
+  const { data: logoData } = client.storage
+    .from("dealer-logos")
+    .getPublicUrl(logoPath);
+
+  logoUrl = logoData.publicUrl;
+}
   const { error: profileError } = await client
     .from("profiles")
     .update({
@@ -141,9 +198,10 @@ const whatsappPhone =
       phone: phone,
       whatsapp_phone: whatsappPhone || phone,
       town: town,
-      province: province,
-      location: location
-    })
+       province: province,
+  location: location,
+  ...(logoUrl ? { logo_url: logoUrl } : {})
+})
     .eq("id", user.id);
 
   if (profileError) {

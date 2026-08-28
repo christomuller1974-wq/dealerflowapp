@@ -289,12 +289,30 @@ body {
   .section-title { font-size:26px; }
   .vehicle-grid { grid-template-columns:1fr; }
 }
+  @media (min-width: 701px) {
+  #dealerLogo {
+    width: 260px !important;
+    height: 120px !important;
+  }
+}
 </style>
 </head>
 
 <body>
 
 <div class="hero">
+  <img
+  id="dealerLogo"
+  alt="Dealer Logo"
+  style="
+    display:none;
+    width:150px;
+    height:70px;
+    object-fit:contain;
+    margin:0 auto 12px;
+   
+  "
+>
   <h1>Dealer Dashboard</h1>
   <p>Manage your stock and share your CarScoutZA dealer page</p>
 </div>
@@ -686,8 +704,16 @@ async function loadProfile() {
     return false;
   }
 
-  currentProfile = data;
-  return true;
+ currentProfile = data;
+
+const dealerLogo = document.getElementById("dealerLogo");
+
+if (dealerLogo && data.logo_url) {
+  dealerLogo.src = data.logo_url;
+  dealerLogo.style.display = "block";
+}
+
+return true;
 }
 
 function showAdminButton() {
