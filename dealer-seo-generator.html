@@ -175,19 +175,46 @@ list.appendChild(item);
   URL.revokeObjectURL(url);
 }
 
-  async function generateAllDealerPages() {
+ async function generateAllDealerPages() {
+
   if (!verifiedDealers || verifiedDealers.length === 0) {
     alert("Please click Load Verified Dealers first.");
     return;
   }
 
   const confirmed = confirm(
-    `Generate ${verifiedDealers.length} dealer SEO pages?`
+    `Generate ${verifiedDealers.length} improved dealer SEO pages?`
   );
 
   if (!confirmed) return;
 
+
+  function cleanDealerName(name, city) {
+
+    let result = String(name || "").trim();
+
+    // Convert abbreviations such as "Auto Excellence Kby"
+    // to the proper city name.
+    if (city) {
+      result = result.replace(/\bKby\b/gi, city);
+    }
+
+    return result;
+  }
+
+
+  function escapeHtml(value) {
+    return String(value || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+
   for (const dealer of verifiedDealers) {
+
     let city = dealer.town;
 
     if (!city && dealer.location) {
@@ -195,89 +222,862 @@ list.appendChild(item);
       city = parts[parts.length - 1].trim();
     }
 
-    city = city || "Unknown City";
+    city = city || "South Africa";
+
+    const province =
+      dealer.province || "South Africa";
+
+    const publicDealerName =
+      cleanDealerName(
+        dealer.dealer_name,
+        city
+      );
+
 
     const slug = dealer.dealer_name
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-+|-+$/g, "");
 
+
     const citySlug = city
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-+|-+$/g, "");
 
-    const finalSlug = slug.includes(citySlug)
-      ? slug
-      : `${slug}-${citySlug}`;
 
-    const fileName = `${finalSlug}.html`;
+    const finalSlug =
+      slug.includes(citySlug)
+        ? slug
+        : `${slug}-${citySlug}`;
+
+
+    const fileName =
+      `${finalSlug}.html`;
+
+
+    const safeDealerName =
+      escapeHtml(publicDealerName);
+
+    const safeCity =
+      escapeHtml(city);
+
+    const safeProvince =
+      escapeHtml(province);
+
+    const safeLocation =
+      escapeHtml(
+        dealer.location ||
+        `${city}, ${province}`
+      );
+
 
     const html = `<!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>${dealer.dealer_name} Vehicles for Sale | CarScoutZA</title>
+<meta charset="UTF-8">
 
-  <meta name="description"
-        content="Browse vehicles for sale from ${dealer.dealer_name} in ${city}, ${dealer.province}. View available dealer stock on CarScoutZA and contact the dealership directly.">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
-  <link rel="canonical"
-        href="https://carscoutza.com/${fileName}">
+<title>${safeDealerName} ${safeCity} | Used Cars for Sale | CarScoutZA</title>
+
+<meta name="description"
+content="Browse used cars for sale from ${safeDealerName} in ${safeCity}, ${safeProvince}. View current vehicle stock, prices and dealer details on CarScoutZA.">
+
+<link rel="canonical"
+href="https://carscoutza.com/${fileName}">
+
+<meta property="og:title"
+content="${safeDealerName} ${safeCity} | Used Cars for Sale | CarScoutZA">
+
+<meta property="og:description"
+content="Browse current used vehicle stock from ${safeDealerName} in ${safeCity} on CarScoutZA.">
+
+<meta property="og:url"
+content="https://carscoutza.com/${fileName}">
+
+<meta property="og:type"
+content="website">
+
+<meta name="twitter:card"
+content="summary">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "AutoDealer",
+  "name": "${safeDealerName}",
+  "url": "https://carscoutza.com/${fileName}",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "${safeCity}",
+    "addressRegion": "${safeProvince}",
+    "addressCountry": "ZA"
+  }
+}
+</script>
+
+
+<style>
+
+body{
+  font-family:Arial,sans-serif;
+  max-width:1100px;
+  margin:auto;
+  padding:30px 20px;
+  line-height:1.7;
+  color:#222;
+  background:#f6f7f9;
+}
+
+.page-wrap{
+  background:white;
+  padding:30px;
+  border-radius:14px;
+  box-shadow:0 4px 18px rgba(0,0,0,0.06);
+}
+
+.seo-header{
+  margin-bottom:28px;
+  padding-bottom:18px;
+  border-bottom:1px solid #e5e7eb;
+}
+
+.seo-header a{
+  color:#0056c9;
+  font-size:25px;
+  font-weight:700;
+  text-decoration:none;
+}
+
+h1{
+  color:#102033;
+  line-height:1.25;
+  margin-bottom:10px;
+}
+
+h2{
+  margin-top:38px;
+  color:#102033;
+}
+
+.intro{
+  font-size:17px;
+  color:#4b5563;
+}
+
+.dealer-box{
+  margin-top:25px;
+  padding:20px;
+  background:#f3f6fb;
+  border-radius:10px;
+}
+
+.button{
+  display:inline-block;
+  margin-top:14px;
+  padding:12px 20px;
+  background:#0056c9;
+  color:white;
+  border-radius:7px;
+  text-decoration:none;
+  font-weight:700;
+}
+
+#vehicle-results{
+  display:grid;
+  grid-template-columns:
+    repeat(auto-fill,minmax(260px,1fr));
+  gap:20px;
+  margin-top:24px;
+}
+
+.vehicle-card{
+  border:1px solid #ddd;
+  border-radius:12px;
+  overflow:hidden;
+  background:white;
+  box-shadow:0 3px 12px rgba(0,0,0,0.07);
+}
+
+.vehicle-card img{
+  width:100%;
+  height:220px;
+  object-fit:cover;
+  display:block;
+  background:#eee;
+}
+
+.vehicle-card-body{
+  padding:16px;
+}
+
+.vehicle-card h3{
+  margin:0 0 10px;
+  font-size:19px;
+  line-height:1.35;
+}
+
+.vehicle-price{
+  font-size:21px;
+  font-weight:700;
+  color:#0056c9;
+  margin-bottom:8px;
+}
+
+.vehicle-meta{
+  font-size:14px;
+  color:#5b6470;
+  margin-top:5px;
+}
+
+.vehicle-link{
+  display:inline-block;
+  margin-top:14px;
+  padding:10px 16px;
+  background:#0056c9;
+  color:white;
+  text-decoration:none;
+  border-radius:6px;
+  font-weight:700;
+}
+
+.related-links a{
+  color:#0056c9;
+  font-weight:700;
+  text-decoration:none;
+}
+
+footer{
+  margin-top:45px;
+  padding-top:20px;
+  border-top:1px solid #e5e7eb;
+  font-size:14px;
+  color:#68707b;
+}
+
+@media(max-width:600px){
+
+  body{
+    padding:15px;
+  }
+
+  .page-wrap{
+    padding:20px;
+  }
+
+  h1{
+    font-size:28px;
+  }
+
+}
+
+</style>
+
 </head>
+
 
 <body>
 
-  <h1>${dealer.dealer_name} Vehicles for Sale</h1>
+<div class="page-wrap">
 
-  <p>
-    Browse vehicles available from ${dealer.dealer_name}, a CarScoutZA verified dealer
-    in ${city}, ${dealer.province}.
-  </p>
 
-  <h2>Vehicles from ${dealer.dealer_name}</h2>
+<header class="seo-header">
 
-  <p>
-    View the dealer's current vehicle stock, compare available vehicles and contact
-    the dealership directly through CarScoutZA.
-  </p>
+<a href="https://carscoutza.com/">
+CarScoutZA.com
+</a>
 
-  <p>
-    <a href="https://carscoutza.com/dealer.html?dealer=${dealer.id}">
-      View ${dealer.dealer_name} Stock on CarScoutZA
-    </a>
-  </p>
+</header>
 
-  <p>
-    <a href="https://carscoutza.com/dealers.html">
-      Browse More Verified Car Dealers
-    </a>
-  </p>
+
+<h1>${safeDealerName} – Used Cars for Sale in ${safeCity}</h1>
+
+
+<p class="intro">
+
+Looking for vehicles from ${safeDealerName}?
+
+Browse current used vehicle stock from
+${safeDealerName}, a verified CarScoutZA
+dealer in ${safeCity}, ${safeProvince}.
+
+</p>
+
+
+<p>
+
+CarScoutZA helps South African vehicle buyers
+browse dealership stock, compare vehicles and
+contact verified dealers directly.
+
+View current vehicles available from
+${safeDealerName} below.
+
+</p>
+
+
+<div class="dealer-box">
+
+<strong>${safeDealerName}</strong>
+
+<br>
+
+${safeLocation}
+
+<br>
+
+${safeProvince}, South Africa
+
+<br><br>
+
+
+<a class="button"
+href="https://carscoutza.com/dealer.html?dealer=${dealer.id}">
+
+View Full ${safeDealerName} Stock
+
+</a>
+
+</div>
+
+
+
+<section>
+
+<h2>Current ${safeDealerName} Vehicles</h2>
+
+
+<p id="vehicle-results-message">
+
+Checking the latest ${safeDealerName}
+vehicle stock...
+
+</p>
+
+
+<div id="vehicle-results"></div>
+
+</section>
+
+
+
+<section>
+
+<h2>Used Vehicles from ${safeDealerName}</h2>
+
+
+<p>
+
+CarScoutZA connects buyers directly with
+verified South African dealerships.
+
+Browse current cars, bakkies, SUVs and other
+vehicles available from ${safeDealerName}
+in ${safeCity}.
+
+</p>
+
+
+<ul>
+
+<li>Browse current dealership stock</li>
+
+<li>View vehicle prices and mileage</li>
+
+<li>Compare available makes and models</li>
+
+<li>Contact the dealership directly</li>
+
+<li>Browse verified South African dealers</li>
+
+</ul>
+
+</section>
+
+
+
+<section>
+
+<h2>Used Cars for Sale in ${safeCity}</h2>
+
+
+<p>
+
+Looking for more vehicles in ${safeCity}?
+
+CarScoutZA lists vehicles from verified
+dealerships in ${safeCity}, ${safeProvince}
+and across South Africa.
+
+</p>
+
+
+<p class="related-links">
+
+<a href="https://carscoutza.com/dealers.html">
+
+Browse Verified Car Dealers
+
+</a>
+
+</p>
+
+
+<p class="related-links">
+
+<a href="https://carscoutza.com/">
+
+Browse All Used Cars for Sale
+
+</a>
+
+</p>
+
+</section>
+
+
+<footer>
+
+CarScoutZA – helping South African buyers
+find vehicles from verified dealers.
+
+</footer>
+
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+<script>
+
+const supabaseUrl =
+  "${supabaseUrl}";
+
+const supabaseKey =
+  "${supabaseKey}";
+
+const client =
+  supabase.createClient(
+    supabaseUrl,
+    supabaseKey
+  );
+
+const dealerId =
+  "${dealer.id}";
+
+const dealerDisplayName =
+  ${JSON.stringify(publicDealerName)};
+
+const dealerCity =
+  ${JSON.stringify(city)};
+
+const dealerProvince =
+  ${JSON.stringify(province)};
+
+
+
+function getVehicleImage(vehicle){
+
+  if(
+    vehicle.image &&
+    String(vehicle.image).trim()
+  ){
+    return String(vehicle.image).trim();
+  }
+
+
+  if(
+    Array.isArray(vehicle.images) &&
+    vehicle.images.length
+  ){
+    return vehicle.images[0];
+  }
+
+
+  if(
+    typeof vehicle.images === "string" &&
+    vehicle.images.trim()
+  ){
+
+    try{
+
+      const parsed =
+        JSON.parse(vehicle.images);
+
+      if(
+        Array.isArray(parsed) &&
+        parsed.length
+      ){
+        return parsed[0];
+      }
+
+    }catch(error){
+
+      return vehicle.images.trim();
+
+    }
+
+  }
+
+
+  return "https://via.placeholder.com/400x300?text=No+Image";
+
+}
+
+
+
+function formatPrice(price){
+
+  const number =
+    Number(
+      String(price || "")
+        .replace(/\\\\D/g,"")
+    );
+
+
+  if(!number){
+    return "Price on request";
+  }
+
+
+  return "R" +
+    number.toLocaleString("en-ZA");
+
+}
+
+
+
+function renderVehicles(vehicles){
+
+  const results =
+    document.getElementById(
+      "vehicle-results"
+    );
+
+  const message =
+    document.getElementById(
+      "vehicle-results-message"
+    );
+
+
+  results.innerHTML = "";
+
+
+  if(
+    !vehicles ||
+    vehicles.length === 0
+  ){
+
+    message.textContent =
+      "No vehicles are currently listed from " +
+      dealerDisplayName +
+      ". Stock changes regularly, so please check again soon.";
+
+    return;
+
+  }
+
+
+  message.textContent =
+    vehicles.length +
+    " " +
+    dealerDisplayName +
+    " vehicle" +
+    (
+      vehicles.length === 1
+        ? ""
+        : "s"
+    ) +
+    " currently available.";
+
+
+  vehicles
+    .slice(0,18)
+    .forEach(function(vehicle){
+
+
+      const title =
+        [
+          vehicle.year,
+          vehicle.make,
+          vehicle.model
+        ]
+        .filter(Boolean)
+        .join(" ") ||
+        vehicle.title ||
+        "Vehicle";
+
+
+      const card =
+        document.createElement(
+          "article"
+        );
+
+      card.className =
+        "vehicle-card";
+
+
+      const image =
+        document.createElement(
+          "img"
+        );
+
+      image.src =
+        getVehicleImage(vehicle);
+
+      image.alt =
+        title +
+        " for sale at " +
+        dealerDisplayName;
+
+      image.loading =
+        "lazy";
+
+
+      image.onerror =
+        function(){
+
+          this.src =
+            "https://via.placeholder.com/400x300?text=No+Image";
+
+        };
+
+
+      const body =
+        document.createElement(
+          "div"
+        );
+
+      body.className =
+        "vehicle-card-body";
+
+
+      const heading =
+        document.createElement(
+          "h3"
+        );
+
+      heading.textContent =
+        title;
+
+
+      const price =
+        document.createElement(
+          "div"
+        );
+
+      price.className =
+        "vehicle-price";
+
+      price.textContent =
+        formatPrice(vehicle.price);
+
+
+      const mileage =
+        document.createElement(
+          "div"
+        );
+
+      mileage.className =
+        "vehicle-meta";
+
+      mileage.textContent =
+        "Mileage: " +
+        (
+          vehicle.mileage ||
+          "Not listed"
+        );
+
+
+      const location =
+        document.createElement(
+          "div"
+        );
+
+      location.className =
+        "vehicle-meta";
+
+      location.textContent =
+        "Location: " +
+        dealerCity +
+        ", " +
+        dealerProvince;
+
+
+      const link =
+        document.createElement(
+          "a"
+        );
+
+      link.className =
+        "vehicle-link";
+
+      link.href =
+        "https://carscoutza.com/details.html?id=" +
+        encodeURIComponent(
+          vehicle.id
+        );
+
+      link.textContent =
+        "View Vehicle Details";
+
+
+      body.appendChild(
+        heading
+      );
+
+      body.appendChild(
+        price
+      );
+
+      body.appendChild(
+        mileage
+      );
+
+      body.appendChild(
+        location
+      );
+
+      body.appendChild(
+        link
+      );
+
+
+      card.appendChild(
+        image
+      );
+
+      card.appendChild(
+        body
+      );
+
+
+      results.appendChild(
+        card
+      );
+
+    });
+
+}
+
+
+
+async function loadDealerVehicles(){
+
+  const message =
+    document.getElementById(
+      "vehicle-results-message"
+    );
+
+
+  try{
+
+    const { data, error } =
+      await client
+        .from("vehicles")
+        .select("*")
+        .eq(
+          "user_id",
+          dealerId
+        )
+        .order(
+          "updated_at",
+          {
+            ascending:false,
+            nullsFirst:false
+          }
+        );
+
+
+    if(error){
+      throw error;
+    }
+
+
+    renderVehicles(
+      data || []
+    );
+
+
+  }catch(error){
+
+    console.error(error);
+
+
+    message.textContent =
+      "Vehicle stock could not be loaded at this time. Please use the dealer stock link above to view the latest vehicles.";
+
+  }
+
+}
+
+
+loadDealerVehicles();
+
+</script>
+
 
 </body>
+
 </html>`;
 
-    const blob = new Blob([html], { type: "text/html" });
-    const url = URL.createObjectURL(blob);
 
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = fileName;
+    const blob =
+      new Blob(
+        [html],
+        {
+          type:"text/html"
+        }
+      );
+
+
+    const url =
+      URL.createObjectURL(blob);
+
+
+    const link =
+      document.createElement("a");
+
+
+    link.href =
+      url;
+
+    link.download =
+      fileName;
+
 
     document.body.appendChild(link);
+
     link.click();
+
     link.remove();
+
 
     URL.revokeObjectURL(url);
 
-    await new Promise(resolve => setTimeout(resolve, 250));
+
+    await new Promise(
+      resolve =>
+        setTimeout(
+          resolve,
+          250
+        )
+    );
+
   }
 
-  alert(`Finished generating ${verifiedDealers.length} dealer SEO pages.`);
-}
 
+  alert(
+    `Finished generating ${verifiedDealers.length} improved dealer SEO pages.`
+  );
+
+}
   function generateSitemapEntries() {
   if (!verifiedDealers || verifiedDealers.length === 0) {
     alert("Please click Load Verified Dealers first.");
