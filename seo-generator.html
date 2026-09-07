@@ -1153,14 +1153,14 @@ if(!province){
 const foundCity =
 cities.find(function(item){
 
-return item.city.toLowerCase() ===
+return String(item[0] || "").toLowerCase() ===
 city.toLowerCase();
 
 });
 
 if(foundCity){
 
-province = foundCity.province;
+province = foundCity[1];
 
 }else{
 
@@ -1659,11 +1659,11 @@ function previewPowerfulCityPage() {
   if (!province) {
 
     const foundCity = cities.find(function(item) {
-      return item.city.toLowerCase() === city.toLowerCase();
+      return String(item[0] || "").toLowerCase() === city.toLowerCase();
     });
 
     if (foundCity) {
-      province = foundCity.province;
+      province = foundCity[1];
     } else {
       province = "South Africa";
     }
@@ -1700,11 +1700,11 @@ function downloadPowerfulSingleCityPage() {
   if (!province) {
 
     const foundCity = cities.find(function(item) {
-      return item.city.toLowerCase() === city.toLowerCase();
+      return String(item[0] || "").toLowerCase() === city.toLowerCase();
     });
 
     if (foundCity) {
-      province = foundCity.province;
+      province = foundCity[1];
     } else {
       province = "South Africa";
     }
@@ -1751,11 +1751,11 @@ function downloadVehicleCityPage() {
   if (!province) {
 
     const foundCity = cities.find(function(item) {
-      return item.city.toLowerCase() === city.toLowerCase();
+      return String(item[0] || "").toLowerCase() === city.toLowerCase();
     });
 
     if (foundCity) {
-      province = foundCity.province;
+      province = foundCity[1];
     } else {
       province = "South Africa";
     }
