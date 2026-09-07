@@ -1,45 +1,81 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>CarScoutZA SEO Page Generator</title>
-  
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
 <style>
 body{
 font-family:Arial,sans-serif;
 max-width:1000px;
 margin:auto;
-padding:30px;
-line-height:1.6;
+padding:40px;
+line-height:1.5;
 }
 
-input,textarea,button{
+h1{
+font-size:34px;
+margin-bottom:25px;
+}
+
+label{
+display:block;
+font-size:18px;
+margin-top:18px;
+margin-bottom:8px;
+}
+
+input,textarea{
 width:100%;
-padding:12px;
-margin:8px 0 18px;
+box-sizing:border-box;
+padding:14px;
 font-size:16px;
 }
 
+textarea{
+min-height:220px;
+font-family:Consolas,monospace;
+font-size:14px;
+}
+
 button{
-background:#0056c9;
+width:100%;
+background:#075acb;
 color:white;
-border:0;
-border-radius:6px;
+border:none;
+padding:15px;
+margin-top:20px;
+font-size:17px;
 font-weight:bold;
+border-radius:6px;
 cursor:pointer;
 }
 
-textarea{
-height:330px;
-font-family:monospace;
+button:hover{
+background:#034da9;
+}
+
+.section{
+margin-top:30px;
+padding-top:20px;
+border-top:1px solid #ddd;
 }
 
 .small{
-height:150px;
+font-size:14px;
+color:#555;
+}
+
+#status{
+margin-top:20px;
+padding:15px;
+background:#f5f5f5;
+border-radius:6px;
+font-weight:bold;
 }
 </style>
 </head>
@@ -53,111 +89,214 @@ height:150px;
 
 <label>City</label>
 <input id="city" placeholder="Example: Bloemfontein">
+
 <button onclick="generateAllCities()">
 🚀 Generate All Cities
 </button>
-  <button onclick="generateAllVehicles()">
+
+<button onclick="generateAllVehicles()">
 🚗 Generate All Vehicles
 </button>
-  <button onclick="generateEverythingZip()">
+
+<button onclick="generateEverythingZip()">
 🚀 Generate EVERYTHING ZIP
 </button>
+
+<button onclick="generatePowerfulCityPages()">
+🔥 Generate Powerful City Pages
+</button>
+
 <label>Province</label>
 <input id="province" placeholder="Example: Free State">
 
-<button onclick="generatePage()">Generate SEO Page</button>
+<label>Dealer Name</label>
+<input id="dealer" placeholder="Example: Auto Excellence">
 
-<h2>File Name</h2>
-<textarea id="filename" class="small" readonly></textarea>
+<button onclick="generateSinglePage()">
+Generate Single SEO Page
+</button>
 
-<h2>Sitemap Block</h2>
-<textarea id="sitemap" class="small" readonly></textarea>
+<div class="section">
 
-<button onclick="copySitemap()">Copy Sitemap Block</button>
+<label>Generated File Name(s)</label>
+<textarea id="filename" readonly></textarea>
 
-<h2>Copy This HTML Code</h2>
+<label>Sitemap Entries</label>
+<textarea id="sitemap" readonly></textarea>
+
+<label>Generated HTML</label>
 <textarea id="output" readonly></textarea>
 
-<button onclick="copyCode()">Copy HTML Code</button>
-<button onclick="downloadZip()">
-📦 Download ZIP Files
-</button>
+<div id="status">
+Ready.
+</div>
+
+</div>
+
 <script>
-function titleCase(str){
-  return str
-    .toLowerCase()
-    .split(" ")
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
-}
+
+const SUPABASE_URL = "https://bkmghhmfyubtzriujxfg.supabase.co";
+const SUPABASE_KEY = "sb_publishable_D7saHOTE_JhSlMnSgBnIhQ_mOAOUD9s";
+
+const cities = [
+["Kimberley","Northern Cape"],
+["Upington","Northern Cape"],
+["Kuruman","Northern Cape"],
+["Postmasburg","Northern Cape"],
+["Kathu","Northern Cape"],
+["De Aar","Northern Cape"],
+
+["Bloemfontein","Free State"],
+["Welkom","Free State"],
+["Bethlehem","Free State"],
+["Kroonstad","Free State"],
+["Sasolburg","Free State"],
+
+["Potchefstroom","North West"],
+["Klerksdorp","North West"],
+["Rustenburg","North West"],
+["Mahikeng","North West"],
+["Brits","North West"],
+
+["Johannesburg","Gauteng"],
+["Pretoria","Gauteng"],
+["Centurion","Gauteng"],
+["Midrand","Gauteng"],
+["Alberton","Gauteng"],
+["Benoni","Gauteng"],
+["Boksburg","Gauteng"],
+["Brakpan","Gauteng"],
+["Germiston","Gauteng"],
+["Kempton Park","Gauteng"],
+["Krugersdorp","Gauteng"],
+["Roodepoort","Gauteng"],
+["Randburg","Gauteng"],
+["Sandton","Gauteng"],
+["Vanderbijlpark","Gauteng"],
+["Vereeniging","Gauteng"],
+
+["Cape Town","Western Cape"],
+["Bellville","Western Cape"],
+["Stellenbosch","Western Cape"],
+["Paarl","Western Cape"],
+["Worcester","Western Cape"],
+["George","Western Cape"],
+["Mossel Bay","Western Cape"],
+
+["Durban","KwaZulu-Natal"],
+["Pietermaritzburg","KwaZulu-Natal"],
+["Pinetown","KwaZulu-Natal"],
+["Umhlanga","KwaZulu-Natal"],
+["Ballito","KwaZulu-Natal"],
+["Richards Bay","KwaZulu-Natal"],
+
+["Gqeberha","Eastern Cape"],
+["East London","Eastern Cape"],
+["Mthatha","Eastern Cape"],
+["Queenstown","Eastern Cape"],
+["Makhanda","Eastern Cape"],
+
+["Polokwane","Limpopo"],
+["Mbombela","Mpumalanga"],
+["Middelburg","Mpumalanga"]
+];
+
+const vehicles = [
+"Toyota Hilux",
+"Ford Ranger",
+"VW Polo",
+"Toyota Fortuner",
+"Ford EcoSport",
+"Isuzu D-Max",
+"Suzuki Swift",
+"BMW 3 Series",
+"Mercedes-Benz C-Class",
+"Hyundai Creta",
+"Hyundai i20",
+"Hyundai Grand i10",
+"Toyota Corolla Cross",
+"Toyota Corolla Quest",
+"Toyota Urban Cruiser",
+"Toyota Starlet",
+"Toyota RAV4",
+"Ford Everest",
+"Ford Figo",
+"Ford Fiesta",
+"Ford Focus",
+"VW T-Cross",
+"VW Tiguan",
+"VW Golf",
+"VW Amarok",
+"Suzuki Jimny",
+"Suzuki Baleno",
+"Suzuki Ertiga",
+"Kia Picanto",
+"Kia Seltos",
+"Renault Kwid",
+"Renault Duster",
+"Nissan NP200",
+"Nissan Navara",
+"Mahindra Pik Up",
+"Mahindra XUV300",
+"BMW X3",
+"BMW X5",
+"Audi A3",
+"Audi Q5",
+"Mercedes-Benz GLC",
+"Mercedes-Benz A-Class",
+"Toyota Land Cruiser",
+"Mitsubishi Pajero Sport",
+"Haval Jolion",
+"Haval H6",
+"Mitsubishi Triton",
+"Subaru Forester",
+"Mazda BT-50",
+"Haval H6 GT"
+];
 
 function slugify(text){
-  return text
-    .toLowerCase()
-    .replace(/&/g,"and")
-    .replace(/[^a-z0-9]+/g,"-")
-    .replace(/^-+|-+$/g,"");
+return text
+.toString()
+.toLowerCase()
+.trim()
+.replace(/&/g,"and")
+.replace(/[^a-z0-9]+/g,"-")
+.replace(/^-+|-+$/g,"");
 }
 
-  const vehicleInfo = {
-
-
-    "Porsche Macan":{
-summary:"Looking for a Porsche Macan? CarScoutZA connects you directly with trusted South African dealerships that can help you compare models, arrange finance and find the right Porsche Macan for your lifestyle.",
-idealFor:"Families, business professionals and buyers looking for premium performance with everyday practicality.",
-category:"Luxury SUV"
-},
-
-"Ford Ranger":{
-summary:"Looking for a Ford Ranger? CarScoutZA connects you directly with trusted dealerships that can help you compare Ranger models, arrange finance and find the right vehicle for your needs.",
-idealFor:"Business owners, families, farmers and buyers looking for a dependable bakkie for work and everyday driving.",
-category:"Bakkie"
-},
-
-"Toyota Hilux":{
-summary:"Looking for a Toyota Hilux? Browse available Hilux models from trusted CarScoutZA dealerships and speak directly with professionals who can help you choose the right vehicle.",
-idealFor:"Farmers, contractors, business owners, families and anyone looking for a reliable and versatile bakkie.",
-category:"Bakkie"
-},
-
-"Nissan NP200":{
-summary:"Looking for a Nissan NP200? CarScoutZA connects you with trusted dealerships that can help you compare vehicles, arrange finance and find the right NP200 for your business or personal needs.",
-idealFor:"Small business owners, delivery services, tradesmen and buyers looking for an affordable workhorse.",
-category:"Small Bakkie"
+function setStatus(message){
+document.getElementById("status").textContent = message;
 }
 
-};
-function generatePage(){
-  const vehicleRaw = document.getElementById("vehicle").value.trim();
-  const cityRaw = document.getElementById("city").value.trim();
-  const provinceRaw = document.getElementById("province").value.trim();
+function escapeHtml(value){
+return String(value || "")
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
+}
 
-  if(!vehicleRaw || !cityRaw || !provinceRaw){
-    alert("Please enter vehicle, city and province.");
-    return;
-  }
+function todayISO(){
+return new Date().toISOString().slice(0,10);
+}
 
-  const vehicle = titleCase(vehicleRaw);
-  
-  const city = titleCase(cityRaw);
-  const province = titleCase(provinceRaw);
-
-  const info = vehicleInfo[vehicle] || {
-  summary: `Looking for a ${vehicle}? CarScoutZA connects you directly with trusted South African dealerships that can help you compare options, arrange finance and find the right vehicle for your needs.`,
-  idealFor: `Buyers looking for a quality ${vehicle} with help from trusted South African dealers.`,
-  category: "Used Vehicle"
-};
-  const fileName = slugify(vehicle) + "-for-sale-" + slugify(city) + ".html";
-  const url = "https://carscoutza.com/" + fileName;
-
-  const sitemapBlock = `<url>
+function sitemapEntry(url,priority="0.8"){
+return `<url>
   <loc>${url}</loc>
-  <lastmod>2026-07-06</lastmod>
-  <changefreq>weekly</changefreq>
-  <priority>0.8</priority>
+  <lastmod>${todayISO()}</lastmod>
+  <changefreq>daily</changefreq>
+  <priority>${priority}</priority>
 </url>`;
+}
+  function buildVehicleCityPage(vehicle,city,province){
 
-  const code = `<!DOCTYPE html>
+const vehicleSlug = slugify(vehicle);
+const citySlug = slugify(city);
+const fileName = `${vehicleSlug}-for-sale-${citySlug}.html`;
+const pageUrl = `https://carscoutza.com/${fileName}`;
+
+return `<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -165,32 +304,28 @@ function generatePage(){
 
 <title>${vehicle} for Sale in ${city} | CarScoutZA</title>
 
-<meta name="description" content="Browse ${vehicle} vehicles for sale in ${city}. Find trusted dealerships, finance options and quality used vehicles on CarScoutZA.">
+<meta name="description" content="Find ${vehicle} vehicles for sale in ${city}, ${province}. Browse used vehicles from trusted dealers and contact dealerships directly on CarScoutZA.">
 
-<meta name="keywords" content="${vehicle} for sale ${city}, used ${vehicle} ${city}, ${vehicle} for sale ${province}, ${vehicle} South Africa">
+<meta name="robots" content="index, follow">
 
-<link rel="canonical" href="${url}">
+<link rel="canonical" href="${pageUrl}">
 
 <meta property="og:title" content="${vehicle} for Sale in ${city} | CarScoutZA">
-<meta property="og:description" content="Browse ${vehicle} vehicles for sale in ${city}. Contact trusted dealerships directly through CarScoutZA.">
-<meta property="og:url" content="${url}">
+<meta property="og:description" content="Browse ${vehicle} vehicles for sale in ${city} from trusted dealerships on CarScoutZA.">
+<meta property="og:url" content="${pageUrl}">
 <meta property="og:type" content="website">
-
-<meta name="twitter:title" content="${vehicle} for Sale in ${city} | CarScoutZA">
-<meta name="twitter:description" content="Browse ${vehicle} vehicles for sale in ${city}. Contact trusted dealerships directly through CarScoutZA.">
-<meta name="twitter:card" content="summary_large_image">
 
 <script type="application/ld+json">
 {
-  "@context": "https://schema.org",
-  "@type": "CollectionPage",
-  "name": "${vehicle} for Sale in ${city}",
-  "description": "Browse ${vehicle} vehicles for sale in ${city} on CarScoutZA.",
-  "url": "${url}",
-  "isPartOf": {
-    "@type": "WebSite",
-    "name": "CarScoutZA",
-    "url": "https://carscoutza.com"
+  "@context":"https://schema.org",
+  "@type":"CollectionPage",
+  "name":"${vehicle} for Sale in ${city}",
+  "description":"Browse ${vehicle} vehicles for sale in ${city}, ${province}.",
+  "url":"${pageUrl}",
+  "isPartOf":{
+    "@type":"WebSite",
+    "name":"CarScoutZA",
+    "url":"https://carscoutza.com/"
   }
 }
 <\/script>
@@ -198,1089 +333,1491 @@ function generatePage(){
 <style>
 body{
 font-family:Arial,sans-serif;
-max-width:1000px;
+margin:0;
+background:#f5f7fa;
+color:#172033;
+line-height:1.6;
+}
+
+.container{
+max-width:1100px;
 margin:auto;
-padding:40px;
-line-height:1.8;
-color:#333;
+padding:30px 20px;
+}
+
+.hero,
+.info-box{
+background:white;
+padding:30px;
+border-radius:12px;
+margin-bottom:25px;
+}
+
+h1{
+color:#0052cc;
+font-size:36px;
+margin-top:0;
+}
+
+h2{
+color:#172033;
+margin-top:0;
+}
+
+.button{
+display:inline-block;
+background:#0052cc;
+color:white;
+padding:14px 24px;
+text-decoration:none;
+border-radius:8px;
+font-weight:bold;
+margin-top:12px;
+}
+
+.stock-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:18px;
+margin-top:20px;
+}
+
+.stock-card{
+background:white;
+border:1px solid #e5e7eb;
+border-radius:10px;
+overflow:hidden;
+}
+
+.stock-card img{
+width:100%;
+height:180px;
+object-fit:cover;
+background:#eee;
+}
+
+.stock-card-content{
+padding:15px;
+}
+
+.stock-card h3{
+margin:0 0 8px;
+font-size:18px;
+}
+
+.price{
+font-weight:bold;
+font-size:20px;
+color:#0052cc;
+}
+
+.related-links{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:10px;
+}
+
+.related-links a{
+background:white;
+border:1px solid #e5e7eb;
+padding:12px;
+border-radius:8px;
+color:#0052cc;
+font-weight:bold;
+text-decoration:none;
+}
+
+.empty-stock{
+background:#fff8e6;
+border:1px solid #f1d38a;
+padding:20px;
+border-radius:10px;
+}
+
+@media(max-width:600px){
+h1{
+font-size:29px;
+}
+
+.hero,
+.info-box{
+padding:22px 18px;
+}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<section class="hero">
+
+<h1>${vehicle} for Sale in ${city}</h1>
+
+<p>
+Looking for a <strong>${vehicle} for sale in ${city}</strong>?
+CarScoutZA helps you discover vehicles advertised by trusted motor dealerships in ${city}, ${province} and across South Africa.
+</p>
+
+<p>
+Browse available stock below and contact the advertising dealership directly for more information, finance enquiries, trade-ins or to arrange a viewing.
+</p>
+
+<a class="button" href="https://carscoutza.com/">
+Search All Vehicles
+</a>
+
+</section>
+
+<section>
+
+<h2>Available ${vehicle} Vehicles</h2>
+
+<div id="vehicleStock" class="stock-grid">
+<p>Loading available vehicles...</p>
+</div>
+
+</section>
+
+<section class="info-box">
+
+<h2>Buying a ${vehicle} in ${city}</h2>
+
+<p>
+When comparing ${vehicle} vehicles for sale, consider the model year, mileage, price, service history, specifications and overall condition.
+</p>
+
+<p>
+Vehicle availability changes regularly as dealerships sell stock and upload new arrivals. If there is no suitable ${vehicle} currently available in ${city}, you can also search CarScoutZA for vehicles advertised in other towns and provinces.
+</p>
+
+</section>
+
+<section class="info-box">
+
+<h2>Used Cars for Sale in ${city}</h2>
+
+<p>
+Looking beyond the ${vehicle}? Browse more used, second hand and pre-owned cars available in ${city}.
+</p>
+
+<a class="button" href="https://carscoutza.com/used-cars-for-sale-${citySlug}.html">
+Cars for Sale in ${city}
+</a>
+
+</section>
+
+<section class="info-box">
+
+<h2>Why Search on CarScoutZA?</h2>
+
+<ul>
+<li>Vehicles advertised by trusted dealerships</li>
+<li>Contact dealerships directly</li>
+<li>Phone and WhatsApp enquiry options</li>
+<li>Finance and trade-in enquiries</li>
+<li>Search cars, bakkies and SUVs</li>
+<li>Nationwide vehicle listings</li>
+</ul>
+
+</section>
+
+<section class="info-box">
+
+<h2>Popular Vehicle Searches</h2>
+
+<div class="related-links">
+
+<a href="https://carscoutza.com/toyota-hilux-for-sale-${citySlug}.html">
+Toyota Hilux ${city}
+</a>
+
+<a href="https://carscoutza.com/ford-ranger-for-sale-${citySlug}.html">
+Ford Ranger ${city}
+</a>
+
+<a href="https://carscoutza.com/vw-polo-for-sale-${citySlug}.html">
+VW Polo ${city}
+</a>
+
+<a href="https://carscoutza.com/toyota-fortuner-for-sale-${citySlug}.html">
+Toyota Fortuner ${city}
+</a>
+
+<a href="https://carscoutza.com/isuzu-d-max-for-sale-${citySlug}.html">
+Isuzu D-Max ${city}
+</a>
+
+<a href="https://carscoutza.com/haval-jolion-for-sale-${citySlug}.html">
+Haval Jolion ${city}
+</a>
+
+</div>
+
+</section>
+
+</div>
+
+<script>
+
+const SUPABASE_URL_PAGE = "${SUPABASE_URL}";
+const SUPABASE_KEY_PAGE = "${SUPABASE_KEY}";
+
+const PAGE_VEHICLE = ${JSON.stringify(vehicle)};
+const PAGE_CITY = ${JSON.stringify(city)};
+
+function money(value){
+
+const number = Number(value);
+
+if(!Number.isFinite(number)){
+return "";
+}
+
+return "R" + number.toLocaleString("en-ZA");
+
+}
+
+function firstImage(vehicle){
+
+if(vehicle.image_url){
+return vehicle.image_url;
+}
+
+if(vehicle.image){
+return vehicle.image;
+}
+
+if(Array.isArray(vehicle.images) && vehicle.images.length){
+return vehicle.images[0];
+}
+
+if(Array.isArray(vehicle.photos) && vehicle.photos.length){
+return vehicle.photos[0];
+}
+
+return "";
+
+}
+
+async function loadVehicleStock(){
+
+const container = document.getElementById("vehicleStock");
+
+try{
+
+if(
+!SUPABASE_KEY_PAGE ||
+SUPABASE_KEY_PAGE === "YOUR_EXISTING_SUPABASE_ANON_KEY"
+){
+
+container.innerHTML =
+'<div class="empty-stock">Browse current CarScoutZA stock using the search button above.</div>';
+
+return;
+
+}
+
+const endpoint =
+SUPABASE_URL_PAGE +
+"/rest/v1/vehicles?select=*&limit=1000";
+
+const response = await fetch(endpoint,{
+headers:{
+apikey:SUPABASE_KEY_PAGE,
+Authorization:"Bearer " + SUPABASE_KEY_PAGE
+}
+});
+
+if(!response.ok){
+throw new Error("Unable to load stock");
+}
+
+const rows = await response.json();
+
+const wantedVehicle = PAGE_VEHICLE.toLowerCase();
+const wantedCity = PAGE_CITY.toLowerCase();
+
+const matches = rows.filter(function(item){
+
+const make = String(item.make || "").toLowerCase();
+const model = String(item.model || "").toLowerCase();
+const combined = (make + " " + model).trim();
+
+const cityValue = String(
+item.city ||
+item.dealer_city ||
+item.location ||
+""
+).toLowerCase();
+
+const vehicleMatch =
+combined.includes(wantedVehicle) ||
+wantedVehicle.includes(combined);
+
+const cityMatch =
+!cityValue ||
+cityValue.includes(wantedCity) ||
+wantedCity.includes(cityValue);
+
+return vehicleMatch && cityMatch;
+
+});
+
+if(!matches.length){
+
+container.innerHTML =
+'<div class="empty-stock">No matching ${escapeHtml(vehicle)} vehicles are currently listed in ${escapeHtml(city)}. Search all CarScoutZA vehicles to see stock available elsewhere in South Africa.</div>';
+
+return;
+
+}
+
+container.innerHTML = matches.slice(0,12).map(function(item){
+
+const title = [
+item.year || "",
+item.make || "",
+item.model || "",
+item.variant || ""
+].join(" ").replace(/\\s+/g," ").trim();
+
+const image = firstImage(item);
+
+const detailsUrl =
+item.details_url ||
+item.url ||
+item.vehicle_url ||
+"https://carscoutza.com/";
+
+return \`
+<article class="stock-card">
+
+\${image ? \`
+<img
+src="\${escapeHtml(image)}"
+alt="\${escapeHtml(title)} for sale"
+loading="lazy">
+\` : ""}
+
+<div class="stock-card-content">
+
+<h3>\${escapeHtml(title || PAGE_VEHICLE)}</h3>
+
+\${item.price ? \`
+<div class="price">\${money(item.price)}</div>
+\` : ""}
+
+\${item.mileage ? \`
+<p>\${Number(item.mileage).toLocaleString("en-ZA")} km</p>
+\` : ""}
+
+<a class="button"
+href="\${escapeHtml(detailsUrl)}">
+View Vehicle
+</a>
+
+</div>
+
+</article>
+\`;
+
+}).join("");
+
+}catch(error){
+
+console.error(error);
+
+container.innerHTML =
+'<div class="empty-stock">Current stock could not be loaded. Please browse all vehicles on CarScoutZA.</div>';
+
+}
+
+}
+
+loadVehicleStock();
+
+<\/script>
+
+</body>
+</html>`;
+}
+
+
+function buildPowerfulCityPage(city,province){
+
+const citySlug = slugify(city);
+
+const fileName =
+`used-cars-for-sale-${citySlug}.html`;
+
+const pageUrl =
+`https://carscoutza.com/${fileName}`;
+
+const popularVehicles = [
+["Toyota Hilux","toyota-hilux"],
+["Ford Ranger","ford-ranger"],
+["VW Polo","vw-polo"],
+["Toyota Fortuner","toyota-fortuner"],
+["Isuzu D-Max","isuzu-d-max"],
+["Suzuki Swift","suzuki-swift"],
+["BMW 3 Series","bmw-3-series"],
+["Toyota Corolla Cross","toyota-corolla-cross"],
+["Haval Jolion","haval-jolion"],
+["Mitsubishi Triton","mitsubishi-triton"]
+];
+
+const vehicleLinks =
+popularVehicles.map(function(item){
+
+return `
+<a href="https://carscoutza.com/${item[1]}-for-sale-${citySlug}.html">
+${item[0]} for Sale ${city}
+</a>`;
+
+}).join("");
+
+return `<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Cars for Sale ${city} | Used & Second Hand Cars | CarScoutZA</title>
+
+<meta name="description"
+content="Looking for cars for sale in ${city}? Browse used, second hand and pre-owned cars, bakkies and SUVs from trusted dealers on CarScoutZA.">
+
+<meta name="robots"
+content="index, follow">
+
+<link rel="canonical"
+href="${pageUrl}">
+
+<meta property="og:title"
+content="Cars for Sale in ${city} | CarScoutZA">
+
+<meta property="og:description"
+content="Browse used, second hand and pre-owned vehicles from trusted dealerships in ${city} and across South Africa.">
+
+<meta property="og:url"
+content="${pageUrl}">
+
+<meta property="og:type"
+content="website">
+
+<script type="application/ld+json">
+{
+"@context":"https://schema.org",
+"@type":"CollectionPage",
+"name":"Cars for Sale in ${city}",
+"description":"Browse used and second hand cars for sale in ${city} on CarScoutZA.",
+"url":"${pageUrl}",
+"isPartOf":{
+"@type":"WebSite",
+"name":"CarScoutZA",
+"url":"https://carscoutza.com/"
+}
+}
+<\/script>
+
+<style>
+
+body{
+font-family:Arial,sans-serif;
+margin:0;
+background:#f5f7fa;
+color:#172033;
+line-height:1.65;
+}
+
+.container{
+max-width:1100px;
+margin:auto;
+padding:30px 20px;
+}
+
+.seo-header{
+margin-bottom:24px;
+padding-bottom:14px;
+border-bottom:1px solid #e5e7eb;
+}
+
+.seo-header a{
+color:#0056c9;
+font-size:24px;
+font-weight:700;
+text-decoration:none;
+}
+
+.hero,
+.info-box{
+background:white;
+padding:30px;
+border-radius:12px;
+margin-bottom:24px;
 }
 
 h1{
 color:#0056c9;
+margin-top:0;
+font-size:36px;
 }
 
 h2{
-margin-top:40px;
+color:#172033;
 }
 
-a{
-color:#0056c9;
-text-decoration:none;
-font-weight:bold;
-}
-
-.button{
+.search-button{
 display:inline-block;
-margin-top:30px;
-padding:15px 30px;
 background:#0056c9;
 color:white;
-border-radius:6px;
+padding:14px 24px;
+border-radius:8px;
 text-decoration:none;
+font-weight:bold;
+margin-top:12px;
 }
-#vehicle-results{
+
+.vehicle-links{
 display:grid;
-grid-template-columns:repeat(auto-fill,minmax(260px,320px));
-gap:20px;
-margin-top:25px;
-justify-content:start;
+grid-template-columns:
+repeat(auto-fit,minmax(220px,1fr));
+gap:12px;
 }
 
-.seo-vehicle-card{
-border:1px solid #ddd;
-border-radius:10px;
-overflow:hidden;
+.vehicle-links a{
 background:white;
-box-shadow:0 3px 12px rgba(0,0,0,0.08);
-}
-
-.seo-vehicle-card img{
-width:100%;
-height:220px;
-object-fit:cover;
-display:block;
-}
-
-.seo-vehicle-card-body{
-padding:16px;
-}
-
-.seo-vehicle-card h3{
-margin:0 0 10px;
-font-size:19px;
-color:#222;
-}
-
-.seo-vehicle-price{
-font-size:21px;
-font-weight:bold;
-color:#0056c9;
-margin-bottom:8px;
-}
-
-.seo-vehicle-meta{
-font-size:14px;
-color:#555;
-margin-top:5px;
-}
-
-.seo-details-button{
-display:inline-block;
-margin-top:15px;
-padding:10px 18px;
-background:#0056c9;
-color:white;
-border-radius:6px;
+padding:14px;
+border-radius:8px;
 text-decoration:none;
+color:#0056c9;
+font-weight:bold;
+border:1px solid #e5e7eb;
 }
+
+@media(max-width:600px){
+
+h1{
+font-size:29px;
+}
+
+.hero,
+.info-box{
+padding:22px 18px;
+}
+
+}
+
 </style>
+
 </head>
 
 <body>
 
-<h1>${vehicle} for Sale in ${city}</h1>
+<div class="container">
 
-<p>
-${info.summary}
-</p>
-<h2>Who is the ${vehicle} ideal for?</h2>
+<header class="seo-header">
 
-<p>
-${info.idealFor}
-</p>
-
-
-<h2>Used ${vehicle} Vehicles in ${city}</h2>
-
-<p>
-Whether you're buying your first vehicle, upgrading to something newer or searching for the perfect ${vehicle}, CarScoutZA makes the process simple. Browse vehicles from trusted dealerships in ${city}, compare your options and speak directly with knowledgeable dealers who can answer your questions, assist with finance and help you make the right buying decision.
-</p>
-
-<p>
-Availability can change daily as dealers upload new stock. If you do not immediately find the exact ${vehicle} you want in ${city}, you can still browse other listings on CarScoutZA or contact dealers directly to help source the right vehicle.
-</p>
-<h2>Why Choose CarScoutZA?</h2>
-
-<p>
-CarScoutZA was built with one goal in mind: connecting serious vehicle buyers directly with trusted South African dealerships. Every enquiry goes straight to the dealer, giving you expert advice, faster responses and a more personal buying experience.
-</p>
-
-<ul>
-<li>🚗 Browse vehicles from trusted dealerships</li>
-<li>💬 Contact dealers directly by phone or WhatsApp</li>
-<li>💰 Finance assistance available</li>
-<li>🔄 Trade-ins welcome</li>
-<li>🔍 Dealers can help source specific vehicles</li>
-<li>🇿🇦 Proudly South African</li>
-</ul>
-
-<h2>Ready to Find Your Next ${vehicle}?</h2>
-
-<p>
-CarScoutZA makes it simple to find ${vehicle} vehicles for sale in ${city}. Whether you are buying your first vehicle, upgrading your family car, or looking for a reliable work vehicle, CarScoutZA helps you connect with dealerships quickly and easily.
-</p>
-
-
-
-<h2>Why Thousands of South Africans Use CarScoutZA</h2>
-
-<p>
-CarScoutZA is designed to connect serious buyers with trusted dealerships across South Africa. Whether you're searching for a vehicle in ${city} or anywhere in ${province}, our goal is to make buying a vehicle simple, transparent and personal.
-</p>
-
-<ul>
-<li>🚗 Browse quality used vehicles from trusted dealers</li>
-<li>📞 Speak directly to dealerships — no middlemen</li>
-<li>💰 Get help with vehicle finance applications</li>
-<li>🔄 Trade in your current vehicle</li>
-<li>🔍 Ask dealers to source a specific vehicle for you</li>
-<li>🇿🇦 Proudly South African dealer network</li>
-</ul>
-<h2>The CarScoutZA Promise</h2>
-
-<p>
-Every enquiry made through CarScoutZA is designed to connect you directly with a trusted South African dealership. Our goal is simple: help buyers find the right vehicle while giving dealers the opportunity to provide expert advice, competitive finance solutions and outstanding customer service.
-</p>
-
-<p>
-Instead of dealing with call centres or middlemen, you'll speak directly to experienced vehicle professionals who can answer your questions, arrange finance, value your trade-in and even help source a vehicle if it's not currently available.
-</p>
-<h2>Frequently Asked Questions</h2>
-
-<h3>Where can I find a ${vehicle} for sale in ${city}?</h3>
-<p>
-You can browse ${vehicle} vehicles for sale in ${city} on CarScoutZA and contact trusted dealers directly by phone or WhatsApp.
-</p>
-
-<h3>Can I apply for finance on a ${vehicle}?</h3>
-<p>
-Many dealers listed on CarScoutZA offer vehicle finance options. Buyers can contact the dealer directly to ask about finance, affordability and approval options.
-</p>
-
-<h3>Are trade-ins welcome?</h3>
-<p>
-Many South African dealerships accept trade-ins. If you currently own a vehicle, you can ask the dealer whether they can assist with a trade-in valuation.
-</p>
-
-<h3>What if I cannot find the exact ${vehicle} I want in ${city}?</h3>
-<p>
-Stock changes regularly. If the exact ${vehicle} is not currently available in ${city}, you can browse nearby areas or contact dealers to help source the right vehicle.
-</p>
-
-<h2>Ready to Speak to a Trusted Dealer?</h2>
-
-<p>
-Whether you're ready to buy today or simply have a few questions, our trusted dealer network is here to help. Compare vehicles, arrange finance, discuss trade-ins or ask a dealer to source the perfect ${vehicle} for you.
-</p>
-
-<a class="button" href="https://carscoutza.com">
-Help Me Find My ${vehicle}
+<a href="https://carscoutza.com/">
+CarScoutZA.com
 </a>
 
-<p style="font-size:14px;color:#666;margin-top:20px;">
-CarScoutZA – Where Buyers Meet Trusted Dealers.
+</header>
+
+<section class="hero">
+
+<h1>Cars for Sale in ${city}</h1>
+
+<p>
+Searching for <strong>cars for sale in ${city}</strong>?
+CarScoutZA helps you discover used, second hand and pre-owned vehicles advertised by trusted dealerships.
 </p>
 
+<p>
+Browse cars, bakkies, SUVs, hatchbacks and sedans available from dealers in ${city}, ${province} and across South Africa.
+</p>
+
+<a class="search-button"
+href="https://carscoutza.com/">
+Search Cars for Sale
+</a>
+
+</section>
+
+<section class="info-box">
+
+<h2>Used Cars for Sale in ${city}</h2>
+
+<p>
+Whether you are looking for an affordable first car, a family SUV, a work bakkie or your next everyday vehicle, CarScoutZA helps you compare vehicles advertised by professional motor dealerships.
+</p>
+
+<p>
+Search available stock, compare makes and models and contact the advertising dealership directly for vehicle information, finance enquiries, trade-ins or to arrange a viewing.
+</p>
+
+</section>
+
+<section>
+
+<h2>Popular Cars and Bakkies in ${city}</h2>
+
+<div class="vehicle-links">
+
+${vehicleLinks}
+
+</div>
+
+</section>
+
+<section class="info-box">
+
+<h2>Second Hand and Pre-Owned Cars in ${city}</h2>
+
+<p>
+CarScoutZA brings together vehicle listings from dealerships so buyers can browse different makes, models, prices and vehicle types in one place.
+</p>
+
+<p>
+If you are searching for
+<strong>second hand cars in ${city}</strong>,
+<strong>pre-owned cars in ${city}</strong>,
+<strong>used cars for sale in ${city}</strong>
+or simply
+<strong>cars for sale ${city}</strong>,
+CarScoutZA helps you find vehicles and connect directly with dealerships.
+</p>
+
+</section>
+
+<section class="info-box">
+
+<h2>Why Search on CarScoutZA?</h2>
+
+<ul>
+
+<li>Vehicles advertised by trusted dealerships</li>
+
+<li>Search cars, bakkies and SUVs</li>
+
+<li>Contact dealerships directly</li>
+
+<li>Phone and WhatsApp enquiry options</li>
+
+<li>Finance and trade-in enquiries</li>
+
+<li>Vehicle listings from dealers across South Africa</li>
+
+<li>Easy browsing on mobile and desktop</li>
+
+</ul>
+
+</section>
+
+<section class="info-box">
+
+<h2>Buying a Used Car in ${city}</h2>
+
+<p>
+When comparing used vehicles, consider the price, mileage, model year, service history, condition and specifications of each vehicle.
+Contact the advertising dealer directly to confirm current availability and any information important to your buying decision.
+</p>
+
+<p>
+Stock changes regularly as dealerships sell vehicles and upload new arrivals, so check CarScoutZA often for the latest vehicles available in ${city} and elsewhere in ${province}.
+</p>
+
+</section>
+
+<section class="info-box">
+
+<h2>Find Cars Beyond ${city}</h2>
+
+<p>
+Cannot find the right vehicle in ${city}?
+CarScoutZA also helps you search vehicles advertised by dealerships in other towns and provinces across South Africa.
+</p>
+
+<a class="search-button"
+href="https://carscoutza.com/">
+Browse All Vehicles
+</a>
+
+</section>
+
+</div>
+
 </body>
+
 </html>`;
+}
+  <script>
 
-  document.getElementById("filename").value = fileName;
-  document.getElementById("sitemap").value = sitemapBlock;
-  document.getElementById("output").value = code;
+function downloadFile(filename, content){
+
+const blob = new Blob(
+[content],
+{type:"text/html;charset=utf-8"}
+);
+
+const url = URL.createObjectURL(blob);
+
+const link = document.createElement("a");
+
+link.href = url;
+link.download = filename;
+
+document.body.appendChild(link);
+
+link.click();
+
+document.body.removeChild(link);
+
+setTimeout(function(){
+URL.revokeObjectURL(url);
+},1000);
+
 }
 
-function copyCode(){
-  const output = document.getElementById("output");
-  output.select();
-  document.execCommand("copy");
-  alert("HTML code copied.");
+
+function downloadTextFile(filename, content){
+
+const blob = new Blob(
+[content],
+{type:"text/plain;charset=utf-8"}
+);
+
+const url = URL.createObjectURL(blob);
+
+const link = document.createElement("a");
+
+link.href = url;
+link.download = filename;
+
+document.body.appendChild(link);
+
+link.click();
+
+document.body.removeChild(link);
+
+setTimeout(function(){
+URL.revokeObjectURL(url);
+},1000);
+
 }
 
-function copySitemap(){
-  const sitemap = document.getElementById("sitemap");
-  sitemap.select();
-  document.execCommand("copy");
-  alert("Sitemap block copied.");
+
+async function generateSinglePage(){
+
+const vehicleInput =
+document.getElementById("vehicleName");
+
+const cityInput =
+document.getElementById("city");
+
+const provinceInput =
+document.getElementById("province");
+
+const vehicle =
+vehicleInput ? vehicleInput.value.trim() : "";
+
+const city =
+cityInput ? cityInput.value.trim() : "";
+
+let province =
+provinceInput ? provinceInput.value.trim() : "";
+
+if(!vehicle){
+
+alert("Please enter a vehicle name.");
+
+return;
+
 }
-function generateAllCities(){
 
-  const vehicleRaw = document.getElementById("vehicle").value.trim();
+if(!city){
 
-  if(!vehicleRaw){
-    alert("Please enter a vehicle name first.");
-    return;
-  }
+alert("Please enter a city.");
 
-  const vehicle = titleCase(vehicleRaw);
+return;
 
-  const cities = [
-    ["Kimberley","Northern Cape"],
-    ["Upington","Northern Cape"],
-    ["Kuruman","Northern Cape"],
-    ["Springbok","Northern Cape"],
-    ["De Aar","Northern Cape"],
+}
 
-    ["Bloemfontein","Free State"],
-    ["Welkom","Free State"],
-    ["Kroonstad","Free State"],
-    ["Bethlehem","Free State"],
-    ["Sasolburg","Free State"],
+if(!province){
 
-    ["Rustenburg","North West"],
-    ["Potchefstroom","North West"],
-    ["Klerksdorp","North West"],
-    ["Mahikeng","North West"],
-    ["Brits","North West"],
+const foundCity =
+cities.find(function(item){
 
-    ["Johannesburg","Gauteng"],
-    ["Pretoria","Gauteng"],
-    ["Centurion","Gauteng"],
-    ["Midrand","Gauteng"],
-    ["Randburg","Gauteng"],
-    ["Roodepoort","Gauteng"],
-    ["Kempton Park","Gauteng"],
-    ["Benoni","Gauteng"],
-    ["Boksburg","Gauteng"],
-    ["Alberton","Gauteng"],
+return item.city.toLowerCase() ===
+city.toLowerCase();
 
-    ["Cape Town","Western Cape"],
-    ["Bellville","Western Cape"],
-    ["Paarl","Western Cape"],
-    ["Stellenbosch","Western Cape"],
-    ["George","Western Cape"],
-    ["Mossel Bay","Western Cape"],
-    ["Worcester","Western Cape"],
+});
 
-    ["Durban","KwaZulu-Natal"],
-    ["Pinetown","KwaZulu-Natal"],
-    ["Pietermaritzburg","KwaZulu-Natal"],
-    ["Richards Bay","KwaZulu-Natal"],
-    ["Ballito","KwaZulu-Natal"],
-    ["Newcastle","KwaZulu-Natal"],
+if(foundCity){
 
-    ["Gqeberha","Eastern Cape"],
-    ["East London","Eastern Cape"],
-    ["Kariega","Eastern Cape"],
-    ["Makhanda","Eastern Cape"],
-    ["Queenstown","Eastern Cape"],
+province = foundCity.province;
 
-    ["Polokwane","Limpopo"],
-    ["Tzaneen","Limpopo"],
-    ["Mokopane","Limpopo"],
-    ["Thohoyandou","Limpopo"],
-    ["Bela-Bela","Limpopo"],
+}else{
 
-    ["Mbombela","Mpumalanga"],
-    ["Witbank","Mpumalanga"],
-    ["Secunda","Mpumalanga"],
-    ["Ermelo","Mpumalanga"],
-    ["Standerton","Mpumalanga"]
-  ];
+province = "South Africa";
 
-  let fileList = "";
-  let sitemapBlocks = "";
-  let htmlOutput = "";
+}
 
-  cities.forEach(function(item){
-    const city = item[0];
-    const province = item[1];
-const info = vehicleInfo[vehicle] || {
-  summary:`Looking for a ${vehicle}? CarScoutZA connects you directly with trusted dealerships in South Africa that can help you compare vehicles, arrange finance and find the right ${vehicle} for your needs.`
-};
-    const fileName = slugify(vehicle) + "-for-sale-" + slugify(city) + ".html";
-    const url = "https://carscoutza.com/" + fileName;
+}
 
-    fileList += fileName + "\n";
+const html =
+buildVehicleCityPage(
+vehicle,
+city,
+province
+);
 
-    sitemapBlocks += `<url>
-  <loc>${url}</loc>
-  <lastmod>2026-07-06</lastmod>
-  <changefreq>weekly</changefreq>
-  <priority>0.8</priority>
+const filename =
+`${slugify(vehicle)}-for-sale-${slugify(city)}.html`;
+
+downloadFile(
+filename,
+html
+);
+
+}
+
+
+async function generateAllCities(){
+
+const vehicleInput =
+document.getElementById("vehicleName");
+
+const vehicle =
+vehicleInput ?
+vehicleInput.value.trim() :
+"";
+
+if(!vehicle){
+
+alert(
+"Please enter a vehicle name first. Example: Ford Ranger"
+);
+
+return;
+
+}
+
+if(
+typeof JSZip === "undefined"
+){
+
+alert(
+"ZIP library has not loaded. Please refresh the page and try again."
+);
+
+return;
+
+}
+
+const zip =
+new JSZip();
+
+cities.forEach(function(location){
+
+const html =
+buildVehicleCityPage(
+vehicle,
+location.city,
+location.province
+);
+
+const filename =
+`${slugify(vehicle)}-for-sale-${slugify(location.city)}.html`;
+
+zip.file(
+filename,
+html
+);
+
+});
+
+const blob =
+await zip.generateAsync({
+type:"blob"
+});
+
+saveAsBlob(
+blob,
+`${slugify(vehicle)}-all-cities.zip`
+);
+
+alert(
+`Created ${cities.length} SEO pages for ${vehicle}.`
+);
+
+}
+
+
+async function generateAllVehicles(){
+
+if(
+typeof JSZip === "undefined"
+){
+
+alert(
+"ZIP library has not loaded. Please refresh the page and try again."
+);
+
+return;
+
+}
+
+const zip =
+new JSZip();
+
+vehicles.forEach(function(vehicle){
+
+cities.forEach(function(location){
+
+const html =
+buildVehicleCityPage(
+vehicle,
+location.city,
+location.province
+);
+
+const filename =
+`${slugify(vehicle)}-for-sale-${slugify(location.city)}.html`;
+
+zip.file(
+filename,
+html
+);
+
+});
+
+});
+
+const blob =
+await zip.generateAsync({
+type:"blob"
+});
+
+saveAsBlob(
+blob,
+"carscoutza-all-vehicle-seo-pages.zip"
+);
+
+alert(
+`Created ${vehicles.length * cities.length} vehicle SEO pages.`
+);
+
+}
+
+
+async function generatePowerfulCityPages(){
+
+if(
+typeof JSZip === "undefined"
+){
+
+alert(
+"ZIP library has not loaded. Please refresh the page and try again."
+);
+
+return;
+
+}
+
+const zip =
+new JSZip();
+
+cities.forEach(function(location){
+
+const html =
+buildPowerfulCityPage(
+location.city,
+location.province
+);
+
+const filename =
+`used-cars-for-sale-${slugify(location.city)}.html`;
+
+zip.file(
+filename,
+html
+);
+
+});
+
+const blob =
+await zip.generateAsync({
+type:"blob"
+});
+
+saveAsBlob(
+blob,
+"carscoutza-powerful-city-pages.zip"
+);
+
+alert(
+`Created ${cities.length} powerful city SEO pages.`
+);
+
+}
+
+
+async function generateEverything(){
+
+if(
+typeof JSZip === "undefined"
+){
+
+alert(
+"ZIP library has not loaded. Please refresh the page and try again."
+);
+
+return;
+
+}
+
+const zip =
+new JSZip();
+
+const vehicleFolder =
+zip.folder(
+"vehicle-city-pages"
+);
+
+const cityFolder =
+zip.folder(
+"powerful-city-pages"
+);
+
+vehicles.forEach(function(vehicle){
+
+cities.forEach(function(location){
+
+const html =
+buildVehicleCityPage(
+vehicle,
+location.city,
+location.province
+);
+
+const filename =
+`${slugify(vehicle)}-for-sale-${slugify(location.city)}.html`;
+
+vehicleFolder.file(
+filename,
+html
+);
+
+});
+
+});
+
+
+cities.forEach(function(location){
+
+const html =
+buildPowerfulCityPage(
+location.city,
+location.province
+);
+
+const filename =
+`used-cars-for-sale-${slugify(location.city)}.html`;
+
+cityFolder.file(
+filename,
+html
+);
+
+});
+
+
+const sitemapEntries =
+buildSitemapEntries();
+
+zip.file(
+"seo-sitemap-entries.txt",
+sitemapEntries
+);
+
+
+const blob =
+await zip.generateAsync({
+type:"blob"
+});
+
+saveAsBlob(
+blob,
+"carscoutza-complete-seo-package.zip"
+);
+
+alert(
+"Complete CarScoutZA SEO package created."
+);
+
+}
+
+
+function saveAsBlob(
+blob,
+filename
+){
+
+const url =
+URL.createObjectURL(blob);
+
+const link =
+document.createElement("a");
+
+link.href =
+url;
+
+link.download =
+filename;
+
+document.body.appendChild(
+link
+);
+
+link.click();
+
+document.body.removeChild(
+link
+);
+
+setTimeout(function(){
+
+URL.revokeObjectURL(
+url
+);
+
+},1000);
+
+}
+
+
+function buildSitemapEntries(){
+
+let output = "";
+
+cities.forEach(function(location){
+
+const citySlug =
+slugify(location.city);
+
+output +=
+`<url>
+<loc>https://carscoutza.com/used-cars-for-sale-${citySlug}.html</loc>
+<changefreq>daily</changefreq>
+<priority>0.9</priority>
 </url>
 
 `;
 
-    htmlOutput += `==============================
-FILE NAME: ${fileName}
-==============================
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>${vehicle} for Sale in ${city} | CarScoutZA</title>
-
-<meta name="description" content="Browse ${vehicle} vehicles for sale in ${city}. Find trusted dealerships, finance options and quality used vehicles on CarScoutZA.">
-
-<meta name="keywords" content="${vehicle} for sale ${city}, used ${vehicle} ${city}, ${vehicle} for sale ${province}, ${vehicle} South Africa">
-
-<link rel="canonical" href="${url}">
-
-<meta property="og:title" content="${vehicle} for Sale in ${city} | CarScoutZA">
-<meta property="og:description" content="Browse ${vehicle} vehicles for sale in ${city}. Contact trusted dealerships directly through CarScoutZA.">
-<meta property="og:url" content="${url}">
-<meta property="og:type" content="website">
-
-<meta name="twitter:title" content="${vehicle} for Sale in ${city} | CarScoutZA">
-<meta name="twitter:description" content="Browse ${vehicle} vehicles for sale in ${city}. Contact trusted dealerships directly through CarScoutZA.">
-<meta name="twitter:card" content="summary_large_image">
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "CollectionPage",
-  "name": "${vehicle} for Sale in ${city}",
-  "description": "Browse ${vehicle} vehicles for sale in ${city} on CarScoutZA.",
-  "url": "${url}",
-  "isPartOf": {
-    "@type": "WebSite",
-    "name": "CarScoutZA",
-    "url": "https://carscoutza.com"
-  }
-}
-<\/script>
-
-<style>
-body{
-font-family:Arial,sans-serif;
-max-width:1000px;
-margin:auto;
-padding:40px;
-line-height:1.8;
-color:#333;
-}
-h1{color:#0056c9;}
-h2{margin-top:40px;}
-a{color:#0056c9;text-decoration:none;font-weight:bold;}
-.button{
-display:inline-block;
-margin-top:30px;
-padding:15px 30px;
-background:#0056c9;
-color:white;
-border-radius:6px;
-text-decoration:none;
-}
-#vehicle-results{
-display:grid;
-grid-template-columns:repeat(auto-fill,minmax(260px,320px));
-gap:20px;
-margin-top:25px;
-justify-content:start;
-}
-
-.seo-vehicle-card{
-border:1px solid #ddd;
-border-radius:10px;
-overflow:hidden;
-background:white;
-box-shadow:0 3px 12px rgba(0,0,0,0.08);
-}
-
-.seo-vehicle-card img{
-width:100%;
-height:220px;
-object-fit:cover;
-display:block;
-}
-
-.seo-vehicle-card-body{
-padding:16px;
-}
-
-.seo-vehicle-card h3{
-margin:0 0 10px;
-font-size:19px;
-color:#222;
-}
-
-.seo-vehicle-price{
-font-size:21px;
-font-weight:bold;
-color:#0056c9;
-margin-bottom:8px;
-}
-
-.seo-vehicle-meta{
-font-size:14px;
-color:#555;
-margin-top:5px;
-}
-
-.seo-details-button{
-display:inline-block;
-margin-top:15px;
-padding:10px 18px;
-background:#0056c9;
-color:white;
-border-radius:6px;
-text-decoration:none;
-}
-.seo-header{
-  margin-bottom:24px;
-  padding-bottom:14px;
-  border-bottom:1px solid #e5e7eb;
-}
-
-.seo-header a{
-  color:#0056c9;
-  font-size:24px;
-  font-weight:700;
-  text-decoration:none;
-}
-</style>
-</head>
-
-<body>
-<header class="seo-header">
-  <a href="https://carscoutza.com/">CarScoutZA.com</a>
-</header>
-<h1>${vehicle} for Sale in ${city}</h1>
-
-<section id="live-vehicles-section">
-
-<h2>${vehicle} Vehicles Available in ${city}</h2>
-
-<p id="vehicle-results-message">
-Checking the latest ${vehicle} vehicles available in ${city}...
-</p>
-
-<div id="vehicle-results"></div>
-
-</section>
-<p>
-${info.summary}
-</p>
-
-<h2>Why Buy Through CarScoutZA?</h2>
-
-<ul>
-<li>Trusted South African dealerships</li>
-<li>Finance available</li>
-<li>Trade-ins welcome</li>
-<li>Quality used vehicles</li>
-<li>Direct dealer contact</li>
-<li>WhatsApp enquiries</li>
-<li>No middlemen</li>
-</ul>
-
-
-<h2>Other Vehicles for Sale in ${city}</h2>
-
-<p>
-Explore other popular vehicles for sale in ${city}:
-</p>
-
-<ul>
-  <li><a href="https://carscoutza.com/ford-ranger-for-sale-${slugify(city)}.html">Ford Ranger for Sale in ${city}</a></li>
-  <li><a href="https://carscoutza.com/toyota-hilux-for-sale-${slugify(city)}.html">Toyota Hilux for Sale in ${city}</a></li>
-  <li><a href="https://carscoutza.com/toyota-fortuner-for-sale-${slugify(city)}.html">Toyota Fortuner for Sale in ${city}</a></li>
-  <li><a href="https://carscoutza.com/volkswagen-polo-for-sale-${slugify(city)}.html">Volkswagen Polo for Sale in ${city}</a></li>
-</ul>
-
-<h2>${vehicle} for Sale in Other Cities</h2>
-
-<p>
-Can't find the ${vehicle} you're looking for in ${city}? Explore ${vehicle} vehicles available in other South African cities:
-</p>
-
-<ul>
-  ${
-    ["Bloemfontein", "Kimberley", "Cape Town", "Johannesburg", "Pretoria"]
-      .filter(otherCity => otherCity.toLowerCase() !== city.toLowerCase())
-      .slice(0, 3)
-      .map(otherCity => `
-        <li>
-          <a href="https://carscoutza.com/${slugify(vehicle)}-for-sale-${slugify(otherCity)}.html">
-            ${vehicle} for Sale in ${otherCity}
-          </a>
-        </li>
-      `)
-      .join("")
-  }
-</ul>
-
-
-<a class="button" href="https://carscoutza.com">
-Browse All Vehicles
-</a>
-<script>
-
-const seoVehicle = "${vehicle}";
-const seoCity = "${city}";
-
-/*
-Copy the exact supabaseUrl and supabaseKey values
-from index.html and paste them below.
-*/
-const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
-
-function normaliseSeoText(value){
-  return String(value || "")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, " ")
-    .trim();
-}
-function getSeoVehicleImage(vehicle){
-
-  if(vehicle.image && String(vehicle.image).trim()){
-    return String(vehicle.image).trim();
-  }
-
-  if(Array.isArray(vehicle.images) && vehicle.images.length){
-    return vehicle.images[0];
-  }
-
-  if(typeof vehicle.images === "string" && vehicle.images.trim()){
-
-    try{
-      const parsedImages = JSON.parse(vehicle.images);
-
-      if(Array.isArray(parsedImages) && parsedImages.length){
-        return parsedImages[0];
-      }
-    }catch(error){
-      return vehicle.images.trim();
-    }
-
-  }
-
-  return "https://via.placeholder.com/400x300?text=No+Image";
-}
-
-function formatSeoPrice(price){
-
-  const number = Number(
-    String(price || "").replace(/\D/g,"")
-  );
-
-  if(!number){
-    return "Price on request";
-  }
-
-  return "R" + number.toLocaleString("en-ZA");
-}
-
-function getSeoLocation(vehicle, profile){
-
-  return [
-    vehicle.town || profile.town,
-    vehicle.province || profile.province
-  ]
-  .filter(Boolean)
-  .join(", ") ||
-  vehicle.location ||
-  "South Africa";
-}
-function renderSeoVehicles(vehicleList, profileMap){
-
-  const results =
-    document.getElementById("vehicle-results");
-
-  results.innerHTML = "";
-
-  vehicleList.slice(0,12).forEach(function(vehicle){
-
-    const profile =
-      profileMap[
-        String(vehicle.user_id || vehicle.dealer_id || "")
-      ] || {};
-
-    const title =
-      [
-        vehicle.year,
-        vehicle.make,
-        vehicle.model
-      ]
-      .filter(Boolean)
-      .join(" ") ||
-      vehicle.title ||
-      "Vehicle";
-
-    const card = document.createElement("article");
-    card.className = "seo-vehicle-card";
-
-    const image = document.createElement("img");
-    image.src = getSeoVehicleImage(vehicle);
-    image.alt = title + " for sale";
-    image.loading = "lazy";
-
-    image.onerror = function(){
-      this.src =
-        "https://via.placeholder.com/400x300?text=No+Image";
-    };
-
-    const body = document.createElement("div");
-    body.className = "seo-vehicle-card-body";
-
-    const heading = document.createElement("h3");
-    heading.textContent = title;
-
-    const price = document.createElement("div");
-    price.className = "seo-vehicle-price";
-    price.textContent = formatSeoPrice(vehicle.price);
-
-    const location = document.createElement("div");
-    location.className = "seo-vehicle-meta";
-    location.textContent =
-      "📍 " + getSeoLocation(vehicle, profile);
-
-    const mileage = document.createElement("div");
-    mileage.className = "seo-vehicle-meta";
-    mileage.textContent =
-      "🚗 " + (vehicle.mileage || "Mileage not listed");
-
-    const dealer = document.createElement("div");
-    dealer.className = "seo-vehicle-meta";
-    dealer.textContent =
-      "🏢 " +
-      (
-        vehicle.dealer ||
-        vehicle.dealer_name ||
-        "CarScoutZA Dealer"
-      );
-
-    const link = document.createElement("a");
-    link.className = "seo-details-button";
-    link.href =
-      "details.html?id=" +
-      encodeURIComponent(vehicle.id);
-    link.textContent = "View Vehicle Details";
-
-    body.appendChild(heading);
-    body.appendChild(price);
-    body.appendChild(location);
-    body.appendChild(mileage);
-    body.appendChild(dealer);
-    body.appendChild(link);
-
-    card.appendChild(image);
-    card.appendChild(body);
-
-    results.appendChild(card);
-
-  });
-
-}
-async function checkLiveVehicles(){
-
-  const message =
-    document.getElementById("vehicle-results-message");
-
-  try{
-
-    const vehicleResponse = await fetch(
-      supabaseUrl +
-      "/rest/v1/vehicles?select=*&order=updated_at.desc.nullslast,id.desc",
-      {
-        headers:{
-          apikey: supabaseKey,
-          Authorization: "Bearer " + supabaseKey
-        }
-      }
-    );
-
-    const profileResponse = await fetch(
-      supabaseUrl +
-      "/rest/v1/profiles?select=id,town,province",
-      {
-        headers:{
-          apikey: supabaseKey,
-          Authorization: "Bearer " + supabaseKey
-        }
-      }
-    );
-
-    if(!vehicleResponse.ok || !profileResponse.ok){
-      throw new Error("Could not load vehicle information.");
-    }
-
-    const vehicles = await vehicleResponse.json();
-    const profiles = await profileResponse.json();
-
-    const profileMap = {};
-
-    profiles.forEach(function(profile){
-      profileMap[String(profile.id)] = profile;
-    });
-
-    const wantedVehicle = normaliseSeoText(seoVehicle);
-    const wantedCity = normaliseSeoText(seoCity);
-
-    const exactMatches = vehicles.filter(function(v){
-
-      const profile =
-        profileMap[String(v.user_id || v.dealer_id || "")] || {};
-
-      const fullVehicleName = normaliseSeoText(
-        (v.make || "") + " " + (v.model || "")
-      );
-
-      const vehicleLocation = normaliseSeoText(
-        v.town ||
-        profile.town ||
-        v.location ||
-        ""
-      );
-
-      return (
-        fullVehicleName.includes(wantedVehicle) &&
-        vehicleLocation.includes(wantedCity)
-      );
-
-    });
-
-    if(exactMatches.length > 0){
-
-      message.textContent =
-        exactMatches.length +
-        " matching ${vehicle} vehicle" +
-        (exactMatches.length === 1 ? "" : "s") +
-        " currently available in ${city}.";
-renderSeoVehicles(exactMatches, profileMap);
-    }else{
-
-      message.textContent =
-  "No exact ${vehicle} matches are currently available in ${city}. Showing ${vehicle} vehicles available elsewhere in South Africa.";
-const sameVehicleElsewhere = vehicles.filter(function(v){
-
-  const fullVehicleName = normaliseSeoText(
-    (v.make || "") + " " + (v.model || "")
-  );
-
-  return fullVehicleName.includes(wantedVehicle);
-
 });
 
-renderSeoVehicles(
-  sameVehicleElsewhere,
-  profileMap
-);
-    }
-
-    console.log(
-      "SEO exact matches:",
-      exactMatches
-    );
-
-  }catch(error){
-
-    console.error(error);
-
-    message.textContent =
-      "Vehicle availability changes daily. Browse the latest CarScoutZA stock below.";
-
-  }
-
-}
-
-checkLiveVehicles();
-
-<\/script>
-</body>
-</html>
-
-
-`;
-  });
-
-  document.getElementById("filename").value = fileList;
-  document.getElementById("sitemap").value = sitemapBlocks;
-  document.getElementById("output").value = htmlOutput;
-
-  console.log("Generated " + cities.length + " SEO pages for " + vehicle + ".");
-}
-  function generateAllVehicles(){
-
-const vehicles = [
-"Toyota Hilux",
-"Toyota Fortuner",
-"Toyota Corolla",
-"Toyota Corolla Quest",
-"Toyota Corolla Cross",
-"Toyota Starlet",
-"Toyota Urban Cruiser",
-"Toyota RAV4",
-"Toyota Land Cruiser",
-"Toyota Land Cruiser Prado",
-"Toyota Quantum",
-"Toyota Rumion",
-"Toyota Yaris",
-"Toyota Avanza",
-"Toyota HiAce",
-
-"Ford Ranger",
-"Ford Everest",
-"Ford EcoSport",
-"Ford Territory",
-"Ford Figo",
-"Ford Fiesta",
-"Ford Focus",
-"Ford Puma",
-"Ford Tourneo",
-
-"VW Polo",
-"VW Polo Vivo",
-"VW Golf",
-"VW Tiguan",
-"VW T-Cross",
-"VW Touareg",
-"VW Amarok",
-"VW Caddy",
-"VW Transporter",
-"VW Crafter",
-
-"Isuzu D-Max",
-"Isuzu MU-X",
-
-"Nissan Navara",
-"Nissan NP200",
-"Nissan Magnite",
-"Nissan X-Trail",
-"Nissan Qashqai",
-"Nissan Patrol",
-"Nissan Livina",
-
-"Suzuki Swift",
-"Suzuki Baleno",
-"Suzuki Fronx",
-"Suzuki Jimny",
-"Suzuki Celerio",
-"Suzuki Ertiga",
-"Suzuki Ignis",
-"Suzuki XL6",
-"Suzuki S-Presso",
-
-"Hyundai i10",
-"Hyundai Grand i10",
-"Hyundai i20",
-"Hyundai Venue",
-"Hyundai Creta",
-"Hyundai Tucson",
-"Hyundai Santa Fe",
-"Hyundai Staria",
-"Hyundai H1",
-
-"Kia Picanto",
-"Kia Rio",
-"Kia Sonet",
-"Kia Seltos",
-"Kia Sportage",
-"Kia Sorento",
-"Kia Carnival",
-
-"Renault Kwid",
-"Renault Kiger",
-"Renault Duster",
-"Renault Triber",
-
-"Mahindra Pik Up",
-"Mahindra XUV300",
-"Mahindra XUV700",
-"Mahindra Scorpio",
-"Mahindra Bolero",
-
-"Haval Jolion",
-"Haval H6",
-"Haval H6 GT",
-
-"Chery Tiggo 4 Pro",
-"Chery Tiggo 7 Pro",
-"Chery Tiggo 8 Pro",
-
-"Omoda C5",
-"Jaecoo J7",
-
-"Jetour Dashing",
-"Jetour X70 Plus",
-"Jetour T2",
-
-"BMW 1 Series",
-"BMW 2 Series",
-"BMW 3 Series",
-"BMW 5 Series",
-"BMW X1",
-"BMW X3",
-"BMW X5",
-
-"Mercedes-Benz A-Class",
-"Mercedes-Benz C-Class",
-"Mercedes-Benz E-Class",
-"Mercedes-Benz GLC",
-"Mercedes-Benz GLE",
-"Mercedes-Benz V-Class",
-"Mercedes-Benz Sprinter",
-
-"Audi A1",
-"Audi A3",
-"Audi A4",
-"Audi Q2",
-"Audi Q3",
-"Audi Q5",
-"Audi Q7",
-
-"Mazda 2",
-"Mazda 3",
-"Mazda CX-3",
-"Mazda CX-5",
-"Mazda BT-50",
-
-"Honda Amaze",
-"Honda Ballade",
-"Honda BR-V",
-"Honda CR-V",
-"Honda WR-V",
-
-"Mitsubishi Pajero Sport",
-"Mitsubishi Triton",
-"Mitsubishi ASX",
-"Mitsubishi Eclipse Cross",
-
-"Peugeot 208",
-"Peugeot 2008",
-"Opel Corsa",
-"Opel Mokka",
-
-"GWM P-Series",
-"GWM Steed",
-
-"Fiat 500",
-"Fiat Fullback",
-
-"Subaru Forester",
-"Subaru Outback",
-
-"Volvo XC40",
-"Volvo XC60",
-
-"Land Rover Defender",
-"Land Rover Discovery",
-"Range Rover Evoque",
-"Range Rover Sport",
-
-"Lexus RX",
-"Lexus NX",
-
-"Mini Cooper",
-
-"Porsche Cayenne",
-"Porsche Macan"
-];
-    
-
-let allHtml = "";
-let allSitemap = "";
-let allFiles = "";
 
 vehicles.forEach(function(vehicle){
 
-    document.getElementById("vehicle").value = vehicle;
+cities.forEach(function(location){
 
-    generateAllCities();
+const vehicleSlug =
+slugify(vehicle);
 
-    allFiles += document.getElementById("filename").value + "\n";
-    allSitemap += document.getElementById("sitemap").value + "\n";
-    allHtml += document.getElementById("output").value + "\n";
+const citySlug =
+slugify(location.city);
+
+output +=
+`<url>
+<loc>https://carscoutza.com/${vehicleSlug}-for-sale-${citySlug}.html</loc>
+<changefreq>daily</changefreq>
+<priority>0.8</priority>
+</url>
+
+`;
 
 });
 
-document.getElementById("filename").value = allFiles;
-document.getElementById("sitemap").value = allSitemap;
-document.getElementById("output").value = allHtml;
+});
 
-alert("Finished generating SEO pages for " + vehicles.length + " vehicle models.");
-    
+return output;
+
 }
- async function downloadZip(){
 
-  if (typeof JSZip === "undefined") {
-    alert("ZIP library did not load. Please refresh the page and try again.");
+
+function generateSitemapEntries(){
+
+const entries =
+buildSitemapEntries();
+
+downloadTextFile(
+"carscoutza-seo-sitemap-entries.txt",
+entries
+);
+
+}
+
+
+function updateGeneratorStats(){
+
+const cityCount =
+document.getElementById(
+"cityCount"
+);
+
+const vehicleCount =
+document.getElementById(
+"vehicleCount"
+);
+
+const pageCount =
+document.getElementById(
+"pageCount"
+);
+
+if(cityCount){
+
+cityCount.textContent =
+cities.length;
+
+}
+
+if(vehicleCount){
+
+vehicleCount.textContent =
+vehicles.length;
+
+}
+
+if(pageCount){
+
+pageCount.textContent =
+(cities.length * vehicles.length) +
+cities.length;
+
+}
+
+}
+
+
+document.addEventListener(
+"DOMContentLoaded",
+function(){
+
+updateGeneratorStats();
+
+}
+);
+
+</script>
+<script>
+
+function showStatus(message, type = "success") {
+
+  const statusBox = document.getElementById("statusBox");
+
+  if (!statusBox) {
+    alert(message);
     return;
   }
 
-  const output = document.getElementById("output").value.trim();
+  statusBox.textContent = message;
 
-  if (!output) {
-    alert("Please generate SEO pages first.");
+  if (type === "error") {
+    statusBox.style.background = "#fee2e2";
+    statusBox.style.color = "#991b1b";
+    statusBox.style.border = "1px solid #fecaca";
+  } else {
+    statusBox.style.background = "#dcfce7";
+    statusBox.style.color = "#166534";
+    statusBox.style.border = "1px solid #bbf7d0";
+  }
+
+  statusBox.style.display = "block";
+}
+
+
+function previewPowerfulCityPage() {
+
+  const cityInput = document.getElementById("city");
+  const provinceInput = document.getElementById("province");
+
+  const city = cityInput ? cityInput.value.trim() : "";
+  let province = provinceInput ? provinceInput.value.trim() : "";
+
+  if (!city) {
+    alert("Please enter a city first.");
     return;
   }
 
-  const zip = new JSZip();
+  if (!province) {
 
-  const parts = output.split("FILE NAME:");
+    const foundCity = cities.find(function(item) {
+      return item.city.toLowerCase() === city.toLowerCase();
+    });
 
-  let count = 0;
-
-  parts.forEach(function(part){
-
-    const trimmed = part.trim();
-
-    if (!trimmed) return;
-
-    const firstLineEnd = trimmed.indexOf("\n");
-
-    if (firstLineEnd === -1) return;
-
-    const filename = trimmed.substring(0, firstLineEnd).trim();
-
-    const htmlStart = trimmed.indexOf("<!DOCTYPE html>");
-
-    if (htmlStart === -1) return;
-
-    const nextSeparator = trimmed.indexOf("==============================", htmlStart);
-
-const html =
-  nextSeparator === -1
-    ? trimmed.substring(htmlStart).trim()
-    : trimmed.substring(htmlStart, nextSeparator).trim();
-
-    if (filename && html) {
-      zip.file(filename, html);
-      count++;
+    if (foundCity) {
+      province = foundCity.province;
+    } else {
+      province = "South Africa";
     }
+  }
 
-  });
+  const html = buildPowerfulCityPage(city, province);
 
-  if (count === 0) {
-    alert("No HTML files found. Please generate pages first.");
+  const previewWindow = window.open("", "_blank");
+
+  if (!previewWindow) {
+    alert("Your browser blocked the preview window. Please allow pop-ups and try again.");
     return;
   }
 
-  const content = await zip.generateAsync({type:"blob"});
+  previewWindow.document.open();
+  previewWindow.document.write(html);
+  previewWindow.document.close();
+}
 
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(content);
-  link.download = "carscoutza-seo-pages.zip";
-  link.click();
 
-  alert("ZIP created with " + count + " HTML files.");
-} 
-  async function generateEverythingZip(){
+function downloadPowerfulSingleCityPage() {
 
-    // Generate all vehicles first
-    generateAllVehicles();
+  const cityInput = document.getElementById("city");
+  const provinceInput = document.getElementById("province");
 
-    // Give the browser a second to finish
-    await new Promise(resolve => setTimeout(resolve, 1000));
+  const city = cityInput ? cityInput.value.trim() : "";
+  let province = provinceInput ? provinceInput.value.trim() : "";
 
-    // Create the ZIP
-    downloadZip();
+  if (!city) {
+    alert("Please enter a city first.");
+    return;
+  }
+
+  if (!province) {
+
+    const foundCity = cities.find(function(item) {
+      return item.city.toLowerCase() === city.toLowerCase();
+    });
+
+    if (foundCity) {
+      province = foundCity.province;
+    } else {
+      province = "South Africa";
+    }
+  }
+
+  const html = buildPowerfulCityPage(city, province);
+
+  const filename =
+    `used-cars-for-sale-${slugify(city)}.html`;
+
+  downloadFile(filename, html);
+
+  showStatus(
+    `Powerful SEO city page created for ${city}.`
+  );
+}
+
+
+function downloadVehicleCityPage() {
+
+  const vehicleInput = document.getElementById("vehicleName");
+  const cityInput = document.getElementById("city");
+  const provinceInput = document.getElementById("province");
+
+  const vehicle =
+    vehicleInput ? vehicleInput.value.trim() : "";
+
+  const city =
+    cityInput ? cityInput.value.trim() : "";
+
+  let province =
+    provinceInput ? provinceInput.value.trim() : "";
+
+  if (!vehicle) {
+    alert("Please enter a vehicle name.");
+    return;
+  }
+
+  if (!city) {
+    alert("Please enter a city.");
+    return;
+  }
+
+  if (!province) {
+
+    const foundCity = cities.find(function(item) {
+      return item.city.toLowerCase() === city.toLowerCase();
+    });
+
+    if (foundCity) {
+      province = foundCity.province;
+    } else {
+      province = "South Africa";
+    }
+  }
+
+  const html =
+    buildVehicleCityPage(
+      vehicle,
+      city,
+      province
+    );
+
+  const filename =
+    `${slugify(vehicle)}-for-sale-${slugify(city)}.html`;
+
+  downloadFile(filename, html);
+
+  showStatus(
+    `${vehicle} SEO page for ${city} created successfully.`
+  );
+}
+
+
+function generatorReadyCheck() {
+
+  console.log("CarScoutZA SEO Generator loaded.");
+
+  console.log(
+    "Cities:",
+    typeof cities !== "undefined" ? cities.length : 0
+  );
+
+  console.log(
+    "Vehicles:",
+    typeof vehicles !== "undefined" ? vehicles.length : 0
+  );
+
+  if (
+    typeof cities !== "undefined" &&
+    typeof vehicles !== "undefined"
+  ) {
+
+    console.log(
+      "Potential vehicle/city pages:",
+      cities.length * vehicles.length
+    );
+
+  }
 
 }
+
+
+window.addEventListener(
+  "load",
+  function() {
+
+    generatorReadyCheck();
+
+  }
+);
+
 </script>
 
 </body>
