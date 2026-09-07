@@ -1228,12 +1228,12 @@ cities.forEach(function(location){
 const html =
 buildVehicleCityPage(
 vehicle,
-location.city,
-location.province
+location[0],
+location[1]
 );
 
 const filename =
-`${slugify(vehicle)}-for-sale-${slugify(location.city)}.html`;
+`${slugify(vehicle)}-for-sale-${slugify(location[0])}.html`;
 
 zip.file(
 filename,
@@ -1283,12 +1283,12 @@ cities.forEach(function(location){
 const html =
 buildVehicleCityPage(
 vehicle,
-location.city,
-location.province
+location[0],
+location[1]
 );
 
 const filename =
-`${slugify(vehicle)}-for-sale-${slugify(location.city)}.html`;
+`${slugify(vehicle)}-for-sale-${slugify(location[0])}.html`;
 
 zip.file(
 filename,
@@ -1337,12 +1337,12 @@ cities.forEach(function(location){
 
 const html =
 buildPowerfulCityPage(
-location.city,
-location.province
+location[0],
+location[1]
 );
 
 const filename =
-`used-cars-for-sale-${slugify(location.city)}.html`;
+`used-cars-for-sale-${slugify(location[0])}.html`;
 
 zip.file(
 filename,
@@ -1402,12 +1402,12 @@ cities.forEach(function(location){
 const html =
 buildVehicleCityPage(
 vehicle,
-location.city,
-location.province
+location[0],
+location[1]
 );
 
 const filename =
-`${slugify(vehicle)}-for-sale-${slugify(location.city)}.html`;
+`${slugify(vehicle)}-for-sale-${slugify(location[0])}.html`;
 
 vehicleFolder.file(
 filename,
@@ -1423,12 +1423,12 @@ cities.forEach(function(location){
 
 const html =
 buildPowerfulCityPage(
-location.city,
-location.province
+location[0],
+location[1]
 );
 
 const filename =
-`used-cars-for-sale-${slugify(location.city)}.html`;
+`used-cars-for-sale-${slugify(location[0])}.html`;
 
 cityFolder.file(
 filename,
@@ -1509,7 +1509,7 @@ let output = "";
 cities.forEach(function(location){
 
 const citySlug =
-slugify(location.city);
+slugify(location[0]);
 
 output +=
 `<url>
@@ -1531,7 +1531,7 @@ const vehicleSlug =
 slugify(vehicle);
 
 const citySlug =
-slugify(location.city);
+slugify(location[0]);
 
 output +=
 `<url>
