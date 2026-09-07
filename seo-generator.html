@@ -573,6 +573,18 @@ return String(value || "")
 .replace(/"/g,"&quot;")
 .replace(/'/g,"&#039;");
 }
+function formatMileage(value){
+
+const number = Number(
+String(value || "").replace(/\D/g,"")
+);
+
+if(!number){
+return "";
+}
+
+return number.toLocaleString("en-ZA") + " km";
+}
 function money(value){
 
 const number = Number(value);
@@ -691,10 +703,9 @@ item.variant || ""
 const image = firstImage(item);
 
 const detailsUrl =
-item.details_url ||
-item.url ||
-item.vehicle_url ||
-"https://carscoutza.com/";
+item.id
+? "https://carscoutza.com/details.html?id=" + encodeURIComponent(item.id)
+: "https://carscoutza.com/";
 
 return \`
 <article class="stock-card">
@@ -715,7 +726,7 @@ loading="lazy">
 \` : ""}
 
 \${item.mileage ? \`
-<p>\${Number(item.mileage).toLocaleString("en-ZA")} km</p>
+<p>\${formatMileage(item.mileage)}</p>
 \` : ""}
 
 <a class="button"
