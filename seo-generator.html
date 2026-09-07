@@ -576,22 +576,26 @@ return String(value || "")
 function formatMileage(value){
 
 const number = Number(
-String(value || "").replace(/\D/g,"")
+String(value || "").replace(/[^0-9]/g,"")
 );
 
 if(!number){
 return "";
 }
 
+
 return number.toLocaleString("en-ZA") + " km";
 }
 function money(value){
 
-const number = Number(value);
+const number = Number(
+String(value || "").replace(/[^0-9.]/g,"")
+);
 
-if(!Number.isFinite(number)){
+if(!number){
 return "";
 }
+
 
 return "R" + number.toLocaleString("en-ZA");
 
