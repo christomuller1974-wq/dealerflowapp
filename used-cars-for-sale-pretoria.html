@@ -8,8 +8,7 @@
 <meta name="viewport"
 content="width=device-width, initial-scale=1.0">
 
-<title>Cars for Sale Pretoria | Used & Second Hand Cars | CarScoutZA</title>
-
+<title>Used Cars for Sale in Pretoria | CarScoutZA</title>
 <meta name="description"
 content="Looking for cars for sale in Pretoria? Browse used, second hand and pre-owned cars, bakkies and SUVs from trusted dealers on CarScoutZA.">
 
@@ -152,10 +151,10 @@ CarScoutZA.com
 
 <section class="hero">
 
-<h1>Cars for Sale in Pretoria</h1>
+<h1>Used Cars for Sale in Pretoria</h1>
 
 <p>
-Searching for <strong>cars for sale in Pretoria</strong>?
+Searching for <strong>used cars for sale in Pretoria</strong>?
 CarScoutZA helps you discover used, second hand and pre-owned vehicles advertised by trusted dealerships.
 </p>
 
@@ -300,9 +299,209 @@ Browse All Vehicles
 </a>
 
 </section>
+<section class="info-box">
 
+<h2>Used Cars Currently for Sale in Pretoria</h2>
+
+<p>
+Browse current used vehicle listings from CarScoutZA dealers in Pretoria.
+Vehicle availability changes regularly as dealerships add and sell stock.
+</p>
+
+<div id="pretoriaVehicles">
+Loading Pretoria vehicles...
 </div>
 
+</section>
+</div>
+<script>
+const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
+
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
+
+function getPretoriaImages(v){
+  if(Array.isArray(v.images)) return v.images;
+
+  if(typeof v.images === "string"){
+    try{
+      const parsed = JSON.parse(v.images);
+      if(Array.isArray(parsed)) return parsed;
+    }catch(e){}
+  }
+
+  if(v.image_url) return [v.image_url];
+  if(v.image) return [v.image];
+
+  return [];
+}
+
+function formatPretoriaPrice(price){
+  const clean = String(price || "").replace(/\D/g,"");
+
+  if(!clean) return "Price on request";
+
+  return "R" + Number(clean).toLocaleString("en-ZA");
+}
+
+async function loadPretoriaVehicles(){
+
+  const container = document.getElementById("pretoriaVehicles");
+
+  try{
+
+    const vehicleRes = await fetch(
+      supabaseUrl +
+      "/rest/v1/public_active_verified_vehicles_test?select=*",
+      {
+        headers:{
+          apikey:supabaseKey,
+          Authorization:"Bearer " + supabaseKey
+        }
+      }
+    );
+
+    let vehicles = await vehicleRes.json();
+
+    if(!Array.isArray(vehicles)){
+      container.innerHTML = "Could not load Pretoria vehicles.";
+      return;
+    }
+
+    vehicles = vehicles.filter(function(v){
+
+      const location = [
+        v.town || "",
+        v.province || "",
+        v.location || ""
+      ]
+      .join(" ")
+      .toLowerCase();
+
+      return location.includes("pretoria");
+    });
+
+    if(!vehicles.length){
+      container.innerHTML =
+        "<p>No Pretoria vehicles are currently available. Please check again soon.</p>";
+      return;
+    }
+
+    vehicles = vehicles.slice(0,12);
+
+    let html = `
+      <div style="
+        display:grid;
+        grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+        gap:18px;
+        margin-top:20px;
+      ">
+    `;
+
+    vehicles.forEach(function(v){
+
+      const images = getPretoriaImages(v);
+
+      const img = images[0] ||
+        "https://via.placeholder.com/400x300?text=No+Image";
+
+      const title = [
+        v.year || "",
+        v.make || "",
+        v.model || "",
+        v.variant || ""
+      ]
+      .filter(Boolean)
+      .join(" ");
+
+      const location = [
+        v.town || "",
+        v.province || ""
+      ]
+      .filter(Boolean)
+      .join(", ") || v.location || "Pretoria";
+
+      const dealer =
+        v.dealer ||
+        v.dealer_name ||
+        "CarScoutZA Dealer";
+
+      html += `
+        <a
+          href="https://carscoutza.com/details.html?id=${encodeURIComponent(v.id)}"
+          style="
+            display:block;
+            background:#fff;
+            border:1px solid #e5e7eb;
+            border-radius:12px;
+            overflow:hidden;
+            text-decoration:none;
+            color:#172033;
+          "
+        >
+
+          <img
+            src="${img}"
+            alt="${title} for sale in Pretoria"
+            loading="lazy"
+            style="
+              width:100%;
+              height:180px;
+              object-fit:cover;
+              display:block;
+            "
+          >
+
+          <div style="padding:16px;">
+
+            <h3 style="
+              margin:0 0 8px;
+              font-size:18px;
+            ">
+              ${title}
+            </h3>
+
+            <div style="
+              font-size:20px;
+              font-weight:700;
+              color:#0056c9;
+              margin-bottom:8px;
+            ">
+              ${formatPretoriaPrice(v.price)}
+            </div>
+
+            <div>
+              ${location}
+            </div>
+
+            <div>
+              ${v.mileage || "-"} km
+            </div>
+
+            <div>
+              ${dealer}
+            </div>
+
+          </div>
+
+        </a>
+      `;
+    });
+
+    html += "</div>";
+
+    container.innerHTML = html;
+
+  }catch(error){
+
+    console.error(error);
+
+    container.innerHTML =
+      "<p>Unable to load Pretoria vehicles at the moment.</p>";
+  }
+}
+
+loadPretoriaVehicles();
+</script>
 </body>
 
 </html>
