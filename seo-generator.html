@@ -1234,10 +1234,11 @@ async function loadCityVehicles() {
       image.src = cityVehicleImage(v);
       image.alt = title + " for sale in " + cityPageName;
       image.loading = "lazy";
-      image.style.width = "100%";
-      image.style.height = "220px";
-      image.style.objectFit = "cover";
-      image.style.display = "block";
+     image.style.width = "100%";
+image.style.height = "130px";
+image.style.objectFit = "contain";
+image.style.background = "white";
+image.style.display = "block";
 
       const body = document.createElement("div");
       body.style.padding = "16px";
