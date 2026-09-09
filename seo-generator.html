@@ -442,6 +442,9 @@ font-size:29px;
 .info-box{
 padding:22px 18px;
 }
+#cityVehicles{
+  grid-template-columns:1fr !important;
+}
 }
 </style>
 </head>
@@ -979,7 +982,7 @@ Browse current used vehicle listings from CarScoutZA dealers in ${city}.
 Vehicle availability changes regularly as dealerships add and sell stock.
 </p>
 
-<div id="cityVehicles">
+<div id="cityVehicles" style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;width:100%;">
 Loading ${city} vehicles...
 </div>
 
@@ -1235,8 +1238,8 @@ async function loadCityVehicles() {
       image.alt = title + " for sale in " + cityPageName;
       image.loading = "lazy";
      image.style.width = "100%";
-image.style.height = "130px";
-image.style.objectFit = "contain";
+image.style.height = "220px";
+image.style.objectFit = "cover";
 image.style.background = "white";
 image.style.display = "block";
 
