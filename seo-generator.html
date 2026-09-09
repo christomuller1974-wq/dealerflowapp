@@ -1137,7 +1137,7 @@ async function loadCityVehicles() {
   try {
     const vehicleResponse = await fetch(
       citySupabaseUrl +
-      "/rest/v1/vehicles?select=*&order=updated_at.desc.nullslast,id.desc",
+     "/rest/v1/public_active_verified_vehicles_test?select=*",
       {
         headers: {
           apikey: citySupabaseKey,
