@@ -1007,7 +1007,22 @@ async function trackSiteVisit(vehicle){
 async function trackVehicleClick(type, vehicle){
 
   if (!vehicle || !vehicle.id) return;
-
+if (typeof fbq === "function") {
+  fbq("trackCustom", "DealerContact", {
+    contact_type: type,
+    content_ids: [String(vehicle.id)],
+    content_name:
+      vehicle.title ||
+      [vehicle.year, vehicle.make, vehicle.model, vehicle.variant]
+        .filter(Boolean)
+        .join(" ") ||
+      "Vehicle",
+    make: vehicle.make || "",
+    model: vehicle.model || "",
+    value: Number(String(vehicle.price || "").replace(/\D/g, "")) || 0,
+    currency: "ZAR"
+  });
+}
   try {
 
     await fetch(
