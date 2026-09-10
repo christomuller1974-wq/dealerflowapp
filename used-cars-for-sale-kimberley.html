@@ -8,7 +8,7 @@
 <meta name="viewport"
 content="width=device-width, initial-scale=1.0">
 
-<title>Cars for Sale Kimberley | Used & Second Hand Cars | CarScoutZA</title>
+<title>Used Cars for Sale in Kimberley | CarScoutZA</title>
 
 <meta name="description"
 content="Looking for cars for sale in Kimberley? Browse used, second hand and pre-owned cars, bakkies and SUVs from trusted dealers on CarScoutZA.">
@@ -152,7 +152,7 @@ CarScoutZA.com
 
 <section class="hero">
 
-<h1>Cars for Sale in Kimberley</h1>
+<h1>Used Cars for Sale in Kimberley</h1>
 
 <p>
 Searching for <strong>cars for sale in Kimberley</strong>?
@@ -167,6 +167,21 @@ Browse cars, bakkies, SUVs, hatchbacks and sedans available from dealers in Kimb
 href="https://carscoutza.com/">
 Search Cars for Sale
 </a>
+
+</section>
+
+<section class="info-box">
+
+<h2>Used Cars Currently for Sale in Kimberley</h2>
+
+<p>
+Browse current used vehicle listings from CarScoutZA dealers in Kimberley.
+Vehicle availability changes regularly as dealerships add and sell stock.
+</p>
+
+<div id="cityVehicles" style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;width:100%;">
+Loading Kimberley vehicles...
+</div>
 
 </section>
 
@@ -301,7 +316,218 @@ Browse All Vehicles
 
 </section>
 
+
+
 </div>
+
+<script>
+const cityPageName = "Kimberley";
+
+const citySupabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
+const citySupabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
+
+function cityVehicleImage(v) {
+  if (v.image && String(v.image).trim()) {
+    return String(v.image).trim();
+  }
+
+  if (Array.isArray(v.images) && v.images.length) {
+    return v.images[0];
+  }
+
+  if (typeof v.images === "string" && v.images.trim()) {
+    try {
+      const parsed = JSON.parse(v.images);
+      if (Array.isArray(parsed) && parsed.length) {
+        return parsed[0];
+      }
+    } catch (e) {
+      return v.images.split(",")[0].trim();
+    }
+  }
+
+  return "https://via.placeholder.com/400x300?text=No+Image";
+}
+
+function cityPrice(price) {
+  const number = Number(
+    String(price || "").replace(/D/g, "")
+  );
+
+  if (!number) return "Price on request";
+
+  return "R" + number.toLocaleString("en-ZA");
+}
+
+async function loadCityVehicles() {
+  const container = document.getElementById("cityVehicles");
+
+  if (!container) return;
+
+  try {
+    const vehicleResponse = await fetch(
+      citySupabaseUrl +
+     "/rest/v1/public_active_verified_vehicles_test?select=*",
+      {
+        headers: {
+          apikey: citySupabaseKey,
+          Authorization: "Bearer " + citySupabaseKey
+        }
+      }
+    );
+
+    const profileResponse = await fetch(
+      citySupabaseUrl +
+      "/rest/v1/profiles?select=id,town,province",
+      {
+        headers: {
+          apikey: citySupabaseKey,
+          Authorization: "Bearer " + citySupabaseKey
+        }
+      }
+    );
+
+    if (!vehicleResponse.ok || !profileResponse.ok) {
+      throw new Error("Could not load vehicles");
+    }
+
+    const vehicles = await vehicleResponse.json();
+    const profiles = await profileResponse.json();
+
+    const profileMap = {};
+
+    profiles.forEach(function(profile) {
+      profileMap[String(profile.id)] = profile;
+    });
+
+    const wantedCity = cityPageName.toLowerCase().trim();
+
+    const cityVehicles = vehicles.filter(function(v) {
+      const profile =
+        profileMap[String(v.user_id || v.dealer_id || "")] || {};
+
+      const location = String(
+        v.town ||
+        profile.town ||
+        v.location ||
+        ""
+      ).toLowerCase();
+
+      return location.includes(wantedCity);
+    });
+
+    container.innerHTML = "";
+
+    if (!cityVehicles.length) {
+      container.innerHTML =
+        "<p>No vehicles are currently listed in " +
+        cityPageName +
+        ". Please check again soon.</p>";
+      return;
+    }
+
+    cityVehicles.slice(0, 24).forEach(function(v) {
+      const profile =
+        profileMap[String(v.user_id || v.dealer_id || "")] || {};
+
+      const title =
+        [v.year, v.make, v.model]
+          .filter(Boolean)
+          .join(" ") ||
+        v.title ||
+        "Vehicle";
+
+      const dealer =
+        v.dealer ||
+        v.dealer_name ||
+        "CarScoutZA Dealer";
+
+      const location =
+        [
+          v.town || profile.town,
+          v.province || profile.province
+        ]
+          .filter(Boolean)
+          .join(", ") ||
+        v.location ||
+        cityPageName;
+
+      const card = document.createElement("div");
+
+      card.style.border = "1px solid #ddd";
+      card.style.borderRadius = "10px";
+      card.style.overflow = "hidden";
+      card.style.background = "#fff";
+      card.style.marginBottom = "20px";
+
+      const image = document.createElement("img");
+      image.src = cityVehicleImage(v);
+      image.alt = title + " for sale in " + cityPageName;
+      image.loading = "lazy";
+     image.style.width = "100%";
+image.style.height = "220px";
+image.style.objectFit = "cover";
+image.style.background = "white";
+image.style.display = "block";
+
+      const body = document.createElement("div");
+      body.style.padding = "16px";
+
+      const heading = document.createElement("h3");
+      heading.textContent = title;
+
+      const price = document.createElement("div");
+      price.textContent = cityPrice(v.price);
+      price.style.fontSize = "21px";
+      price.style.fontWeight = "bold";
+      price.style.color = "#0056c9";
+
+      const locationDiv = document.createElement("div");
+      locationDiv.textContent = location;
+
+      const mileage = document.createElement("div");
+      mileage.textContent =
+        v.mileage || "Mileage not listed";
+
+      const dealerDiv = document.createElement("div");
+      dealerDiv.textContent = dealer;
+
+      const link = document.createElement("a");
+      link.href =
+        "https://carscoutza.com/details.html?id=" +
+        encodeURIComponent(v.id);
+      link.textContent = "View Vehicle";
+      link.style.display = "inline-block";
+      link.style.marginTop = "12px";
+      link.style.padding = "10px 18px";
+      link.style.background = "#0056c9";
+      link.style.color = "#fff";
+      link.style.borderRadius = "6px";
+      link.style.textDecoration = "none";
+
+      body.appendChild(heading);
+      body.appendChild(price);
+      body.appendChild(locationDiv);
+      body.appendChild(mileage);
+      body.appendChild(dealerDiv);
+      body.appendChild(link);
+
+      card.appendChild(image);
+      card.appendChild(body);
+
+      container.appendChild(card);
+    });
+
+  } catch (error) {
+    console.error(error);
+
+    container.innerHTML =
+      "<p>Vehicle availability changes regularly. Browse all vehicles on CarScoutZA.</p>";
+  }
+}
+
+loadCityVehicles();
+</script>
 
 </body>
 
