@@ -760,7 +760,14 @@ ${currentDealerSection === "DECLINED" ? `
       Reinstate Dealer
     </button>
   ` : ""}
-
+${currentDealerSection === "EXPIRED" ? `
+  <button
+    class="btn btn-blue"
+    onclick="extendFree30Days('${d.id}')"
+  >
+    Grant / Extend 30 Days
+  </button>
+` : ""}
   <button
     class="btn btn-dark"
     onclick="changeLoginEmail('${d.id}')"
