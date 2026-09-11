@@ -1019,6 +1019,11 @@ if ((type === "call" || type === "whatsapp") && typeof fbq === "function") {
       "Vehicle",
     make: vehicle.make || "",
     model: vehicle.model || "",
+    variant: vehicle.variant || "",
+year: vehicle.year || "",
+location: vehicle.location || vehicle.town || "",
+province: vehicle.province || "",
+dealer: vehicle.dealer || vehicle.dealer_name || "",
     value: Number(String(vehicle.price || "").replace(/\D/g, "")) || 0,
     currency: "ZAR"
   });
