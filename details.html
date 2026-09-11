@@ -1279,15 +1279,20 @@ async function loadVehicle(){
       fallbackTitle ||
       "Vehicle";
     if (typeof fbq === "function") {
-  fbq("track", "ViewContent", {
-    content_ids: [String(v.id || "")],
-    content_name: title,
-    content_type: "vehicle",
-    make: v.make || "",
-    model: v.model || "",
-    value: Number(String(v.price || "").replace(/\D/g, "")) || 0,
-    currency: "ZAR"
-  });
+fbq("track", "ViewContent", {
+  content_ids: [String(v.id || "")],
+  content_name: title,
+  content_type: "vehicle",
+  make: v.make || "",
+  model: v.model || "",
+  variant: v.variant || "",
+  year: v.year || "",
+  location: v.location || v.town || "",
+  province: v.province || "",
+  dealer: v.dealer || v.dealer_name || "",
+  value: Number(String(v.price || "").replace(/\D/g, "")) || 0,
+  currency: "ZAR"
+});
 }
 
     currentTitle = title;
