@@ -97,6 +97,10 @@ font-weight:bold;
 🚗 Generate All Vehicles
 </button>
 
+<button onclick="generateAllBrands()">
+🏷️ Generate All Brand + City Pages
+</button>
+
 <button onclick="generateEverything()">
 🚀 Generate EVERYTHING ZIP
 </button>
@@ -251,6 +255,29 @@ const vehicles = [
 "Subaru Forester",
 "Mazda BT-50",
 "Haval H6 GT"
+];
+
+const brands = [
+"Toyota",
+"Ford",
+"Volkswagen",
+"Isuzu",
+"Suzuki",
+"BMW",
+"Mercedes-Benz",
+"Hyundai",
+"Kia",
+"Renault",
+"Nissan",
+"Mahindra",
+"Audi",
+"Mitsubishi",
+"Haval",
+"Subaru",
+"Mazda",
+"Chery",
+"Jetour",
+"Omoda"
 ];
 
 function slugify(text){
@@ -1523,6 +1550,7 @@ return;
 
 }
 
+
 const zip =
 new JSZip();
 
@@ -1561,6 +1589,63 @@ blob,
 
 alert(
 `Created ${vehicles.length * cities.length} vehicle SEO pages.`
+);
+
+}
+
+
+async function generateAllBrands(){
+
+if(
+typeof JSZip === "undefined"
+){
+
+alert(
+"ZIP library has not loaded. Please refresh the page and try again."
+);
+
+return;
+
+}
+
+const zip =
+new JSZip();
+
+brands.forEach(function(brand){
+
+cities.forEach(function(location){
+
+const html =
+buildVehicleCityPage(
+brand,
+location[0],
+location[1]
+);
+
+const filename =
+`${slugify(brand)}-for-sale-${slugify(location[0])}.html`;
+
+zip.file(
+filename,
+html
+);
+
+});
+
+});
+
+const blob =
+await zip.generateAsync({
+type:"blob"
+});
+
+saveAsBlob(
+blob,
+"carscoutza-all-brand-city-seo-pages.zip"
+);
+
+alert(
+`Created ${brands.length * cities.length} brand + city SEO pages.`
 );
 
 }
@@ -1645,6 +1730,11 @@ zip.folder(
 "powerful-city-pages"
 );
 
+const brandFolder =
+zip.folder(
+"brand-city-pages"
+);
+
 vehicles.forEach(function(vehicle){
 
 cities.forEach(function(location){
@@ -1660,6 +1750,30 @@ const filename =
 `${slugify(vehicle)}-for-sale-${slugify(location[0])}.html`;
 
 vehicleFolder.file(
+filename,
+html
+);
+
+});
+
+});
+
+
+brands.forEach(function(brand){
+
+cities.forEach(function(location){
+
+const html =
+buildVehicleCityPage(
+brand,
+location[0],
+location[1]
+);
+
+const filename =
+`${slugify(brand)}-for-sale-${slugify(location[0])}.html`;
+
+brandFolder.file(
 filename,
 html
 );
@@ -1796,6 +1910,30 @@ output +=
 
 });
 
+
+brands.forEach(function(brand){
+
+cities.forEach(function(location){
+
+const brandSlug =
+slugify(brand);
+
+const citySlug =
+slugify(location[0]);
+
+output +=
+`<url>
+<loc>https://carscoutza.com/${brandSlug}-for-sale-${citySlug}.html</loc>
+<changefreq>daily</changefreq>
+<priority>0.85</priority>
+</url>
+
+`;
+
+});
+
+});
+
 return output;
 
 }
@@ -1849,6 +1987,7 @@ if(pageCount){
 
 pageCount.textContent =
 (cities.length * vehicles.length) +
+(cities.length * brands.length) +
 cities.length;
 
 }
