@@ -106,13 +106,97 @@
     if(!container)return;
     try{
       const headers={apikey:supabaseKey,Authorization:'Bearer ' + supabaseKey};
-      const responses=await Promise.all([fetch(supabaseUrl + '/rest/v1/public_active_verified_vehicles_test?select=*',{headers:headers}),fetch(supabaseUrl + '/rest/v1/profiles?select=id,town,province',{headers:headers})]);
-      if(!responses[0].ok || !responses[1].ok)throw new Error('Live stock request failed');
-      const data=await Promise.all([responses[0].json(),responses[1].json()]);const profileMap={};data[1].forEach(function(profile){profileMap[String(profile.id)]=profile;});
-      const wanted=normalise(provincePageName);const matches=data[0].filter(function(v){const profile=profileMap[String(v.user_id || v.dealer_id || '')] || {};return normalise(v.province || profile.province)===wanted;});
-      if(matches.length){render(matches,profileMap);summary.textContent=matches.length + ' live verified-dealer vehicle' + (matches.length===1 ? '' : 's') + ' found in ' + provincePageName + '. Stock changes as dealers add and sell vehicles.';}
-      else{summary.textContent='No live verified-dealer stock is currently matched to ' + provincePageName + '. Please check again soon or search all vehicles.';}
-    }catch(error){console.error(error);summary.textContent='The published examples remain below. Live stock could not be refreshed just now.';}
+      const vehicleResponse=await fetch(
+        supabaseUrl + '/rest/v1/public_active_verified_vehicles_test?select=*',
+        {headers:headers}
+      );
+      if(!vehicleResponse.ok)throw new Error('Live vehicle request failed: ' + vehicleResponse.status);
+      const vehicles=await vehicleResponse.json();
+      if(!Array.isArray(vehicles))throw new Error('Live vehicle response was not a list');
+
+      let profiles=[];
+      try{
+        const profileResponse=await fetch(
+          supabaseUrl + '/rest/v1/profiles?select=id,active,admin_blocked,paid_until,admin_free_until,payment_status,town,province',
+          {headers:headers}
+        );
+        if(profileResponse.ok){
+          const profileData=await profileResponse.json();
+          if(Array.isArray(profileData))profiles=profileData;
+        }
+      }catch(profileError){
+        console.warn('Dealer profile fallback unavailable',profileError);
+      }
+
+      const profileMap={};
+      profiles.forEach(function(profile){profileMap[String(profile.id)]=profile;});
+      const today=new Date();
+      today.setHours(0,0,0,0);
+
+      const eligibleVehicles=vehicles.filter(function(v){
+        if((v.listing_type || 'vehicle')==='motorcycle_leisure')return false;
+        const profile=profileMap[String(v.user_id || v.dealer_id || '')];
+        if(String(v.user_id)==='407c973e-d52f-4b23-ba50-df7c77073214')return true;
+        if(!profile)return true;
+        if(profile.admin_blocked===true)return false;
+        const paidUntil=profile.paid_until ? new Date(profile.paid_until) : null;
+        const freeUntil=profile.admin_free_until ? new Date(profile.admin_free_until) : null;
+        if(paidUntil)paidUntil.setHours(23,59,59,999);
+        if(freeUntil)freeUntil.setHours(23,59,59,999);
+        return !!((paidUntil && paidUntil>=today) || (freeUntil && freeUntil>=today));
+      });
+
+      const activityTime=function(v){
+        const times=[v.refreshed_at,v.updated_at,v.created_at]
+          .filter(Boolean)
+          .map(function(value){return new Date(value).getTime();})
+          .filter(Number.isFinite);
+        return times.length ? Math.max.apply(null,times) : 0;
+      };
+      const shuffleTimes=eligibleVehicles
+        .map(function(v){return v.admin_shuffle_at ? new Date(v.admin_shuffle_at).getTime() : 0;})
+        .filter(function(time){return Number.isFinite(time) && time>0;});
+      const latestShuffleAt=shuffleTimes.length ? Math.max.apply(null,shuffleTimes) : 0;
+
+      eligibleVehicles.sort(function(a,b){
+        const aActivity=activityTime(a);
+        const bActivity=activityTime(b);
+        if(!latestShuffleAt)return (bActivity-aActivity) || (Number(b.id||0)-Number(a.id||0));
+        const aNew=aActivity>latestShuffleAt;
+        const bNew=bActivity>latestShuffleAt;
+        if(aNew!==bNew)return aNew ? -1 : 1;
+        if(aNew && bNew)return (bActivity-aActivity) || (Number(b.id||0)-Number(a.id||0));
+        const aOrder=Number(a.admin_shuffle_order);
+        const bOrder=Number(b.admin_shuffle_order);
+        const aHas=Number.isFinite(aOrder);
+        const bHas=Number.isFinite(bOrder);
+        if(aHas && bHas)return aOrder-bOrder;
+        if(aHas!==bHas)return aHas ? -1 : 1;
+        return bActivity-aActivity;
+      });
+
+      const wanted=normalise(provincePageName);
+      const matches=eligibleVehicles.filter(function(v){
+        const profile=profileMap[String(v.user_id || v.dealer_id || '')] || {};
+        const provinceValue=v.province || profile.province || v.location || '';
+        return normalise(provinceValue).includes(wanted);
+      });
+
+      if(matches.length){
+        render(matches,profileMap);
+        summary.textContent=matches.length + ' current verified-dealer vehicle' +
+          (matches.length===1 ? '' : 's') + ' available in ' + provincePageName +
+          '. This stock updates automatically as dealers add and remove vehicles.';
+      }else{
+        container.innerHTML='<p class="empty">No current verified-dealer vehicles are available in ' +
+          provincePageName + '. Please check again soon or search all vehicles.</p>';
+        summary.textContent='The live CarScoutZA index currently has no vehicles matched to ' +
+          provincePageName + '.';
+      }
+    }catch(error){
+      console.error(error);
+      summary.textContent='The published vehicle examples remain available while the live stock connection retries on the next visit.';
+    }
   }
   loadProvinceVehicles();
 }());
