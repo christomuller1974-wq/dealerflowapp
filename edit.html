@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="vehicle-data.js"></script>
+<script src="listing-classification.js"></script>
   <style>
     * {
       box-sizing: border-box;
@@ -1072,23 +1073,7 @@ function setMakeModelValues(
 
 initMakeModelDropdowns();
     function classifyExistingListingType(vehicle) {
-      if (vehicle.listing_type === "motorcycle_leisure") return "motorcycle_leisure";
-      if (vehicle.listing_type === "bakkie") return "bakkie";
-      if (vehicle.listing_type === "suv") return "suv";
-
-      const bodyType = String(vehicle.body_type || vehicle.bodyType || "")
-        .toLowerCase().trim();
-      if (/^(bakkie|pickup|pick-up|single cab|double cab|extended cab|extra cab)$/.test(bodyType)) {
-        return "bakkie";
-      }
-
-      const modelText = [vehicle.make, vehicle.model]
-        .filter(Boolean).join(" ").toLowerCase()
-        .replace(/[^a-z0-9]+/g, " ").trim();
-
-      if (/\b(hilux|ranger|amarok|np200|navara|triton|bt 50|d max|p series|pik up|t60|t90|t8|t9|tunland|steed|musso|landtrek|gladiator)\b/.test(modelText)) return "bakkie";
-      if (isRecognisedMotorcycleOrLeisure(vehicle)) return "motorcycle_leisure";
-      return isRecognisedSuv(vehicle) ? "suv" : "vehicle";
+      return window.CarScoutListingClassification.classify(vehicle);
     }
 
     function isRecognisedMotorcycleOrLeisure(vehicle) {

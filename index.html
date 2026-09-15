@@ -862,6 +862,7 @@ display:flex;
 }
 </style>
   <script src="vehicle-data.js"></script>
+  <script src="listing-classification.js"></script>
 </head>
 
 <body>
@@ -1185,12 +1186,7 @@ function isSafelyClassifiedBakkie(vehicle) {
 }
 
 function classifyListingType(vehicle) {
-  if (vehicle.listing_type === "motorcycle_leisure") return "motorcycle_leisure";
-  if (vehicle.listing_type === "bakkie") return "bakkie";
-  if (vehicle.listing_type === "suv") return "suv";
-  if (isSafelyClassifiedBakkie(vehicle)) return "bakkie";
-  if (isRecognisedMotorcycleOrLeisure(vehicle)) return "motorcycle_leisure";
-  return isRecognisedSuv(vehicle) ? "suv" : "vehicle";
+  return window.CarScoutListingClassification.classify(vehicle);
 }
 
 function isRecognisedMotorcycleOrLeisure(vehicle) {
