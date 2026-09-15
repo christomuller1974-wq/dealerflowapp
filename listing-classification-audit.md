@@ -1,18 +1,18 @@
 # CarScoutZA Listing Classification Audit
 
-Generated: 2026-09-15T12:06:12.692Z
+Generated: 2026-09-15T12:46:19.092Z
 
 Audited 640 current public listings. Priority: deliberate saved value; Motorcycles & Leisure; Bakkies; SUVs; Cars.
 
 ## Final totals
 
 - Cars: 212
-- Bakkies: 200
-- SUVs: 221
+- Bakkies: 201
+- SUVs: 220
 - Motorcycles & Leisure: 7
 - Total: 640
 
-## Moved from previous SUV results to Bakkies (10)
+## Moved from previous SUV results to Bakkies (11)
 
 - ID 723: 2016 Toyota Land Cruiser 79 4.5D V8 P/U D/C — Midcity Motors 2 (Klerksdorp, North West)
 - ID 835: 2022 Toyota Land Cruiser 79 4.5D P/U S/C — Infinite Auto Potchefstroom (North West)
@@ -23,13 +23,14 @@ Audited 640 current public listings. Priority: deliberate saved value; Motorcycl
 - ID 435: 2026 Toyota Land Cruiser 79. 2.8 GD A/T — Zijlstra's Autohaus (Free State, Bloemfontein)
 - ID 767: 2019 Toyota Land Cruiser 79 4.5D Double Cab Manual — Human Auto Kimberley (Kimberley, Northern Cape)
 - ID 596: 2021 Toyota Land Cruiser 2021 TOYOTA LAND CRUISER 79 4.5D P/U D/C — VX Auto Sales Klerksdorp (North West)
+- ID 235: 2017 Toyota LandCruiser 4.5 LX V8 — Volschenk Motors (Free State)
 - ID 572: 2026 Toyota Land Cruiser 2.8 Gd-6 Manual Double Cab — Penta Now Potchefstroom (North West, Potchefstroom)
 
 ## Moved from previous SUV results to Cars (0)
 
 - None
 
-## Remaining under SUVs (221)
+## Remaining under SUVs (220)
 
 - ID 718: 2021 Mazda CX-3 2.0 Dynamic A/T — Infinite Auto Potchefstroom (North West)
 - ID 398: 2019 Toyota Rav 4 2.0GX — NF Auto PTY Ltd (Bloemfontein, Free State)
@@ -244,7 +245,6 @@ Audited 640 current public listings. Priority: deliberate saved value; Motorcycl
 - ID 612: 2026 Omoda C5 1.5T Street Plus — Leon Geeringh Motoring (Free State)
 - ID 499: 2023 Toyota Land Cruiser Land Cruiser 300 V6 3.3D GR-s — Motus Select Bloemfontein Central (Free State, Bloemfontein)
 - ID 530: 2023 Toyota Fortuner 2.8 GD-6 4x4 VX A/T — Infinite Auto Potchefstroom (North West)
-- ID 235: 2017 Toyota LandCruiser 4.5 LX V8 — Volschenk Motors (Free State)
 - ID 856: 2015 Hyundai IX35 2.0 Premium — Volschenk Motors (Bloemfontein, Free State)
 - ID 626: 2026 BAIC Beijing X55 1.5T Premium 2Tone — SCOTT AUTO BETHLEHEM (Free State, Bethlehem)
 - ID 280: 2020 Renault Duster 1.5 DCI TechRoad EDC — Auto Excellence Kby (Northern Cape, Kimberley)
