@@ -278,11 +278,13 @@ button:disabled {
 
     <div id="preview" class="preview-grid"></div>
 <div class="field">
-  <label for="listingType">What are you listing?</label>
-  <select id="listingType">
-    <option value="vehicle">Vehicle</option>
+  <label for="listingType">Listing Type <span aria-hidden="true">*</span></label>
+  <select id="listingType" required>
+    <option value="">Select listing type</option>
+    <option value="vehicle">Vehicles</option>
+    <option value="bakkie">Bakkies</option>
     <option value="motorcycle_leisure">
-      Motorcycle or Leisure Vehicle
+      Motorcycles &amp; Leisure
     </option>
   </select>
 </div>
@@ -863,6 +865,13 @@ const nationwideDelivery = document.getElementById("nationwideDelivery").checked
 const vehicleCondition = document.getElementById("vehicleCondition").value;
     const title = [year, make, model, variant].filter(Boolean).join(" ");
 
+    const validListingTypes = ["vehicle", "bakkie", "motorcycle_leisure"];
+    if (!validListingTypes.includes(listingType)) {
+      setStatus("Please select a valid Listing Type.");
+      saveBtn.disabled = false;
+      return;
+    }
+
     if (!make || !model || !year || !price || !mileage || !location || !dealer || !phone) {
       setStatus("Please complete all required fields.");
       saveBtn.disabled = false;
@@ -942,7 +951,7 @@ document.getElementById("model").disabled = true;
 const listingTypeSelect =
   document.getElementById("listingType");
 
-listingTypeSelect.value = "vehicle";
+listingTypeSelect.value = "";
 listingTypeSelect.dispatchEvent(new Event("change"));
 document.getElementById("makeOther").value = "";
 document.getElementById("makeOther").style.display = "none";

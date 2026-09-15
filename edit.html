@@ -368,11 +368,13 @@
         </div>
       </div>
 <div class="field">
-  <label for="listingType">What are you listing?</label>
-  <select id="listingType">
-    <option value="vehicle">Vehicle</option>
+  <label for="listingType">Listing Type <span aria-hidden="true">*</span></label>
+  <select id="listingType" required>
+    <option value="">Select listing type</option>
+    <option value="vehicle">Vehicles</option>
+    <option value="bakkie">Bakkies</option>
     <option value="motorcycle_leisure">
-      Motorcycle or Leisure Vehicle
+      Motorcycles &amp; Leisure
     </option>
   </select>
 </div>
@@ -1068,6 +1070,25 @@ function setMakeModelValues(
 }
 
 initMakeModelDropdowns();
+    function classifyExistingListingType(vehicle) {
+      if (vehicle.listing_type === "motorcycle_leisure") return "motorcycle_leisure";
+      if (vehicle.listing_type === "bakkie") return "bakkie";
+
+      const bodyType = String(vehicle.body_type || vehicle.bodyType || "")
+        .toLowerCase().trim();
+      if (/^(bakkie|pickup|pick-up|single cab|double cab|extended cab|extra cab)$/.test(bodyType)) {
+        return "bakkie";
+      }
+
+      const modelText = [vehicle.make, vehicle.model]
+        .filter(Boolean).join(" ").toLowerCase()
+        .replace(/[^a-z0-9]+/g, " ").trim();
+
+      return /\b(hilux|ranger|amarok|np200|navara|triton|bt 50|d max|p series|pik up|t60|t90|t8|t9|tunland|steed|musso|landtrek|gladiator)\b/.test(modelText)
+        ? "bakkie"
+        : "vehicle";
+    }
+
     async function loadVehicle() {
       setStatus("Loading vehicle...");
 
@@ -1087,10 +1108,7 @@ initMakeModelDropdowns();
       const profile = await loadDealerProfile();
       currentVehicle = data;
 
- const savedListingType =
-  data.listing_type === "motorcycle_leisure"
-    ? "motorcycle_leisure"
-    : "vehicle";
+ const savedListingType = classifyExistingListingType(data);
 
 const listingTypeSelect =
   document.getElementById("listingType");
@@ -1336,6 +1354,13 @@ const featured =
 
         const title = [year, make, model, variant].filter(Boolean).join(" ");
 
+        const validListingTypes = ["vehicle", "bakkie", "motorcycle_leisure"];
+        if (!validListingTypes.includes(listingType)) {
+          setStatus("Please select a valid Listing Type.");
+          saveBtn.disabled = false;
+          return;
+        }
+
         if (!make || !model || !year || !price || !mileage || !location || !dealer || !phone) {
           setStatus("Please complete all required fields.");
           saveBtn.disabled = false;
@@ -1505,4 +1530,3 @@ if (
   </script>
 </body>
 </html>
-

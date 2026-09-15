@@ -28,13 +28,14 @@ let verifiedDealers=[];
 let verifiedVehicles=[];
 const supportedBrandSlugs=["toyota","ford","volkswagen","isuzu","suzuki","bmw","mercedes-benz","hyundai","kia","renault","nissan","mahindra","audi","mitsubishi","haval","subaru","mazda","chery","jetour","omoda"];
 const supportedCitySlugs=["kimberley","upington","kuruman","postmasburg","kathu","de-aar","bloemfontein","welkom","bethlehem","kroonstad","sasolburg","potchefstroom","klerksdorp","rustenburg","mahikeng","brits","johannesburg","pretoria","centurion","midrand","alberton","benoni","boksburg","brakpan","germiston","kempton-park","krugersdorp","roodepoort","randburg","sandton","vanderbijlpark","vereeniging","cape-town","bellville","stellenbosch","paarl","worcester","george","mossel-bay","durban","pietermaritzburg","pinetown","umhlanga","ballito","richards-bay","gqeberha","east-london","mthatha","queenstown","makhanda","polokwane","mbombela","middelburg"];
+const existingDealerUrls={"9b95e6a7-64e3-48c2-a579-19eadc6100fb":"car-bakkie-city-kimberley.html","89ae6a2a-3a87-4bf2-82f5-050da89b2d43":"m-i-motors-kuruman.html"};
 
 function slugify(value){return String(value||"").toLowerCase().trim().replace(/&/g,"and").replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"");}
 function escapeHtml(value){return String(value==null?"":value).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");}
 function publicDealerName(name,city){return String(name||"CarScoutZA Dealer").trim().replace(/\bKby\b/gi,city||"Kimberley");}
 function dealerCity(dealer){if(dealer.town)return String(dealer.town).trim();if(dealer.location)return String(dealer.location).split(",")[0].trim();return"South Africa";}
 function dealerProvince(dealer){if(dealer.province)return String(dealer.province).trim();const parts=String(dealer.location||"").split(",").map(function(part){return part.trim();}).filter(Boolean);return parts.length>1?parts[parts.length-1]:"South Africa";}
-function dealerFileName(dealer){const city=dealerCity(dealer);const dealerSlug=slugify(dealer.dealer_name);const citySlug=slugify(city);return(dealerSlug.includes(citySlug)?dealerSlug:dealerSlug+"-"+citySlug)+".html";}
+function dealerFileName(dealer){if(existingDealerUrls[String(dealer.id)])return existingDealerUrls[String(dealer.id)];const city=dealerCity(dealer);const dealerSlug=slugify(dealer.dealer_name);const citySlug=slugify(city);return(dealerSlug.includes(citySlug)?dealerSlug:dealerSlug+"-"+citySlug)+".html";}
 function firstImage(vehicle){if(vehicle.image&&String(vehicle.image).trim())return String(vehicle.image).trim();if(Array.isArray(vehicle.images)&&vehicle.images.length)return vehicle.images[0];if(typeof vehicle.images==="string"&&vehicle.images.trim()){try{const parsed=JSON.parse(vehicle.images);if(Array.isArray(parsed)&&parsed.length)return parsed[0];}catch(error){return vehicle.images.split(",")[0].trim();}}return"";}
 function money(value){const number=Number(String(value||"").replace(/[^0-9.]/g,""));return number?"R"+number.toLocaleString("en-ZA"):"Price on request";}
 function mileage(value){const number=Number(String(value||"").replace(/[^0-9]/g,""));return number?number.toLocaleString("en-ZA")+" km":"Mileage not listed";}
@@ -82,7 +83,7 @@ ${makeLinks?`<section class="section"><h2>Popular ${escapeHtml(name)} Vehicle Se
 
 async function loadVerifiedData(){
 const status=document.getElementById("status");status.textContent="Loading verified dealers and current stock...";
-const results=await Promise.all([client.from("profiles").select("id,dealer_name,town,province,location,logo_url,phone,whatsapp_phone").eq("dealer_verified",true),client.from("public_active_verified_vehicles_test").select("*").order("updated_at",{ascending:false})]);
+const results=await Promise.all([client.from("public_active_verified_dealers").select("id,dealer_name,town,province,location,logo_url"),client.from("public_active_verified_vehicles_test").select("*").order("updated_at",{ascending:false})]);
 if(results[0].error||results[1].error){console.error(results[0].error||results[1].error);status.textContent="Could not load verified dealer data.";return;}
 verifiedDealers=results[0].data||[];verifiedVehicles=results[1].data||[];
 status.textContent=`Loaded ${verifiedDealers.length} verified dealers and ${verifiedVehicles.length} live vehicles.`;

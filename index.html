@@ -912,6 +912,7 @@ display:flex;
 <select id="listingTypeSearch">
   <option value="">All Listing Types</option>
   <option value="vehicle">Vehicles</option>
+  <option value="bakkie">Bakkies</option>
   <option value="motorcycle_leisure">
     Motorcycles & Leisure
   </option>
@@ -1092,7 +1093,7 @@ function formatPrice(p){
   return "R" +
   num.toLocaleString("en-ZA");
 }
-  function initHomepageMakeModelSearch() {
+function initHomepageMakeModelSearch() {
   const vehicleData =
     window.CARSCOUT_VEHICLE_DATA || {};
 
@@ -1161,6 +1162,31 @@ function formatPrice(p){
       modelSelect.disabled = true;
     }
   });
+}
+
+function isSafelyClassifiedBakkie(vehicle) {
+  const explicitBodyType = String(
+    vehicle.body_type || vehicle.bodyType || ""
+  ).toLowerCase().trim();
+
+  if (/^(bakkie|pickup|pick-up|single cab|double cab|extended cab|extra cab)$/.test(explicitBodyType)) {
+    return true;
+  }
+
+  const modelText = [vehicle.make, vehicle.model]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+
+  return /\b(hilux|ranger|amarok|np200|navara|triton|bt 50|d max|p series|pik up|t60|t90|t8|t9|tunland|steed|musso|landtrek|gladiator)\b/.test(modelText);
+}
+
+function classifyListingType(vehicle) {
+  if (vehicle.listing_type === "motorcycle_leisure") return "motorcycle_leisure";
+  if (vehicle.listing_type === "bakkie") return "bakkie";
+  return isSafelyClassifiedBakkie(vehicle) ? "bakkie" : "vehicle";
 }
 
 initHomepageMakeModelSearch();
@@ -1425,8 +1451,7 @@ const maxYear = document.getElementById("maxYear").value;
     document.getElementById("sort").value;
 
     data = data.filter(function(v){
-const vehicleListingType =
-  v.listing_type || "vehicle";
+const vehicleListingType = classifyListingType(v);
 
 const vehicleMake =
   String(v.make || "").toLowerCase().trim();

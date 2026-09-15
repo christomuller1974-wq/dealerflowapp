@@ -1,0 +1,256 @@
+{
+  "generatedAt": "2026-09-15T09:16:48.813Z",
+  "eligibleDealerCount": 31,
+  "pageCount": 31,
+  "sitemapUrlCount": 31,
+  "dealers": [
+    {
+      "id": "66305301-95b3-4b71-8f32-8779a0688b92",
+      "name": "MMG Ford Bethlehem",
+      "town": "Bethlehem",
+      "province": "Free State",
+      "file": "mmg-ford-bethlehem.html",
+      "stockCount": 8
+    },
+    {
+      "id": "48c85ce8-5850-40b9-bf73-3bbb51b059bf",
+      "name": "SCOTT AUTO BETHLEHEM",
+      "town": "Bethlehem",
+      "province": "Free State",
+      "file": "scott-auto-bethlehem.html",
+      "stockCount": 27
+    },
+    {
+      "id": "2b778fb9-432b-40e1-85bd-388a21d39dc9",
+      "name": "Beish Auto",
+      "town": "Bloemfontein",
+      "province": "Free State",
+      "file": "beish-auto-bloemfontein.html",
+      "stockCount": 0
+    },
+    {
+      "id": "6d4d2e8b-3cd3-44a5-8c97-dd12d7fb169d",
+      "name": "Leon Geeringh Motoring",
+      "town": "Bloemfontein",
+      "province": "Free State",
+      "file": "leon-geeringh-motoring-bloemfontein.html",
+      "stockCount": 15
+    },
+    {
+      "id": "3663e8bf-d797-4279-9ff7-9c6b991212ce",
+      "name": "Motus Select Bloemfontein Central",
+      "town": "Bloemfontein",
+      "province": "Free State",
+      "file": "motus-select-bloemfontein-central.html",
+      "stockCount": 19
+    },
+    {
+      "id": "ce38574f-91fa-4d7a-9a57-4b73bd5d6308",
+      "name": "NF Auto PTY Ltd",
+      "town": "Bloemfontein",
+      "province": "Free State",
+      "file": "nf-auto-pty-ltd-bloemfontein.html",
+      "stockCount": 21
+    },
+    {
+      "id": "6aa2d385-1072-41d2-b82c-e18f55082d4e",
+      "name": "Volschenk Motors",
+      "town": "Bloemfontein",
+      "province": "Free State",
+      "file": "volschenk-motors-bloemfontein.html",
+      "stockCount": 40
+    },
+    {
+      "id": "8f5ef106-4b03-485e-9b88-8cbcb9908c4f",
+      "name": "Zijlstra's Autohaus",
+      "town": "Bloemfontein",
+      "province": "Free State",
+      "file": "zijlstra-s-autohaus-bloemfontein.html",
+      "stockCount": 26
+    },
+    {
+      "id": "bed37d5a-3660-45e6-8094-192066d80b93",
+      "name": "Auto Star Welkom",
+      "town": "Welkom",
+      "province": "Free State",
+      "file": "auto-star-welkom.html",
+      "stockCount": 40
+    },
+    {
+      "id": "195707d1-1b00-4c1d-8b2f-66ac7dce668a",
+      "name": "CMH MAZDA / FOTON HATFIELD",
+      "town": "Pretoria",
+      "province": "Gauteng",
+      "file": "cmh-mazda-foton-hatfield-pretoria.html",
+      "stockCount": 39
+    },
+    {
+      "id": "5e4384df-ba3f-4849-8c15-003f8bdfe0f1",
+      "name": "BAKKIE WORLD KLERKSDORP",
+      "town": "Klerksdorp",
+      "province": "North West",
+      "file": "bakkie-world-klerksdorp.html",
+      "stockCount": 21
+    },
+    {
+      "id": "c5243339-4f7f-46e0-9ae1-2df1af257c00",
+      "name": "MC Motors",
+      "town": "Klerksdorp",
+      "province": "North West",
+      "file": "mc-motors-klerksdorp.html",
+      "stockCount": 21
+    },
+    {
+      "id": "6e0222a5-775c-4793-a4a5-74969af3f433",
+      "name": "Midcity Motors 2",
+      "town": "Klerksdorp",
+      "province": "North West",
+      "file": "midcity-motors-2-klerksdorp.html",
+      "stockCount": 23
+    },
+    {
+      "id": "c01fb0b7-e79b-49d8-9b8a-60251adc7fee",
+      "name": "TEN Four Auto",
+      "town": "Klerksdorp",
+      "province": "North West",
+      "file": "ten-four-auto-klerksdorp.html",
+      "stockCount": 20
+    },
+    {
+      "id": "0f16da79-7e40-47a1-8820-3a8926bdc555",
+      "name": "VX AUTO",
+      "town": "Klerksdorp",
+      "province": "North West",
+      "file": "vx-auto-klerksdorp.html",
+      "stockCount": 0
+    },
+    {
+      "id": "cd877617-b071-4f49-b215-42d68e74b57e",
+      "name": "VX Auto Sales Klerksdorp",
+      "town": "Klerksdorp",
+      "province": "North West",
+      "file": "vx-auto-sales-klerksdorp.html",
+      "stockCount": 28
+    },
+    {
+      "id": "2617ad54-fede-4d3e-9a0f-415cbf3a758f",
+      "name": "Infinite Auto Potchefstroom",
+      "town": "Potchefstroom",
+      "province": "North West",
+      "file": "infinite-auto-potchefstroom.html",
+      "stockCount": 19
+    },
+    {
+      "id": "ad0face4-dcd6-4431-a515-e098705c6b98",
+      "name": "Penta Now Potchefstroom",
+      "town": "Potchefstroom",
+      "province": "North West",
+      "file": "penta-now-potchefstroom.html",
+      "stockCount": 19
+    },
+    {
+      "id": "daf1f59c-160c-49e3-a561-aa16a09a4edd",
+      "name": "TX Auto Potchefstroom",
+      "town": "Potchefstroom",
+      "province": "North West",
+      "file": "tx-auto-potchefstroom.html",
+      "stockCount": 13
+    },
+    {
+      "id": "493762ef-261c-4303-b5e9-31adb06444a4",
+      "name": "JAC MOTORS Hartswater",
+      "town": "Hartswater",
+      "province": "Northern Cape",
+      "file": "jac-motors-hartswater.html",
+      "stockCount": 8
+    },
+    {
+      "id": "407c973e-d52f-4b23-be50-df7e77073214",
+      "name": "Auto Excellence Kimberley",
+      "town": "Kimberley",
+      "province": "Northern Cape",
+      "file": "auto-excellence-kby-kimberley.html",
+      "stockCount": 22
+    },
+    {
+      "id": "9b95e6a7-64e3-48c2-a579-19eadc6100fb",
+      "name": "CAR & BAKKIE CITY",
+      "town": "Kimberley",
+      "province": "Northern Cape",
+      "file": "car-bakkie-city-kimberley.html",
+      "stockCount": 38
+    },
+    {
+      "id": "36a87aed-4619-4160-b089-1f79fb2863e7",
+      "name": "FLAMINGO AUTO-KIMBERLEY",
+      "town": "Kimberley",
+      "province": "Northern Cape",
+      "file": "flamingo-auto-kimberley.html",
+      "stockCount": 1
+    },
+    {
+      "id": "d3ff4ad8-acf1-44f7-8c2b-76579d2e5a87",
+      "name": "Human Auto Kimberley",
+      "town": "Kimberley",
+      "province": "Northern Cape",
+      "file": "human-auto-kimberley.html",
+      "stockCount": 38
+    },
+    {
+      "id": "9d74605f-9867-47b1-b2ee-fb443e339ffd",
+      "name": "MORGAN MOTOR GROUP KIMBERLEY",
+      "town": "Kimberley",
+      "province": "Northern Cape",
+      "file": "morgan-motor-group-kimberley.html",
+      "stockCount": 33
+    },
+    {
+      "id": "edec7453-75cc-489e-b70a-1792db05100e",
+      "name": "Moto Xtreme",
+      "town": "Kimberley",
+      "province": "Northern Cape",
+      "file": "moto-xtreme-kimberley.html",
+      "stockCount": 15
+    },
+    {
+      "id": "529b737b-ab45-4041-b09f-88fa39f7eec5",
+      "name": "Super Cars Kimberley",
+      "town": "Kimberley",
+      "province": "Northern Cape",
+      "file": "super-cars-kimberley.html",
+      "stockCount": 6
+    },
+    {
+      "id": "0e073d97-03e8-4248-85eb-9b7b62b2b3ae",
+      "name": "Tata Kimberley",
+      "town": "Kimberley",
+      "province": "Northern Cape",
+      "file": "tata-kimberley.html",
+      "stockCount": 10
+    },
+    {
+      "id": "8f45a5cd-07a5-4a79-b18c-b4a0fc32d803",
+      "name": "BB Motors, Kuruman",
+      "town": "Kuruman",
+      "province": "Northern Cape",
+      "file": "bb-motors-kuruman.html",
+      "stockCount": 25
+    },
+    {
+      "id": "89ae6a2a-3a87-4bf2-82f5-050da89b2d43",
+      "name": "M&I Motors",
+      "town": "Kuruman",
+      "province": "Northern Cape",
+      "file": "m-i-motors-kuruman.html",
+      "stockCount": 6
+    },
+    {
+      "id": "c68de985-c1c7-4068-b2cc-ab4faf6a700e",
+      "name": "RUPPING DEALERS",
+      "town": "Kuruman",
+      "province": "Northern Cape",
+      "file": "rupping-dealers-kuruman.html",
+      "stockCount": 39
+    }
+  ]
+}
