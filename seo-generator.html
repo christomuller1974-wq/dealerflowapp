@@ -673,7 +673,7 @@ return;
 
 const endpoint =
 SUPABASE_URL_PAGE +
-"/rest/v1/vehicles?select=*&limit=1000";
+"/rest/v1/public_active_verified_vehicles_test?select=*&limit=1000";
 
 const response = await fetch(endpoint,{
 headers:{
@@ -1020,7 +1020,7 @@ Loading ${city} vehicles...
 <h2>Used Cars for Sale in ${city}</h2>
 
 <p>
-Whether you are looking for an affordable first car, a family SUV, a work bakkie or your next everyday vehicle, CarScoutZA helps you compare vehicles advertised by professional motor dealerships.
+Whether you are looking for a first car, a family SUV, a work bakkie or your next everyday vehicle, CarScoutZA helps you compare vehicles advertised by professional motor dealerships.
 </p>
 
 <p>

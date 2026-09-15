@@ -1248,8 +1248,17 @@ async function loadVehicle(){
       }
     );
 
-    const data =
-      await res.json();
+    let data = await res.json();
+
+    // Preserve a useful public URL when stock has just sold or been withdrawn.
+    // This second request only succeeds where the public anon policy permits the row.
+    if (!Array.isArray(data) || !data.length) {
+      const archivedRes = await fetch(
+        supabaseUrl + "/rest/v1/vehicles?select=*&id=eq." + encodeURIComponent(id) + "&limit=1",
+        {headers:{apikey:supabaseKey,Authorization:"Bearer " + supabaseKey}}
+      );
+      if (archivedRes.ok) data = await archivedRes.json();
+    }
 
     const v =
       Array.isArray(data)
@@ -1258,7 +1267,10 @@ async function loadVehicle(){
 
     if (!v){
 
-      setStatus("Vehicle not found.");
+      document.title = "Vehicle No Longer Available | CarScoutZA";
+      setStatus("This vehicle is no longer available. Browse current verified dealer stock on CarScoutZA.");
+      const grid = document.getElementById("vehicleDetails") || document.getElementById("details");
+      if (grid) grid.innerHTML = '<section class="panel"><h2>Vehicle no longer available</h2><p>The advert may have sold or been withdrawn. Search current vehicles from verified South African dealers.</p><a class="button" href="index.html">Browse current vehicles</a></section>';
 
       return;
     }

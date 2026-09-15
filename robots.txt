@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://carscoutza.com/sitemap.xml
+Sitemap: https://carscoutza.com/seo-hubs-sitemap.xml
