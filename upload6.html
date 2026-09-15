@@ -283,6 +283,7 @@ button:disabled {
     <option value="">Select listing type</option>
     <option value="vehicle">Vehicles</option>
     <option value="bakkie">Bakkies</option>
+    <option value="suv">SUVs</option>
     <option value="motorcycle_leisure">
       Motorcycles &amp; Leisure
     </option>
@@ -865,7 +866,7 @@ const nationwideDelivery = document.getElementById("nationwideDelivery").checked
 const vehicleCondition = document.getElementById("vehicleCondition").value;
     const title = [year, make, model, variant].filter(Boolean).join(" ");
 
-    const validListingTypes = ["vehicle", "bakkie", "motorcycle_leisure"];
+    const validListingTypes = ["vehicle", "bakkie", "suv", "motorcycle_leisure"];
     if (!validListingTypes.includes(listingType)) {
       setStatus("Please select a valid Listing Type.");
       saveBtn.disabled = false;

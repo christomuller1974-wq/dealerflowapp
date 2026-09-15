@@ -911,8 +911,9 @@ display:flex;
 <div class="search-bar">
 <select id="listingTypeSearch">
   <option value="">All Listing Types</option>
-  <option value="vehicle">Vehicles</option>
+  <option value="vehicle">Cars</option>
   <option value="bakkie">Bakkies</option>
+  <option value="suv">SUVs</option>
   <option value="motorcycle_leisure">
     Motorcycles & Leisure
   </option>
@@ -1186,7 +1187,26 @@ function isSafelyClassifiedBakkie(vehicle) {
 function classifyListingType(vehicle) {
   if (vehicle.listing_type === "motorcycle_leisure") return "motorcycle_leisure";
   if (vehicle.listing_type === "bakkie") return "bakkie";
-  return isSafelyClassifiedBakkie(vehicle) ? "bakkie" : "vehicle";
+  if (vehicle.listing_type === "suv") return "suv";
+  if (isSafelyClassifiedBakkie(vehicle)) return "bakkie";
+  if (isRecognisedMotorcycleOrLeisure(vehicle)) return "motorcycle_leisure";
+  return isRecognisedSuv(vehicle) ? "suv" : "vehicle";
+}
+
+function isRecognisedMotorcycleOrLeisure(vehicle) {
+  const make = String(vehicle.make || "").toLowerCase().trim();
+  const text = [vehicle.make, vehicle.model].filter(Boolean).join(" ").toLowerCase();
+  return /^(yamaha|kawasaki|triumph|harley-davidson|ktm|ducati|husqvarna)$/.test(make) ||
+    /\b(r1200 gs|rr 1000|cbr 1000|fireblade|motorcycle|motorbike|quad bike|caravan|trailer|boat|jetski|jet ski)\b/.test(text);
+}
+
+function isRecognisedSuv(vehicle) {
+  const body = String(vehicle.body_type || vehicle.bodyType || "").toLowerCase().trim();
+  if (/^(suv|crossover|sport utility vehicle)$/.test(body)) return true;
+  const text = [vehicle.make, vehicle.model].filter(Boolean).join(" ").toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
+  if (/\bland cruiser 79\b/.test(text) || /\b(single cab|double cab|super cab|extended cab|extra cab|pickup|pick up)\b/.test(text)) return false;
+  if (/\btrailbrazer\b/.test(text)) return true;
+  return /\b(q3|q5|q7|b30|b40|x25|x55|bmw x1|bmw x3|bmw x5|bmw x6|omoda c5|jaecoo j7|tiggo|captiva|trailblazer|terios|dodge journey|eco sport|ecosport|everest|kuga|puma|territory|haval h1|haval h2|haval h6|haval h9|jolion|cr v|creta|ix35|tucson|venue|grand cherokee|renegade|wrangler|dashing|x70|seltos|sonet|sportage|defender|discovery|evoque|range rover|kuv 100|kuv100|kuv300|scorpio n|xuv 3x0|xuv300|cx 3|cx3|cx 30|cx 5|cx 60|gla|glc|mg hs|countryman|asx|pajero|juke|qashqai|x trail|mokka|crossland|proton x50|captur|capture|duster|kiger|brezza|fronx|jimny|c hr|corolla cross|fortuner|land cruiser|landcruiser|prado|rav 4|rav4|urban cruiser|t cross|taigo|tiguan|tiquan|xc40)\b/.test(text);
 }
 
 initHomepageMakeModelSearch();
@@ -1268,6 +1288,23 @@ async function loadCars(){
     );
 
     let data = await res.json();
+
+// The approved public view may not expose listing_type on older deployments.
+// Overlay only the safe category fields from the public-readable vehicle rows;
+// if unavailable, the conservative classifier below remains the fallback.
+try {
+  const categoryResponse = await fetch(
+    supabaseUrl + "/rest/v1/vehicles?select=id,listing_type",
+    {headers:{apikey:supabaseKey,Authorization:"Bearer " + supabaseKey}}
+  );
+  if (categoryResponse.ok) {
+    const categoryRows = await categoryResponse.json();
+    const categoryById = new Map((categoryRows || []).map(row => [String(row.id), row]));
+    data = data.map(vehicle => Object.assign({}, vehicle, categoryById.get(String(vehicle.id)) || {}));
+  }
+} catch (categoryError) {
+  console.warn("Saved listing categories could not be overlaid; using safe classification.", categoryError);
+}
 const profiles = await fetch(
  supabaseUrl + "/rest/v1/profiles?select=id,active,admin_blocked,paid_until,admin_free_until,payment_status,town,province",
   {

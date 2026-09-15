@@ -373,6 +373,7 @@
     <option value="">Select listing type</option>
     <option value="vehicle">Vehicles</option>
     <option value="bakkie">Bakkies</option>
+    <option value="suv">SUVs</option>
     <option value="motorcycle_leisure">
       Motorcycles &amp; Leisure
     </option>
@@ -1073,6 +1074,7 @@ initMakeModelDropdowns();
     function classifyExistingListingType(vehicle) {
       if (vehicle.listing_type === "motorcycle_leisure") return "motorcycle_leisure";
       if (vehicle.listing_type === "bakkie") return "bakkie";
+      if (vehicle.listing_type === "suv") return "suv";
 
       const bodyType = String(vehicle.body_type || vehicle.bodyType || "")
         .toLowerCase().trim();
@@ -1084,9 +1086,25 @@ initMakeModelDropdowns();
         .filter(Boolean).join(" ").toLowerCase()
         .replace(/[^a-z0-9]+/g, " ").trim();
 
-      return /\b(hilux|ranger|amarok|np200|navara|triton|bt 50|d max|p series|pik up|t60|t90|t8|t9|tunland|steed|musso|landtrek|gladiator)\b/.test(modelText)
-        ? "bakkie"
-        : "vehicle";
+      if (/\b(hilux|ranger|amarok|np200|navara|triton|bt 50|d max|p series|pik up|t60|t90|t8|t9|tunland|steed|musso|landtrek|gladiator)\b/.test(modelText)) return "bakkie";
+      if (isRecognisedMotorcycleOrLeisure(vehicle)) return "motorcycle_leisure";
+      return isRecognisedSuv(vehicle) ? "suv" : "vehicle";
+    }
+
+    function isRecognisedMotorcycleOrLeisure(vehicle) {
+      const make = String(vehicle.make || "").toLowerCase().trim();
+      const text = [vehicle.make, vehicle.model].filter(Boolean).join(" ").toLowerCase();
+      return /^(yamaha|kawasaki|triumph|harley-davidson|ktm|ducati|husqvarna)$/.test(make) ||
+        /\b(r1200 gs|rr 1000|cbr 1000|fireblade|motorcycle|motorbike|quad bike|caravan|trailer|boat|jetski|jet ski)\b/.test(text);
+    }
+
+    function isRecognisedSuv(vehicle) {
+      const body = String(vehicle.body_type || vehicle.bodyType || "").toLowerCase().trim();
+      if (/^(suv|crossover|sport utility vehicle)$/.test(body)) return true;
+      const text = [vehicle.make, vehicle.model].filter(Boolean).join(" ").toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
+      if (/\bland cruiser 79\b/.test(text) || /\b(single cab|double cab|super cab|extended cab|extra cab|pickup|pick up)\b/.test(text)) return false;
+      if (/\btrailbrazer\b/.test(text)) return true;
+      return /\b(q3|q5|q7|b30|b40|x25|x55|bmw x1|bmw x3|bmw x5|bmw x6|omoda c5|jaecoo j7|tiggo|captiva|trailblazer|terios|dodge journey|eco sport|ecosport|everest|kuga|puma|territory|haval h1|haval h2|haval h6|haval h9|jolion|cr v|creta|ix35|tucson|venue|grand cherokee|renegade|wrangler|dashing|x70|seltos|sonet|sportage|defender|discovery|evoque|range rover|kuv 100|kuv100|kuv300|scorpio n|xuv 3x0|xuv300|cx 3|cx3|cx 30|cx 5|cx 60|gla|glc|mg hs|countryman|asx|pajero|juke|qashqai|x trail|mokka|crossland|proton x50|captur|capture|duster|kiger|brezza|fronx|jimny|c hr|corolla cross|fortuner|land cruiser|landcruiser|prado|rav 4|rav4|urban cruiser|t cross|taigo|tiguan|tiquan|xc40)\b/.test(text);
     }
 
     async function loadVehicle() {
@@ -1354,7 +1372,7 @@ const featured =
 
         const title = [year, make, model, variant].filter(Boolean).join(" ");
 
-        const validListingTypes = ["vehicle", "bakkie", "motorcycle_leisure"];
+        const validListingTypes = ["vehicle", "bakkie", "suv", "motorcycle_leisure"];
         if (!validListingTypes.includes(listingType)) {
           setStatus("Please select a valid Listing Type.");
           saveBtn.disabled = false;
