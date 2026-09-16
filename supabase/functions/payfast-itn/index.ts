@@ -20,7 +20,10 @@ Deno.serve(async request=>{
     const service=createClient(supabaseUrl,serviceKey,{auth:{persistSession:false,autoRefreshToken:false}});
     const {data:payment,error:paymentError}=await service.from("subscription_payments").select("id,dealer_id,m_payment_id,amount,currency,status,pf_payment_id").eq("m_payment_id",values.m_payment_id).single();
     if(paymentError||!payment||Number(payment.amount)!==2000||payment.currency!=="ZAR") return json({error:"Unknown or mismatched payment"},400);
-    if(payment.status==="COMPLETE") return new Response("OK",{status:200});
+    if(payment.status==="COMPLETE") {
+      if(payment.pf_payment_id!==values.pf_payment_id) return json({error:"Completed payment reference mismatch"},409);
+      return new Response("OK",{status:200});
+    }
     if(payment.status!=="PENDING"||!values.pf_payment_id) return json({error:"Payment cannot be processed"},409);
 
     const sandbox=(Deno.env.get("PAYFAST_MODE")||"sandbox").toLowerCase()!=="live";
