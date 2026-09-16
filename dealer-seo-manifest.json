@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-09-15T09:16:48.813Z",
-  "eligibleDealerCount": 31,
-  "pageCount": 31,
-  "sitemapUrlCount": 31,
+  "generatedAt": "2026-09-16T07:43:23.533Z",
+  "eligibleDealerCount": 32,
+  "pageCount": 32,
+  "sitemapUrlCount": 32,
   "dealers": [
     {
       "id": "66305301-95b3-4b71-8f32-8779a0688b92",
@@ -34,7 +34,7 @@
       "town": "Bloemfontein",
       "province": "Free State",
       "file": "leon-geeringh-motoring-bloemfontein.html",
-      "stockCount": 15
+      "stockCount": 16
     },
     {
       "id": "3663e8bf-d797-4279-9ff7-9c6b991212ce",
@@ -157,6 +157,14 @@
       "stockCount": 13
     },
     {
+      "id": "e7faf21a-036a-4894-966f-fc255078f6a1",
+      "name": "Valor Motor Group",
+      "town": "Potchefstroom",
+      "province": "North West",
+      "file": "valor-motor-group-potchefstroom.html",
+      "stockCount": 0
+    },
+    {
       "id": "493762ef-261c-4303-b5e9-31adb06444a4",
       "name": "JAC MOTORS Hartswater",
       "town": "Hartswater",
@@ -170,7 +178,7 @@
       "town": "Kimberley",
       "province": "Northern Cape",
       "file": "auto-excellence-kby-kimberley.html",
-      "stockCount": 22
+      "stockCount": 21
     },
     {
       "id": "9b95e6a7-64e3-48c2-a579-19eadc6100fb",
@@ -250,7 +258,7 @@
       "town": "Kuruman",
       "province": "Northern Cape",
       "file": "rupping-dealers-kuruman.html",
-      "stockCount": 39
+      "stockCount": 38
     }
   ]
 }
