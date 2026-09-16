@@ -1,5 +1,6 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
-import { json, parameterString, safeEqual, signature } from "../_shared/payfast.ts";
+import { json, safeEqual } from "../_shared/payfast.ts";
+import { parameterString, signature } from "./file2.ts";
 
 Deno.serve(async request=>{
   if(request.method!=="POST") return json({error:"Method not allowed"},405);
