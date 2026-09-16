@@ -801,8 +801,7 @@ async function activateDealer(id) {
 }
 
 async function grantFree30Days(id) {
-  const freeUntil = new Date();
-  freeUntil.setDate(freeUntil.getDate() + 30);
+  const freeUntil = new Date(Date.now() + (30 * 24 * 60 * 60 * 1000));
 
   const { error } = await client
     .from("profiles")

@@ -7,6 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="dealer-access.js"></script>
 <script src="vehicle-data.js"></script>
 <script src="listing-classification.js"></script>
 <style>
@@ -792,23 +793,16 @@ async function loadProfile() {
   }
 
   profile = data;
-const now = new Date();
-
-const paidUntil = profile.paid_until
-    ? new Date(profile.paid_until)
-    : null;
-
-const freeUntil = profile.admin_free_until
-    ? new Date(profile.admin_free_until)
-    : null;
-
-const paidActive = paidUntil && paidUntil > now;
-const freeActive = freeUntil && freeUntil > now;
-
-if (!profile.active && !paidActive && !freeActive) {
+const access = window.CarScoutAccess.getAccessState(profile);
+if (access.isDeclined || (profile.admin_blocked && !access.isPending)) {
+    alert("Your dealer access is blocked. Please contact CarScoutZA Admin.");
+    window.location.href = "login.html";
+    return false;
+}
+if (!access.isPending && !access.hasCurrentAccess) {
     alert("Your subscription has expired.");
-    window.location.href = "pricing.html";
-    return;
+    window.location.href = "payment.html";
+    return false;
 }
   document.getElementById("dealer").value =
     data.dealer_name || data.name || "";
@@ -1027,44 +1021,12 @@ if (email === "autoexcellence@telkomsa.net") {
   render();
   return;
 }
-    const now = new Date();
-
-const paidUntil = profile.paid_until
-  ? new Date(profile.paid_until)
-  : null;
-
-const freeUntil = profile.admin_free_until
-  ? new Date(profile.admin_free_until)
-  : null;
-
-const trialUntil = profile.trial_expires
-  ? new Date(profile.trial_expires)
-  : null;
-
-const paidActive = paidUntil && paidUntil > now;
-const freeActive = freeUntil && freeUntil > now;
-const trialActive = trialUntil && trialUntil > now;
-
-const hasFreeStatus =
-  profile.payment_status === "FREE_30_DAY";
-
-const hasPaidStatus =
-  profile.payment_status === "PAID";
-
-if (profile.admin_blocked) {
+const access = window.CarScoutAccess.getAccessState(profile);
+if (access.isDeclined || (profile.admin_blocked && !access.isPending)) {
   showPendingApprovalScreen();
   return;
 }
-
-
-
-if (
-  !paidActive &&
-  !freeActive &&
-  !trialActive &&
-  !hasFreeStatus &&
-  !hasPaidStatus
-) {
+if (!access.isPending && !access.hasCurrentAccess) {
   showPendingApprovalScreen();
   return;
 }

@@ -6,6 +6,7 @@
 <title>Dealer Dashboard | CarScoutZA</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="dealer-access.js"></script>
 
 <style>
 * { box-sizing:border-box; }
@@ -73,6 +74,7 @@ body {
   font-weight:900;
   box-shadow:0 3px 10px rgba(0,0,0,0.08);
 }
+.access-notice{background:#eff6ff;border:1px solid #bfdbfe;color:#1e3a8a;border-radius:14px;padding:14px 16px;margin-bottom:16px;font-weight:800;line-height:1.5}
 
 .share-box {
   background:white;
@@ -329,6 +331,7 @@ body {
   </div>
 
   <div id="status" class="status">Starting dashboard...</div>
+  <div id="accessNotice" class="access-notice" hidden></div>
 
   <div class="share-box">
     <h2>Your Dealer Share Link</h2>
@@ -633,21 +636,44 @@ async function loadClickCounts() {
   console.log("Loaded dealer click records:", allClicks.length);
 }
 
-function showPendingApprovalScreen() {
+function showRenewalScreen() {
   document.body.innerHTML = `
     <div class="approval-wrap">
       <div class="approval-card">
-        <h2>Account Not Active</h2>
-        <p>Your dealer account is not currently active.</p>
-        <p>Please renew your monthly payment or contact CarScoutZA support.</p>
+        <h2>Membership Renewal Required</h2>
+        <p>Your free or paid access period has expired. Your stock is no longer public, but your account and saved vehicles remain available.</p>
         <div class="approval-actions">
           <a href="index.html" class="top-btn">Back to Website</a>
-          <a href="payment.html" class="top-btn blue">Make Payment</a>
+          <a href="payment.html" class="top-btn blue">Renew Membership – R2,000 for 30 days</a>
           <button class="top-btn" onclick="logout()">Logout</button>
         </div>
       </div>
     </div>
   `;
+}
+function showAdminBlockedScreen() {
+  document.body.innerHTML = `
+    <div class="approval-wrap"><div class="approval-card">
+      <h2>Dealer Access Blocked</h2>
+      <p>Please contact CarScoutZA Admin on <strong>082 574 4526</strong> for assistance.</p>
+      <div class="approval-actions"><a href="tel:0825744526" class="top-btn blue">Contact Admin</a><button class="top-btn" onclick="logout()">Logout</button></div>
+    </div></div>`;
+}
+
+function showAccessNotice(state) {
+  const notice = document.getElementById("accessNotice");
+  if (!notice) return;
+  if (state.isPending) {
+    notice.textContent = "Your dealership is pending approval. You can upload and edit vehicles now; they will remain hidden from the public until approval.";
+  } else if (state.freeActive) {
+    notice.textContent = "Free dealer access is active until " + new Date(currentProfile.admin_free_until).toLocaleDateString("en-ZA", {day:"numeric",month:"long",year:"numeric"}) + ". No payment is due during this free period.";
+  } else if (state.paidActive) {
+    notice.textContent = "Paid dealer access is active until " + new Date(currentProfile.paid_until).toLocaleDateString("en-ZA", {day:"numeric",month:"long",year:"numeric"}) + ".";
+  } else {
+    notice.hidden = true;
+    return;
+  }
+  notice.hidden = false;
 }
 function showDeclinedDealerScreen() {
   const reason = currentProfile?.decline_reason || "Please contact CarScoutZA Admin for more information.";
@@ -840,26 +866,8 @@ ${refreshButton.text}
   setStatus("Dashboard loaded successfully.");
 }
 function startFeaturedPayment(vehicleId) {
-
-  const paymentUrl =
-    "https://www.payfast.co.za/eng/process?" +
-
-   "merchant_id=34937955" +
-"&merchant_key=eeo8gbmdxxey2" +
-    "&amount=200.00" +
-    "&item_name=" + encodeURIComponent("Featured Vehicle") +
-
-    "&return_url=" +
-    encodeURIComponent(
-      "https://carscoutza.com/feature-success.html?vehicle=" + vehicleId
-    ) +
-
-    "&cancel_url=" +
-    encodeURIComponent(
-      "https://carscoutza.com/dealer-admin.html"
-    );
-
-  window.location.href = paymentUrl;
+  void vehicleId;
+  alert("Featured Vehicle checkout is temporarily unavailable while secure server-side payment verification is being enabled. No payment has been taken.");
 }
 async function toggleFeatured(vehicleId, currentlyFeatured) {
   if (!currentlyFeatured) {
@@ -932,37 +940,21 @@ if (email === MAIN_ADMIN_EMAIL.toLowerCase()) {
   return;
 }
 
-const now = new Date();
-
-const paidUntil = currentProfile.paid_until
-  ? new Date(currentProfile.paid_until)
-  : null;
-
-const freeUntil = currentProfile.admin_free_until
-  ? new Date(currentProfile.admin_free_until)
-  : null;
-
-const trialUntil = currentProfile.trial_expires
-  ? new Date(currentProfile.trial_expires)
-  : null;
-
-const paidActive = paidUntil && paidUntil > now;
-const freeActive = freeUntil && freeUntil > now;
-const trialActive = trialUntil && trialUntil > now;
-  if (currentProfile.approval_status === "DECLINED") {
+const access = window.CarScoutAccess.getAccessState(currentProfile);
+if (access.isDeclined) {
   showDeclinedDealerScreen();
   return;
 }
-if (currentProfile.admin_blocked) {
-  showPendingApprovalScreen();
+if (currentProfile.admin_blocked && !access.isPending) {
+  showAdminBlockedScreen();
+  return;
+}
+if (!access.isPending && !access.hasCurrentAccess) {
+  showRenewalScreen();
   return;
 }
 
-if (!paidActive && !freeActive && !trialActive) {
-  showPendingApprovalScreen();
-  return;
-}
-
+showAccessNotice(access);
 await loadRefreshStatus();
 await loadVehicles();
 }

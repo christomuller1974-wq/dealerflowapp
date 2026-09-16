@@ -210,6 +210,34 @@ button.submit-btn:hover {
   color:#dbeafe;
 }
 
+.modal-backdrop {
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+  background:rgba(15,23,42,0.78);
+  z-index:1000;
+}
+
+.modal-backdrop.open { display:flex; }
+
+.confirmation-modal {
+  width:min(560px,100%);
+  max-height:calc(100vh - 36px);
+  overflow:auto;
+  background:white;
+  color:#111827;
+  border-radius:20px;
+  padding:28px;
+  box-shadow:0 20px 55px rgba(0,0,0,0.4);
+}
+
+.confirmation-modal h2 { margin:0 0 14px; font-size:30px; }
+.confirmation-modal p { line-height:1.6; white-space:pre-line; }
+.confirmation-modal a { display:block; text-align:center; margin-top:22px; }
+
 @media(max-width:600px) {
   .hero h1 { font-size:34px; }
   .hero p { font-size:16px; }
@@ -321,9 +349,21 @@ button.submit-btn:hover {
       </div>
     </div>
 
-    <button class="submit-btn" onclick="signup()">Create Account</button>
+    <button id="signupBtn" class="submit-btn" onclick="signup()">Create Account</button>
 
     <div id="status" class="status"></div>
+  </div>
+</div>
+
+<div id="successModal" class="modal-backdrop" aria-hidden="true">
+  <div class="confirmation-modal" role="dialog" aria-modal="true" aria-labelledby="successTitle" aria-describedby="successMessage">
+    <h2 id="successTitle">Registration Successful</h2>
+    <p id="successMessage">Thank you for registering with CarScoutZA.
+
+You can sign in and continue loading your vehicles while waiting for admin approval.
+
+Dealer verification normally takes 24–48 hours. Your vehicles will only become visible to the public after your dealership has been approved.</p>
+    <a id="continueLogin" class="top-btn blue" href="login.html">Continue to Dealer Login</a>
   </div>
 </div>
 
@@ -331,9 +371,33 @@ button.submit-btn:hover {
 const supabaseUrl = "https://ddmvzypiccryjndcwlre.supabase.co";
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbXZ6eXBpY2NyeWpuZGN3bHJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTQ2NzYsImV4cCI6MjA5MTQzMDY3Nn0.mNkODdvX8gllTZeqfr7nllMWfF7ATdj9MY-EKEE3G6w";
 const client = window.supabase.createClient(supabaseUrl, supabaseKey);
+let signupInProgress = false;
 
 function setStatus(msg) {
   document.getElementById("status").textContent = msg;
+}
+
+function setSignupBusy(isBusy) {
+  signupInProgress = isBusy;
+  const button = document.getElementById("signupBtn");
+  button.disabled = isBusy;
+  button.textContent = isBusy ? "Creating Account..." : "Create Account";
+  button.style.opacity = isBusy ? "0.7" : "1";
+}
+
+function showRegistrationSuccess() {
+  const modal = document.getElementById("successModal");
+  const continueButton = document.getElementById("continueLogin");
+  modal.classList.add("open");
+  modal.setAttribute("aria-hidden", "false");
+  document.body.style.overflow = "hidden";
+  continueButton.focus();
+  modal.addEventListener("keydown", function keepFocus(event) {
+    if (event.key === "Tab") {
+      event.preventDefault();
+      continueButton.focus();
+    }
+  });
 }
 function togglePasswordVisibility() {
   const passwordInput = document.getElementById("password");
@@ -367,6 +431,8 @@ document.addEventListener("click", function(e) {
 });
 
 async function signup() {
+  if (signupInProgress) return;
+
   const dealerName = document.getElementById("dealerName").value.trim();
   const dealerLogoFile = document.getElementById("dealerLogo").files[0] || null;
   const phone = document.getElementById("phone").value.trim();
@@ -381,6 +447,7 @@ async function signup() {
     return;
   }
 
+  setSignupBusy(true);
   setStatus("Creating account...");
 
   const { data, error } = await client.auth.signUp({
@@ -391,11 +458,13 @@ async function signup() {
   if (error) {
     console.log(error);
     setStatus(error.message);
+    setSignupBusy(false);
     return;
   }
 
   if (!data.user) {
     setStatus("Account created. Please check your email to confirm.");
+    setSignupBusy(false);
     return;
   }
   let logoUrl = null;
@@ -418,8 +487,6 @@ async function signup() {
 }
 
 }
-const trialExpires = new Date();
-trialExpires.setDate(trialExpires.getDate() + 30);
   const { error: profileError } = await client
     .from("profiles")
     .insert({
@@ -431,21 +498,18 @@ trialExpires.setDate(trialExpires.getDate() + 30);
       location: location,
       logo_url: logoUrl,
       approval_status: "PENDING",
-is_active: false,
-trial_expires: trialExpires.toISOString()
+      is_active: false
     });
 
   if (profileError) {
     console.log(profileError);
     setStatus("Account created, but profile could not be saved.");
+    setSignupBusy(false);
     return;
   }
 
- setStatus("Account created successfully. Please log in and continue uploading your stock. Dealership verification will be completed within 24 to 48 hours. Your vehicles will be published after verification.");
-
-  setTimeout(function() {
-    window.location.href = "login.html";
-  }, 2200);
+  setStatus("Account and dealer profile created successfully.");
+  showRegistrationSuccess();
 }
 </script>
 
