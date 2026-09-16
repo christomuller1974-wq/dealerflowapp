@@ -1250,16 +1250,6 @@ async function loadVehicle(){
 
     let data = await res.json();
 
-    // Preserve a useful public URL when stock has just sold or been withdrawn.
-    // This second request only succeeds where the public anon policy permits the row.
-    if (!Array.isArray(data) || !data.length) {
-      const archivedRes = await fetch(
-        supabaseUrl + "/rest/v1/vehicles?select=*&id=eq." + encodeURIComponent(id) + "&limit=1",
-        {headers:{apikey:supabaseKey,Authorization:"Bearer " + supabaseKey}}
-      );
-      if (archivedRes.ok) data = await archivedRes.json();
-    }
-
     const v =
       Array.isArray(data)
       ? data[0]

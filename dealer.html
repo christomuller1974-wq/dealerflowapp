@@ -394,7 +394,7 @@ async function loadDealerVehicles() {
 
 
 const { data: profile } = await client
-.from("profiles")
+.from("public_active_verified_dealers")
 .select("dealer_name, logo_url")
 .eq("id", dealerId)
 .single();
@@ -432,7 +432,7 @@ const dealerLogo = document.getElementById("dealerLogo");
 
     const url =
       supabaseUrl +
-      "/rest/v1/vehicles?select=*&user_id=eq." +
+      "/rest/v1/public_active_verified_vehicles_test?select=*&user_id=eq." +
       encodeURIComponent(dealerId) +
       "&order=id.desc";
 
