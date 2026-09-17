@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-16T07:43:23.533Z",
+  "generatedAt": "2026-09-17T07:43:07.595Z",
   "eligibleDealerCount": 32,
   "pageCount": 32,
   "sitemapUrlCount": 32,
@@ -37,14 +37,6 @@
       "stockCount": 16
     },
     {
-      "id": "3663e8bf-d797-4279-9ff7-9c6b991212ce",
-      "name": "Motus Select Bloemfontein Central",
-      "town": "Bloemfontein",
-      "province": "Free State",
-      "file": "motus-select-bloemfontein-central.html",
-      "stockCount": 19
-    },
-    {
       "id": "ce38574f-91fa-4d7a-9a57-4b73bd5d6308",
       "name": "NF Auto PTY Ltd",
       "town": "Bloemfontein",
@@ -75,6 +67,14 @@
       "province": "Free State",
       "file": "auto-star-welkom.html",
       "stockCount": 40
+    },
+    {
+      "id": "9d41645f-7d92-4004-8dc1-ac8fca1ae6ee",
+      "name": "CarScoutZA Sandbox Test",
+      "town": "Kimberley",
+      "province": "Gauteng",
+      "file": "carscoutza-sandbox-test-kimberley.html",
+      "stockCount": 0
     },
     {
       "id": "195707d1-1b00-4c1d-8b2f-66ac7dce668a",
@@ -165,14 +165,6 @@
       "stockCount": 0
     },
     {
-      "id": "493762ef-261c-4303-b5e9-31adb06444a4",
-      "name": "JAC MOTORS Hartswater",
-      "town": "Hartswater",
-      "province": "Northern Cape",
-      "file": "jac-motors-hartswater.html",
-      "stockCount": 8
-    },
-    {
       "id": "407c973e-d52f-4b23-be50-df7e77073214",
       "name": "Auto Excellence Kimberley",
       "town": "Kimberley",
@@ -258,7 +250,15 @@
       "town": "Kuruman",
       "province": "Northern Cape",
       "file": "rupping-dealers-kuruman.html",
-      "stockCount": 38
+      "stockCount": 37
+    },
+    {
+      "id": "5a220344-88a3-428b-8d70-a86f2328b346",
+      "name": "Thys Auto",
+      "town": "Upington",
+      "province": "Northern Cape",
+      "file": "thys-auto-upington.html",
+      "stockCount": 0
     }
   ]
 }
