@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-09-17T07:43:07.595Z",
-  "eligibleDealerCount": 32,
-  "pageCount": 32,
-  "sitemapUrlCount": 32,
+  "generatedAt": "2026-09-18T07:25:54.270Z",
+  "eligibleDealerCount": 34,
+  "pageCount": 34,
+  "sitemapUrlCount": 34,
   "dealers": [
     {
       "id": "66305301-95b3-4b71-8f32-8779a0688b92",
@@ -34,7 +34,7 @@
       "town": "Bloemfontein",
       "province": "Free State",
       "file": "leon-geeringh-motoring-bloemfontein.html",
-      "stockCount": 16
+      "stockCount": 18
     },
     {
       "id": "ce38574f-91fa-4d7a-9a57-4b73bd5d6308",
@@ -253,12 +253,28 @@
       "stockCount": 37
     },
     {
+      "id": "5674f6e8-7541-4e82-ba4e-6503ffe10a0f",
+      "name": "AUTO ELITE",
+      "town": "Upington",
+      "province": "Northern Cape",
+      "file": "auto-elite-upington.html",
+      "stockCount": 0
+    },
+    {
+      "id": "61a9242f-c818-474b-9a0e-df428c7aba06",
+      "name": "Corne's Auto Upington",
+      "town": "Upington",
+      "province": "Northern Cape",
+      "file": "corne-s-auto-upington.html",
+      "stockCount": 0
+    },
+    {
       "id": "5a220344-88a3-428b-8d70-a86f2328b346",
       "name": "Thys Auto",
       "town": "Upington",
       "province": "Northern Cape",
       "file": "thys-auto-upington.html",
-      "stockCount": 0
+      "stockCount": 14
     }
   ]
 }
