@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-18T07:25:54.270Z",
+  "generatedAt": "2026-09-19T07:22:12.378Z",
   "eligibleDealerCount": 34,
   "pageCount": 34,
   "sitemapUrlCount": 34,
@@ -11,14 +11,6 @@
       "province": "Free State",
       "file": "mmg-ford-bethlehem.html",
       "stockCount": 8
-    },
-    {
-      "id": "48c85ce8-5850-40b9-bf73-3bbb51b059bf",
-      "name": "SCOTT AUTO BETHLEHEM",
-      "town": "Bethlehem",
-      "province": "Free State",
-      "file": "scott-auto-bethlehem.html",
-      "stockCount": 27
     },
     {
       "id": "2b778fb9-432b-40e1-85bd-388a21d39dc9",
@@ -69,6 +61,14 @@
       "stockCount": 40
     },
     {
+      "id": "5c75ed28-3ff4-4c1e-957e-196009508f2b",
+      "name": "Avatar Auto",
+      "town": "Welkom",
+      "province": "Free State",
+      "file": "avatar-auto-welkom.html",
+      "stockCount": 5
+    },
+    {
       "id": "9d41645f-7d92-4004-8dc1-ac8fca1ae6ee",
       "name": "CarScoutZA Sandbox Test",
       "town": "Kimberley",
@@ -90,7 +90,7 @@
       "town": "Klerksdorp",
       "province": "North West",
       "file": "bakkie-world-klerksdorp.html",
-      "stockCount": 21
+      "stockCount": 22
     },
     {
       "id": "c5243339-4f7f-46e0-9ae1-2df1af257c00",
@@ -250,7 +250,7 @@
       "town": "Kuruman",
       "province": "Northern Cape",
       "file": "rupping-dealers-kuruman.html",
-      "stockCount": 37
+      "stockCount": 38
     },
     {
       "id": "5674f6e8-7541-4e82-ba4e-6503ffe10a0f",
@@ -274,7 +274,7 @@
       "town": "Upington",
       "province": "Northern Cape",
       "file": "thys-auto-upington.html",
-      "stockCount": 14
+      "stockCount": 21
     }
   ]
 }
