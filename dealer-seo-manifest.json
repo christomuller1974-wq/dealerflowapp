@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-09-19T07:22:12.378Z",
-  "eligibleDealerCount": 34,
-  "pageCount": 34,
-  "sitemapUrlCount": 34,
+  "generatedAt": "2026-09-20T07:45:38.421Z",
+  "eligibleDealerCount": 28,
+  "pageCount": 28,
+  "sitemapUrlCount": 28,
   "dealers": [
     {
       "id": "66305301-95b3-4b71-8f32-8779a0688b92",
@@ -85,14 +85,6 @@
       "stockCount": 39
     },
     {
-      "id": "5e4384df-ba3f-4849-8c15-003f8bdfe0f1",
-      "name": "BAKKIE WORLD KLERKSDORP",
-      "town": "Klerksdorp",
-      "province": "North West",
-      "file": "bakkie-world-klerksdorp.html",
-      "stockCount": 22
-    },
-    {
       "id": "c5243339-4f7f-46e0-9ae1-2df1af257c00",
       "name": "MC Motors",
       "town": "Klerksdorp",
@@ -109,52 +101,12 @@
       "stockCount": 23
     },
     {
-      "id": "c01fb0b7-e79b-49d8-9b8a-60251adc7fee",
-      "name": "TEN Four Auto",
-      "town": "Klerksdorp",
-      "province": "North West",
-      "file": "ten-four-auto-klerksdorp.html",
-      "stockCount": 20
-    },
-    {
-      "id": "0f16da79-7e40-47a1-8820-3a8926bdc555",
-      "name": "VX AUTO",
-      "town": "Klerksdorp",
-      "province": "North West",
-      "file": "vx-auto-klerksdorp.html",
-      "stockCount": 0
-    },
-    {
-      "id": "cd877617-b071-4f49-b215-42d68e74b57e",
-      "name": "VX Auto Sales Klerksdorp",
-      "town": "Klerksdorp",
-      "province": "North West",
-      "file": "vx-auto-sales-klerksdorp.html",
-      "stockCount": 28
-    },
-    {
-      "id": "2617ad54-fede-4d3e-9a0f-415cbf3a758f",
-      "name": "Infinite Auto Potchefstroom",
-      "town": "Potchefstroom",
-      "province": "North West",
-      "file": "infinite-auto-potchefstroom.html",
-      "stockCount": 19
-    },
-    {
       "id": "ad0face4-dcd6-4431-a515-e098705c6b98",
       "name": "Penta Now Potchefstroom",
       "town": "Potchefstroom",
       "province": "North West",
       "file": "penta-now-potchefstroom.html",
       "stockCount": 19
-    },
-    {
-      "id": "daf1f59c-160c-49e3-a561-aa16a09a4edd",
-      "name": "TX Auto Potchefstroom",
-      "town": "Potchefstroom",
-      "province": "North West",
-      "file": "tx-auto-potchefstroom.html",
-      "stockCount": 13
     },
     {
       "id": "e7faf21a-036a-4894-966f-fc255078f6a1",
