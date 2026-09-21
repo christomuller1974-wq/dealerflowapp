@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-09-20T07:45:38.421Z",
-  "eligibleDealerCount": 28,
-  "pageCount": 28,
-  "sitemapUrlCount": 28,
+  "generatedAt": "2026-09-21T07:59:22.358Z",
+  "eligibleDealerCount": 26,
+  "pageCount": 26,
+  "sitemapUrlCount": 26,
   "dealers": [
     {
       "id": "66305301-95b3-4b71-8f32-8779a0688b92",
@@ -101,14 +101,6 @@
       "stockCount": 23
     },
     {
-      "id": "ad0face4-dcd6-4431-a515-e098705c6b98",
-      "name": "Penta Now Potchefstroom",
-      "town": "Potchefstroom",
-      "province": "North West",
-      "file": "penta-now-potchefstroom.html",
-      "stockCount": 19
-    },
-    {
       "id": "e7faf21a-036a-4894-966f-fc255078f6a1",
       "name": "Valor Motor Group",
       "town": "Potchefstroom",
@@ -131,14 +123,6 @@
       "province": "Northern Cape",
       "file": "car-bakkie-city-kimberley.html",
       "stockCount": 38
-    },
-    {
-      "id": "36a87aed-4619-4160-b089-1f79fb2863e7",
-      "name": "FLAMINGO AUTO-KIMBERLEY",
-      "town": "Kimberley",
-      "province": "Northern Cape",
-      "file": "flamingo-auto-kimberley.html",
-      "stockCount": 1
     },
     {
       "id": "d3ff4ad8-acf1-44f7-8c2b-76579d2e5a87",
@@ -202,7 +186,7 @@
       "town": "Kuruman",
       "province": "Northern Cape",
       "file": "rupping-dealers-kuruman.html",
-      "stockCount": 38
+      "stockCount": 36
     },
     {
       "id": "5674f6e8-7541-4e82-ba4e-6503ffe10a0f",
@@ -226,7 +210,7 @@
       "town": "Upington",
       "province": "Northern Cape",
       "file": "thys-auto-upington.html",
-      "stockCount": 21
+      "stockCount": 20
     }
   ]
 }
