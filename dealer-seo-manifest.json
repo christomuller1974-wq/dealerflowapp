@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-09-21T07:59:22.358Z",
-  "eligibleDealerCount": 26,
-  "pageCount": 26,
-  "sitemapUrlCount": 26,
+  "generatedAt": "2026-09-22T07:44:26.044Z",
+  "eligibleDealerCount": 27,
+  "pageCount": 27,
+  "sitemapUrlCount": 27,
   "dealers": [
     {
       "id": "66305301-95b3-4b71-8f32-8779a0688b92",
@@ -109,12 +109,20 @@
       "stockCount": 0
     },
     {
+      "id": "493762ef-261c-4303-b5e9-31adb06444a4",
+      "name": "JAC MOTORS Hartswater",
+      "town": "Hartswater",
+      "province": "Northern Cape",
+      "file": "jac-motors-hartswater.html",
+      "stockCount": 8
+    },
+    {
       "id": "407c973e-d52f-4b23-be50-df7e77073214",
       "name": "Auto Excellence Kimberley",
       "town": "Kimberley",
       "province": "Northern Cape",
       "file": "auto-excellence-kby-kimberley.html",
-      "stockCount": 21
+      "stockCount": 22
     },
     {
       "id": "9b95e6a7-64e3-48c2-a579-19eadc6100fb",
