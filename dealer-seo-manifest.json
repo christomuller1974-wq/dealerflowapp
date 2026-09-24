@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-09-23T07:47:18.630Z",
-  "eligibleDealerCount": 26,
-  "pageCount": 26,
-  "sitemapUrlCount": 26,
+  "generatedAt": "2026-09-24T07:37:44.188Z",
+  "eligibleDealerCount": 27,
+  "pageCount": 27,
+  "sitemapUrlCount": 27,
   "dealers": [
     {
       "id": "66305301-95b3-4b71-8f32-8779a0688b92",
@@ -19,6 +19,14 @@
       "province": "Free State",
       "file": "beish-auto-bloemfontein.html",
       "stockCount": 0
+    },
+    {
+      "id": "3663e8bf-d797-4279-9ff7-9c6b991212ce",
+      "name": "Motus Select Bloemfontein Central",
+      "town": "Bloemfontein",
+      "province": "Free State",
+      "file": "motus-select-bloemfontein-central.html",
+      "stockCount": 19
     },
     {
       "id": "ce38574f-91fa-4d7a-9a57-4b73bd5d6308",
@@ -186,7 +194,7 @@
       "town": "Kuruman",
       "province": "Northern Cape",
       "file": "rupping-dealers-kuruman.html",
-      "stockCount": 36
+      "stockCount": 33
     },
     {
       "id": "5674f6e8-7541-4e82-ba4e-6503ffe10a0f",
@@ -194,7 +202,7 @@
       "town": "Upington",
       "province": "Northern Cape",
       "file": "auto-elite-upington.html",
-      "stockCount": 10
+      "stockCount": 24
     },
     {
       "id": "61a9242f-c818-474b-9a0e-df428c7aba06",
