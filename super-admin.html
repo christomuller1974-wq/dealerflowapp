@@ -284,6 +284,10 @@ body {
 </div>
   </div>
 
+<div class="section-title">Invoice / EFT Payment Requests</div>
+<p style="margin-top:-5px;color:#475569;font-weight:700;">Only activate a dealer after confirming that the payment reflects in the bank account.</p>
+<div id="invoiceRequestList" class="dealer-list"><div class="dealer-row">Loading invoice requests…</div></div>
+
 <!-- Dealer Management Sections -->
 
 <div class="section-title">Dealer Management</div>
@@ -488,8 +492,99 @@ async function startAdmin() {
   setStatus("Admin access granted.");
 loadStats();
   loadTotalVehicles();
+  loadInvoiceRequests();
   loadDealerCounts();
   loadDealers();
+}
+
+function safeText(value) {
+  return String(value ?? "").replace(/[&<>'"]/g, function(character) {
+    return {"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[character];
+  });
+}
+
+async function viewInvoiceProof(path) {
+  const { data, error } = await client.storage
+    .from("invoice-payment-proofs")
+    .createSignedUrl(path, 120);
+  if (error || !data?.signedUrl) {
+    alert("The payment proof could not be opened.");
+    return;
+  }
+  window.open(data.signedUrl, "_blank", "noopener");
+}
+
+async function activateInvoicePayment(requestId, dealerName) {
+  const confirmed = confirm(
+    "Confirm EFT payment for " + dealerName + "?\n\n" +
+    "Only continue if the R2,000 payment reflects in the CarScoutZA bank account. " +
+    "This will activate 30 days of paid access and restore the dealer's public stock."
+  );
+  if (!confirmed) return;
+
+  const { data, error } = await client.rpc("admin_activate_invoice_payment", {
+    p_request_id: requestId
+  });
+  if (error) {
+    console.error(error);
+    alert("Activation failed: " + error.message);
+    return;
+  }
+  alert(
+    "Payment confirmed and dealer activated.\n\nReceipt: " +
+    (data?.receipt_number || "Created")
+  );
+  loadInvoiceRequests();
+  loadDealerCounts();
+  loadDealers();
+}
+
+async function loadInvoiceRequests() {
+  const list = document.getElementById("invoiceRequestList");
+  const { data: requests, error } = await client
+    .from("invoice_renewal_requests")
+    .select("*")
+    .order("created_at", { ascending: false });
+  if (error) {
+    console.error(error);
+    list.innerHTML = '<div class="dealer-row">Invoice requests are not available until the database migration is deployed.</div>';
+    return;
+  }
+  if (!requests?.length) {
+    list.innerHTML = '<div class="dealer-row">No invoice or EFT requests yet.</div>';
+    return;
+  }
+  const dealerIds = [...new Set(requests.map(request => request.dealer_id))];
+  const { data: profiles } = await client.from("profiles").select("id,dealer_name,phone").in("id", dealerIds);
+  const profileMap = Object.fromEntries((profiles || []).map(profile => [profile.id, profile]));
+  list.innerHTML = "";
+  requests.forEach(function(request) {
+    const dealer = profileMap[request.dealer_id] || {};
+    const dealerName = dealer.dealer_name || request.registered_name || "Dealer";
+    const row = document.createElement("div");
+    row.className = "dealer-row";
+    row.innerHTML = `<div class="dealer-info">
+      <div class="dealer-name">${safeText(dealerName)}</div>
+      <div class="dealer-meta"><strong>${safeText(request.invoice_number)}</strong> — R2,000.00</div>
+      <div class="dealer-meta">Status: <strong>${safeText(request.status.replaceAll("_"," "))}</strong></div>
+      <div class="dealer-meta">Registered name: ${safeText(request.registered_name)}</div>
+      <div class="dealer-meta">Registration: ${safeText(request.company_registration_number || "-")} | VAT: ${safeText(request.vat_number || "-")}</div>
+      <div class="dealer-meta">Accounts: ${safeText(request.accounts_email)} | Contact: ${safeText(request.contact_person)}</div>
+      <div class="dealer-meta">Billing address: ${safeText(request.billing_address)}</div>
+      <div class="dealer-meta">PO number: ${safeText(request.purchase_order_number || "-")}</div>
+      <div class="dealer-meta">Requested: ${safeText(new Date(request.created_at).toLocaleString("en-ZA"))}</div>
+      ${request.proof_submitted_at ? `<div class="dealer-meta">Proof submitted: ${safeText(new Date(request.proof_submitted_at).toLocaleString("en-ZA"))}</div>` : ""}
+      ${request.period_end ? `<div class="dealer-meta">Activated until: ${safeText(new Date(request.period_end).toLocaleString("en-ZA"))}</div>` : ""}
+    </div><div class="dealer-actions">
+      ${request.proof_storage_path ? `<button class="btn btn-dark" type="button" data-proof>View Payment Proof</button>` : ""}
+      ${request.status === "PAYMENT_SUBMITTED" ? `<button class="btn btn-green" type="button" data-activate>Confirm Payment & Activate 30 Days</button>` : ""}
+    </div>`;
+    const proofButton = row.querySelector("[data-proof]");
+    if (proofButton) proofButton.onclick = () => viewInvoiceProof(request.proof_storage_path);
+    const activateButton = row.querySelector("[data-activate]");
+    if (activateButton) activateButton.onclick = () => activateInvoicePayment(request.id, dealerName);
+    list.appendChild(row);
+  });
 }
 
 async function loadDealers() {
