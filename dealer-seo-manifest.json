@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-09-24T07:37:44.188Z",
-  "eligibleDealerCount": 27,
-  "pageCount": 27,
-  "sitemapUrlCount": 27,
+  "generatedAt": "2026-09-25T07:52:29.694Z",
+  "eligibleDealerCount": 26,
+  "pageCount": 26,
+  "sitemapUrlCount": 26,
   "dealers": [
     {
       "id": "66305301-95b3-4b71-8f32-8779a0688b92",
@@ -11,14 +11,6 @@
       "province": "Free State",
       "file": "mmg-ford-bethlehem.html",
       "stockCount": 8
-    },
-    {
-      "id": "2b778fb9-432b-40e1-85bd-388a21d39dc9",
-      "name": "Beish Auto",
-      "town": "Bloemfontein",
-      "province": "Free State",
-      "file": "beish-auto-bloemfontein.html",
-      "stockCount": 0
     },
     {
       "id": "3663e8bf-d797-4279-9ff7-9c6b991212ce",
@@ -194,7 +186,7 @@
       "town": "Kuruman",
       "province": "Northern Cape",
       "file": "rupping-dealers-kuruman.html",
-      "stockCount": 33
+      "stockCount": 35
     },
     {
       "id": "5674f6e8-7541-4e82-ba4e-6503ffe10a0f",
