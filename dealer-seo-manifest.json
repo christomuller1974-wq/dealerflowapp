@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-09-26T07:45:35.861Z",
-  "eligibleDealerCount": 26,
-  "pageCount": 26,
-  "sitemapUrlCount": 26,
+  "generatedAt": "2026-09-27T08:14:20.900Z",
+  "eligibleDealerCount": 25,
+  "pageCount": 25,
+  "sitemapUrlCount": 25,
   "dealers": [
     {
       "id": "66305301-95b3-4b71-8f32-8779a0688b92",
@@ -67,14 +67,6 @@
       "province": "Gauteng",
       "file": "carscoutza-sandbox-test-kimberley.html",
       "stockCount": 0
-    },
-    {
-      "id": "195707d1-1b00-4c1d-8b2f-66ac7dce668a",
-      "name": "CMH MAZDA / FOTON HATFIELD",
-      "town": "Pretoria",
-      "province": "Gauteng",
-      "file": "cmh-mazda-foton-hatfield-pretoria.html",
-      "stockCount": 39
     },
     {
       "id": "c5243339-4f7f-46e0-9ae1-2df1af257c00",
@@ -186,7 +178,7 @@
       "town": "Kuruman",
       "province": "Northern Cape",
       "file": "rupping-dealers-kuruman.html",
-      "stockCount": 35
+      "stockCount": 33
     },
     {
       "id": "5674f6e8-7541-4e82-ba4e-6503ffe10a0f",
