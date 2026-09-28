@@ -368,6 +368,15 @@ function hasCurrentDealerAccess(dealer) {
   return paidUntil >= now || freeUntil >= now;
 }
 
+function getDealerExpiryTimestamp(dealer) {
+  const accessDates = [dealer.paid_until, dealer.admin_free_until]
+    .filter(Boolean)
+    .map(value => new Date(value).getTime())
+    .filter(Number.isFinite);
+
+  return accessDates.length ? Math.max(...accessDates) : 0;
+}
+
 async function loadDealerCounts() {
   const [
     activeResult,
@@ -643,6 +652,14 @@ if (
       ? hasAccess
       : !hasAccess;
   });
+
+  if (currentDealerSection === "EXPIRED") {
+    data.sort(
+      (firstDealer, secondDealer) =>
+        getDealerExpiryTimestamp(secondDealer) -
+        getDealerExpiryTimestamp(firstDealer)
+    );
+  }
 }
   if (!data || data.length === 0) {
     list.innerHTML = "<div class='empty-box'>No dealers found.</div>";
@@ -756,6 +773,11 @@ ${currentDealerSection === "DECLINED" ? `
     Declined Reason: ${d.decline_reason || "-"}
   </div>
 ` : `
+  ${currentDealerSection === "EXPIRED" ? `
+    <div class="dealer-meta" style="margin:10px 0; color:#b91c1c; font-size:16px; font-weight:900;">
+      Expired on: ${formatDate(getDealerExpiryTimestamp(d))}
+    </div>
+  ` : ""}
   <div class="dealer-meta">
     Paid Until: ${formatDate(d.paid_until)}
   </div>
