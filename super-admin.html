@@ -443,6 +443,15 @@ function formatDate(value) {
   return new Date(value).toLocaleDateString("en-ZA");
 }
 
+function getWhatsAppLink(value) {
+  const digits = String(value || "").replace(/\D/g, "");
+  if (!digits) return "";
+  const internationalNumber = digits.startsWith("0")
+    ? "27" + digits.slice(1)
+    : digits;
+  return "https://wa.me/" + internationalNumber;
+}
+
 function getDealerStatus(d) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -767,6 +776,20 @@ const totalLeads =
        <div class="dealer-meta">
   Phone: ${d.phone || "-"}
 </div>
+
+${d.whatsapp_phone ? `
+  <div class="dealer-meta">
+    WhatsApp:
+    <a
+      href="${getWhatsAppLink(d.whatsapp_phone)}"
+      target="_blank"
+      rel="noopener"
+      style="color:#15803d; font-weight:800; text-decoration:none;"
+    >
+      ${d.whatsapp_phone}
+    </a>
+  </div>
+` : ""}
 
 ${currentDealerSection === "DECLINED" ? `
   <div class="dealer-meta" style="margin-top:10px;">
