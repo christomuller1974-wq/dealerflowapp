@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-09-29T08:34:40.909Z",
-  "eligibleDealerCount": 25,
-  "pageCount": 25,
-  "sitemapUrlCount": 25,
+  "generatedAt": "2026-09-30T08:37:04.667Z",
+  "eligibleDealerCount": 34,
+  "pageCount": 34,
+  "sitemapUrlCount": 34,
   "dealers": [
     {
       "id": "66305301-95b3-4b71-8f32-8779a0688b92",
@@ -11,6 +11,22 @@
       "province": "Free State",
       "file": "mmg-ford-bethlehem.html",
       "stockCount": 8
+    },
+    {
+      "id": "48c85ce8-5850-40b9-bf73-3bbb51b059bf",
+      "name": "SCOTT AUTO BETHLEHEM",
+      "town": "Bethlehem",
+      "province": "Free State",
+      "file": "scott-auto-bethlehem.html",
+      "stockCount": 27
+    },
+    {
+      "id": "6d4d2e8b-3cd3-44a5-8c97-dd12d7fb169d",
+      "name": "Leon Geeringh Motoring",
+      "town": "Bloemfontein",
+      "province": "Free State",
+      "file": "leon-geeringh-motoring-bloemfontein.html",
+      "stockCount": 18
     },
     {
       "id": "3663e8bf-d797-4279-9ff7-9c6b991212ce",
@@ -69,6 +85,22 @@
       "stockCount": 0
     },
     {
+      "id": "195707d1-1b00-4c1d-8b2f-66ac7dce668a",
+      "name": "CMH MAZDA / FOTON HATFIELD",
+      "town": "Pretoria",
+      "province": "Gauteng",
+      "file": "cmh-mazda-foton-hatfield-pretoria.html",
+      "stockCount": 39
+    },
+    {
+      "id": "5e4384df-ba3f-4849-8c15-003f8bdfe0f1",
+      "name": "BAKKIE WORLD KLERKSDORP",
+      "town": "Klerksdorp",
+      "province": "North West",
+      "file": "bakkie-world-klerksdorp.html",
+      "stockCount": 22
+    },
+    {
       "id": "c5243339-4f7f-46e0-9ae1-2df1af257c00",
       "name": "MC Motors",
       "town": "Klerksdorp",
@@ -83,6 +115,46 @@
       "province": "North West",
       "file": "midcity-motors-2-klerksdorp.html",
       "stockCount": 23
+    },
+    {
+      "id": "c01fb0b7-e79b-49d8-9b8a-60251adc7fee",
+      "name": "TEN Four Auto",
+      "town": "Klerksdorp",
+      "province": "North West",
+      "file": "ten-four-auto-klerksdorp.html",
+      "stockCount": 20
+    },
+    {
+      "id": "cd877617-b071-4f49-b215-42d68e74b57e",
+      "name": "VX Auto Sales Klerksdorp",
+      "town": "Klerksdorp",
+      "province": "North West",
+      "file": "vx-auto-sales-klerksdorp.html",
+      "stockCount": 23
+    },
+    {
+      "id": "2617ad54-fede-4d3e-9a0f-415cbf3a758f",
+      "name": "Infinite Auto Potchefstroom",
+      "town": "Potchefstroom",
+      "province": "North West",
+      "file": "infinite-auto-potchefstroom.html",
+      "stockCount": 19
+    },
+    {
+      "id": "ad0face4-dcd6-4431-a515-e098705c6b98",
+      "name": "Penta Now Potchefstroom",
+      "town": "Potchefstroom",
+      "province": "North West",
+      "file": "penta-now-potchefstroom.html",
+      "stockCount": 19
+    },
+    {
+      "id": "daf1f59c-160c-49e3-a561-aa16a09a4edd",
+      "name": "TX Auto Potchefstroom",
+      "town": "Potchefstroom",
+      "province": "North West",
+      "file": "tx-auto-potchefstroom.html",
+      "stockCount": 14
     },
     {
       "id": "e7faf21a-036a-4894-966f-fc255078f6a1",
@@ -106,7 +178,7 @@
       "town": "Kimberley",
       "province": "Northern Cape",
       "file": "auto-excellence-kby-kimberley.html",
-      "stockCount": 22
+      "stockCount": 21
     },
     {
       "id": "9b95e6a7-64e3-48c2-a579-19eadc6100fb",
@@ -178,7 +250,7 @@
       "town": "Kuruman",
       "province": "Northern Cape",
       "file": "rupping-dealers-kuruman.html",
-      "stockCount": 32
+      "stockCount": 33
     },
     {
       "id": "5674f6e8-7541-4e82-ba4e-6503ffe10a0f",
