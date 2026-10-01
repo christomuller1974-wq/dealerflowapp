@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-09-30T08:37:04.667Z",
-  "eligibleDealerCount": 34,
-  "pageCount": 34,
-  "sitemapUrlCount": 34,
+  "generatedAt": "2026-10-01T08:59:18.255Z",
+  "eligibleDealerCount": 32,
+  "pageCount": 32,
+  "sitemapUrlCount": 32,
   "dealers": [
     {
       "id": "66305301-95b3-4b71-8f32-8779a0688b92",
@@ -99,14 +99,6 @@
       "province": "North West",
       "file": "bakkie-world-klerksdorp.html",
       "stockCount": 22
-    },
-    {
-      "id": "c5243339-4f7f-46e0-9ae1-2df1af257c00",
-      "name": "MC Motors",
-      "town": "Klerksdorp",
-      "province": "North West",
-      "file": "mc-motors-klerksdorp.html",
-      "stockCount": 21
     },
     {
       "id": "6e0222a5-775c-4793-a4a5-74969af3f433",
@@ -245,14 +237,6 @@
       "stockCount": 21
     },
     {
-      "id": "c68de985-c1c7-4068-b2cc-ab4faf6a700e",
-      "name": "RUPPING DEALERS",
-      "town": "Kuruman",
-      "province": "Northern Cape",
-      "file": "rupping-dealers-kuruman.html",
-      "stockCount": 33
-    },
-    {
       "id": "5674f6e8-7541-4e82-ba4e-6503ffe10a0f",
       "name": "AUTO ELITE",
       "town": "Upington",
@@ -274,7 +258,7 @@
       "town": "Upington",
       "province": "Northern Cape",
       "file": "thys-auto-upington.html",
-      "stockCount": 20
+      "stockCount": 16
     }
   ]
 }
