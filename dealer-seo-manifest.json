@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-10-02T08:34:55.207Z",
-  "eligibleDealerCount": 30,
-  "pageCount": 30,
-  "sitemapUrlCount": 30,
+  "generatedAt": "2026-10-03T08:09:54.217Z",
+  "eligibleDealerCount": 34,
+  "pageCount": 34,
+  "sitemapUrlCount": 34,
   "dealers": [
     {
       "id": "66305301-95b3-4b71-8f32-8779a0688b92",
@@ -90,7 +90,7 @@
       "town": "Pretoria",
       "province": "Gauteng",
       "file": "cmh-mazda-foton-hatfield-pretoria.html",
-      "stockCount": 34
+      "stockCount": 39
     },
     {
       "id": "5e4384df-ba3f-4849-8c15-003f8bdfe0f1",
@@ -99,6 +99,22 @@
       "province": "North West",
       "file": "bakkie-world-klerksdorp.html",
       "stockCount": 22
+    },
+    {
+      "id": "c5243339-4f7f-46e0-9ae1-2df1af257c00",
+      "name": "MC Motors",
+      "town": "Klerksdorp",
+      "province": "North West",
+      "file": "mc-motors-klerksdorp.html",
+      "stockCount": 21
+    },
+    {
+      "id": "6e0222a5-775c-4793-a4a5-74969af3f433",
+      "name": "Midcity Motors 2",
+      "town": "Klerksdorp",
+      "province": "North West",
+      "file": "midcity-motors-2-klerksdorp.html",
+      "stockCount": 23
     },
     {
       "id": "c01fb0b7-e79b-49d8-9b8a-60251adc7fee",
@@ -213,12 +229,28 @@
       "stockCount": 10
     },
     {
+      "id": "8f45a5cd-07a5-4a79-b18c-b4a0fc32d803",
+      "name": "BB Motors, Kuruman",
+      "town": "Kuruman",
+      "province": "Northern Cape",
+      "file": "bb-motors-kuruman.html",
+      "stockCount": 25
+    },
+    {
       "id": "89ae6a2a-3a87-4bf2-82f5-050da89b2d43",
       "name": "M&I Motors",
       "town": "Kuruman",
       "province": "Northern Cape",
       "file": "m-i-motors-kuruman.html",
       "stockCount": 21
+    },
+    {
+      "id": "c68de985-c1c7-4068-b2cc-ab4faf6a700e",
+      "name": "RUPPING DEALERS",
+      "town": "Kuruman",
+      "province": "Northern Cape",
+      "file": "rupping-dealers-kuruman.html",
+      "stockCount": 33
     },
     {
       "id": "5674f6e8-7541-4e82-ba4e-6503ffe10a0f",
@@ -242,7 +274,7 @@
       "town": "Upington",
       "province": "Northern Cape",
       "file": "thys-auto-upington.html",
-      "stockCount": 25
+      "stockCount": 35
     }
   ]
 }
