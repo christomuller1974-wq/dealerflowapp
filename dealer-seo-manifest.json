@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-05T09:08:17.599Z",
+  "generatedAt": "2026-10-06T09:01:32.446Z",
   "eligibleDealerCount": 34,
   "pageCount": 34,
   "sitemapUrlCount": 34,
@@ -250,7 +250,7 @@
       "town": "Kuruman",
       "province": "Northern Cape",
       "file": "rupping-dealers-kuruman.html",
-      "stockCount": 30
+      "stockCount": 31
     },
     {
       "id": "5674f6e8-7541-4e82-ba4e-6503ffe10a0f",
@@ -274,7 +274,7 @@
       "town": "Upington",
       "province": "Northern Cape",
       "file": "thys-auto-upington.html",
-      "stockCount": 35
+      "stockCount": 34
     }
   ]
 }
