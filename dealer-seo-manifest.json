@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-06T09:01:32.446Z",
+  "generatedAt": "2026-10-07T08:43:09.478Z",
   "eligibleDealerCount": 34,
   "pageCount": 34,
   "sitemapUrlCount": 34,
@@ -10,7 +10,7 @@
       "town": "Bethlehem",
       "province": "Free State",
       "file": "mmg-ford-bethlehem.html",
-      "stockCount": 8
+      "stockCount": 6
     },
     {
       "id": "48c85ce8-5850-40b9-bf73-3bbb51b059bf",
@@ -274,7 +274,7 @@
       "town": "Upington",
       "province": "Northern Cape",
       "file": "thys-auto-upington.html",
-      "stockCount": 34
+      "stockCount": 36
     }
   ]
 }
