@@ -18,8 +18,16 @@ window.CARSCOUT_VEHICLE_DATA = {
     "i3", "i4", "iX"
   ],
 
+  "BYD": [
+    "Atto 3", "Atto 8", "Dolphin", "Dolphin Surf",
+    "Seal", "Sealion 6", "Sealion 7", "Shark 6"
+  ],
+
   "Chery": [
-    "Tiggo 4 Pro", "Tiggo 7 Pro", "Tiggo 8 Pro"
+    "Tiggo 4 Cross", "Tiggo 4 Cross HEV", "Tiggo 4 Pro",
+    "Tiggo 7", "Tiggo 7 PHEV", "Tiggo 7 Pro", "Tiggo 7 Pro Max",
+    "Tiggo 8 PHEV", "Tiggo 8 Pro", "Tiggo 8 Pro LS", "Tiggo 8 Pro Max",
+    "Tiggo 9", "Tiggo 9 PHEV"
   ],
 
   "Citroën": [
@@ -37,6 +45,17 @@ window.CARSCOUT_VEHICLE_DATA = {
   "Ford": [
     "EcoSport", "Everest", "Fiesta", "Figo", "Focus",
     "Kuga", "Mustang", "Ranger", "Territory", "Tourneo"
+  ],
+
+  "Foton": [
+    "Asambe Taxi", "eTruckmate", "eView Panel Van",
+    "Miler", "Miler Lite", "Truckmate",
+    "Tunland G7", "Tunland V7", "Tunland V9",
+    "View Panel Van", "View Shuttlebus"
+  ],
+
+  "GAC": [
+    "EMKOO", "GS3 EMZOOM", "M8"
   ],
 
   "GWM": [
@@ -75,6 +94,14 @@ window.CARSCOUT_VEHICLE_DATA = {
     "Renegade", "Wrangler"
   ],
 
+  "JAECOO": [
+    "J5", "J5 EV", "J5 HEV", "J7", "J7 SHS"
+  ],
+
+  "JETOUR": [
+    "Dashing", "T1", "T1 i-DM", "T2", "T2 i-DM", "X70 Plus"
+  ],
+
   "Kia": [
     "Carens", "Carnival", "Cerato", "K2700", "Pegas",
     "Picanto", "Rio", "Seltos", "Sonet", "Sorento",
@@ -107,6 +134,10 @@ window.CARSCOUT_VEHICLE_DATA = {
     "GLE", "GLS", "S-Class", "V-Class", "Vito"
   ],
 
+  "MG": [
+    "MG3", "MG3 Hybrid+", "HS", "ZS", "ZS Pro", "Cyberster"
+  ],
+
   "MINI": [
     "Clubman", "Countryman", "Cooper", "Hatch"
   ],
@@ -124,6 +155,10 @@ window.CARSCOUT_VEHICLE_DATA = {
   "Opel": [
     "Adam", "Astra", "Combo", "Corsa", "Crossland",
     "Grandland", "Mokka", "Zafira"
+  ],
+
+  "OMODA": [
+    "C5", "C5 HEV", "C7", "C7 SHS", "C9", "C9 SHS"
   ],
 
   "Peugeot": [
