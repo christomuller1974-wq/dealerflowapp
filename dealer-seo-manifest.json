@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-08T09:01:41.137Z",
+  "generatedAt": "2026-10-09T09:08:49.910Z",
   "eligibleDealerCount": 34,
   "pageCount": 34,
   "sitemapUrlCount": 34,
@@ -242,7 +242,7 @@
       "town": "Kuruman",
       "province": "Northern Cape",
       "file": "m-i-motors-kuruman.html",
-      "stockCount": 21
+      "stockCount": 19
     },
     {
       "id": "c68de985-c1c7-4068-b2cc-ab4faf6a700e",
@@ -274,7 +274,7 @@
       "town": "Upington",
       "province": "Northern Cape",
       "file": "thys-auto-upington.html",
-      "stockCount": 36
+      "stockCount": 34
     }
   ]
 }
