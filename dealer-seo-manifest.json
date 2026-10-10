@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-10-09T09:08:49.910Z",
-  "eligibleDealerCount": 34,
-  "pageCount": 34,
-  "sitemapUrlCount": 34,
+  "generatedAt": "2026-10-10T08:32:29.144Z",
+  "eligibleDealerCount": 33,
+  "pageCount": 33,
+  "sitemapUrlCount": 33,
   "dealers": [
     {
       "id": "66305301-95b3-4b71-8f32-8779a0688b92",
@@ -43,14 +43,6 @@
       "province": "Free State",
       "file": "nf-auto-pty-ltd-bloemfontein.html",
       "stockCount": 21
-    },
-    {
-      "id": "6aa2d385-1072-41d2-b82c-e18f55082d4e",
-      "name": "Volschenk Motors",
-      "town": "Bloemfontein",
-      "province": "Free State",
-      "file": "volschenk-motors-bloemfontein.html",
-      "stockCount": 40
     },
     {
       "id": "8f5ef106-4b03-485e-9b88-8cbcb9908c4f",
@@ -242,7 +234,7 @@
       "town": "Kuruman",
       "province": "Northern Cape",
       "file": "m-i-motors-kuruman.html",
-      "stockCount": 19
+      "stockCount": 20
     },
     {
       "id": "c68de985-c1c7-4068-b2cc-ab4faf6a700e",
