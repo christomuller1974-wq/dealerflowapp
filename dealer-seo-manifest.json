@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-10-10T08:32:29.144Z",
-  "eligibleDealerCount": 33,
-  "pageCount": 33,
-  "sitemapUrlCount": 33,
+  "generatedAt": "2026-10-11T08:56:15.866Z",
+  "eligibleDealerCount": 30,
+  "pageCount": 30,
+  "sitemapUrlCount": 30,
   "dealers": [
     {
       "id": "66305301-95b3-4b71-8f32-8779a0688b92",
@@ -43,14 +43,6 @@
       "province": "Free State",
       "file": "nf-auto-pty-ltd-bloemfontein.html",
       "stockCount": 21
-    },
-    {
-      "id": "8f5ef106-4b03-485e-9b88-8cbcb9908c4f",
-      "name": "Zijlstra's Autohaus",
-      "town": "Bloemfontein",
-      "province": "Free State",
-      "file": "zijlstra-s-autohaus-bloemfontein.html",
-      "stockCount": 26
     },
     {
       "id": "bed37d5a-3660-45e6-8094-192066d80b93",
@@ -181,28 +173,12 @@
       "stockCount": 38
     },
     {
-      "id": "d3ff4ad8-acf1-44f7-8c2b-76579d2e5a87",
-      "name": "Human Auto Kimberley",
-      "town": "Kimberley",
-      "province": "Northern Cape",
-      "file": "human-auto-kimberley.html",
-      "stockCount": 27
-    },
-    {
       "id": "9d74605f-9867-47b1-b2ee-fb443e339ffd",
       "name": "MORGAN MOTOR GROUP KIMBERLEY",
       "town": "Kimberley",
       "province": "Northern Cape",
       "file": "morgan-motor-group-kimberley.html",
       "stockCount": 33
-    },
-    {
-      "id": "edec7453-75cc-489e-b70a-1792db05100e",
-      "name": "Moto Xtreme",
-      "town": "Kimberley",
-      "province": "Northern Cape",
-      "file": "moto-xtreme-kimberley.html",
-      "stockCount": 16
     },
     {
       "id": "529b737b-ab45-4041-b09f-88fa39f7eec5",
