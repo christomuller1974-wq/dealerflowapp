@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-10-18T07:15:37.277Z",
-  "eligibleDealerCount": 30,
-  "pageCount": 30,
-  "sitemapUrlCount": 30,
+  "generatedAt": "2026-10-19T07:50:11.866Z",
+  "eligibleDealerCount": 29,
+  "pageCount": 29,
+  "sitemapUrlCount": 29,
   "dealers": [
     {
       "id": "66305301-95b3-4b71-8f32-8779a0688b92",
@@ -67,14 +67,6 @@
       "province": "Free State",
       "file": "auto-star-welkom.html",
       "stockCount": 40
-    },
-    {
-      "id": "5c75ed28-3ff4-4c1e-957e-196009508f2b",
-      "name": "Avatar Auto",
-      "town": "Welkom",
-      "province": "Free State",
-      "file": "avatar-auto-welkom.html",
-      "stockCount": 5
     },
     {
       "id": "9d41645f-7d92-4004-8dc1-ac8fca1ae6ee",
@@ -242,7 +234,7 @@
       "town": "Kuruman",
       "province": "Northern Cape",
       "file": "rupping-dealers-kuruman.html",
-      "stockCount": 32
+      "stockCount": 31
     }
   ]
 }
