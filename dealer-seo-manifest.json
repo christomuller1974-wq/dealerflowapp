@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-19T07:50:11.866Z",
+  "generatedAt": "2026-10-20T07:37:33.977Z",
   "eligibleDealerCount": 29,
   "pageCount": 29,
   "sitemapUrlCount": 29,
@@ -162,7 +162,7 @@
       "town": "Kimberley",
       "province": "Northern Cape",
       "file": "auto-excellence-kby-kimberley.html",
-      "stockCount": 20
+      "stockCount": 17
     },
     {
       "id": "9b95e6a7-64e3-48c2-a579-19eadc6100fb",
@@ -178,7 +178,7 @@
       "town": "Kimberley",
       "province": "Northern Cape",
       "file": "human-auto-kimberley.html",
-      "stockCount": 20
+      "stockCount": 33
     },
     {
       "id": "9d74605f-9867-47b1-b2ee-fb443e339ffd",
@@ -234,7 +234,7 @@
       "town": "Kuruman",
       "province": "Northern Cape",
       "file": "rupping-dealers-kuruman.html",
-      "stockCount": 31
+      "stockCount": 32
     }
   ]
 }
