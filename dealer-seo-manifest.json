@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-10-21T07:42:07.588Z",
-  "eligibleDealerCount": 29,
-  "pageCount": 29,
-  "sitemapUrlCount": 29,
+  "generatedAt": "2026-10-22T07:37:55.920Z",
+  "eligibleDealerCount": 28,
+  "pageCount": 28,
+  "sitemapUrlCount": 28,
   "dealers": [
     {
       "id": "66305301-95b3-4b71-8f32-8779a0688b92",
@@ -82,7 +82,7 @@
       "town": "Pretoria",
       "province": "Gauteng",
       "file": "cmh-mazda-foton-hatfield-pretoria.html",
-      "stockCount": 39
+      "stockCount": 38
     },
     {
       "id": "5e4384df-ba3f-4849-8c15-003f8bdfe0f1",
@@ -149,20 +149,12 @@
       "stockCount": 14
     },
     {
-      "id": "493762ef-261c-4303-b5e9-31adb06444a4",
-      "name": "JAC MOTORS Hartswater",
-      "town": "Hartswater",
-      "province": "Northern Cape",
-      "file": "jac-motors-hartswater.html",
-      "stockCount": 8
-    },
-    {
       "id": "407c973e-d52f-4b23-be50-df7e77073214",
       "name": "Auto Excellence Kimberley",
       "town": "Kimberley",
       "province": "Northern Cape",
       "file": "auto-excellence-kby-kimberley.html",
-      "stockCount": 17
+      "stockCount": 18
     },
     {
       "id": "9b95e6a7-64e3-48c2-a579-19eadc6100fb",
@@ -234,7 +226,7 @@
       "town": "Kuruman",
       "province": "Northern Cape",
       "file": "rupping-dealers-kuruman.html",
-      "stockCount": 32
+      "stockCount": 31
     }
   ]
 }
