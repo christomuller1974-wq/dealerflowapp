@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-10-22T07:37:55.920Z",
-  "eligibleDealerCount": 28,
-  "pageCount": 28,
-  "sitemapUrlCount": 28,
+  "generatedAt": "2026-10-23T07:35:10.203Z",
+  "eligibleDealerCount": 30,
+  "pageCount": 30,
+  "sitemapUrlCount": 30,
   "dealers": [
     {
       "id": "66305301-95b3-4b71-8f32-8779a0688b92",
@@ -226,7 +226,23 @@
       "town": "Kuruman",
       "province": "Northern Cape",
       "file": "rupping-dealers-kuruman.html",
-      "stockCount": 31
+      "stockCount": 30
+    },
+    {
+      "id": "5674f6e8-7541-4e82-ba4e-6503ffe10a0f",
+      "name": "AUTO ELITE",
+      "town": "Upington",
+      "province": "Northern Cape",
+      "file": "auto-elite-upington.html",
+      "stockCount": 24
+    },
+    {
+      "id": "5a220344-88a3-428b-8d70-a86f2328b346",
+      "name": "Thys Auto",
+      "town": "Upington",
+      "province": "Northern Cape",
+      "file": "thys-auto-upington.html",
+      "stockCount": 32
     }
   ]
 }
