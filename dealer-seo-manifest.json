@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-23T07:35:10.203Z",
+  "generatedAt": "2026-10-24T07:20:17.087Z",
   "eligibleDealerCount": 30,
   "pageCount": 30,
   "sitemapUrlCount": 30,
@@ -27,14 +27,6 @@
       "province": "Free State",
       "file": "leon-geeringh-motoring-bloemfontein.html",
       "stockCount": 18
-    },
-    {
-      "id": "3663e8bf-d797-4279-9ff7-9c6b991212ce",
-      "name": "Motus Select Bloemfontein Central",
-      "town": "Bloemfontein",
-      "province": "Free State",
-      "file": "motus-select-bloemfontein-central.html",
-      "stockCount": 19
     },
     {
       "id": "ce38574f-91fa-4d7a-9a57-4b73bd5d6308",
@@ -83,6 +75,14 @@
       "province": "Gauteng",
       "file": "cmh-mazda-foton-hatfield-pretoria.html",
       "stockCount": 38
+    },
+    {
+      "id": "bf6467fc-fd7e-41b0-a499-f20ba5153d00",
+      "name": "Pieters Cars",
+      "town": "Pretoria",
+      "province": "Gauteng",
+      "file": "pieters-cars-pretoria.html",
+      "stockCount": 0
     },
     {
       "id": "5e4384df-ba3f-4849-8c15-003f8bdfe0f1",
