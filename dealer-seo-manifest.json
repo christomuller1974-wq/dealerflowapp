@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-10-25T07:37:14.820Z",
-  "eligibleDealerCount": 30,
-  "pageCount": 30,
-  "sitemapUrlCount": 30,
+  "generatedAt": "2026-10-26T07:50:25.243Z",
+  "eligibleDealerCount": 29,
+  "pageCount": 29,
+  "sitemapUrlCount": 29,
   "dealers": [
     {
       "id": "66305301-95b3-4b71-8f32-8779a0688b92",
@@ -59,14 +59,6 @@
       "province": "Free State",
       "file": "auto-star-welkom.html",
       "stockCount": 40
-    },
-    {
-      "id": "9d41645f-7d92-4004-8dc1-ac8fca1ae6ee",
-      "name": "CarScoutZA Sandbox Test",
-      "town": "Kimberley",
-      "province": "Gauteng",
-      "file": "carscoutza-sandbox-test-kimberley.html",
-      "stockCount": 0
     },
     {
       "id": "195707d1-1b00-4c1d-8b2f-66ac7dce668a",
@@ -226,7 +218,7 @@
       "town": "Kuruman",
       "province": "Northern Cape",
       "file": "rupping-dealers-kuruman.html",
-      "stockCount": 30
+      "stockCount": 28
     },
     {
       "id": "5674f6e8-7541-4e82-ba4e-6503ffe10a0f",
