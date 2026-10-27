@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-10-26T07:50:25.243Z",
-  "eligibleDealerCount": 29,
-  "pageCount": 29,
-  "sitemapUrlCount": 29,
+  "generatedAt": "2026-10-27T07:55:19.086Z",
+  "eligibleDealerCount": 32,
+  "pageCount": 32,
+  "sitemapUrlCount": 32,
   "dealers": [
     {
       "id": "66305301-95b3-4b71-8f32-8779a0688b92",
@@ -27,6 +27,14 @@
       "province": "Free State",
       "file": "leon-geeringh-motoring-bloemfontein.html",
       "stockCount": 18
+    },
+    {
+      "id": "3663e8bf-d797-4279-9ff7-9c6b991212ce",
+      "name": "Motus Select Bloemfontein Central",
+      "town": "Bloemfontein",
+      "province": "Free State",
+      "file": "motus-select-bloemfontein-central.html",
+      "stockCount": 19
     },
     {
       "id": "ce38574f-91fa-4d7a-9a57-4b73bd5d6308",
@@ -61,12 +69,20 @@
       "stockCount": 40
     },
     {
+      "id": "5c75ed28-3ff4-4c1e-957e-196009508f2b",
+      "name": "Avatar Auto",
+      "town": "Welkom",
+      "province": "Free State",
+      "file": "avatar-auto-welkom.html",
+      "stockCount": 5
+    },
+    {
       "id": "195707d1-1b00-4c1d-8b2f-66ac7dce668a",
       "name": "CMH MAZDA / FOTON HATFIELD",
       "town": "Pretoria",
       "province": "Gauteng",
       "file": "cmh-mazda-foton-hatfield-pretoria.html",
-      "stockCount": 38
+      "stockCount": 37
     },
     {
       "id": "bf6467fc-fd7e-41b0-a499-f20ba5153d00",
@@ -139,6 +155,14 @@
       "province": "North West",
       "file": "tx-auto-potchefstroom.html",
       "stockCount": 14
+    },
+    {
+      "id": "493762ef-261c-4303-b5e9-31adb06444a4",
+      "name": "JAC MOTORS Hartswater",
+      "town": "Hartswater",
+      "province": "Northern Cape",
+      "file": "jac-motors-hartswater.html",
+      "stockCount": 8
     },
     {
       "id": "407c973e-d52f-4b23-be50-df7e77073214",
@@ -218,7 +242,7 @@
       "town": "Kuruman",
       "province": "Northern Cape",
       "file": "rupping-dealers-kuruman.html",
-      "stockCount": 28
+      "stockCount": 30
     },
     {
       "id": "5674f6e8-7541-4e82-ba4e-6503ffe10a0f",
