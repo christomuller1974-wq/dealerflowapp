@@ -17,7 +17,11 @@
       hasCurrentAccess: freeActive || paidActive,
       isPending: Boolean(profile && profile.approval_status === "PENDING"),
       isDeclined: Boolean(profile && profile.approval_status === "DECLINED"),
-      isApproved: Boolean(profile && profile.approval_status === "ACTIVE" && profile.dealer_verified === true)
+      isApproved: Boolean(profile && profile.approval_status === "ACTIVE" && profile.dealer_verified === true),
+      canManageStock: Boolean(profile && (
+        profile.approval_status === "PENDING" ||
+        (profile.approval_status === "ACTIVE" && profile.dealer_verified === true)
+      ))
     };
   }
 

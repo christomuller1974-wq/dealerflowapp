@@ -1483,7 +1483,7 @@ if (access.isDeclined || (profile.admin_blocked && !access.isPending)) {
   showPendingApprovalScreen();
   return;
 }
-if (!access.isPending && !access.hasCurrentAccess) {
+if (!access.canManageStock) {
   showPendingApprovalScreen();
   return;
 }
@@ -1491,7 +1491,9 @@ if (!access.isPending && !access.hasCurrentAccess) {
       const okVehicle = await loadVehicle();
       if (!okVehicle) return;
 
-      setStatus("Edit page ready.");
+      setStatus(access.hasCurrentAccess
+        ? "Edit page ready."
+        : "Edit page ready. Changes are saved, but the vehicle remains offline until verification and payment are complete.");
     }
 
     window.makeMain = makeMain;

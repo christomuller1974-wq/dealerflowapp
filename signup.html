@@ -362,7 +362,7 @@ button.submit-btn:hover {
 
 You can sign in and continue loading your vehicles while waiting for admin approval.
 
-Dealer verification normally takes 24–48 hours. Your vehicles will only become visible to the public after your dealership has been approved.</p>
+Dealer verification normally takes 24–48 hours. After approval, complete your R2,000 membership payment. Your vehicles will only become visible to the public after your dealership has been approved and payment has been verified.</p>
     <a id="continueLogin" class="top-btn blue" href="login.html">Continue to Dealer Login</a>
   </div>
 </div>
@@ -498,7 +498,9 @@ async function signup() {
       location: location,
       logo_url: logoUrl,
       approval_status: "PENDING",
-      is_active: false
+      active: false,
+      is_active: false,
+      payment_status: "PENDING_VERIFICATION"
     });
 
   if (profileError) {

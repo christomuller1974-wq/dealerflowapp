@@ -641,7 +641,7 @@ function showRenewalScreen() {
     <div class="approval-wrap">
       <div class="approval-card">
         <h2>Membership Renewal Required</h2>
-        <p>Your free or paid access period has expired. Your stock is no longer public, but your account and saved vehicles remain available.</p>
+        <p>Your membership is not active. Your stock is no longer public, but your account and saved vehicles remain available.</p>
         <div class="approval-actions">
           <a href="index.html" class="top-btn">Back to Website</a>
           <a href="payment.html" class="top-btn blue">Renew Membership – Choose Payment Option</a>
@@ -664,11 +664,13 @@ function showAccessNotice(state) {
   const notice = document.getElementById("accessNotice");
   if (!notice) return;
   if (state.isPending) {
-    notice.textContent = "Your dealership is pending approval. You can upload and edit vehicles now; they will remain hidden from the public until approval.";
+    notice.textContent = "Your dealership is pending approval. You can upload and edit vehicles now; they will remain hidden until approval and payment.";
   } else if (state.freeActive) {
-    notice.textContent = "Free dealer access is active until " + new Date(currentProfile.admin_free_until).toLocaleDateString("en-ZA", {day:"numeric",month:"long",year:"numeric"}) + ". No payment is due during this free period.";
+    notice.textContent = "Your existing access is active until " + new Date(currentProfile.admin_free_until).toLocaleDateString("en-ZA", {day:"numeric",month:"long",year:"numeric"}) + ".";
   } else if (state.paidActive) {
     notice.textContent = "Paid dealer access is active until " + new Date(currentProfile.paid_until).toLocaleDateString("en-ZA", {day:"numeric",month:"long",year:"numeric"}) + ".";
+  } else if (state.isApproved) {
+    notice.innerHTML = 'Your dealership is verified, but payment is required before vehicles can go live. <a href="payment.html" style="font-weight:900;color:inherit;">Pay R2,000 for 30 days</a>.';
   } else {
     notice.hidden = true;
     return;
@@ -949,7 +951,7 @@ if (currentProfile.admin_blocked && !access.isPending) {
   showAdminBlockedScreen();
   return;
 }
-if (!access.isPending && !access.hasCurrentAccess) {
+if (!access.canManageStock) {
   showRenewalScreen();
   return;
 }

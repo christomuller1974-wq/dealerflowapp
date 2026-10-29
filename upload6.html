@@ -799,9 +799,9 @@ if (access.isDeclined || (profile.admin_blocked && !access.isPending)) {
     window.location.href = "login.html";
     return false;
 }
-if (!access.isPending && !access.hasCurrentAccess) {
-    alert("Your subscription has expired.");
-    window.location.href = "payment.html";
+if (!access.canManageStock) {
+    alert("Your dealer account is not available. Please contact CarScoutZA Admin.");
+    window.location.href = "dealer-admin.html";
     return false;
 }
   document.getElementById("dealer").value =
@@ -1026,13 +1026,16 @@ if (access.isDeclined || (profile.admin_blocked && !access.isPending)) {
   showPendingApprovalScreen();
   return;
 }
-if (!access.isPending && !access.hasCurrentAccess) {
+if (!access.canManageStock) {
   showPendingApprovalScreen();
   return;
 }
 
     let c = await countVehicles();
-    setStatus("Upload page ready. Vehicles: " + c + " / " + MAX_VEHICLES);
+    const visibilityNote = access.hasCurrentAccess
+      ? ""
+      : " Vehicles will remain offline until verification and payment are complete.";
+    setStatus("Upload page ready. Vehicles: " + c + " / " + MAX_VEHICLES + "." + visibilityNote);
 
     render();
   } catch (err) {

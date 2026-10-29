@@ -310,7 +310,7 @@ body {
   style="background:#f59e0b;"
   onclick="showDealerSection('EXPIRED')"
 >
-  Expired Access (<span id="expiredDealerCount">0</span>)
+  Payment Required / Expired (<span id="expiredDealerCount">0</span>)
 </button>
 <button
   class="btn btn-blue"
@@ -476,7 +476,9 @@ function getDealerStatus(d) {
     return "PAID ACTIVE";
   }
 
-  return "INACTIVE / EXPIRED";
+  return getDealerExpiryTimestamp(d) > 0
+    ? "PAYMENT REQUIRED / EXPIRED"
+    : "PAYMENT REQUIRED";
 }
 async function loadTotalVehicles() {
   const { count, error } = await client
@@ -798,7 +800,9 @@ ${currentDealerSection === "DECLINED" ? `
 ` : `
   ${currentDealerSection === "EXPIRED" ? `
     <div class="dealer-meta" style="margin:10px 0; color:#b91c1c; font-size:16px; font-weight:900;">
-      Expired on: ${formatDate(getDealerExpiryTimestamp(d))}
+      ${getDealerExpiryTimestamp(d) > 0
+        ? "Access expired on: " + formatDate(getDealerExpiryTimestamp(d))
+        : "Payment required before stock goes live"}
     </div>
   ` : ""}
   <div class="dealer-meta">
@@ -847,25 +851,11 @@ ${currentDealerSection === "DECLINED" ? `
      <div class="dealer-actions">
 
   ${currentDealerSection === "ACTIVE" ? `
-    <button
-      class="btn btn-green"
-      onclick="activateDealer('${d.id}')"
-    >
-      Activate
-    </button>
-
    <button
   class="btn btn-red"
   onclick="deactivateDealer('${d.id}')"
 >
   Deactivate
-</button>
-
-<button
-  class="btn btn-blue"
-  onclick="extendFree30Days('${d.id}')"
->
-  Grant / Extend 30 Days
 </button>
 
 <button
@@ -879,9 +869,9 @@ ${currentDealerSection === "DECLINED" ? `
   ${currentDealerSection === "PENDING" ? `
     <button
       class="btn btn-blue"
-      onclick="grantFree30Days('${d.id}')"
+      onclick="verifyDealerForPayment('${d.id}')"
     >
-      Verify & Start 30-Day Trial
+      Verify Dealer – Payment Required
     </button>
 
     <button
@@ -900,14 +890,6 @@ ${currentDealerSection === "DECLINED" ? `
       Reinstate Dealer
     </button>
   ` : ""}
-${currentDealerSection === "EXPIRED" ? `
-  <button
-    class="btn btn-blue"
-    onclick="extendFree30Days('${d.id}')"
-  >
-    Grant / Extend 30 Days
-  </button>
-` : ""}
   <button
     class="btn btn-dark"
     onclick="changeLoginEmail('${d.id}')"
@@ -922,46 +904,27 @@ if (loadRequestId !== dealerLoadRequestId) return;
   });
 }
 
-async function activateDealer(id) {
+async function verifyDealerForPayment(id) {
   const { error } = await client
     .from("profiles")
     .update({
-      active:true,
-      admin_blocked:false
+      active: false,
+      is_active: false,
+      dealer_verified: true,
+      approval_status: "ACTIVE",
+      admin_blocked: false,
+      admin_free_until: null,
+      payment_status: "PAYMENT_REQUIRED"
     })
     .eq("id", id);
 
   if (error) {
-    alert("Failed to activate dealer");
+    alert("Failed to verify dealer");
     console.error(error);
     return;
   }
 
-  loadDealers();
-}
-
-async function grantFree30Days(id) {
-  const freeUntil = new Date(Date.now() + (30 * 24 * 60 * 60 * 1000));
-
-  const { error } = await client
-    .from("profiles")
-    .update({
-      active:true,
-      dealer_verified:true,
-      approval_status:"ACTIVE",
-      admin_blocked:false,
-      admin_free_until:freeUntil.toISOString(),
-      payment_status:"FREE_30_DAY"
-    })
-    .eq("id", id);
-
-  if (error) {
-    alert("Failed to grant free access");
-    console.error(error);
-    return;
-  }
-
- alert("Dealer verified. Vehicles are now live and the 30-day trial has started.");
+ alert("Dealer verified. They can manage stock, but vehicles remain offline until the R2,000 payment is verified.");
 
 loadDealerCounts();
 loadDealers();
@@ -993,65 +956,6 @@ loadDealers();
     alert("Something went wrong while shuffling the vehicles.");
   }
 }
-  async function extendFree30Days(id) {
-  const { data, error: fetchError } = await client
-    .from("profiles")
-    .select("admin_free_until")
-    .eq("id", id)
-    .single();
-
-  if (fetchError) {
-    console.error(fetchError);
-    alert("Could not load the dealer's current access date.");
-    return;
-  }
-
-  const now = new Date();
-  let baseDate = now;
-
-  if (data?.admin_free_until) {
-    const currentExpiry = new Date(data.admin_free_until);
-
-    if (currentExpiry > now) {
-      baseDate = currentExpiry;
-    }
-  }
-
-  const newFreeUntil = new Date(baseDate);
-  newFreeUntil.setDate(newFreeUntil.getDate() + 30);
-
-  const ok = confirm(
-    "Grant this dealer another 30 days of free access?\n\n" +
-    "New expiry date: " +
-    newFreeUntil.toLocaleDateString("en-ZA")
-  );
-
-  if (!ok) return;
-
-  const { error } = await client
-    .from("profiles")
-    .update({
-      active: true,
-      admin_blocked: false,
-      admin_free_until: newFreeUntil.toISOString(),
-      payment_status: "FREE_30_DAY"
-    })
-    .eq("id", id);
-
-  if (error) {
-    console.error(error);
-    alert("Failed to extend dealer access.");
-    return;
-  }
-
-  alert(
-    "Dealer access extended by 30 days.\n\nNew expiry: " +
-    newFreeUntil.toLocaleDateString("en-ZA")
-  );
-
-  loadDealerCounts();
-  loadDealers();
-}
 async function declineDealer(id) {
   const reason = prompt(
     "Enter the reason for declining this dealer:"
@@ -1075,6 +979,7 @@ async function declineDealer(id) {
       approval_status: "DECLINED",
       dealer_verified: false,
       active: false,
+      is_active: false,
       admin_blocked: true,
       decline_reason: reason.trim(),
       declined_at: new Date().toISOString()
@@ -1103,8 +1008,11 @@ loadDealers();
     .update({
       approval_status: "ACTIVE",
       dealer_verified: true,
-      active: true,
-      admin_blocked: false
+      active: false,
+      is_active: false,
+      admin_blocked: false,
+      admin_free_until: null,
+      payment_status: "PAYMENT_REQUIRED"
     })
     .eq("id", id);
 
@@ -1114,7 +1022,7 @@ loadDealers();
     return;
   }
 
-  alert("Dealer reinstated and moved to Active Dealers.");
+  alert("Dealer reinstated. Payment is required before vehicles can go live.");
 
   loadDealerCounts();
   loadDealers();
@@ -1128,6 +1036,7 @@ const { error } = await client
 .from("profiles")
 .update({
 active: false,
+is_active: false,
 admin_blocked: true,
 payment_status:"DEACTIVATED"
 })
