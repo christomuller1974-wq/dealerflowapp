@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-28T08:37:05.181Z",
+  "generatedAt": "2026-10-29T08:33:01.925Z",
   "eligibleDealerCount": 32,
   "pageCount": 32,
   "sitemapUrlCount": 32,
@@ -74,7 +74,7 @@
       "town": "Welkom",
       "province": "Free State",
       "file": "avatar-auto-welkom.html",
-      "stockCount": 5
+      "stockCount": 9
     },
     {
       "id": "195707d1-1b00-4c1d-8b2f-66ac7dce668a",
@@ -170,7 +170,7 @@
       "town": "Kimberley",
       "province": "Northern Cape",
       "file": "auto-excellence-kby-kimberley.html",
-      "stockCount": 18
+      "stockCount": 16
     },
     {
       "id": "9b95e6a7-64e3-48c2-a579-19eadc6100fb",
