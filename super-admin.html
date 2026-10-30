@@ -890,6 +890,14 @@ ${currentDealerSection === "DECLINED" ? `
       Reinstate Dealer
     </button>
   ` : ""}
+  ${currentDealerSection === "EXPIRED" ? `
+    <button
+      class="btn btn-blue"
+      onclick="grantPromotional30Days('${d.id}')"
+    >
+      Grant 30 Days Free Access
+    </button>
+  ` : ""}
   <button
     class="btn btn-dark"
     onclick="changeLoginEmail('${d.id}')"
@@ -928,6 +936,63 @@ async function verifyDealerForPayment(id) {
 
 loadDealerCounts();
 loadDealers();
+}
+
+async function grantPromotional30Days(id) {
+  const confirmed = confirm(
+    "Grant this verified dealer 30 days of free promotional access?\n\n" +
+    "Their vehicles will become public immediately and access will expire automatically after 30 days."
+  );
+
+  if (!confirmed) return;
+
+  const { data: dealer, error: dealerError } = await client
+    .from("profiles")
+    .select("approval_status, dealer_verified, admin_blocked")
+    .eq("id", id)
+    .single();
+
+  if (dealerError) {
+    console.error(dealerError);
+    alert("Could not verify this dealer's current status.");
+    return;
+  }
+
+  if (
+    dealer.approval_status !== "ACTIVE" ||
+    dealer.dealer_verified !== true ||
+    dealer.admin_blocked === true
+  ) {
+    alert("Free access can only be granted to an approved, verified dealer.");
+    loadDealerCounts();
+    loadDealers();
+    return;
+  }
+
+  const freeUntil = new Date(Date.now() + (30 * 24 * 60 * 60 * 1000));
+  const { error } = await client
+    .from("profiles")
+    .update({
+      active: true,
+      is_active: true,
+      admin_free_until: freeUntil.toISOString(),
+      payment_status: "FREE_30_DAY"
+    })
+    .eq("id", id);
+
+  if (error) {
+    console.error(error);
+    alert("Failed to grant free promotional access.");
+    return;
+  }
+
+  alert(
+    "30 days of free promotional access granted.\n\nAccess expires: " +
+    freeUntil.toLocaleDateString("en-ZA")
+  );
+
+  loadDealerCounts();
+  loadDealers();
 }
   async function shuffleVehicles() {
   const confirmed = confirm(
