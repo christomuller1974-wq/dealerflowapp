@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-10-29T08:33:01.925Z",
-  "eligibleDealerCount": 32,
-  "pageCount": 32,
-  "sitemapUrlCount": 32,
+  "generatedAt": "2026-10-30T08:41:23.938Z",
+  "eligibleDealerCount": 28,
+  "pageCount": 28,
+  "sitemapUrlCount": 28,
   "dealers": [
     {
       "id": "66305301-95b3-4b71-8f32-8779a0688b92",
@@ -74,7 +74,7 @@
       "town": "Welkom",
       "province": "Free State",
       "file": "avatar-auto-welkom.html",
-      "stockCount": 9
+      "stockCount": 18
     },
     {
       "id": "195707d1-1b00-4c1d-8b2f-66ac7dce668a",
@@ -117,44 +117,12 @@
       "stockCount": 23
     },
     {
-      "id": "c01fb0b7-e79b-49d8-9b8a-60251adc7fee",
-      "name": "TEN Four Auto",
-      "town": "Klerksdorp",
-      "province": "North West",
-      "file": "ten-four-auto-klerksdorp.html",
-      "stockCount": 20
-    },
-    {
       "id": "cd877617-b071-4f49-b215-42d68e74b57e",
       "name": "VX Auto Sales Klerksdorp",
       "town": "Klerksdorp",
       "province": "North West",
       "file": "vx-auto-sales-klerksdorp.html",
       "stockCount": 23
-    },
-    {
-      "id": "2617ad54-fede-4d3e-9a0f-415cbf3a758f",
-      "name": "Infinite Auto Potchefstroom",
-      "town": "Potchefstroom",
-      "province": "North West",
-      "file": "infinite-auto-potchefstroom.html",
-      "stockCount": 19
-    },
-    {
-      "id": "ad0face4-dcd6-4431-a515-e098705c6b98",
-      "name": "Penta Now Potchefstroom",
-      "town": "Potchefstroom",
-      "province": "North West",
-      "file": "penta-now-potchefstroom.html",
-      "stockCount": 19
-    },
-    {
-      "id": "daf1f59c-160c-49e3-a561-aa16a09a4edd",
-      "name": "TX Auto Potchefstroom",
-      "town": "Potchefstroom",
-      "province": "North West",
-      "file": "tx-auto-potchefstroom.html",
-      "stockCount": 14
     },
     {
       "id": "493762ef-261c-4303-b5e9-31adb06444a4",
@@ -170,7 +138,7 @@
       "town": "Kimberley",
       "province": "Northern Cape",
       "file": "auto-excellence-kby-kimberley.html",
-      "stockCount": 16
+      "stockCount": 20
     },
     {
       "id": "9b95e6a7-64e3-48c2-a579-19eadc6100fb",
@@ -242,7 +210,7 @@
       "town": "Kuruman",
       "province": "Northern Cape",
       "file": "rupping-dealers-kuruman.html",
-      "stockCount": 30
+      "stockCount": 31
     },
     {
       "id": "5674f6e8-7541-4e82-ba4e-6503ffe10a0f",
