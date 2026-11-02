@@ -1,6 +1,6 @@
 (function(root){
   "use strict";
-  const VALID_TYPES=new Set(["vehicle","bakkie","suv","motorcycle_leisure"]);
+  const VALID_TYPES=new Set(["vehicle","bakkie","suv","classic_car","motorcycle_leisure"]);
   const MANUAL_BAKKIE_IDS=new Set(["235"]);
   function text(value){return String(value||"").toLowerCase().replace(/&/g," and ").replace(/[^a-z0-9/]+/g," ").replace(/\s+/g," ").trim()}
   function fields(v){return{make:text(v.make),model:text(v.model),variant:text(v.variant),title:text(v.title),body:text(v.body_type||v.bodyType),makeModel:text([v.make,v.model].filter(Boolean).join(" ")),identity:text([v.make,v.model,v.variant,v.title].filter(Boolean).join(" "))}}

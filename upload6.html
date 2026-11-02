@@ -286,6 +286,7 @@ button:disabled {
     <option value="vehicle">Vehicles</option>
     <option value="bakkie">Bakkies</option>
     <option value="suv">SUVs</option>
+    <option value="classic_car">Classic Cars</option>
     <option value="motorcycle_leisure">
       Motorcycles &amp; Leisure
     </option>
@@ -325,8 +326,15 @@ button:disabled {
 </div>
     <div class="two-col">
       <div class="field">
-        <label for="year">Year</label>
+        <label id="yearLabel" for="year">Year</label>
         <select id="year"></select>
+        <input
+          id="yearOther"
+          inputmode="numeric"
+          maxlength="4"
+          placeholder="Enter year, e.g. 1967"
+          style="display:none;"
+        >
       </div>
       <div class="field">
         <label for="price">Price</label>
@@ -501,6 +509,9 @@ function initMakeModelDropdowns() {
   const makeOther = document.getElementById("makeOther");
   const modelOther = document.getElementById("modelOther");
 const listingType = document.getElementById("listingType");
+  const yearSelect = document.getElementById("year");
+  const yearOther = document.getElementById("yearOther");
+  const yearLabel = document.getElementById("yearLabel");
   makeSelect.innerHTML = '<option value="">Select make</option>';
 
   Object.keys(vehicleData).sort().forEach(make => {
@@ -568,7 +579,9 @@ const listingType = document.getElementById("listingType");
   });
   function updateListingTypeFields() {
   const flexibleListing =
-    listingType.value === "motorcycle_leisure";
+    listingType.value === "motorcycle_leisure" ||
+    listingType.value === "classic_car";
+  const classicListing = listingType.value === "classic_car";
 
   if (flexibleListing) {
     makeSelect.value = "__other__";
@@ -579,25 +592,33 @@ const listingType = document.getElementById("listingType");
 
     makeOther.placeholder = "Enter make";
     modelOther.placeholder = "Enter model";
-    return;
+  } else {
+    makeSelect.style.display = "block";
+    makeSelect.disabled = false;
+    makeSelect.value = "";
+
+    modelSelect.style.display = "block";
+    modelSelect.innerHTML =
+      '<option value="">Select make first</option>';
+    modelSelect.disabled = true;
+
+    makeOther.value = "";
+    makeOther.style.display = "none";
+    makeOther.placeholder = "Enter make";
+
+    modelOther.value = "";
+    modelOther.style.display = "none";
+    modelOther.placeholder = "Enter model";
   }
 
-  makeSelect.style.display = "block";
-  makeSelect.disabled = false;
-  makeSelect.value = "";
-
-  modelSelect.style.display = "block";
-  modelSelect.innerHTML =
-    '<option value="">Select make first</option>';
-  modelSelect.disabled = true;
-
-  makeOther.value = "";
-  makeOther.style.display = "none";
-  makeOther.placeholder = "Enter make";
-
-  modelOther.value = "";
-  modelOther.style.display = "none";
-  modelOther.placeholder = "Enter model";
+  yearSelect.style.display = classicListing ? "none" : "block";
+  yearOther.style.display = classicListing ? "block" : "none";
+  yearLabel.setAttribute("for", classicListing ? "yearOther" : "year");
+  if (classicListing) {
+    yearSelect.value = "";
+  } else {
+    yearOther.value = "";
+  }
 }
 
 listingType.addEventListener(
@@ -842,7 +863,9 @@ const model = selectedModel === "__other__"
     const listingType =
   document.getElementById("listingType").value;
     const variant = document.getElementById("variant").value.trim();
-    const year = document.getElementById("year").value.trim();
+    const year = listingType === "classic_car"
+      ? document.getElementById("yearOther").value.trim()
+      : document.getElementById("year").value.trim();
     const price = document.getElementById("price").value.trim();
     const mileage = document.getElementById("mileage").value.trim();
     const location = document.getElementById("location").value.trim();
@@ -861,7 +884,7 @@ const nationwideDelivery = document.getElementById("nationwideDelivery").checked
 const vehicleCondition = document.getElementById("vehicleCondition").value;
     const title = [year, make, model, variant].filter(Boolean).join(" ");
 
-    const validListingTypes = ["vehicle", "bakkie", "suv", "motorcycle_leisure"];
+    const validListingTypes = ["vehicle", "bakkie", "suv", "classic_car", "motorcycle_leisure"];
     if (!validListingTypes.includes(listingType)) {
       setStatus("Please select a valid Listing Type.");
       saveBtn.disabled = false;
@@ -870,6 +893,15 @@ const vehicleCondition = document.getElementById("vehicleCondition").value;
 
     if (!make || !model || !year || !price || !mileage || !location || !dealer || !phone) {
       setStatus("Please complete all required fields.");
+      saveBtn.disabled = false;
+      return;
+    }
+
+    if (
+      listingType === "classic_car" &&
+      (!/^\d{4}$/.test(year) || Number(year) < 1886 || Number(year) > new Date().getFullYear() + 1)
+    ) {
+      setStatus("Please enter a valid four-digit year for the classic car.");
       saveBtn.disabled = false;
       return;
     }
@@ -956,6 +988,7 @@ document.getElementById("modelOther").value = "";
 document.getElementById("modelOther").style.display = "none";
     document.getElementById("variant").value = "";
     document.getElementById("year").value = "";
+    document.getElementById("yearOther").value = "";
     document.getElementById("price").value = "";
     document.getElementById("mileage").value = "";
     document.getElementById("description").value = "";

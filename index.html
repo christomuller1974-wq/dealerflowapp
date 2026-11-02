@@ -915,6 +915,7 @@ display:flex;
   <option value="vehicle">Cars</option>
   <option value="bakkie">Bakkies</option>
   <option value="suv">SUVs</option>
+  <option value="classic_car">Classic Cars</option>
   <option value="motorcycle_leisure">
     Motorcycles & Leisure
   </option>
@@ -1143,8 +1144,8 @@ function initHomepageMakeModelSearch() {
 
   listingTypeSelect.addEventListener("change", () => {
     const flexibleListing =
-      listingTypeSelect.value ===
-      "motorcycle_leisure";
+      listingTypeSelect.value === "motorcycle_leisure" ||
+      listingTypeSelect.value === "classic_car";
 
     if (flexibleListing) {
       makeSelect.value = "";
@@ -1419,7 +1420,10 @@ const modelSelect =
 listingTypeSelect.value = listingTypeFromUrl;
 listingTypeSelect.dispatchEvent(new Event("change"));
 
-if (listingTypeFromUrl !== "motorcycle_leisure") {
+if (
+  listingTypeFromUrl !== "motorcycle_leisure" &&
+  listingTypeFromUrl !== "classic_car"
+) {
   makeSelect.value = makeFromUrl;
   makeSelect.dispatchEvent(new Event("change"));
   modelSelect.value = modelFromUrl;
