@@ -3,3 +3,9 @@ verify_jwt = false
 
 [functions.create-payfast-checkout]
 verify_jwt = true
+
+[functions.featured-payfast-itn]
+verify_jwt = false
+
+[functions.create-featured-checkout]
+verify_jwt = true

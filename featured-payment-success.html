@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Featured Vehicle Payment Status | CarScoutZA</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    *{box-sizing:border-box}body{font-family:Arial,sans-serif;background:#eef2f7;margin:0;padding:20px;color:#111827}.receipt{max-width:760px;margin:35px auto;background:#fff;padding:30px;border-radius:20px;box-shadow:0 8px 24px #0002}h1{margin-top:0;color:#1d4ed8}.pending{background:#fffbeb;border:1px solid #fde68a;padding:14px;border-radius:12px;line-height:1.5}.line{display:flex;justify-content:space-between;gap:20px;border-bottom:1px solid #e5e7eb;padding:12px 0;font-weight:700}.line span:last-child{text-align:right}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}.btn{padding:14px 18px;border:0;border-radius:12px;background:#2563eb;color:#fff;font-weight:900;cursor:pointer;text-decoration:none}.dark{background:#111827}.receipt-details{display:none}.receipt-details.visible{display:block}@media(max-width:560px){.receipt{padding:21px;margin:10px auto}.line{display:block}.line span{display:block;text-align:left!important;margin-top:5px}.btn{width:100%;text-align:center}}@media print{body{background:#fff;padding:0}.receipt{box-shadow:none;margin:0;max-width:none;border-radius:0;padding:14mm}.no-print,.pending{display:none!important}.receipt-details{display:block!important}h1{color:#111827}.line{break-inside:avoid}}
+  </style>
+</head>
+<body>
+  <main class="receipt">
+    <h1 id="heading">Payment verification pending</h1>
+    <p id="status" class="pending" role="status" aria-live="polite">PayFast is still confirming this transaction. Opening this page does not feature a vehicle.</p>
+    <section id="receiptDetails" class="receipt-details" aria-label="Featured Vehicle Payment Receipt">
+      <h2>CarScoutZA Payment Receipt</h2>
+      <div class="line"><span>Receipt number</span><span id="receiptNumber"></span></div>
+      <div class="line"><span>PayFast transaction reference</span><span id="payfastReference"></span></div>
+      <div class="line"><span>Dealer / business</span><span id="dealerName"></span></div>
+      <div class="line"><span>Vehicle</span><span id="vehicleTitle"></span></div>
+      <div class="line"><span>Payment date and time</span><span id="paymentDate"></span></div>
+      <div class="line"><span>Package</span><span>Featured Vehicle – 7 Days</span></div>
+      <div class="line"><span>Amount paid</span><span>R200.00</span></div>
+      <div class="line"><span>Currency</span><span>ZAR</span></div>
+      <div class="line"><span>Payment status</span><span>Paid</span></div>
+      <div class="line"><span>Featured period start</span><span id="periodStart"></span></div>
+      <div class="line"><span>Featured period end</span><span id="periodEnd"></span></div>
+      <p><strong>CarScoutZA</strong><br>carscoutza.com<br>Support: 082 574 4526</p>
+    </section>
+    <div class="actions no-print">
+      <button id="refreshButton" class="btn" type="button">Refresh Status</button>
+      <button id="printButton" class="btn" type="button" hidden>Print / Save Receipt</button>
+      <a class="btn dark" href="dealer-admin.html">Return to Dealer Dashboard</a>
+    </div>
+  </main>
+  <script>
+    const client = window.supabase.createClient(
+      "https://ddmvzypiccryjndcwlre.supabase.co",
+      "sb_publishable_D7saHOTE_JhSlMnSgBnIhQ_mOAOUD9s"
+    );
+    const reference = new URLSearchParams(location.search).get("payment") ||
+      sessionStorage.getItem("carscout_featured_payment_reference") || "";
+    const formatDate = value => value
+      ? new Date(value).toLocaleString("en-ZA", { dateStyle: "long", timeStyle: "short" })
+      : "—";
+    let attempts = 0;
+    let pollTimer = null;
+
+    async function refreshStatus() {
+      const { data: userData, error: userError } = await client.auth.getUser();
+      if (userError || !userData.user) {
+        location.href = "login.html";
+        return;
+      }
+      if (!reference) {
+        document.getElementById("status").textContent = "No payment reference is available. Return to the dashboard and start a new featured vehicle payment.";
+        return;
+      }
+
+      const { data, error } = await client
+        .from("featured_vehicle_payments")
+        .select("internal_reference,vehicle_title,pf_payment_id,amount,currency,status,payment_date,featured_start,featured_end,receipt_number")
+        .eq("internal_reference", reference)
+        .eq("dealer_id", userData.user.id)
+        .maybeSingle();
+
+      if (error || !data) {
+        document.getElementById("status").textContent = "The payment record could not be found for this signed-in dealer. No vehicle has been featured.";
+        return;
+      }
+      if (data.status !== "COMPLETE") {
+        document.getElementById("status").textContent = data.status === "FAILED" || data.status === "CANCELLED"
+          ? "Payment was not completed. The vehicle was not featured and no receipt was created."
+          : "Payment verification pending. PayFast confirmation has not yet been verified by the server.";
+        return;
+      }
+      if (Number(data.amount) !== 200 || data.currency !== "ZAR") {
+        document.getElementById("status").textContent = "The verified payment details do not match this package. Please contact CarScoutZA Admin.";
+        return;
+      }
+
+      const { data: profile } = await client
+        .from("profiles")
+        .select("dealer_name")
+        .eq("id", userData.user.id)
+        .single();
+
+      document.getElementById("heading").textContent = "Payment Successful";
+      document.getElementById("status").textContent = "Your verified payment is complete and this vehicle has been featured for seven days.";
+      document.getElementById("receiptDetails").classList.add("visible");
+      document.getElementById("receiptNumber").textContent = data.receipt_number;
+      document.getElementById("payfastReference").textContent = data.pf_payment_id;
+      document.getElementById("dealerName").textContent = profile?.dealer_name || "CarScoutZA Dealer";
+      document.getElementById("vehicleTitle").textContent = data.vehicle_title;
+      document.getElementById("paymentDate").textContent = formatDate(data.payment_date);
+      document.getElementById("periodStart").textContent = formatDate(data.featured_start);
+      document.getElementById("periodEnd").textContent = formatDate(data.featured_end);
+      document.getElementById("printButton").hidden = false;
+      document.getElementById("refreshButton").hidden = true;
+      if (pollTimer) clearInterval(pollTimer);
+    }
+
+    document.getElementById("refreshButton").addEventListener("click", refreshStatus);
+    document.getElementById("printButton").addEventListener("click", () => window.print());
+    (async () => {
+      const { data } = await client.auth.getUser();
+      if (!data.user) {
+        location.href = "login.html";
+        return;
+      }
+      await refreshStatus();
+      pollTimer = setInterval(async () => {
+        attempts += 1;
+        await refreshStatus();
+        if (attempts >= 8) {
+          clearInterval(pollTimer);
+          pollTimer = null;
+        }
+      }, 3000);
+    })();
+  </script>
+</body>
+</html>
