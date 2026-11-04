@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-11-03T09:36:21.910Z",
-  "eligibleDealerCount": 32,
-  "pageCount": 32,
-  "sitemapUrlCount": 32,
+  "generatedAt": "2026-11-04T09:18:55.966Z",
+  "eligibleDealerCount": 33,
+  "pageCount": 33,
+  "sitemapUrlCount": 33,
   "dealers": [
     {
       "id": "66305301-95b3-4b71-8f32-8779a0688b92",
@@ -77,12 +77,20 @@
       "stockCount": 18
     },
     {
+      "id": "c2e0121e-e8bd-4846-92d2-695e7679821b",
+      "name": "P&P Auction House",
+      "town": "Cullinan",
+      "province": "Gauteng",
+      "file": "pandp-auction-house-cullinan.html",
+      "stockCount": 7
+    },
+    {
       "id": "195707d1-1b00-4c1d-8b2f-66ac7dce668a",
       "name": "CMH MAZDA / FOTON HATFIELD",
       "town": "Pretoria",
       "province": "Gauteng",
       "file": "cmh-mazda-foton-hatfield-pretoria.html",
-      "stockCount": 37
+      "stockCount": 36
     },
     {
       "id": "bf6467fc-fd7e-41b0-a499-f20ba5153d00",
@@ -234,7 +242,7 @@
       "town": "Kuruman",
       "province": "Northern Cape",
       "file": "m-i-motors-kuruman.html",
-      "stockCount": 22
+      "stockCount": 28
     },
     {
       "id": "c68de985-c1c7-4068-b2cc-ab4faf6a700e",
