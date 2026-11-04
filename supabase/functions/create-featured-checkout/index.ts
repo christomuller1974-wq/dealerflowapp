@@ -1,5 +1,31 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
-import { json, signature } from "../_shared/payfast.ts";
+import { createHash } from "node:crypto";
+
+function payfastEncode(value: string): string {
+  return encodeURIComponent(value.trim()).replace(/%20/g, "+").replace(/[!'()~]/g, (character) =>
+    `%${character.charCodeAt(0).toString(16).toUpperCase()}`
+  );
+}
+
+function checkoutParameterString(entries: Iterable<[string, string]>, passphrase: string): string {
+  const parts: string[] = [];
+  for (const [key, value] of entries) {
+    if (key !== "signature" && value !== "") parts.push(`${key}=${payfastEncode(value)}`);
+  }
+  parts.push(`passphrase=${payfastEncode(passphrase)}`);
+  return parts.join("&");
+}
+
+function signature(entries: Iterable<[string, string]>, passphrase: string): string {
+  return createHash("md5").update(checkoutParameterString(entries, passphrase)).digest("hex");
+}
+
+function json(body: unknown, status = 200, headers: HeadersInit = {}): Response {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { "content-type": "application/json; charset=utf-8", ...headers },
+  });
+}
 
 const siteUrl = (Deno.env.get("SITE_URL") || "https://carscoutza.com").replace(/\/$/, "");
 const cors = {

@@ -1,6 +1,39 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
-import { json, safeEqual } from "../_shared/payfast.ts";
-import { parameterString, signature } from "../payfast-itn/file2.ts";
+import { createHash, timingSafeEqual } from "node:crypto";
+import { Buffer } from "node:buffer";
+
+function payfastEncode(value: string): string {
+  return encodeURIComponent(value.trim()).replace(/%20/g, "+").replace(/[!'()~]/g, (character) =>
+    `%${character.charCodeAt(0).toString(16).toUpperCase()}`
+  );
+}
+
+function parameterString(entries: Iterable<[string, string]>, passphrase?: string): string {
+  const parts: string[] = [];
+  for (const [key, value] of entries) {
+    if (key === "signature") break;
+    parts.push(`${key}=${payfastEncode(value)}`);
+  }
+  if (passphrase) parts.push(`passphrase=${payfastEncode(passphrase)}`);
+  return parts.join("&");
+}
+
+function signature(entries: Iterable<[string, string]>, passphrase: string): string {
+  return createHash("md5").update(parameterString(entries, passphrase)).digest("hex");
+}
+
+function safeEqual(left: string, right: string): boolean {
+  const leftBytes = Buffer.from(left);
+  const rightBytes = Buffer.from(right);
+  return leftBytes.length === rightBytes.length && timingSafeEqual(leftBytes, rightBytes);
+}
+
+function json(body: unknown, status = 200, headers: HeadersInit = {}): Response {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { "content-type": "application/json; charset=utf-8", ...headers },
+  });
+}
 
 Deno.serve(async (request) => {
   if (request.method !== "POST") return json({ error: "Method not allowed" }, 405);

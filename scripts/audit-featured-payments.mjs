@@ -21,12 +21,15 @@ assert.match(checkout, /\^\[1-9\]\\d\{0,18\}\$/);
 assert.match(checkout, /amount:\s*200/);
 assert.match(checkout, /amount:\s*"200\.00"/);
 assert.match(checkout, /featured-payfast-itn/);
+assert.match(checkout, /value !== ""/);
 assert.doesNotMatch(checkout, /body\.amount|body\.dealer_id|body\.user_id/);
 
 assert.match(itn, /safeEqual\(signature\(entries,\s*passphrase\),\s*receivedSignature\)/);
 assert.match(itn, /values\.payment_status\s*!==\s*"COMPLETE"/);
 assert.match(itn, /amount\s*!==\s*200/);
 assert.match(itn, /parameterString\(entries\)/);
+assert.match(itn, /if \(key === "signature"\) break/);
+assert.doesNotMatch(itn, /key === "signature"[\s\S]{0,120}value !== ""/);
 assert.match(itn, /validationText\s*!==\s*"VALID"/);
 assert.match(itn, /finalize_featured_vehicle_payment/);
 
