@@ -38,7 +38,7 @@ Deno.serve(async (request) => {
       return json({ error: "A vehicle must be selected." }, 400, cors);
     }
     const vehicleId = typeof body.vehicle_id === "string" ? body.vehicle_id.trim() : "";
-    if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(vehicleId)) {
+    if (!/^[1-9]\d{0,18}$/.test(vehicleId)) {
       return json({ error: "Invalid vehicle selection." }, 400, cors);
     }
 

@@ -17,6 +17,7 @@ assert.doesNotMatch(dashboard, /body:\s*\{[^}]*amount/s);
 assert.doesNotMatch(dashboard, /\.from\(["']vehicles["']\)[\s\S]{0,160}\.update\([\s\S]{0,160}featured:\s*true/);
 
 assert.match(checkout, /\.eq\("user_id",\s*user\.id\)/);
+assert.match(checkout, /\^\[1-9\]\\d\{0,18\}\$/);
 assert.match(checkout, /amount:\s*200/);
 assert.match(checkout, /amount:\s*"200\.00"/);
 assert.match(checkout, /featured-payfast-itn/);
@@ -30,6 +31,7 @@ assert.match(itn, /validationText\s*!==\s*"VALID"/);
 assert.match(itn, /finalize_featured_vehicle_payment/);
 
 assert.match(migration, /alter table public\.featured_vehicle_payments enable row level security/);
+assert.match(migration, /vehicle_id bigint not null references public\.vehicles\(id\)/);
 assert.match(migration, /using \(dealer_id = auth\.uid\(\)\)/);
 assert.match(migration, /v_payment\.status = 'COMPLETE'/);
 assert.match(migration, /v_payment\.pf_payment_id <> p_pf_payment_id/);

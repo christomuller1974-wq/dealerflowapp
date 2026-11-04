@@ -3,7 +3,7 @@ create extension if not exists pgcrypto;
 create table if not exists public.featured_vehicle_payments (
   id uuid primary key default gen_random_uuid(),
   dealer_id uuid not null references auth.users(id) on delete restrict,
-  vehicle_id uuid not null references public.vehicles(id) on delete restrict,
+  vehicle_id bigint not null references public.vehicles(id) on delete restrict,
   vehicle_title text not null,
   internal_reference text not null unique,
   m_payment_id text not null unique,
