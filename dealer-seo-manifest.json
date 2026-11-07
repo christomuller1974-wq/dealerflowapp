@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-11-06T09:26:58.713Z",
-  "eligibleDealerCount": 33,
-  "pageCount": 33,
-  "sitemapUrlCount": 33,
+  "generatedAt": "2026-11-07T08:49:59.034Z",
+  "eligibleDealerCount": 32,
+  "pageCount": 32,
+  "sitemapUrlCount": 32,
   "dealers": [
     {
       "id": "66305301-95b3-4b71-8f32-8779a0688b92",
@@ -59,14 +59,6 @@
       "province": "Free State",
       "file": "zijlstra-s-autohaus-bloemfontein.html",
       "stockCount": 26
-    },
-    {
-      "id": "bed37d5a-3660-45e6-8094-192066d80b93",
-      "name": "Auto Star Welkom",
-      "town": "Welkom",
-      "province": "Free State",
-      "file": "auto-star-welkom.html",
-      "stockCount": 40
     },
     {
       "id": "5c75ed28-3ff4-4c1e-957e-196009508f2b",
