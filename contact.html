@@ -60,6 +60,47 @@ body{
   margin-bottom:18px;
 }
 
+.contacts-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:20px;
+  margin-top:22px;
+}
+
+.contact-person{
+  border:1px solid #e2e8f0;
+  border-radius:14px;
+  padding:20px;
+  background:#f8fafc;
+}
+
+.contact-person h2{
+  margin:0 0 16px;
+  font-size:21px;
+}
+
+.contact-person .info:last-of-type{
+  margin-bottom:0;
+}
+
+.back-row{
+  margin-top:22px;
+}
+
+@media(max-width:680px){
+  .hero{
+    padding:42px 18px;
+  }
+
+  .hero h1{
+    font-size:32px;
+  }
+
+  .contacts-grid{
+    grid-template-columns:1fr;
+  }
+}
+
 .info{
   margin-bottom:14px;
   font-size:16px;
@@ -117,34 +158,64 @@ footer{
       Interested in advertising your vehicles on CarScoutZA?
     </div>
 
-    <div class="info">
-      📞 Phone: 082 5744 526
+    <div class="contacts-grid">
+
+      <section class="contact-person" aria-labelledby="christo-contact">
+        <h2 id="christo-contact">Christo Muller</h2>
+
+        <div class="info">
+          📞 Phone: <a href="tel:+27825744526">082 5744 526</a>
+        </div>
+
+        <div class="info">
+          📧 Email: <a href="mailto:christomuller1974@gmail.com">christomuller1974@gmail.com</a>
+        </div>
+
+        <div class="info">
+          📍 South Africa
+        </div>
+
+        <a
+          href="https://wa.me/27825744526"
+          class="btn"
+          target="_blank"
+          rel="noopener"
+        >
+          WhatsApp Us
+        </a>
+      </section>
+
+      <section class="contact-person" aria-labelledby="peter-contact">
+        <h2 id="peter-contact">Peter Clarke</h2>
+
+        <div class="info">
+          📞 Phone: <a href="tel:+27729272721">072 927 2721</a>
+        </div>
+
+        <div class="info">
+          📍 South Africa
+        </div>
+
+        <a
+          href="https://wa.me/27729272721"
+          class="btn"
+          target="_blank"
+          rel="noopener"
+        >
+          WhatsApp Us
+        </a>
+      </section>
+
     </div>
 
-    <div class="info">
-      📧 Email: christomuller1974@gmail.com
+    <div class="back-row">
+      <a
+        href="index.html"
+        class="top-btn"
+      >
+        Back To Website
+      </a>
     </div>
-
-    <div class="info">
-      📍 Kimberley, South Africa
-    </div>
-
-    <a
-      href="https://wa.me/27825744526"
-      class="btn"
-      target="_blank"
-    >
-      WhatsApp Us
-    </a>
-
-    <br>
-
-    <a
-      href="index.html"
-      class="top-btn"
-    >
-      Back To Website
-    </a>
 
   </div>
 
