@@ -402,6 +402,10 @@ const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const client = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 const MAIN_ADMIN_EMAIL = "autoexcellence@telkomsa.net";
+const STAFF_ADMIN_IDS = new Set([
+  "c2e0121e-e8bd-4846-92d2-695e7679821b", // P&P Auction House
+  "bf6467fc-fd7e-41b0-a499-f20ba5153d00"  // Pieters Cars
+]);
 
 let currentUser = null;
 let currentProfile = null;
@@ -749,11 +753,16 @@ function showAdminButton() {
   if (!adminHost || !currentUser) return;
 
   const email = (currentUser.email || "").toLowerCase().trim();
+  const userId = String(currentUser.id || "").toLowerCase();
 
   if (email === MAIN_ADMIN_EMAIL.toLowerCase()) {
-    adminHost.innerHTML = '<a href="super-admin.html" class="top-btn green">Super Admin</a>';
+    adminHost.innerHTML =
+      '<a href="super-admin.html" class="top-btn green">Super Admin</a>';
+  } else if (STAFF_ADMIN_IDS.has(userId)) {
+    adminHost.innerHTML =
+      '<a href="super-admin.html" class="top-btn green">Management Dashboard</a>';
   } else {
-    adminHost.innerHTML = '';
+    adminHost.innerHTML = "";
   }
 }
 
