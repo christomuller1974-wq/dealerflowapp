@@ -9,3 +9,6 @@ verify_jwt = false
 
 [functions.create-featured-checkout]
 verify_jwt = true
+
+[functions.send-expiry-reminders]
+verify_jwt = false
