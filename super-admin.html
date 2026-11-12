@@ -222,6 +222,16 @@ body {
     text-align:left;
   }
 }
+  .owner-only { display: initial; }
+  body.staff-admin .owner-only { display: none !important; }
+  .staff-access-note {
+    margin: 0 0 18px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    background: #eef2ff;
+    color: #1e40af;
+    font-weight: 800;
+  }
 </style>
 </head>
 
@@ -284,9 +294,11 @@ body {
 </div>
   </div>
 
+<section class="owner-only" id="invoiceAdminSection">
 <div class="section-title">Invoice / EFT Payment Requests</div>
 <p style="margin-top:-5px;color:#475569;font-weight:700;">Only activate a dealer after confirming that the payment reflects in the bank account.</p>
 <div id="invoiceRequestList" class="dealer-list"><div class="dealer-row">Loading invoice requests…</div></div>
+</section>
 
 <!-- Dealer Management Sections -->
 
@@ -326,7 +338,7 @@ body {
   Declined Dealers (<span id="declinedDealerCount">0</span>)
 </button>
   <button
-  class="btn btn-blue"
+  class="btn btn-blue owner-only"
   onclick="shuffleVehicles()"
 >
   🔀 Shuffle Vehicles
@@ -346,7 +358,23 @@ const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 
 const client = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-const ADMIN_EMAIL = "autoexcellence@telkomsa.net";
+const OWNER_ADMIN_EMAIL = "autoexcellence@telkomsa.net";
+const STAFF_ADMIN_IDS = new Set([
+  "c2e0121e-e8bd-4846-92d2-695e7679821b", // P&P Auction House
+  "bf6467fc-fd7e-41b0-a499-f20ba5153d00"  // Pieters Cars
+]);
+let currentAdminRole = "NONE";
+
+function isOwnerAdmin() {
+  return currentAdminRole === "OWNER";
+}
+
+function requireOwnerAdmin() {
+  if (isOwnerAdmin()) return true;
+  alert("This action is restricted to the CarScoutZA owner administrator.");
+  return false;
+}
+
 let currentDealerSection = "ACTIVE";
 let dealerLoadRequestId = 0;
 function showDealerSection(status) {
@@ -502,17 +530,36 @@ async function startAdmin() {
     return;
   }
 
+  const userId = String(data.user.id || "").toLowerCase();
   const email = (data.user.email || "").toLowerCase().trim();
 
-  if (email !== ADMIN_EMAIL.toLowerCase()) {
+  if (email === OWNER_ADMIN_EMAIL.toLowerCase()) {
+    currentAdminRole = "OWNER";
+  } else if (STAFF_ADMIN_IDS.has(userId)) {
+    currentAdminRole = "STAFF";
+  } else {
     setStatus("Access denied.");
     return;
   }
 
-  setStatus("Admin access granted.");
-loadStats();
+  document.body.classList.toggle("staff-admin", currentAdminRole === "STAFF");
+  setStatus(
+    currentAdminRole === "OWNER"
+      ? "Owner admin access granted."
+      : "Staff admin access granted — read-only."
+  );
+
+  if (currentAdminRole === "STAFF") {
+    const note = document.createElement("div");
+    note.className = "staff-access-note";
+    note.textContent =
+      "Read-only management access: statistics and dealer status lists are available. Owner actions are hidden.";
+    document.getElementById("status").insertAdjacentElement("afterend", note);
+  }
+
+  loadStats();
   loadTotalVehicles();
-  loadInvoiceRequests();
+  if (isOwnerAdmin()) loadInvoiceRequests();
   loadDealerCounts();
   loadDealers();
 }
@@ -524,6 +571,7 @@ function safeText(value) {
 }
 
 async function viewInvoiceProof(path) {
+  if (!requireOwnerAdmin()) return;
   const { data, error } = await client.storage
     .from("invoice-payment-proofs")
     .createSignedUrl(path, 120);
@@ -535,6 +583,7 @@ async function viewInvoiceProof(path) {
 }
 
 async function activateInvoicePayment(requestId, dealerName) {
+  if (!requireOwnerAdmin()) return;
   const confirmed = confirm(
     "Confirm EFT payment for " + dealerName + "?\n\n" +
     "Only continue if the R2,000 payment reflects in the CarScoutZA bank account. " +
@@ -560,6 +609,7 @@ async function activateInvoicePayment(requestId, dealerName) {
 }
 
 async function loadInvoiceRequests() {
+  if (!requireOwnerAdmin()) return;
   const list = document.getElementById("invoiceRequestList");
   const { data: requests, error } = await client
     .from("invoice_renewal_requests")
@@ -848,7 +898,7 @@ ${currentDealerSection === "DECLINED" ? `
 
       </div>
 
-     <div class="dealer-actions">
+     <div class="dealer-actions owner-only">
 
   ${currentDealerSection === "ACTIVE" ? `
    <button
@@ -913,6 +963,7 @@ if (loadRequestId !== dealerLoadRequestId) return;
 }
 
 async function verifyDealerForPayment(id) {
+  if (!requireOwnerAdmin()) return;
   const { error } = await client
     .from("profiles")
     .update({
@@ -939,6 +990,7 @@ loadDealers();
 }
 
 async function grantPromotional30Days(id) {
+  if (!requireOwnerAdmin()) return;
   const confirmed = confirm(
     "Grant this verified dealer 30 days of free promotional access?\n\n" +
     "Their vehicles will become public immediately and access will expire automatically after 30 days."
@@ -995,6 +1047,7 @@ async function grantPromotional30Days(id) {
   loadDealers();
 }
   async function shuffleVehicles() {
+  if (!requireOwnerAdmin()) return;
   const confirmed = confirm(
     "Shuffle all currently active dealer vehicles?\n\n" +
     "This will randomly mix the normal vehicle order on CarScoutZA."
@@ -1022,6 +1075,7 @@ async function grantPromotional30Days(id) {
   }
 }
 async function declineDealer(id) {
+  if (!requireOwnerAdmin()) return;
   const reason = prompt(
     "Enter the reason for declining this dealer:"
   );
@@ -1062,6 +1116,7 @@ loadDealerCounts();
 loadDealers();
    }
   async function reinstateDealer(id) {
+  if (!requireOwnerAdmin()) return;
   const ok = confirm(
     "Reinstate this dealer as an approved CarScoutZA dealer?"
   );
@@ -1093,6 +1148,7 @@ loadDealers();
   loadDealers();
 }
 async function deactivateDealer(id){
+  if (!requireOwnerAdmin()) return;
 
 const ok = confirm("Deactivate this dealer?");
 if(!ok) return;
@@ -1118,6 +1174,7 @@ loadDealers();
 
 }
 async function deleteDealer(id) {
+  if (!requireOwnerAdmin()) return;
 
 const confirmDelete = confirm(
 "Delete this dealer account and all vehicles? This cannot be undone."
@@ -1152,6 +1209,7 @@ window.location.reload();
 
 }
   async function changeLoginEmail(dealerId) {
+  if (!requireOwnerAdmin()) return;
   const newEmail = prompt(
     "Enter the dealership's new login email address:"
   );
