@@ -75,6 +75,11 @@ body {
   box-shadow:0 3px 10px rgba(0,0,0,0.08);
 }
 .access-notice{background:#eff6ff;border:1px solid #bfdbfe;color:#1e3a8a;border-radius:14px;padding:14px 16px;margin-bottom:16px;font-weight:800;line-height:1.5}
+.access-notice.payment-due{background:#fff7ed;border:2px solid #ea580c;color:#7c2d12;padding:22px;font-size:17px}
+.access-notice.payment-due h2{margin:0 0 10px;font-size:25px}
+.access-notice.payment-due p{margin:8px 0}
+.access-notice.payment-due .payment-cta{display:inline-block;background:#16a34a;color:white;padding:14px 22px;border-radius:10px;text-decoration:none;margin-top:10px;font-weight:900}
+
 
 .share-box {
   background:white;
@@ -667,6 +672,7 @@ function showAdminBlockedScreen() {
 function showAccessNotice(state) {
   const notice = document.getElementById("accessNotice");
   if (!notice) return;
+  notice.classList.toggle("payment-due", state.isApproved && !state.hasCurrentAccess);
   if (state.isPending) {
     notice.textContent = "Your dealership is pending approval. You can upload and edit vehicles now; they will remain hidden until approval and payment.";
   } else if (state.freeActive) {
@@ -674,7 +680,7 @@ function showAccessNotice(state) {
   } else if (state.paidActive) {
     notice.textContent = "Paid dealer access is active until " + new Date(currentProfile.paid_until).toLocaleDateString("en-ZA", {day:"numeric",month:"long",year:"numeric"}) + ".";
   } else if (state.isApproved) {
-    notice.innerHTML = 'Your dealership is verified, but payment is required before vehicles can go live. <a href="payment.html" style="font-weight:900;color:inherit;">Pay R2,000 for 30 days</a>.';
+    notice.innerHTML = '<h2>Your dealership has been approved!</h2><p>Your uploaded vehicles are <strong>NOT LIVE</strong> until your membership is paid and verified.</p><p><strong>0 vehicles live — payment required.</strong> Activate your 30-day membership for R2,000 to advertise up to 40 vehicles.</p><a class="payment-cta" href="payment.html">Pay R2,000 – Activate My Vehicles</a><p style="font-size:13px">You can also request an invoice or EFT payment on the payment page.</p>';
   } else {
     notice.hidden = true;
     return;
@@ -1059,7 +1065,41 @@ async function refreshVehicle(vehicleId) {
   window.location.reload();
 }
 
-startDashboard();
+// Keep approval and membership status fresh even if the dealer stays signed in.
+let accessCheckBusy = false;
+let lastAccessSignature = null;
+function accessSignature(profile) {
+  return [profile.approval_status, profile.dealer_verified, profile.admin_blocked,
+    profile.paid_until, profile.admin_free_until].join("|");
+}
+async function checkDealerAccess() {
+  if (accessCheckBusy || !currentUser || document.hidden) return;
+  if ((currentUser.email || "").toLowerCase().trim() === MAIN_ADMIN_EMAIL.toLowerCase()) return;
+  accessCheckBusy = true;
+  try {
+    const {data, error} = await client.from("profiles")
+      .select("approval_status,dealer_verified,admin_blocked,paid_until,admin_free_until")
+      .eq("id", currentUser.id).single();
+    if (error || !data) return;
+    const signature = accessSignature(data);
+    if (lastAccessSignature === null) {
+      lastAccessSignature = signature;
+    } else if (signature !== lastAccessSignature) {
+      // Reload the dashboard to show the newly approved/payment-required state.
+      window.location.reload();
+    }
+  } finally {
+    accessCheckBusy = false;
+  }
+}
+startDashboard().then(() => {
+  if (currentProfile) lastAccessSignature = accessSignature(currentProfile);
+});
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden) checkDealerAccess();
+});
+window.addEventListener("focus", checkDealerAccess);
+setInterval(checkDealerAccess, 30000);
 </script>
 </body>
 </html>
