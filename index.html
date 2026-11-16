@@ -1832,7 +1832,7 @@ onclick="event.stopPropagation(); shareVehicleWhatsApp('${v.id}', '${title.repla
           <img
             src="${img}"
             loading="lazy"
-            onclick="window.location.href='details.html?id=${v.id}'"
+            onclick="window.location.href='details.html?id=${v.id}&amp;return=' + encodeURIComponent(window.location.pathname + window.location.search + window.location.hash)"
             onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'"
           >
 
