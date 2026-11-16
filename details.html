@@ -645,7 +645,21 @@ color: #315bd4;
 
 <div class="container">
   <div class="top-actions">
-    <a href="index.html" class="top-btn">Back to Website</a>
+    <a href="index.html" class="top-btn" id="backToResults">Back to Search Results</a>
+    <script>
+      // Only allow local search-results paths to prevent an open redirect.
+      (function () {
+        const raw = new URLSearchParams(window.location.search).get("return");
+        if (!raw) return;
+        try {
+          const destination = new URL(raw, window.location.origin);
+          if (destination.origin !== window.location.origin ||
+              !/\/(?:index\.html)?$/.test(destination.pathname)) return;
+          document.getElementById("backToResults").href =
+            destination.pathname + destination.search + destination.hash;
+        } catch (_) {}
+      })();
+    </script>
     <a href="dealer-admin.html" class="top-btn blue">Dealer Login</a>
   </div>
 
