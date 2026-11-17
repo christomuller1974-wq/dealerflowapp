@@ -680,7 +680,7 @@ function showAccessNotice(state) {
   } else if (state.paidActive) {
     notice.textContent = "Paid dealer access is active until " + new Date(currentProfile.paid_until).toLocaleDateString("en-ZA", {day:"numeric",month:"long",year:"numeric"}) + ".";
   } else if (state.isApproved) {
-    notice.innerHTML = '<h2>Your dealership has been approved!</h2><p>Your uploaded vehicles are <strong>NOT LIVE</strong> until your membership is paid and verified.</p><p><strong>0 vehicles live — payment required.</strong> Activate your 30-day membership for R2,000 to advertise up to 40 vehicles.</p><a class="payment-cta" href="payment.html">Pay R2,000 – Activate My Vehicles</a><p style="font-size:13px">You can also request an invoice or EFT payment on the payment page.</p>';
+    notice.innerHTML = '<h2>Your dealership has been approved!</h2><p>Your uploaded vehicles are <strong>NOT LIVE</strong> until your membership is paid and verified.</p><p><strong>0 vehicles live — payment required.</strong> Activate your 30-day membership for R2,000 to advertise up to 40 vehicles.</p><p style="margin-top:16px"><strong>Choose how you would like to pay:</strong></p><a class="payment-cta" href="payment.html">View Payment Options – PayFast or EFT</a><p><a class="payment-cta" style="background:#3156c7" href="invoice-request.html">Request Invoice / Pay by EFT</a></p><p style="font-size:13px">PayFast, invoice requests and EFT payment options are available. Your vehicles go live after payment is verified.</p>';
   } else {
     notice.hidden = true;
     return;
