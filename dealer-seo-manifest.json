@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-11-16T09:48:30.021Z",
-  "eligibleDealerCount": 29,
-  "pageCount": 29,
-  "sitemapUrlCount": 29,
+  "generatedAt": "2026-11-17T10:46:01.238Z",
+  "eligibleDealerCount": 34,
+  "pageCount": 34,
+  "sitemapUrlCount": 34,
   "dealers": [
     {
       "id": "66305301-95b3-4b71-8f32-8779a0688b92",
@@ -37,6 +37,30 @@
       "stockCount": 19
     },
     {
+      "id": "ce38574f-91fa-4d7a-9a57-4b73bd5d6308",
+      "name": "NF Auto PTY Ltd",
+      "town": "Bloemfontein",
+      "province": "Free State",
+      "file": "nf-auto-pty-ltd-bloemfontein.html",
+      "stockCount": 21
+    },
+    {
+      "id": "6aa2d385-1072-41d2-b82c-e18f55082d4e",
+      "name": "Volschenk Motors",
+      "town": "Bloemfontein",
+      "province": "Free State",
+      "file": "volschenk-motors-bloemfontein.html",
+      "stockCount": 40
+    },
+    {
+      "id": "8f5ef106-4b03-485e-9b88-8cbcb9908c4f",
+      "name": "Zijlstra's Autohaus",
+      "town": "Bloemfontein",
+      "province": "Free State",
+      "file": "zijlstra-s-autohaus-bloemfontein.html",
+      "stockCount": 26
+    },
+    {
       "id": "bed37d5a-3660-45e6-8094-192066d80b93",
       "name": "Auto Star Welkom",
       "town": "Welkom",
@@ -55,9 +79,9 @@
     {
       "id": "c2e0121e-e8bd-4846-92d2-695e7679821b",
       "name": "P&P Auction House",
-      "town": "Cullinan",
+      "town": "Cullinun",
       "province": "Gauteng",
-      "file": "pandp-auction-house-cullinan.html",
+      "file": "pandp-auction-house-cullinun.html",
       "stockCount": 7
     },
     {
@@ -66,7 +90,15 @@
       "town": "Pretoria",
       "province": "Gauteng",
       "file": "cmh-mazda-foton-hatfield-pretoria.html",
-      "stockCount": 36
+      "stockCount": 40
+    },
+    {
+      "id": "1ad1b46a-6f25-407a-88b3-e6146b1434a6",
+      "name": "Krubach auto",
+      "town": "Pretoria",
+      "province": "Gauteng",
+      "file": "krubach-auto-pretoria.html",
+      "stockCount": 3
     },
     {
       "id": "bf6467fc-fd7e-41b0-a499-f20ba5153d00",
@@ -163,6 +195,14 @@
       "province": "Northern Cape",
       "file": "car-bakkie-city-kimberley.html",
       "stockCount": 38
+    },
+    {
+      "id": "d3ff4ad8-acf1-44f7-8c2b-76579d2e5a87",
+      "name": "Human Auto Kimberley",
+      "town": "Kimberley",
+      "province": "Northern Cape",
+      "file": "human-auto-kimberley.html",
+      "stockCount": 40
     },
     {
       "id": "9d74605f-9867-47b1-b2ee-fb443e339ffd",
