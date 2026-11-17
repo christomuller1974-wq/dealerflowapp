@@ -294,12 +294,6 @@ body {
 </div>
   </div>
 
-<section class="owner-only" id="invoiceAdminSection">
-<div class="section-title">Invoice / EFT Payment Requests</div>
-<p style="margin-top:-5px;color:#475569;font-weight:700;">Only activate a dealer after confirming that the payment reflects in the bank account.</p>
-<div id="invoiceRequestList" class="dealer-list"><div class="dealer-row">Loading invoice requests…</div></div>
-</section>
-
 <!-- Dealer Management Sections -->
 
 <div class="section-title">Dealer Management</div>
@@ -343,6 +337,7 @@ body {
 >
   🔀 Shuffle Vehicles
 </button>
+ <a class="btn btn-blue owner-only" href="admin-invoice-eft.html" style="display:inline-flex;align-items:center;text-decoration:none;">📄 Invoice / EFT Requests</a>
 </div>
 
 
@@ -559,7 +554,6 @@ async function startAdmin() {
 
   loadStats();
   loadTotalVehicles();
-  if (isOwnerAdmin()) loadInvoiceRequests();
   loadDealerCounts();
   loadDealers();
 }
