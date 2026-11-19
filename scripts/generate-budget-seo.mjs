@@ -8,10 +8,10 @@ const specs=[
  {file:'used-suvs-under-r350000.html',label:'Used SUVs Under R350,000',kind:'suv',max:350000}
 ];
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const amount=v=>{const s=String(v??'').replace(/[^0-9]/g,'');return s?Number(s):NaN};
+const amount=v=>{const s=String(v??'').trim().replace(/[^0-9.,]/g,'');if(!s)return NaN;const n=Number(s.replace(/[.,](?=\\d{3}(?:\\D|$))/g,'').replace(',','.'));return Number.isFinite(n)?n:NaN};
 const title=v=>[v.year,v.make,v.model,v.variant].filter(Boolean).join(' ')||v.title||'Used vehicle';
 const bak=/hilux|ranger|d-?max|amarok|np200|navara|triton|pik.?up|bt-50|t60|t90|tunland|p.?series|land cruiser 7[0-9]|colt|rodeo|mahindra scorpio pik/i;
-const suv=/fortuner|everest|tucson|sportage|jolion|h6|duster|creta|tiguan|rav4|cx-5|kuga|ecosport|vitara|territory|seltos|corolla cross|qashqai|x-trail|pajero|outlander|hr-v|cr-v|br-v|captur|kicks|santa fe|sorento|grand vitara|kwid|jimny|glc|x1|x3|x5|q3|q5|q7|tiggo|proton x|haval h|land rover|discovery|defender|wrangler|compass|renegade|rush|urban cruiser|fronx/i;
+const suv=/fortuner|everest|tucson|sportage|jolion|h6|duster|creta|tiguan|rav4|cx-5|kuga|ecosport|vitara|territory|seltos|corolla cross|qashqai|x-trail|pajero|outlander|hr-v|cr-v|br-v|captur|kicks|santa fe|sorento|grand vitara|jimny|glc|x1|x3|x5|q3|q5|q7|tiggo|proton x|haval h|land rover|discovery|defender|wrangler|compass|renegade|rush|urban cruiser|fronx/i;
 const other=/motorcycle|bike|quad|trailer|caravan|jet ski|boat|tractor|scooter|atv/i;
 function kind(v){const s=[v.make,v.model,v.variant,v.title].filter(Boolean).join(' ');if(other.test(s))return 'other';if(bak.test(s))return 'bakkie';if(suv.test(s))return 'suv';return 'car'}
 const headers={apikey:KEY,Authorization:'Bearer '+KEY};
