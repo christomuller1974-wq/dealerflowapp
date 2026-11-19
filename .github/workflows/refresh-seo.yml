@@ -19,6 +19,7 @@ jobs:
           node-version: '22'
       - run: node scripts/generate-seo-hubs.mjs
       - run: node scripts/generate-dealer-seo.mjs
+      - run: node scripts/generate-budget-seo.mjs
       - run: node scripts/update-sitemap.mjs
       - name: Commit only meaningful changes
         run: |
