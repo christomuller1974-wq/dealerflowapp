@@ -650,7 +650,8 @@ function initDerivativeSelector(){
   const category=listing.value;
   const m=(make.value==="__other__"?makeOther.value:make.value).trim();
   const n=(model.value==="__other__"?modelOther.value:model.value).trim();
-  const catalog=derivativeSuggestions[m]||{};
+  const matchedMake=Object.keys(derivativeSuggestions).find(k=>k.toLowerCase()===m.toLowerCase());
+  const catalog=derivativeSuggestions[matchedMake]||{};
   const modelKey=Object.keys(catalog).find(k=>k.toLowerCase()===n.toLowerCase());
   let variants=modelKey?catalog[modelKey]:[];
   if(category==="motorcycle_leisure"){
