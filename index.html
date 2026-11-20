@@ -1145,7 +1145,9 @@ function initHomepageMakeModelSearch() {
   const derivativeSelect=document.getElementById("derivativeSearch");
   function updateDerivatives(){
     const make=makeSelect.value, model=modelSelect.value;
-    const catalogue=(window.CARSCOUT_DERIVATIVES||{})[make]||{};
+    const allDerivatives=window.CARSCOUT_DERIVATIVES||{};
+    const matchedMake=Object.keys(allDerivatives).find(k=>k.toLowerCase()===make.toLowerCase());
+    const catalogue=allDerivatives[matchedMake]||{};
     const key=Object.keys(catalogue).find(k=>k.toLowerCase()===model.toLowerCase());
     const values=key?catalogue[key]:[];
     derivativeSelect.replaceChildren(new Option("All Derivatives",""));
@@ -1552,7 +1554,7 @@ if (
   return false;
 }
 
-if(selectedDerivative && vehicleDerivative!==selectedDerivative) return false;
+if(selectedDerivative && vehicleDerivative!==selectedDerivative && !vehicleDerivative.startsWith(selectedDerivative+" ")) return false;
 
 if (
   selectedModel &&
