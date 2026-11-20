@@ -30,6 +30,19 @@ jobs:
             test -s "$page" || { echo "Missing generated page: $page"; exit 1; }
             grep -Fq "https://carscoutza.com/$page" sitemap.xml || { echo "Missing sitemap URL: $page"; exit 1; }
           done
+      - name: Validate eight town pages and sitemap
+        run: |
+          for town in bloemfontein kimberley klerksdorp pretoria kuruman upington welkom potchefstroom; do
+            page="used-cars-for-sale-$town.html"
+            test -s "$page" || { echo "Missing town page: $page"; exit 1; }
+            grep -Fq "https://carscoutza.com/$page" sitemap.xml || { echo "Missing town sitemap URL: $page"; exit 1; }
+          done
+      - name: Validate homepage discovery links
+        run: |
+          grep -Fq 'CARSCOUTZA_SEO_DISCOVERY_LINKS' index.html || { echo 'Missing homepage SEO links'; exit 1; }
+          for page in used-cars-under-r200000.html used-cars-for-sale-bloemfontein.html used-vw-polo-vivo-for-sale.html car-buying-guides.html; do
+            grep -Fq "href=\"$page\"" index.html || { echo "Missing homepage link: $page"; exit 1; }
+          done
       - name: Validate vehicle-specific pages and sitemap
         run: |
           for page in used-vw-polo-vivo-for-sale.html used-toyota-hilux-double-cab-for-sale.html used-ford-ranger-supercab-for-sale.html; do
