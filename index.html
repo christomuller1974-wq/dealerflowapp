@@ -862,6 +862,7 @@ display:flex;
 }
 </style>
   <script src="vehicle-data.js"></script>
+<script src="vehicle-derivatives.js"></script>
   <script src="listing-classification.js"></script>
 </head>
 
@@ -928,6 +929,7 @@ display:flex;
 <select id="modelSearch" disabled>
   <option value="">Select make first</option>
 </select>
+<select id="derivativeSearch" disabled aria-label="Filter by derivative"><option value="">All Derivatives</option></select>
   <input id="search" placeholder="Keyword e.g. 2.8, 4x4 or dealer">
 
   <button class="search-btn" onclick="searchCars()">
@@ -1140,6 +1142,19 @@ function initHomepageMakeModelSearch() {
     makeSelect.appendChild(option);
   });
 
+  const derivativeSelect=document.getElementById("derivativeSearch");
+  function updateDerivatives(){
+    const make=makeSelect.value, model=modelSelect.value;
+    const catalogue=(window.CARSCOUT_DERIVATIVES||{})[make]||{};
+    const key=Object.keys(catalogue).find(k=>k.toLowerCase()===model.toLowerCase());
+    const values=key?catalogue[key]:[];
+    derivativeSelect.replaceChildren(new Option("All Derivatives",""));
+    values.forEach(v=>derivativeSelect.add(new Option(v,v)));
+    derivativeSelect.disabled=!values.length;
+  }
+  modelSelect.addEventListener("change",updateDerivatives);
+  makeSelect.addEventListener("change",()=>{derivativeSelect.replaceChildren(new Option("All Derivatives",""));derivativeSelect.disabled=true;});
+  listingTypeSelect.addEventListener("change",()=>{derivativeSelect.replaceChildren(new Option("All Derivatives",""));derivativeSelect.disabled=true;});
   makeSelect.addEventListener("change", () => {
     const selectedMake = makeSelect.value;
 
@@ -1239,6 +1254,7 @@ const make =
 
 const model =
   document.getElementById("modelSearch").value;
+const derivative = document.getElementById("derivativeSearch").value;
 const search = document.getElementById("search").value.trim();
 const min = document.getElementById("min").value.trim();
 const max = document.getElementById("max").value.trim();
@@ -1257,6 +1273,7 @@ if(make) {
 if(model) {
   params.set("model", model);
 }
+if(derivative) params.set("derivative", derivative);
 if(search) params.set("search", search);
   if(minYear) params.set("minYear", minYear);
 if(maxYear) params.set("maxYear", maxYear);
@@ -1448,6 +1465,8 @@ if (
   makeSelect.value = makeFromUrl;
   makeSelect.dispatchEvent(new Event("change"));
   modelSelect.value = modelFromUrl;
+  modelSelect.dispatchEvent(new Event("change"));
+  document.getElementById("derivativeSearch").value=params.get("derivative")||"";
 }
 document.getElementById("search").value =
 params.get("search") || document.getElementById("search").value;
@@ -1516,6 +1535,8 @@ const vehicleMake =
 
 const vehicleModel =
   String(v.model || "").toLowerCase().trim();
+const selectedDerivative=(params.get("derivative")||"").toLowerCase().trim();
+const vehicleDerivative=String(v.variant||"").toLowerCase().trim();
 
 if (
   selectedListingType &&
@@ -1530,6 +1551,8 @@ if (
 ) {
   return false;
 }
+
+if(selectedDerivative && vehicleDerivative!==selectedDerivative) return false;
 
 if (
   selectedModel &&
