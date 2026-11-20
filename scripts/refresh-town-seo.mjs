@@ -3,7 +3,7 @@ const SUPA='https://ddmvzypiccryjndcwlre.supabase.co';
 const KEY='sb_publishable_D7saHOTE_JhSlMnSgBnIhQ_mOAOUD9s';
 const towns=['Bloemfontein','Kimberley','Klerksdorp','Pretoria','Kuruman','Upington','Welkom','Potchefstroom'];
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const norm=s=>String(s??'').trim().toLowerCase().replace(/\\s+/g,' ');
+const norm=s=>String(s??'').trim().toLowerCase().replace(/\s+/g,' ');
 const slug=s=>norm(s).replace(/[^a-z0-9]+/g,'-');
 const money=v=>{const n=Number(String(v??'').replace(/[^0-9]/g,''));return n>0?'R'+n.toLocaleString('en-ZA'):'Price on request'};
 const image=v=>v.image||(Array.isArray(v.images)?v.images[0]:String(v.images||'').split(',')[0]);
