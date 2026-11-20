@@ -21,6 +21,12 @@ jobs:
       - run: node scripts/generate-dealer-seo.mjs
       - run: node scripts/generate-budget-seo.mjs
       - run: node scripts/update-sitemap.mjs
+      - name: Validate five budget pages and sitemap
+        run: |
+          for page in used-cars-under-r150000.html used-cars-under-r200000.html used-cars-under-r300000.html used-bakkies-under-r300000.html used-suvs-under-r350000.html; do
+            test -s "$page" || { echo "Missing generated page: $page"; exit 1; }
+            grep -Fq "https://carscoutza.com/$page" sitemap.xml || { echo "Missing sitemap URL: $page"; exit 1; }
+          done
       - name: Commit only meaningful changes
         run: |
           git config user.name "github-actions[bot]"
