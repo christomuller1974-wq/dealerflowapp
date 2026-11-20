@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-19T10:25:01.423Z",
+  "generatedAt": "2026-11-20T07:23:18.313Z",
   "eligibleDealerCount": 36,
   "pageCount": 36,
   "sitemapUrlCount": 36,
@@ -98,7 +98,7 @@
       "town": "Pretoria",
       "province": "Gauteng",
       "file": "cmh-honda-foton-mitsubishi-menlyn-pretoria.html",
-      "stockCount": 14
+      "stockCount": 15
     },
     {
       "id": "195707d1-1b00-4c1d-8b2f-66ac7dce668a",
@@ -274,7 +274,7 @@
       "town": "Kuruman",
       "province": "Northern Cape",
       "file": "rupping-dealers-kuruman.html",
-      "stockCount": 28
+      "stockCount": 29
     },
     {
       "id": "5674f6e8-7541-4e82-ba4e-6503ffe10a0f",
