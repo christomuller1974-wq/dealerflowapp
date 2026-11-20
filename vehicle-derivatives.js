@@ -12,3 +12,19 @@ window.CARSCOUT_DERIVATIVES = {
 "BMW":{"1 Series":["116i","118i","120i","125i","128ti","M135i","116d","118d","120d","125d"],"2 Series":["218i","220i","220d","225i","228i","230i","M235i","M240i"],"3 Series":["318i","320i","320d","325i","328i","330i","330d","335i","340i","M340i","M3"],"4 Series":["420i","420d","430i","430d","435i","440i","M440i","M4"],"5 Series":["520i","520d","523i","525d","530i","530d","535i","540i","M550i","M5"],"X1":["sDrive18i","sDrive18d","sDrive20i","xDrive20d","xDrive25i"],"X2":["sDrive18i","sDrive20i","xDrive20d","M35i"],"X3":["sDrive18d","xDrive20d","xDrive30d","xDrive30i","M40i","X3 M"],"X5":["xDrive30d","xDrive40d","xDrive40i","xDrive45e","M50d","X5 M"]},
 "Mercedes-Benz":{"C-Class":["C180","C200","C220d","C300"],"GLC":["GLC 220d","GLC 300d"]}
 };
+
+// Suzuki variants commonly encountered in South African used stock.
+// Dealers can always retain or type a more precise specification.
+window.CARSCOUT_DERIVATIVES["Suzuki"] = {
+  "Swift":["1.2 GA","1.2 GL","1.2 GL+","1.2 GLX","1.4 GLS","1.4 GLX","1.4 Sport","1.6 Sport"],
+  "Dzire":["1.2 GA","1.2 GL","1.2 GL+","1.2 GLX"],
+  "Baleno":["1.4 GL","1.4 GLX","1.5 GL","1.5 GLX"],
+  "Vitara":["1.6 GL","1.6 GL+","1.6 GLX","1.4T GLX"],
+  "Jimny":["1.3","1.5 GA","1.5 GL","1.5 GLX"],
+  "S-Presso":["1.0 GL","1.0 GL+","1.0 S-Edition"],
+  "Ertiga":["1.5 GA","1.5 GL","1.5 GLX"],
+  "Celerio":["1.0 GA","1.0 GL"],
+  "Ignis":["1.2 GL","1.2 GLX"],
+  "Fronx":["1.5 GL","1.5 GLX"],
+  "Grand Vitara":["1.5 GL","1.5 GLX"]
+};
