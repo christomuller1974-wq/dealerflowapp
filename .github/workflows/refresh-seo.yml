@@ -22,6 +22,7 @@ jobs:
       - run: node scripts/generate-budget-seo.mjs
       - run: node scripts/refresh-town-seo.mjs
       - run: node scripts/generate-variant-seo.mjs
+      - run: node scripts/generate-phase4-guides.mjs
       - run: node scripts/update-sitemap.mjs
       - name: Validate five budget pages and sitemap
         run: |
@@ -35,6 +36,13 @@ jobs:
             test -s "$page" || { echo "Missing variant page: $page"; exit 1; }
             grep -Fq "https://carscoutza.com/$page" sitemap.xml || { echo "Missing variant sitemap URL: $page"; exit 1; }
           done
+      - name: Validate Phase 4 buying guides and sitemap
+        run: |
+          for page in toyota-hilux-vs-ford-ranger-used-bakkie-guide.html buying-a-used-car-under-r200000-south-africa.html double-cab-vs-supercab-south-africa.html used-car-inspection-checklist.html; do
+            test -s "$page" || { echo "Missing buying guide: $page"; exit 1; }
+            grep -Fq "https://carscoutza.com/$page" sitemap.xml || { echo "Missing guide sitemap URL: $page"; exit 1; }
+          done
+          grep -Fq 'PHASE4_GUIDES_START' car-buying-guides.html
       - name: Commit only meaningful changes
         run: |
           git config user.name "github-actions[bot]"
