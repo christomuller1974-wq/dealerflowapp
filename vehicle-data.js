@@ -204,3 +204,55 @@ window.CARSCOUT_VEHICLE_DATA = {
     "XC40", "XC60", "XC90"
   ]
 };
+
+// South African market expansion (November 2026): additional makes and model lines.
+// Includes both currently marketed and commonly traded used models; dealers can use Other.
+const CARSCOUT_SA_MODEL_ADDITIONS = {
+ "Alfa Romeo":["Giulia","Stelvio","Giulietta","MiTo","Tonale"],
+ "Ashok Leyland":["Dost","Partner"],
+ "Bentley":["Bentayga","Continental GT","Flying Spur"],
+ "Changan":["Alsvin","CS35 Plus","CS55 Plus","Hunter","Deepal S07"],
+ "Chevrolet":["Aveo","Captiva","Cruze","Optra","Spark","Trailblazer","Utility","Lumina"],
+ "DFSK":["C31","C32","Glory 580"],
+ "Dongfeng":["Box","Shine","Mage"],
+ "FAW":["V2","V5","Tiger V","J5"],
+ "Farizon":["SV"],
+ "Ferrari":["296","488","F8","Roma","Purosangue"],
+ "Geely":["Coolray","EX5","Starray"],
+ "iCaur":["03"],
+ "Ineos":["Grenadier","Quartermaster"],
+ "JMC":["Vigus","Carrying"],
+ "LDV":["T60","T60 Max","D90","Deliver 9"],
+ "Leapmotor":["T03","C10"],
+ "Lepas":["L8"],
+ "Maserati":["Ghibli","Grecale","Levante","Quattroporte"],
+ "Maxus":["T90","eDeliver 3","eDeliver 9"],
+ "Mercedes-AMG":["A 35","A 45","C 43","C 63","GLA 35","GLC 43","G 63","GT"],
+ "Mercedes-Maybach":["S-Class","GLS"],
+ "Proton":["Saga","X50","X70","X90"],
+ "Tata":["Indica","Indigo","Bolt","Tiago","Punch","Nexon","Curvv","Harrier","Safari","Xenon"],
+ "Tank":["300","500"],
+ "Haval":["Jolion Pro","H7"],
+ "GWM":["P300","P500","Tank 300","Tank 500","Ora 03"],
+ "Ford":["Puma","Transit","Tourneo Custom"],
+ "Kia":["Tasman","Seltos","Sonet","Sportage","Sorento","Carnival","EV3","EV5","EV6"],
+ "Toyota":["Starlet Cross","Corolla Cross","Land Cruiser Prado","Land Cruiser 70","Land Cruiser 300","Rumion"],
+ "Volkswagen":["Tayron","Polo Sedan","ID.4"],
+ "Suzuki":["Fronx","Grand Vitara","XL6","Eeco","Dzire"],
+ "Mahindra":["XUV 3XO","Scorpio-N","XUV700","Bolero"],
+ "Mitsubishi":["Triton","Outlander","Xpander"],
+ "Nissan":["Magnite","X-Trail","Patrol"],
+ "Renault":["Kiger","Triber","Kwid","Duster"],
+ "Hyundai":["i10","Ioniq 5","Ioniq 6"],
+ "JAC":["T6","T8","T9","N-Series"],
+ "Omoda":["C5","C7","C9"],
+ "Jaecoo":["J5","J7","J8"],
+ "Jetour":["Dashing","T1","T2","X70 Plus"],
+ "BYD":["Atto 2","Atto 2 DM-i","Atto 3","Seal","Sealion 6","Shark 6"]
+};
+for (const [make,models] of Object.entries(CARSCOUT_SA_MODEL_ADDITIONS)) {
+  const existingKey=Object.keys(window.CARSCOUT_VEHICLE_DATA).find(k=>k.toLowerCase()===make.toLowerCase());
+  const key=existingKey||make;
+  const existing=window.CARSCOUT_VEHICLE_DATA[key]||[];
+  window.CARSCOUT_VEHICLE_DATA[key]=[...new Set([...existing,...models])].sort((a,b)=>a.localeCompare(b));
+}
