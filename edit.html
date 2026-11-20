@@ -7,6 +7,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="dealer-access.js"></script>
 <script src="vehicle-data.js"></script>
+<script src="vehicle-derivatives.js"></script>
 <script src="listing-classification.js"></script>
   <style>
     * {
@@ -409,11 +410,10 @@
 </div>
 
 <div class="field">
-  <label for="variant">Variant / Derivative</label>
-  <input
-    id="variant"
-    placeholder="e.g. 2.8 GD-6 4x4 Auto Double Cab"
-  >
+  <label for="variantChoice">Variant / Derivative</label>
+  <select id="variantChoice" aria-label="Select vehicle derivative"><option value="__manual__">Other / Enter derivative manually</option></select>
+  <input id="variant" placeholder="Enter derivative if not listed" style="margin-top:8px">
+  <small style="display:block;margin-top:6px;color:#475569">Choose a derivative or enter it manually. Existing values are preserved.</small>
 </div>
 
       <div class="two-col">
@@ -1094,6 +1094,37 @@ function setMakeModelValues(
 }
 
 initMakeModelDropdowns();
+function initEditDerivativeSelector(){
+ const choice=document.getElementById("variantChoice");
+ const input=document.getElementById("variant");
+ const make=document.getElementById("make"),model=document.getElementById("model");
+ const listing=document.getElementById("listingType");
+ const makeOther=document.getElementById("makeOther"),modelOther=document.getElementById("modelOther");
+ function refresh(){
+  const m=(make.value==="__other__"?makeOther.value:make.value).trim();
+  const n=(model.value==="__other__"?modelOther.value:model.value).trim();
+  const catalog=(window.CARSCOUT_DERIVATIVES||{});
+  const makeKey=Object.keys(catalog).find(k=>k.toLowerCase()===m.toLowerCase());
+  const models=catalog[makeKey]||{};
+  const modelKey=Object.keys(models).find(k=>k.toLowerCase()===n.toLowerCase());
+  const variants=modelKey?models[modelKey]:[];
+  const saved=input.value.trim();
+  choice.replaceChildren(new Option("Other / Enter derivative manually","__manual__"));
+  variants.forEach(v=>choice.add(new Option(v,v)));
+  if(saved && variants.includes(saved)){choice.value=saved;input.style.display="none";}
+  else {choice.value="__manual__";input.style.display="block";}
+ }
+ choice.addEventListener("change",()=>{
+  if(choice.value==="__manual__"){input.style.display="block";input.focus();}
+  else {input.value=choice.value;input.style.display="none";}
+ });
+ [make,model,listing].forEach(el=>el.addEventListener("change",()=>{input.value="";refresh();}));
+ [makeOther,modelOther].forEach(el=>el.addEventListener("change",refresh));
+ window.refreshEditDerivativeSelector=refresh;
+ refresh();
+}
+initEditDerivativeSelector();
+
     function classifyExistingListingType(vehicle) {
       return window.CarScoutListingClassification.classify(vehicle);
     }
@@ -1157,6 +1188,7 @@ if (savedListingType === "motorcycle_leisure" || savedListingType === "classic_c
     data.variant
   );
 }
+      window.refreshEditDerivativeSelector?.();
       if (savedListingType === "classic_car") {
         document.getElementById("yearOther").value = data.year || "";
       } else {
