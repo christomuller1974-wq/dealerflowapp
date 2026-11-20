@@ -642,24 +642,59 @@ const derivativeSuggestions = {
 "BMW":{"3 Series":["318i","320i","320d","330i","330d"],"X3":["sDrive18d","xDrive20d","xDrive30d"]},
 "Mercedes-Benz":{"C-Class":["C180","C200","C220d","C300"],"GLC":["GLC 220d","GLC 300d"]}
 };
+// Derivatives are optional suggestions, never a restriction on dealer stock.
+const leisureDerivativeSuggestions = {
+ motorcycle:["Standard","Sport","Touring","Adventure","Cruiser","Scooter","Off-road / Enduro","Motocross","Quad Bike / ATV"],
+ caravan:["Standard Caravan","Off-road Caravan","Pop-top Caravan","Luxury Caravan","Camping Trailer","Off-road Trailer"],
+ trailer:["Utility Trailer","Luggage Trailer","Car Trailer","Bike Trailer","Camping Trailer","Off-road Trailer"],
+ boat:["Fishing Boat","Ski Boat","Bowrider","Jet Ski / Personal Watercraft"],
+ general:["Standard","Sport","Touring","Adventure","Off-road","Luxury","Base Model"]
+};
 function initDerivativeSelector(){
  const select=document.getElementById("variantChoice"), field=document.getElementById("variant");
- const make=document.getElementById("make"),model=document.getElementById("model");
- function update(){
-  const m=make.value, n=model.value, catalog=derivativeSuggestions[m]||{};
-  const key=Object.keys(catalog).find(k=>k.toLowerCase()===n.toLowerCase());
-  const variants=key?catalog[key]:[];
+ const make=document.getElementById("make"), model=document.getElementById("model");
+ const listing=document.getElementById("listingType");
+ const makeOther=document.getElementById("makeOther"), modelOther=document.getElementById("modelOther");
+ function option(value,label){const o=document.createElement("option");o.value=value;o.textContent=label;select.appendChild(o)}
+ function refresh(){
+  const category=listing.value;
+  const m=(make.value==="__other__"?makeOther.value:make.value).trim();
+  const n=(model.value==="__other__"?modelOther.value:model.value).trim();
+  const catalog=derivativeSuggestions[m]||{};
+  const modelKey=Object.keys(catalog).find(k=>k.toLowerCase()===n.toLowerCase());
+  let variants=modelKey?catalog[modelKey]:[];
+  if(category==="motorcycle_leisure"){
+   const combined=(m+" "+n).toLowerCase();
+   const kind=/caravan|sprite|jurgens|gypsey|camping|pop.top/.test(combined)?"caravan":
+    /trailer|venter|echo|conqueror/.test(combined)?"trailer":
+    /boat|jetski|jet ski|yamaha wave|sea.doo/.test(combined)?"boat":
+    /motorcycle|motorbike|bike|honda|kawasaki|suzuki|ktm|ducati|harley|bmw|triumph|royal enfield/.test(combined)?"motorcycle":"general";
+   variants=leisureDerivativeSuggestions[kind];
+  }
+  if(category==="classic_car") variants=[]; // Historical specifications are too varied to assume.
+  const previous=field.value.trim();
   select.replaceChildren();
-  function option(value,label){const o=document.createElement("option");o.value=value;o.textContent=label;select.appendChild(o)}
   option("__other__","Other / Enter derivative manually");
   option("","Select derivative");
-  variants.forEach(v=>option(v,v));
-  select.value=variants.length?"":"__other__";
-  field.value="";field.style.display=variants.length?"none":"block";
+  [...new Set(variants)].forEach(v=>option(v,v));
+  if(previous && variants.includes(previous)){
+   select.value=previous;field.value=previous;field.style.display="none";
+  }else{
+   select.value="__other__";field.value=previous;field.style.display="block";
+  }
+  field.placeholder=category==="classic_car"?"Enter original engine, trim or historical derivative":
+    category==="motorcycle_leisure"?"Enter motorcycle, caravan or leisure derivative":
+    "Enter derivative, e.g. 2.8 GD-6 4x4 Auto Double Cab";
  }
- select.addEventListener("change",()=>{const other=select.value==="__other__";field.style.display=other?"block":"none";field.value=other?"":select.value;if(other)field.focus()});
- [make,model,document.getElementById("listingType")].forEach(el=>el.addEventListener("change",update));
- update();
+ select.addEventListener("change",()=>{
+  const custom=select.value==="__other__";
+  field.style.display=custom?"block":"none";
+  field.value=custom?field.value.trim():select.value;
+  if(custom)field.focus();
+ });
+ [make,model,listing].forEach(el=>el.addEventListener("change",refresh));
+ [makeOther,modelOther].forEach(el=>el.addEventListener("change",refresh));
+ refresh();
 }
 initDerivativeSelector();
 
