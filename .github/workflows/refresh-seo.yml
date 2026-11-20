@@ -20,6 +20,7 @@ jobs:
       - run: node scripts/generate-seo-hubs.mjs
       - run: node scripts/generate-dealer-seo.mjs
       - run: node scripts/generate-budget-seo.mjs
+      - run: node scripts/refresh-town-seo.mjs
       - run: node scripts/update-sitemap.mjs
       - name: Validate five budget pages and sitemap
         run: |
