@@ -19,9 +19,11 @@ for(const town of towns){
  if(!fs.existsSync(file))throw Error('Existing town page missing: '+file);
  const html=fs.readFileSync(file,'utf8');
  const rows=stock.filter(v=>norm(byId.get(String(v.user_id))?.town)===norm(town)).sort((a,b)=>String(a.id).localeCompare(String(b.id),undefined,{numeric:true}));
- if(rows.length<5)throw Error('Too few public town listings: '+town);
+ // A town may temporarily have no eligible stock. Keep the page accurate instead of failing all SEO refreshes.
+ if(rows.length<5)console.warn('Low eligible town stock: '+town+' ('+rows.length+'); publishing an accurate snapshot');
  const cards=rows.slice(0,18).map(v=>'<article style="border:1px solid #dce4ef;border-radius:10px;overflow:hidden;background:white">'+(image(v)?'<img loading="lazy" style="width:100%;height:170px;object-fit:cover" src="'+esc(image(v))+'" alt="'+esc(title(v))+'">':'')+'<div style="padding:12px"><h3 style="font-size:17px"><a href="details.html?id='+encodeURIComponent(v.id)+'">'+esc(title(v))+'</a></h3><strong>'+money(v.price)+'</strong><p>'+esc(town)+'</p><a href="details.html?id='+encodeURIComponent(v.id)+'">View vehicle</a></div></article>').join('');
- const snapshot=begin+'<section class="info-box" data-town-seo-snapshot="true"><h2>Current verified dealer stock in '+esc(town)+'</h2><p>'+rows.length+' vehicles listed by verified CarScoutZA dealers in '+esc(town)+' at the latest stock refresh. Confirm availability and price with the dealer.</p><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px">'+cards+'</div></section>'+end;
+ const stockMessage=rows.length ? rows.length+' vehicles listed by verified CarScoutZA dealers in '+esc(town)+' at the latest stock refresh. Confirm availability and price with the dealer.' : 'No currently eligible dealer vehicles were found in '+esc(town)+' at the latest stock refresh. Browse other CarScoutZA listings or check back later.';
+ const snapshot=begin+'<section class="info-box" data-town-seo-snapshot="true"><h2>Current verified dealer stock in '+esc(town)+'</h2><p>'+stockMessage+'</p><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px">'+cards+'</div></section>'+end;
  let output;
  if(html.includes(begin)&&html.includes(end)){const a=html.indexOf(begin),b=html.indexOf(end,a)+end.length;output=html.slice(0,a)+snapshot+html.slice(b)}
  else {const anchor='<section class="info-box">';const idx=html.indexOf(anchor);if(idx<0)throw Error('Town page layout changed: '+file);output=html.slice(0,idx)+snapshot+'\n'+html.slice(idx)}
