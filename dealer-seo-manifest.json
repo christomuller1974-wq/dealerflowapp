@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-11-21T09:53:05.329Z",
-  "eligibleDealerCount": 37,
-  "pageCount": 37,
-  "sitemapUrlCount": 37,
+  "generatedAt": "2026-11-23T10:49:41.532Z",
+  "eligibleDealerCount": 34,
+  "pageCount": 34,
+  "sitemapUrlCount": 34,
   "dealers": [
     {
       "id": "66305301-95b3-4b71-8f32-8779a0688b92",
@@ -82,7 +82,7 @@
       "town": "Boksburg",
       "province": "Gauteng",
       "file": "auto-view-pre-owned-boksburg.html",
-      "stockCount": 36
+      "stockCount": 37
     },
     {
       "id": "c2e0121e-e8bd-4846-92d2-695e7679821b",
@@ -122,15 +122,7 @@
       "town": "Pretoria",
       "province": "Gauteng",
       "file": "krubach-auto-pretoria.html",
-      "stockCount": 4
-    },
-    {
-      "id": "bf6467fc-fd7e-41b0-a499-f20ba5153d00",
-      "name": "P&K Vehicles",
-      "town": "Pretoria",
-      "province": "Gauteng",
-      "file": "pandk-vehicles-pretoria.html",
-      "stockCount": 0
+      "stockCount": 3
     },
     {
       "id": "5e4384df-ba3f-4849-8c15-003f8bdfe0f1",
@@ -283,22 +275,6 @@
       "province": "Northern Cape",
       "file": "rupping-dealers-kuruman.html",
       "stockCount": 30
-    },
-    {
-      "id": "5674f6e8-7541-4e82-ba4e-6503ffe10a0f",
-      "name": "AUTO ELITE",
-      "town": "Upington",
-      "province": "Northern Cape",
-      "file": "auto-elite-upington.html",
-      "stockCount": 24
-    },
-    {
-      "id": "5a220344-88a3-428b-8d70-a86f2328b346",
-      "name": "Thys Auto",
-      "town": "Upington",
-      "province": "Northern Cape",
-      "file": "thys-auto-upington.html",
-      "stockCount": 32
     }
   ]
 }
