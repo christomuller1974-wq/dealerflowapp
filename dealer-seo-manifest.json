@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-11-23T10:49:41.532Z",
-  "eligibleDealerCount": 34,
-  "pageCount": 34,
-  "sitemapUrlCount": 34,
+  "generatedAt": "2026-11-24T12:32:41.819Z",
+  "eligibleDealerCount": 36,
+  "pageCount": 36,
+  "sitemapUrlCount": 36,
   "dealers": [
     {
       "id": "66305301-95b3-4b71-8f32-8779a0688b92",
@@ -82,7 +82,7 @@
       "town": "Boksburg",
       "province": "Gauteng",
       "file": "auto-view-pre-owned-boksburg.html",
-      "stockCount": 37
+      "stockCount": 38
     },
     {
       "id": "c2e0121e-e8bd-4846-92d2-695e7679821b",
@@ -114,7 +114,7 @@
       "town": "Pretoria",
       "province": "Gauteng",
       "file": "cmh-mazda-foton-hatfield-pretoria.html",
-      "stockCount": 40
+      "stockCount": 38
     },
     {
       "id": "1ad1b46a-6f25-407a-88b3-e6146b1434a6",
@@ -202,7 +202,7 @@
       "town": "Kimberley",
       "province": "Northern Cape",
       "file": "auto-excellence-kby-kimberley.html",
-      "stockCount": 22
+      "stockCount": 21
     },
     {
       "id": "9b95e6a7-64e3-48c2-a579-19eadc6100fb",
@@ -274,7 +274,23 @@
       "town": "Kuruman",
       "province": "Northern Cape",
       "file": "rupping-dealers-kuruman.html",
-      "stockCount": 30
+      "stockCount": 35
+    },
+    {
+      "id": "5674f6e8-7541-4e82-ba4e-6503ffe10a0f",
+      "name": "AUTO ELITE",
+      "town": "Upington",
+      "province": "Northern Cape",
+      "file": "auto-elite-upington.html",
+      "stockCount": 24
+    },
+    {
+      "id": "5a220344-88a3-428b-8d70-a86f2328b346",
+      "name": "Thys Auto",
+      "town": "Upington",
+      "province": "Northern Cape",
+      "file": "thys-auto-upington.html",
+      "stockCount": 32
     }
   ]
 }
