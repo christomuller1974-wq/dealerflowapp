@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-11-24T12:32:41.819Z",
-  "eligibleDealerCount": 36,
-  "pageCount": 36,
-  "sitemapUrlCount": 36,
+  "generatedAt": "2026-11-25T11:21:23.262Z",
+  "eligibleDealerCount": 33,
+  "pageCount": 33,
+  "sitemapUrlCount": 33,
   "dealers": [
     {
       "id": "66305301-95b3-4b71-8f32-8779a0688b92",
@@ -27,14 +27,6 @@
       "province": "Free State",
       "file": "leon-geeringh-motoring-bloemfontein.html",
       "stockCount": 18
-    },
-    {
-      "id": "3663e8bf-d797-4279-9ff7-9c6b991212ce",
-      "name": "Motus Select Bloemfontein Central",
-      "town": "Bloemfontein",
-      "province": "Free State",
-      "file": "motus-select-bloemfontein-central.html",
-      "stockCount": 19
     },
     {
       "id": "ce38574f-91fa-4d7a-9a57-4b73bd5d6308",
@@ -67,14 +59,6 @@
       "province": "Free State",
       "file": "auto-star-welkom.html",
       "stockCount": 40
-    },
-    {
-      "id": "5c75ed28-3ff4-4c1e-957e-196009508f2b",
-      "name": "Avatar Auto",
-      "town": "Welkom",
-      "province": "Free State",
-      "file": "avatar-auto-welkom.html",
-      "stockCount": 18
     },
     {
       "id": "909e2e26-08dc-47be-8775-d0eebc709849",
@@ -114,7 +98,7 @@
       "town": "Pretoria",
       "province": "Gauteng",
       "file": "cmh-mazda-foton-hatfield-pretoria.html",
-      "stockCount": 38
+      "stockCount": 37
     },
     {
       "id": "1ad1b46a-6f25-407a-88b3-e6146b1434a6",
@@ -189,14 +173,6 @@
       "stockCount": 14
     },
     {
-      "id": "493762ef-261c-4303-b5e9-31adb06444a4",
-      "name": "JAC MOTORS Hartswater",
-      "town": "Hartswater",
-      "province": "Northern Cape",
-      "file": "jac-motors-hartswater.html",
-      "stockCount": 8
-    },
-    {
       "id": "407c973e-d52f-4b23-be50-df7e77073214",
       "name": "Auto Excellence Kimberley",
       "town": "Kimberley",
@@ -218,7 +194,7 @@
       "town": "Kimberley",
       "province": "Northern Cape",
       "file": "human-auto-kimberley.html",
-      "stockCount": 40
+      "stockCount": 30
     },
     {
       "id": "9d74605f-9867-47b1-b2ee-fb443e339ffd",
