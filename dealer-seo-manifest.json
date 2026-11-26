@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-25T11:21:23.262Z",
+  "generatedAt": "2026-11-26T10:57:14.192Z",
   "eligibleDealerCount": 33,
   "pageCount": 33,
   "sitemapUrlCount": 33,
@@ -82,7 +82,7 @@
       "town": "Pretoria",
       "province": "Gauteng",
       "file": "a-n-n-motors-pretoria.html",
-      "stockCount": 1
+      "stockCount": 6
     },
     {
       "id": "16f12464-cba5-482e-b420-da88b82b0400",
@@ -178,7 +178,7 @@
       "town": "Kimberley",
       "province": "Northern Cape",
       "file": "auto-excellence-kby-kimberley.html",
-      "stockCount": 21
+      "stockCount": 22
     },
     {
       "id": "9b95e6a7-64e3-48c2-a579-19eadc6100fb",
@@ -250,7 +250,7 @@
       "town": "Kuruman",
       "province": "Northern Cape",
       "file": "rupping-dealers-kuruman.html",
-      "stockCount": 35
+      "stockCount": 36
     },
     {
       "id": "5674f6e8-7541-4e82-ba4e-6503ffe10a0f",
