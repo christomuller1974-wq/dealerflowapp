@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-11-26T10:57:14.192Z",
-  "eligibleDealerCount": 33,
-  "pageCount": 33,
-  "sitemapUrlCount": 33,
+  "generatedAt": "2026-11-27T10:55:07.306Z",
+  "eligibleDealerCount": 36,
+  "pageCount": 36,
+  "sitemapUrlCount": 36,
   "dealers": [
     {
       "id": "66305301-95b3-4b71-8f32-8779a0688b92",
@@ -27,6 +27,14 @@
       "province": "Free State",
       "file": "leon-geeringh-motoring-bloemfontein.html",
       "stockCount": 18
+    },
+    {
+      "id": "3663e8bf-d797-4279-9ff7-9c6b991212ce",
+      "name": "Motus Select Bloemfontein Central",
+      "town": "Bloemfontein",
+      "province": "Free State",
+      "file": "motus-select-bloemfontein-central.html",
+      "stockCount": 19
     },
     {
       "id": "ce38574f-91fa-4d7a-9a57-4b73bd5d6308",
@@ -61,6 +69,14 @@
       "stockCount": 40
     },
     {
+      "id": "5c75ed28-3ff4-4c1e-957e-196009508f2b",
+      "name": "Avatar Auto",
+      "town": "Welkom",
+      "province": "Free State",
+      "file": "avatar-auto-welkom.html",
+      "stockCount": 18
+    },
+    {
       "id": "909e2e26-08dc-47be-8775-d0eebc709849",
       "name": "Auto View Pre Owned",
       "town": "Boksburg",
@@ -82,7 +98,7 @@
       "town": "Pretoria",
       "province": "Gauteng",
       "file": "a-n-n-motors-pretoria.html",
-      "stockCount": 6
+      "stockCount": 29
     },
     {
       "id": "16f12464-cba5-482e-b420-da88b82b0400",
@@ -171,6 +187,14 @@
       "province": "North West",
       "file": "tx-auto-potchefstroom.html",
       "stockCount": 14
+    },
+    {
+      "id": "493762ef-261c-4303-b5e9-31adb06444a4",
+      "name": "JAC MOTORS Hartswater",
+      "town": "Hartswater",
+      "province": "Northern Cape",
+      "file": "jac-motors-hartswater.html",
+      "stockCount": 8
     },
     {
       "id": "407c973e-d52f-4b23-be50-df7e77073214",
